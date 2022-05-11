@@ -36,12 +36,12 @@ export function tokenDayDataMapper(payload: any): MappedTokenDayData {
     priceUSD: payload.priceUSD ? payload.priceUSD.toString() : '',
     totalLiquidityToken: payload.totalLiquidityToken ? payload.totalLiquidityToken.toString() : '',
     totalLiquidityUSD: payload.totalLiquidityUSD ? payload.totalLiquidityUSD.toString() : '',
-    totalLiquidityNative: payload.totalLiquidityETH
+    totalLiquidityCoin: payload.totalLiquidityETH
       ? payload.totalLiquidityETH.toString()
       : payload.totalLiquidityTRX
       ? payload.totalLiquidityTRX.toString()
       : '',
-    dailyVolumeNative: payload.dailyVolumeETH
+    dailyVolumeCoin: payload.dailyVolumeETH
       ? payload.dailyVolumeETH.toString()
       : payload.dailyVolumeTRX
       ? payload.dailyVolumeTRX.toString()

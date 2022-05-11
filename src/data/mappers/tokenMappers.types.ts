@@ -27,8 +27,8 @@ export type MappedTokenDayData = {
   priceUSD: string
   totalLiquidityToken: string
   totalLiquidityUSD: string
-  totalLiquidityNative: string // Native means "default token of selected network"
-  dailyVolumeNative: string
+  totalLiquidityCoin: string
+  dailyVolumeCoin: string
   dailyVolumeToken: string
   dailyVolumeUSD: number
   __typename: string
