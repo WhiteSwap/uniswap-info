@@ -1,4 +1,5 @@
 import { TOKEN_OVERRIDES } from 'constants/tokens'
+import { pairListMapper } from 'data/mappers/pairMappers'
 import { IPairDataController } from 'data/types/PairController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
@@ -88,6 +89,7 @@ export default class PairDataController implements IPairDataController {
       }
     })
   }
+
   async getPairList(price: number) {
     const {
       data: { pairs }
@@ -103,6 +105,7 @@ export default class PairDataController implements IPairDataController {
     // get data for every pair in list
     return this.getBulkPairData(formattedPairs, price)
   }
+
   async getBulkPairData(pairList: string[], price: number) {
     const [t1, t2, tWeek] = getTimestampsForChanges()
     const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek])
@@ -160,8 +163,9 @@ export default class PairDataController implements IPairDataController {
           return parseData(pair, oneDayHistory, twoDayHistory, oneWeekHistory, price, b1)
         })
     )
-    return pairData
+    return pairListMapper(pairData)
   }
+
   async getPairChartData(pairAddress: string) {
     let data: any = []
     const utcEndTime = dayjs.utc()
@@ -227,6 +231,7 @@ export default class PairDataController implements IPairDataController {
 
     return data
   }
+
   async getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number) {
     try {
       const utcEndTime = dayjs.utc()

@@ -1,6 +1,8 @@
+import { MappedPair } from 'data/mappers/pairMappers.types'
+
 export type PairsState = Record<SupportedNetwork, Record<string, PairDetails>>
 
-export interface PairDetails extends Pair {
+export interface PairDetails extends MappedPair {
   chartData?: PairDayData[]
   timeWindowData?: TimeWindowData
   txns?: Transactions
@@ -17,11 +19,11 @@ export interface PairDayData {
 
 export type UpdatePairPayload = ParamsWithNetwork<{
   pairAddress: string
-  data: Pair
+  data: MappedPair
 }>
 
 export type UpdateTopPairsPayload = ParamsWithNetwork<{
-  topPairs: Pair[]
+  topPairs: MappedPair[]
 }>
 
 export type UpdatePairTransactionsPayload = ParamsWithNetwork<{

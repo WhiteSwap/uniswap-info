@@ -1,3 +1,4 @@
+import { pairListMapper } from 'data/mappers/pairMappers'
 import { IPairDataController } from 'data/types/PairController.interface'
 import { client } from 'service/client'
 import { PAIR_SEARCH } from 'service/queries/ethereum/pairs'
@@ -14,18 +15,22 @@ export default class PairDataController implements IPairDataController {
       }
     })
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPairList(_price: number) {
-    return Promise.resolve(PairListMock)
+    return pairListMapper(await Promise.resolve(PairListMock))
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getBulkPairData(_pairList: string[], _price: number) {
-    return Promise.resolve(PairListMock)
+    return pairListMapper(await Promise.resolve(PairListMock))
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPairChartData(_pairAddress: string): Promise<PairDayData[]> {
     return Promise.resolve(PairChartDataMock)
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getHourlyRateData(_pairAddress: string, _startTime: number, _latestBlock: number) {
     return Promise.resolve(HourlyRateDataMock)

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SupportedNetwork } from 'constants/networks'
+import { MappedPair } from 'data/mappers/pairMappers.types'
 import {
   PairsState,
   UpdateChartDataPayload,
@@ -32,7 +33,7 @@ export const pairsSlice = createSlice({
       state[networkId][pairAddress] = data
     },
     setTopPairs: (state, { payload: { networkId, topPairs } }: PayloadAction<UpdateTopPairsPayload>) => {
-      const added: Record<string, Pair> = {}
+      const added: Record<string, MappedPair> = {}
       topPairs.map(pair => {
         return (added[pair.id] = pair)
       })
