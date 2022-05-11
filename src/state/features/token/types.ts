@@ -1,6 +1,8 @@
-export interface TokenDetails extends Token {
+import { MappedToken, MappedTokenDayData } from 'data/mappers/tokenMappers.types'
+
+export interface TokenDetails extends MappedToken {
   transactions?: Transactions
-  chartData?: TokenDayData[]
+  chartData?: MappedTokenDayData[]
   tokenPairs?: string[]
   timeWindowData?: Record<string, Record<string, TimeWindowItem[]>>
 }
@@ -22,11 +24,11 @@ export type TokenState = Record<SupportedNetwork, Record<string, TokenDetails>>
 
 export type UpdateTokenPayload = ParamsWithNetwork<{
   tokenAddress: string
-  data: Token
+  data: MappedToken
 }>
 
 export type UpdateTopTokensPayload = ParamsWithNetwork<{
-  topTokens: Token[]
+  topTokens: MappedToken[]
 }>
 
 export type UpdateTransactionsPayload = ParamsWithNetwork<{
@@ -36,7 +38,7 @@ export type UpdateTransactionsPayload = ParamsWithNetwork<{
 
 export type UpdateChartDataPayload = ParamsWithNetwork<{
   address: string
-  chartData: TokenDayData[]
+  chartData: MappedTokenDayData[]
 }>
 
 export type UpdatePriceDataPayload = ParamsWithNetwork<{

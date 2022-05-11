@@ -1,8 +1,8 @@
-import { TokenDayData } from 'state/features/token/types'
+import { MappedToken, MappedTokenDayData } from 'data/mappers/tokenMappers.types'
 
 export interface ITokenDataController {
-  getTopTokens(price: number, priceOld: number): Promise<Token[]>
-  getTokenData(address: string, price: number, priceOld: number): Promise<Token | undefined>
+  getTopTokens(price: number, priceOld: number): Promise<MappedToken[]>
+  getTokenData(address: string, price: number, priceOld: number): Promise<MappedToken | undefined>
   getTokenPairs(tokenAddress: string): Promise<string[]>
   getIntervalTokenData(
     tokenAddress: string,
@@ -10,6 +10,6 @@ export interface ITokenDataController {
     interval: number,
     latestBlock: number
   ): Promise<TimeWindowItem[]>
-  getTokenChartData(tokenAddress: string): Promise<TokenDayData[]>
+  getTokenChartData(tokenAddress: string): Promise<MappedTokenDayData[]>
   searchToken(value: string, id: string): Promise<any>
 }

@@ -13,6 +13,7 @@ import {
   getBlocksFromTimestamps,
   splitQuery
 } from 'utils'
+import { tokenChartDataMapper, tokenMapper, topTokensMapper } from 'data/mappers/tokenMappers'
 
 async function fetchTokens(block?: number) {
   return client.query<TokensQuery>({
@@ -102,6 +103,7 @@ export default class TokenDataController implements ITokenDataController {
       }
     })
   }
+
   async getTopTokens(price: number, priceOld: number) {
     const utcCurrentTime = dayjs()
     const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
@@ -147,7 +149,7 @@ export default class TokenDataController implements ITokenDataController {
           })
       )
 
-      return bulkResults
+      return topTokensMapper(bulkResults)
     } catch (e) {
       return []
     }
@@ -171,7 +173,7 @@ export default class TokenDataController implements ITokenDataController {
       const twoDayResult = await fetchTokenData(address, twoDayBlock)
       const twoDayData = { ...twoDayResult.data.tokens[0] }
 
-      return parseToken(data, price, priceOld, oneDayData, twoDayData)
+      return tokenMapper(parseToken(data, price, priceOld, oneDayData, twoDayData))
     }
     return
   }
@@ -325,6 +327,6 @@ export default class TokenDataController implements ITokenDataController {
       console.error(e)
     }
 
-    return data
+    return tokenChartDataMapper(data)
   }
 }
