@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 
+import PropTypes from 'prop-types'
 import { formatTime, formattedNum, getBlockChainScanLink } from '../../utils'
 import { useMedia } from 'react-use'
 import { RowFixed, RowBetween } from '../Row'
@@ -186,9 +187,8 @@ function getTransactionType(event, symbol0, symbol1) {
       return ''
   }
 }
-
 // @TODO rework into virtualized list
-function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
+function TxnList({ transactions, color }) {
   const { t } = useTranslation()
 
   // page state
@@ -424,8 +424,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
                   setSortDirection(sortedColumn !== SORT_FIELD.AMOUNT0 ? true : !sortDirection)
                 }}
               >
-                {symbol0Override ? symbol0Override + ` ${t('amount')}` : t('tokenAmount')}{' '}
-                {sortedColumn === SORT_FIELD.AMOUNT0 ? (sortDirection ? '↑' : '↓') : ''}
+                {t('tokenAmount')} {sortedColumn === SORT_FIELD.AMOUNT0 ? (sortDirection ? '↑' : '↓') : ''}
               </ClickableText>
             </Flex>
           )}
@@ -440,8 +439,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
                     setSortDirection(sortedColumn !== SORT_FIELD.AMOUNT1 ? true : !sortDirection)
                   }}
                 >
-                  {symbol1Override ? symbol1Override + ` ${t('amount')}` : t('tokenAmount')}{' '}
-                  {sortedColumn === SORT_FIELD.AMOUNT1 ? (sortDirection ? '↑' : '↓') : ''}
+                  {t('tokenAmount')} {sortedColumn === SORT_FIELD.AMOUNT1 ? (sortDirection ? '↑' : '↓') : ''}
                 </ClickableText>
               </Flex>
             )}
@@ -501,6 +499,11 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
       </PageButtons>
     </>
   )
+}
+
+TxnList.propTypes = {
+  transactions: PropTypes.any,
+  color: PropTypes.string
 }
 
 export default TxnList

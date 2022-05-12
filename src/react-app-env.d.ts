@@ -136,6 +136,7 @@ interface Pair {
   oneDayVolumeUntracked?: number
   untrackedVolumeUSD?: string
   volumeChangeUntracked?: number
+  trackedReserveUSD?: number
 }
 
 interface OldPair {

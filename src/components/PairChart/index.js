@@ -73,9 +73,9 @@ const PairChart = ({ address, color, base0, base1 }) => {
 
   // formatted symbols for overflow
   const formattedSymbol0 =
-    pairData?.token0?.symbol.length > 6 ? pairData?.token0?.symbol.slice(0, 5) + '...' : pairData?.token0?.symbol
+    pairData?.tokenOne?.symbol.length > 6 ? pairData?.tokenOne?.symbol.slice(0, 5) + '...' : pairData?.tokenOne?.symbol
   const formattedSymbol1 =
-    pairData?.token1?.symbol.length > 6 ? pairData?.token1?.symbol.slice(0, 5) + '...' : pairData?.token1?.symbol
+    pairData?.tokenTwo?.symbol.length > 6 ? pairData?.tokenTwo?.symbol.slice(0, 5) + '...' : pairData?.tokenTwo?.symbol
 
   const below1600 = useMedia('(max-width: 1600px)')
   const below1080 = useMedia('(max-width: 1080px)')
@@ -149,7 +149,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 setChartFilter(CHART_VIEW.RATE0)
               }}
             >
-              {pairData.token0 ? formattedSymbol1 + '/' + formattedSymbol0 : '-'}
+              {pairData.tokenOne ? formattedSymbol1 + '/' + formattedSymbol0 : '-'}
             </OptionButton>
             <OptionButton
               active={chartFilter === CHART_VIEW.RATE1}
@@ -158,7 +158,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 setChartFilter(CHART_VIEW.RATE1)
               }}
             >
-              {pairData.token0 ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
+              {pairData.tokenOne ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
             </OptionButton>
           </AutoRow>
           <AutoRow justify="flex-end" gap="6px" style={{ width: 'auto' }}>

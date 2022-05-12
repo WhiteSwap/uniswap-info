@@ -1,147 +1,75 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useParams, Navigate, Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import Panel from 'components/Panel'
-import { PageWrapper, ContentWrapperLarge, StyledIcon } from 'components/index'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import Column, { AutoColumn } from 'components/Column'
+import { PageWrapper, ContentWrapperLarge, Hover, StyledIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
-import PairChart from 'components/PairChart'
-import Link from 'components/Link'
-import TxnList from 'components/TxnList'
-import { getBlockChainScanLink, getViewOnScanKey, isValidAddress } from 'utils'
-import Loader from 'components/LocalLoader'
-import { PAIR_BLACKLIST } from 'constants/index'
-import { BasicLink } from 'components/Link'
-import Search from 'components/Search'
-import { formattedNum, getPoolLink, getSwapLink } from 'utils'
-import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
-import { DashboardWrapper, TYPE } from 'Theme'
+import Column, { AutoColumn } from 'components/Column'
 import CopyHelper from 'components/Copy'
-import { useMedia } from 'react-use'
 import DoubleTokenLogo from 'components/DoubleLogo'
-import TokenLogo from 'components/TokenLogo'
-import { Hover } from 'components'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
-import Warning from 'components/Warning'
-import { usePathDismissed, useSavedPairs } from 'state/features/user/hooks'
-import { useFormatPath } from 'hooks'
-import { Bookmark, PlusCircle } from 'react-feather'
-import FormattedName from 'components/FormattedName'
-import { useListedTokens } from 'state/features/application/hooks'
-import { useTranslation } from 'react-i18next'
-import { useActiveNetworkId } from 'state/features/application/selectors'
+import Link, { BasicLink } from 'components/Link'
+import PairChart from 'components/PairChart'
+import Panel from 'components/Panel'
 import Percent from 'components/Percent'
+import { RowBetween, RowFixed, AutoRow } from 'components/Row'
+import Search from 'components/Search'
+import TokenLogo from 'components/TokenLogo'
+import TxnList from 'components/TxnList'
+import Warning from 'components/Warning'
+import { PAIR_BLACKLIST } from 'constants/index'
+import { useFormatPath } from 'hooks'
+import { useState, useEffect } from 'react'
+import { PlusCircle, Bookmark, Loader } from 'react-feather'
+import { useTranslation } from 'react-i18next'
+import { useParams, useLocation, Navigate, Link as RouterLink } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { useListedTokens } from 'state/features/application/hooks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
+import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
+import { usePathDismissed, useSavedPairs } from 'state/features/user/hooks'
+import { TYPE, DashboardWrapper } from 'Theme'
+import { isValidAddress, formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, getViewOnScanKey } from 'utils'
+import {
+  WarningGrouping,
+  TokenSymbolLink,
+  FixedPanel,
+  PanelWrapper,
+  TokenDetailsLayout,
+  TokenLink,
+  CustomFormattedName
+} from './styled'
 
-const PanelWrapper = styled.div`
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: max-content;
-  gap: 14px;
-  display: inline-grid;
-  width: 100%;
-  align-items: start;
-
-  @media screen and (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-    > * {
-      grid-column: 1 / 4;
-    }
-
-    > * {
-      &:first-child {
-        width: 100%;
-      }
-    }
-  }
-`
-
-const TokenDetailsLayout = styled.div`
-  display: inline-grid;
-  width: 100%;
-  grid-template-columns: auto auto auto auto 1fr;
-  column-gap: 60px;
-  align-items: start;
-
-  &:last-child {
-    align-items: center;
-    justify-items: end;
-  }
-  @media screen and (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-
-    > * {
-      grid-column: 1 / 4;
-      margin-bottom: 1.5rem;
-    }
-
-    &:last-child {
-      align-items: start;
-      justify-items: start;
-    }
-  }
-`
-
-const FixedPanel = styled(Panel)`
-  width: fit-content;
-  padding: 0;
-  border: 0;
-  background: unset;
-  cursor: pointer;
-  box-shadow: unset;
-`
-
-const TokenSymbolLink = styled(RouterLink)`
-  color: ${({ theme }) => theme.white};
-
-  :hover {
-    cursor: pointer;
-    opacity: 0.7;
-  }
-`
-
-const WarningGrouping = styled.div`
-  opacity: ${({ disabled }) => disabled && '0.4'};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
-`
-
-const CustomFormattedName = styled(FormattedName)`
-  color: ${({ theme }) => theme.text1};
-`
-
-function PairPage() {
+const PairPage = () => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
-  const { pairAddress } = useParams()
+  const params = useParams()
+  const pairAddress = params.pairAddress!
   const location = useLocation()
   const activeNetworkId = useActiveNetworkId()
 
-  if (PAIR_BLACKLIST.includes(pairAddress.toLowerCase()) || !isValidAddress(pairAddress, activeNetworkId)) {
+  if (PAIR_BLACKLIST.includes(pairAddress!.toLowerCase()) || !isValidAddress(pairAddress!, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
 
   const {
-    token0,
-    token1,
-    reserve0,
-    reserve1,
-    reserveUSD,
+    tokenOne,
+    tokenTwo,
+    reserveOne,
+    reserveTwo,
+    totalLiquidityUSD,
     trackedReserveUSD,
-    oneDayVolumeUSD,
+    dayFees,
+    dayVolumeUSD,
     volumeChangeUSD,
     oneDayVolumeUntracked,
     volumeChangeUntracked,
     liquidityChangeUSD
-  } = usePairData(pairAddress)
+  } = usePairData(pairAddress!)
 
-  const transactions = usePairTransactions(pairAddress)
+  const transactions = usePairTransactions(pairAddress!)
 
   // liquidity
   const liquidity = trackedReserveUSD
     ? formattedNum(trackedReserveUSD, true)
-    : reserveUSD
-    ? formattedNum(reserveUSD, true)
+    : totalLiquidityUSD
+    ? formattedNum(totalLiquidityUSD, true)
     : '-'
 
   // mark if using untracked liquidity
@@ -152,47 +80,35 @@ function PairPage() {
 
   // volume	  // volume
   const volume =
-    oneDayVolumeUSD || oneDayVolumeUSD === 0
-      ? formattedNum(oneDayVolumeUSD === 0 ? oneDayVolumeUntracked : oneDayVolumeUSD, true)
-      : oneDayVolumeUSD === 0
+    dayVolumeUSD || dayVolumeUSD === 0
+      ? formattedNum(dayVolumeUSD === 0 ? oneDayVolumeUntracked : dayVolumeUSD, true)
+      : dayVolumeUSD === 0
       ? '$0'
       : '-'
 
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
   useEffect(() => {
-    setUsingUtVolume(oneDayVolumeUSD === 0 ? true : false)
-  }, [oneDayVolumeUSD])
+    setUsingUtVolume(dayVolumeUSD === 0 ? true : false)
+  }, [dayVolumeUSD])
 
   const volumeChange = !usingUtVolume ? volumeChangeUSD : volumeChangeUntracked
-
-  // get fees	  // get fees
-  const fees =
-    oneDayVolumeUSD || oneDayVolumeUSD === 0
-      ? usingUtVolume
-        ? formattedNum(oneDayVolumeUntracked * 0.003, true)
-        : formattedNum(oneDayVolumeUSD * 0.003, true)
-      : '-'
 
   // token data for usd
   const activeTokenPrice = useActiveTokenPrice()
   const token0USD =
-    token0?.derivedETH && activeTokenPrice
-      ? formattedNum(parseFloat(token0.derivedETH) * parseFloat(activeTokenPrice), true)
-      : ''
+    tokenOne?.derivedPrice && activeTokenPrice ? formattedNum(tokenOne.derivedPrice * activeTokenPrice, true) : 0
 
   const token1USD =
-    token1?.derivedETH && activeTokenPrice
-      ? formattedNum(parseFloat(token1.derivedETH) * parseFloat(activeTokenPrice), true)
-      : ''
+    tokenTwo?.derivedPrice && activeTokenPrice ? formattedNum(tokenTwo.derivedPrice * activeTokenPrice, true) : 0
 
   // rates
-  const token0Rate = reserve0 && reserve1 ? formattedNum(reserve1 / reserve0) : '-'
-  const token1Rate = reserve0 && reserve1 ? formattedNum(reserve0 / reserve1) : '-'
+  const token0Rate = reserveOne && reserveTwo ? formattedNum(reserveTwo / reserveOne) : '-'
+  const token1Rate = reserveOne && reserveTwo ? formattedNum(reserveOne / reserveTwo) : '-'
 
   // formatted symbols for overflow
-  const formattedSymbol0 = token0?.symbol.length > 6 ? token0?.symbol.slice(0, 5) + '...' : token0?.symbol
-  const formattedSymbol1 = token1?.symbol.length > 6 ? token1?.symbol.slice(0, 5) + '...' : token1?.symbol
+  const formattedSymbol0 = tokenOne?.symbol.length > 6 ? tokenOne?.symbol.slice(0, 5) + '...' : tokenOne?.symbol
+  const formattedSymbol1 = tokenTwo?.symbol.length > 6 ? tokenTwo?.symbol.slice(0, 5) + '...' : tokenTwo?.symbol
 
   const below1080 = useMedia('(max-width: 1080px)')
   const below1024 = useMedia('(max-width: 1024px)')
@@ -209,11 +125,10 @@ function PairPage() {
     <PageWrapper>
       <span />
       <Warning
-        type={'pair'}
         show={
           !dismissed &&
           listedTokens.length > 0 &&
-          !(listedTokens.includes(token0?.id) && listedTokens.includes(token1?.id))
+          !(listedTokens.includes(tokenOne?.id) && listedTokens.includes(tokenTwo?.id))
         }
         setShow={markAsDismissed}
         address={pairAddress}
@@ -221,13 +136,13 @@ function PairPage() {
       <ContentWrapperLarge>
         <RowBetween>
           <TYPE.body>
-            <BasicLink to={formatPath('/pairs')}>{'Pairs '}</BasicLink>→ {token0?.symbol}-{token1?.symbol}
+            <BasicLink to={formatPath('/pairs')}>{'Pairs '}</BasicLink>→ {tokenOne?.symbol}-{tokenTwo?.symbol}
           </TYPE.body>
           {!below600 && <Search small={true} />}
         </RowBetween>
         <WarningGrouping
           disabled={
-            !dismissed && listedTokens && !(listedTokens.includes(token0?.id) && listedTokens.includes(token1?.id))
+            !dismissed && listedTokens && !(listedTokens.includes(tokenOne?.id) && listedTokens.includes(tokenTwo?.id))
           }
         >
           <DashboardWrapper>
@@ -242,10 +157,10 @@ function PairPage() {
               >
                 <RowFixed style={{ flexWrap: 'wrap', minWidth: '100px' }}>
                   <RowFixed>
-                    {token0 && token1 && (
+                    {tokenOne && tokenTwo && (
                       <DoubleTokenLogo
-                        a0={token0?.id || ''}
-                        a1={token1?.id || ''}
+                        a0={tokenOne?.id || ''}
+                        a1={tokenTwo?.id || ''}
                         size={below440 ? 22 : 32}
                         margin={true}
                       />
@@ -254,12 +169,14 @@ function PairPage() {
                       fontSize={!below1080 ? '2.5rem' : below440 ? '1.25rem' : '1.5rem'}
                       style={{ margin: '0 1rem' }}
                     >
-                      {token0 && token1 ? (
+                      {tokenOne && tokenTwo ? (
                         <>
-                          <TokenSymbolLink to={formatPath(`/tokens/${token0?.id}`)}>{token0.symbol}</TokenSymbolLink>
+                          <TokenSymbolLink to={formatPath(`/tokens/${tokenOne?.id}`)}>
+                            {tokenOne.symbol}
+                          </TokenSymbolLink>
                           <span>/</span>
-                          <TokenSymbolLink to={formatPath(`/tokens/${token1?.id}`)}>
-                            {token1.symbol}
+                          <TokenSymbolLink to={formatPath(`/tokens/${tokenTwo?.id}`)}>
+                            {tokenTwo.symbol}
                           </TokenSymbolLink>{' '}
                           {t('pair')}
                         </>
@@ -269,13 +186,15 @@ function PairPage() {
                 </RowFixed>
                 <RowFixed
                   ml={below900 ? '0' : '2.5rem'}
-                  mt={below1080 && '1rem'}
+                  mt={below1080 ? '1rem' : '0'}
                   style={{
                     flexDirection: below1080 ? 'row-reverse' : 'initial'
                   }}
                 >
                   {!savedPairs[pairAddress] && !below1080 ? (
-                    <Hover onClick={() => addPair(pairAddress, token0.id, token1.id, token0.symbol, token1.symbol)}>
+                    <Hover
+                      onClick={() => addPair(pairAddress, tokenOne.id, tokenTwo.id, tokenOne.symbol, tokenTwo.symbol)}
+                    >
                       <StyledIcon>
                         <PlusCircle style={{ marginRight: '0.5rem' }} />
                       </StyledIcon>
@@ -288,11 +207,11 @@ function PairPage() {
                     <></>
                   )}
 
-                  <Link external href={getPoolLink(activeNetworkId, token0?.id, token1?.id)}>
+                  <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>
-                  <Link external href={getSwapLink(activeNetworkId, token0?.id, token1?.id)}>
-                    <ButtonDark ml={!below1080 && '.5rem'} mr={below1080 && '.5rem'}>
+                  <Link external href={getSwapLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
+                    <ButtonDark ml={!below1080 ? '.5rem' : '0'} mr={below1080 ? '.5rem' : '0'}>
                       {t('trade')}
                     </ButtonDark>
                   </Link>
@@ -308,26 +227,26 @@ function PairPage() {
                 flexWrap: 'wrap'
               }}
             >
-              <FixedPanel as={RouterLink} to={formatPath(`/tokens/${token0?.id}`)}>
+              <FixedPanel as={RouterLink} to={formatPath(`/tokens/${tokenOne?.id}`)}>
                 <RowFixed>
-                  <TokenLogo alt={token0?.symbol} address={token0?.id} size={'1rem'} />
+                  <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size={'1rem'} />
                   <TYPE.light fontSize=".875rem" lineHeight="1rem" fontWeight={700} ml=".25rem" mr="3.75rem">
-                    {token0 && token1
+                    {tokenOne && tokenTwo
                       ? `1 ${formattedSymbol0} = ${token0Rate} ${formattedSymbol1} ${
-                          parseFloat(token0?.derivedETH) ? '(' + token0USD + ')' : ''
+                          tokenOne?.derivedPrice ? '(' + token0USD + ')' : ''
                         }`
                       : '-'}
                   </TYPE.light>
                 </RowFixed>
               </FixedPanel>
 
-              <FixedPanel as={RouterLink} to={formatPath(`/tokens/${token1?.id}`)}>
+              <FixedPanel as={RouterLink} to={formatPath(`/tokens/${tokenTwo?.id}`)}>
                 <RowFixed>
-                  <TokenLogo alt={token1?.symbol} address={token1?.id} size={'16px'} />
+                  <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} size={'16px'} />
                   <TYPE.light fontSize={'.875rem'} lineHeight={'1rem'} fontWeight={700} ml={'.25rem'}>
-                    {token0 && token1
+                    {tokenOne && tokenTwo
                       ? `1 ${formattedSymbol1} = ${token1Rate} ${formattedSymbol0}  ${
-                          parseFloat(token1?.derivedETH) ? '(' + token1USD + ')' : ''
+                          tokenTwo?.derivedPrice ? '(' + token1USD + ')' : ''
                         }`
                       : '-'}
                   </TYPE.light>
@@ -368,7 +287,7 @@ function PairPage() {
                         {volume}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
-                        <Percent percent={volumeChange} />
+                        <Percent percent={volumeChange || 0} />
                       </TYPE.main>
                     </RowBetween>
                   </AutoColumn>
@@ -383,10 +302,10 @@ function PairPage() {
                     </RowBetween>
                     <RowBetween align="flex-end">
                       <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
-                        {fees}
+                        {formattedNum(dayFees, true)}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
-                        <Percent percent={volumeChange} />
+                        <Percent percent={volumeChange || 0} />
                       </TYPE.main>
                     </RowBetween>
                   </AutoColumn>
@@ -400,28 +319,26 @@ function PairPage() {
                       </TYPE.light>
                       <div />
                     </RowBetween>
-                    <Hover as={RouterLink} to={formatPath(`/tokens/${token0?.id}`)} $fade>
+                    <TokenLink to={formatPath(`/tokens/${tokenOne?.id}`)}>
                       <AutoRow gap="4px">
-                        <TokenLogo alt={token0?.symbol} address={token0?.id} />
+                        <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {reserve0 ? formattedNum(reserve0) : ''}{' '}
-                            <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} margin={true} />
+                            {reserveOne ? formattedNum(reserveOne) : ''} {tokenOne?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
-                    </Hover>
-                    <Hover as={RouterLink} to={formatPath(`/tokens/${token1?.id}`)} $fade>
+                    </TokenLink>
+                    <TokenLink to={formatPath(`/tokens/${tokenTwo?.id}`)}>
                       <AutoRow gap="4px">
-                        <TokenLogo alt={token1?.symbol} address={token1?.id} />
+                        <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {reserve1 ? formattedNum(reserve1) : ''}{' '}
-                            <FormattedName text={token1?.symbol ?? ''} maxCharacters={8} margin={true} />
+                            {reserveTwo ? formattedNum(reserveTwo) : ''} {tokenTwo?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
-                    </Hover>
+                    </TokenLink>
                   </AutoColumn>
                 </Panel>
                 <Panel
@@ -434,8 +351,8 @@ function PairPage() {
                   <PairChart
                     address={pairAddress}
                     color={'#2E69BB'}
-                    base0={reserve1 / reserve0}
-                    base1={reserve0 / reserve1}
+                    base0={reserveTwo / reserveOne}
+                    base1={reserveOne / reserveTwo}
                   />
                 </Panel>
               </PanelWrapper>
@@ -454,7 +371,6 @@ function PairPage() {
               </TYPE.main>{' '}
             </RowBetween>
             <Panel
-              rounded
               style={{
                 marginTop: below440 ? '.75rem' : '1.5rem'
               }}
@@ -465,9 +381,9 @@ function PairPage() {
                   <TYPE.light>{t('pairName')}</TYPE.light>
                   <TYPE.main style={{ marginTop: '.5rem' }}>
                     <RowFixed>
-                      <CustomFormattedName text={token0?.symbol ?? ''} maxCharacters={8} />
+                      <CustomFormattedName text={tokenOne?.symbol ?? ''} maxCharacters={8} />
                       -
-                      <CustomFormattedName text={token1?.symbol ?? ''} maxCharacters={8} />
+                      <CustomFormattedName text={tokenTwo?.symbol ?? ''} maxCharacters={8} />
                     </RowFixed>
                   </TYPE.main>
                 </Column>
@@ -483,29 +399,27 @@ function PairPage() {
                 <Column>
                   <TYPE.light>
                     <RowFixed>
-                      <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} />{' '}
-                      <span style={{ marginLeft: '4px' }}>{t('address')}</span>
+                      {tokenOne?.symbol ?? ''} <span style={{ marginLeft: '4px' }}>{t('address')}</span>
                     </RowFixed>
                   </TYPE.light>
                   <RowBetween style={{ marginTop: '-5px' }}>
                     <TYPE.main style={{ marginTop: '.5rem' }}>
-                      {token0 && token0.id.slice(0, 6) + '...' + token0.id.slice(38, 42)}
+                      {tokenOne && tokenOne.id.slice(0, 6) + '...' + tokenOne.id.slice(38, 42)}
                     </TYPE.main>
-                    <CopyHelper toCopy={token0?.id} />
+                    <CopyHelper toCopy={tokenOne?.id} />
                   </RowBetween>
                 </Column>
                 <Column>
                   <TYPE.light>
                     <RowFixed>
-                      <FormattedName text={token1?.symbol ?? ''} maxCharacters={8} />{' '}
-                      <span style={{ marginLeft: '4px' }}>{t('address')}</span>
+                      {tokenTwo?.symbol ?? ''} <span style={{ marginLeft: '4px' }}>{t('address')}</span>
                     </RowFixed>
                   </TYPE.light>
                   <RowBetween style={{ marginTop: '-5px' }}>
                     <TYPE.main style={{ marginTop: '.5rem' }}>
-                      {token1 && token1.id.slice(0, 6) + '...' + token1.id.slice(38, 42)}
+                      {tokenTwo && tokenTwo.id.slice(0, 6) + '...' + tokenTwo.id.slice(38, 42)}
                     </TYPE.main>
-                    <CopyHelper toCopy={token1?.id} />
+                    <CopyHelper toCopy={tokenTwo?.id} />
                   </RowBetween>
                 </Column>
                 <ButtonLight>

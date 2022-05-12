@@ -24,6 +24,7 @@ export function pairMapperV2(payload: EthereumPair): Pair {
     volumeChangeUSD: payload.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
     oneDayVolumeUntracked: payload.oneDayVolumeUntracked ? +payload.oneDayVolumeUntracked : 0,
     volumeChangeUntracked: payload.volumeChangeUntracked ? +payload.volumeChangeUntracked : 0,
+    trackedReserveUSD: +payload.trackedReserveUSD ?? 0,
     liquidityChangeUSD: payload.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0
   }
 }

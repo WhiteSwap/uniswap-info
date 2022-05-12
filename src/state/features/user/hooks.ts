@@ -10,6 +10,7 @@ import {
   removeToken
 } from './slice'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { SavedPair } from './types'
 
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useAppDispatch()
@@ -48,7 +49,11 @@ export function useSavedAccounts(): [string[], (account: string) => void, (accou
   return [savedAccounts, addSavedAccount, removeSavedAccount]
 }
 
-export function useSavedPairs() {
+export function useSavedPairs(): [
+  Record<string, SavedPair>,
+  (address: string, token0Address: string, token1Address: string, token0Symbol: string, token1Symbol: string) => void,
+  (address: string) => void
+] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const savedPairs = useAppSelector(state => state.user[activeNetwork].savedPairs)
