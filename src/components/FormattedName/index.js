@@ -22,7 +22,7 @@ const FormattedName = ({ text, maxCharacters, margin = false, adjustSize = false
   const [showHover, setShowHover] = useState(false)
 
   if (!text) {
-    return ''
+    return null
   }
 
   if (text.length > maxCharacters) {

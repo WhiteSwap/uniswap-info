@@ -58,8 +58,8 @@ interface SwapTransactions extends TransactionData {
 }
 
 interface TransactionV2 {
-  id: string
-  timestamp: string
+  hash: string
+  timestamp: number
   tokenOneAmount: number
   tokenOneSymbol: string
   tokenTwoAmount: number
