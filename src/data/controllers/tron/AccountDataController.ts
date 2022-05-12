@@ -1,4 +1,4 @@
-import { IAccountDataController } from 'data/types/AccountController.interface'
+import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import { TopLpsMock, UserHistoryMock, UserLiquidityChartMock, UserPositionsMock } from '__mocks__/account'
 
 export default class AccountDataController implements IAccountDataController {

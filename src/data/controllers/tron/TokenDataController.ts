@@ -1,7 +1,8 @@
-import { ITokenDataController } from 'data/types/TokenController.interface'
+import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import { client } from 'service/client'
 import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
-import { IntervalTokenDataMock, TokenChartDatMock, TokenPairsMock, TopTokensMock } from '__mocks__/tokens'
+import { IntervalTokenDataMock, TokenChartDatMock, TokenPairsMock, TronTopTokensMock } from '__mocks__/tokens'
+import { tokenMapper, topTokensMapper, tokenChartDataMapper } from 'data/mappers/tron/tokenMappers'
 
 export default class TokenDataController implements ITokenDataController {
   async searchToken(value: string, id: string) {
@@ -15,11 +16,11 @@ export default class TokenDataController implements ITokenDataController {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTopTokens(_price: number, _priceOld: number) {
-    return Promise.resolve(TopTokensMock)
+    return topTokensMapper(await Promise.resolve(TronTopTokensMock))
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTokenData(_address: string, _price: number, _priceOld: number) {
-    return Promise.resolve(TopTokensMock[0])
+    return tokenMapper(await Promise.resolve(TronTopTokensMock[0]))
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTokenPairs(_tokenAddress: string) {
@@ -31,6 +32,6 @@ export default class TokenDataController implements ITokenDataController {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTokenChartData(_tokenAddress: string) {
-    return Promise.resolve(TokenChartDatMock)
+    return tokenChartDataMapper(await Promise.resolve(TokenChartDatMock))
   }
 }

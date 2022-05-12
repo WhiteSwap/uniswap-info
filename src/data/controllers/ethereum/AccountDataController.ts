@@ -1,4 +1,4 @@
-import { IAccountDataController } from 'data/types/AccountController.interface'
+import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {

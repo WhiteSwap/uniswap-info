@@ -1,5 +1,6 @@
 import { TOKEN_OVERRIDES } from 'constants/tokens'
-import { IPairDataController } from 'data/types/PairController.interface'
+import { pairListMapper } from 'data/mappers/ethereum/pairMappers'
+import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {
@@ -88,6 +89,7 @@ export default class PairDataController implements IPairDataController {
       }
     })
   }
+
   async getPairList(price: number) {
     const {
       data: { pairs }
@@ -103,6 +105,7 @@ export default class PairDataController implements IPairDataController {
     // get data for every pair in list
     return this.getBulkPairData(formattedPairs, price)
   }
+
   async getBulkPairData(pairList: string[], price: number) {
     const [t1, t2, tWeek] = getTimestampsForChanges()
     const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek])
@@ -139,7 +142,7 @@ export default class PairDataController implements IPairDataController {
       return { ...obj, [cur.id]: cur }
     }, {})
 
-    const pairData: Pair[] = await Promise.all(
+    const pairData: EthereumPair[] = await Promise.all(
       current &&
         current.data.pairs.map(async (pair: { id: string }) => {
           let oneDayHistory = oneDayData?.[pair.id]
@@ -160,8 +163,9 @@ export default class PairDataController implements IPairDataController {
           return parseData(pair, oneDayHistory, twoDayHistory, oneWeekHistory, price, b1)
         })
     )
-    return pairData
+    return pairListMapper(pairData)
   }
+
   async getPairChartData(pairAddress: string) {
     let data: any = []
     const utcEndTime = dayjs.utc()
@@ -227,6 +231,7 @@ export default class PairDataController implements IPairDataController {
 
     return data
   }
+
   async getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number) {
     try {
       const utcEndTime = dayjs.utc()

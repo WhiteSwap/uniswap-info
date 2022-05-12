@@ -1,10 +1,10 @@
-import { FACTORY_ADDRESS } from '../../constants'
+import { FACTORY_ADDRESS } from 'constants/index'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import { ETH_PRICE, GLOBAL_CHART, GLOBAL_DATA, SUBGRAPH_HEALTH } from 'service/queries/ethereum/global'
 import { getBlocksFromTimestamps, get2DayPercentChange, getPercentChange, getBlockFromTimestamp } from 'utils'
 import { GlobalData } from 'state/features/global/types'
-import { IGlobalDataController } from 'data/types/GlobalController.interface'
+import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 
 async function fetchGlobalData(block?: number) {
   return client.query({

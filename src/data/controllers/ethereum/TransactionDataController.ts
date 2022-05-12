@@ -1,4 +1,4 @@
-import { ITransactionDataController } from 'data/types/TransactionController.interface'
+import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
 import { client } from 'service/client'
 import { FILTERED_TRANSACTIONS, GLOBAL_TXNS, USER_TRANSACTIONS } from 'service/queries/ethereum/transactions'
 import {

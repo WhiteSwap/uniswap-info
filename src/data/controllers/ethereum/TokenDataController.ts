@@ -1,11 +1,10 @@
 import { TOKEN_OVERRIDES } from 'constants/tokens'
-import { ITokenDataController } from 'data/types/TokenController.interface'
+import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import { PRICES_BY_BLOCK } from 'service/queries/ethereum/global'
 import { GET_TOKENS, TOKEN_CHART, TOKEN_DATA, TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { TokensQuery, Token as ETHToken, TokenDataQuery } from 'service/generated/ethereumGraphql'
-import { TokenDayData } from 'state/features/token/types'
 import {
   getBlockFromTimestamp,
   get2DayPercentChange,
@@ -13,6 +12,7 @@ import {
   getBlocksFromTimestamps,
   splitQuery
 } from 'utils'
+import { tokenChartDataMapper, tokenMapper } from 'data/mappers/ethereum/tokenMappers'
 
 async function fetchTokens(block?: number) {
   return client.query<TokensQuery>({
@@ -62,7 +62,7 @@ function parseToken(
   const currentLiquidityUSD = +data?.totalLiquidity * price * +data?.derivedETH
   const oldLiquidityUSD = oneDayTotalLiquidity * priceOld * oneDayDerivedEth
 
-  const tokenInfo: Token = {
+  const tokenInfo: EthereumToken = {
     ...data,
     totalLiquidity: +data.totalLiquidity,
     tradeVolumeUSD: +data.tradeVolumeUSD,
@@ -89,7 +89,7 @@ function parseToken(
     tokenInfo.oneDayTxns = +data.txCount
   }
 
-  return tokenInfo
+  return tokenMapper(tokenInfo)
 }
 
 export default class TokenDataController implements ITokenDataController {
@@ -102,6 +102,7 @@ export default class TokenDataController implements ITokenDataController {
       }
     })
   }
+
   async getTopTokens(price: number, priceOld: number) {
     const utcCurrentTime = dayjs()
     const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
@@ -325,6 +326,6 @@ export default class TokenDataController implements ITokenDataController {
       console.error(e)
     }
 
-    return data
+    return tokenChartDataMapper(data)
   }
 }
