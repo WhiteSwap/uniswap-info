@@ -92,27 +92,18 @@ interface Token {
   id: string
   name: string
   symbol: string
-  derived: number
-  liquidityChangeUSD: number
-  oneDayTxns: number
-  oneDayVolumeUSD: number
-  oneDayVolumeUT: number
-  priceChangeUSD: number
-  priceUSD: number
-  totalLiquidity: number
-  totalLiquidityUSD: number
-  tradeVolume: number
+  derivedPrice: number
   tradeVolumeUSD: number
-  txCount: number
-  txnChange: number
-  untrackedVolumeUSD: number
+  totalLiquidityUSD: number
+  priceUSD: number
+  liquidityChangeUSD: number
   volumeChangeUSD: number
-  volumeChangeUT: number
-  __typename?: string
+  priceChangeUSD: number
+  oneDayTxns: number
+  txnChange: number
+  oneDayVolumeUT?: number
+  volumeChangeUT?: number
 }
-
-type EthereumToken = Omit<Token, 'derived'> & { derivedETH: number }
-type TronToken = Omit<Token, 'derived'> & { derivedTRX: number }
 
 interface TokenDayData {
   dailyVolumeCoin?: string
@@ -125,21 +116,9 @@ interface TokenDayData {
   totalLiquidityToken?: string
   totalLiquidityUSD: string
   dayString?: number
-  __typename?: string
-}
-
-type EthereumTokenDayData = Omit<TokenDayData, 'dailyVolumeCoin' | 'totalLiquidityCoin'> & {
-  dailyVolumeETH?: string
-  totalLiquidityETH?: string
-}
-type TronTokenDayData = Omit<TokenDayData, 'dailyVolumeCoin' | 'totalLiquidityCoin'> & {
-  dailyVolumeTRX?: string
-  totalLiquidityTRX?: string
 }
 
 type PairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>
-type EthereumPairToken = Omit<PairToken, 'derived'> & { derivedETH: number }
-type TronPairToken = Omit<PairToken, 'derived'> & { derivedTRX: number }
 
 interface PairV2 {
   id: string
@@ -182,17 +161,6 @@ interface Pair {
   volumeChangeUntracked: number
   volumeUSD: string
   __typename?: string
-}
-
-type EthereumPair = Omit<Pair, 'trackedReserveCoin' | 'token0' | 'token1'> & {
-  trackedReserveETH: string
-  token0: EthereumPairToken
-  token1: EthereumPairToken
-}
-type TronPair = Omit<Pair, 'trackedReserveCoin' | 'token0' | 'token1'> & {
-  trackedReserveTRX: string
-  token0: TronPairToken
-  token1: TronPairToken
 }
 
 type PositionPair = Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>

@@ -88,3 +88,47 @@ export type GlobalChartQuery = {
     totalLiquidityUSD: number
   }> | null
 }
+
+export type TokensQueryVariables = Exact<{ [key: string]: never }>
+
+export type TokensQuery = {
+  __typename?: 'RootQuery'
+  tokens?: Array<{
+    __typename?: 'Token'
+    id: string
+    name: string
+    symbol: string
+    derivedTRX: number
+    tradeVolumeUSD: number
+    totalLiquidityUSD: number
+    priceUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    priceChangeUSD: number
+    oneDayTxns: number
+    txnChange: number
+  } | null> | null
+}
+
+export type TokenByAddressQueryVariables = Exact<{
+  address: Scalars['Int']
+}>
+
+export type TokenByAddressQuery = {
+  __typename?: 'RootQuery'
+  token?: {
+    __typename?: 'Token'
+    id: string
+    name: string
+    symbol: string
+    derivedTRX: number
+    tradeVolumeUSD: number
+    totalLiquidityUSD: number
+    priceUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    priceChangeUSD: number
+    oneDayTxns: number
+    txnChange: number
+  } | null
+}

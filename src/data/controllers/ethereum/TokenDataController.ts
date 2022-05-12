@@ -12,7 +12,7 @@ import {
   getBlocksFromTimestamps,
   splitQuery
 } from 'utils'
-import { tokenChartDataMapper, tokenMapper } from 'data/mappers/ethereum/tokenMappers'
+import { tokenChartDataMapper } from 'data/mappers/ethereum/tokenMappers'
 
 async function fetchTokens(block?: number) {
   return client.query<TokensQuery>({
@@ -42,7 +42,8 @@ function parseToken(
 ): Token {
   const oneDayDerivedEth = oneDayHistory ? +oneDayHistory.derivedETH : 0
   const oneDayTotalLiquidity = oneDayHistory ? +oneDayHistory.totalLiquidity : 0
-  const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, volumeChangeUSD] = get2DayPercentChange(
     data.tradeVolumeUSD,
     oneDayHistory?.tradeVolumeUSD ?? 0,
     twoDayHistory?.tradeVolumeUSD ?? 0
@@ -62,18 +63,14 @@ function parseToken(
   const currentLiquidityUSD = +data?.totalLiquidity * price * +data?.derivedETH
   const oldLiquidityUSD = oneDayTotalLiquidity * priceOld * oneDayDerivedEth
 
-  const tokenInfo: EthereumToken = {
-    ...data,
-    totalLiquidity: +data.totalLiquidity,
+  const tokenInfo: Token = {
+    id: data.id,
     tradeVolumeUSD: +data.tradeVolumeUSD,
-    txCount: +data.txCount,
-    untrackedVolumeUSD: +data.untrackedVolumeUSD,
-    derivedETH: +data.derivedETH,
+    derivedPrice: +data.derivedETH,
     priceUSD: +data?.derivedETH * price,
     totalLiquidityUSD: currentLiquidityUSD,
     oneDayVolumeUT: oneDayVolumeUT,
     volumeChangeUT: volumeChangeUT,
-    oneDayVolumeUSD,
     volumeChangeUSD,
     priceChangeUSD,
     liquidityChangeUSD: getPercentChange(currentLiquidityUSD ?? 0, oldLiquidityUSD ?? 0),
@@ -85,11 +82,10 @@ function parseToken(
 
   // new tokens
   if (!oneDayHistory && data) {
-    tokenInfo.oneDayVolumeUSD = +data.tradeVolumeUSD
     tokenInfo.oneDayTxns = +data.txCount
   }
 
-  return tokenMapper(tokenInfo)
+  return tokenInfo
 }
 
 export default class TokenDataController implements ITokenDataController {

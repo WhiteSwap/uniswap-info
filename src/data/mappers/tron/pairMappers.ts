@@ -1,4 +1,4 @@
-export function pairMapper(payload: TronPair): Pair {
+export function pairMapper(payload: any): Pair {
   return {
     id: payload.id ? payload.id.toString() : '',
     token0: {
@@ -36,6 +36,6 @@ export function pairMapper(payload: TronPair): Pair {
   }
 }
 
-export function pairListMapper(payload: TronPair[]): Pair[] {
+export function pairListMapper(payload: any[]): Pair[] {
   return payload.map(pair => pairMapper(pair))
 }

@@ -1,3 +1,5 @@
+import { EthereumPair } from 'data/controllers/types/ethTypes'
+
 export function pairMapper(payload: EthereumPair): Pair {
   return {
     id: payload.id ? payload.id.toString() : '',

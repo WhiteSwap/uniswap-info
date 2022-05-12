@@ -19,6 +19,7 @@ import {
   getPercentChange,
   splitQuery
 } from 'utils'
+import { EthereumPair } from 'data/controllers/types/ethTypes'
 
 async function fetchPairData(pairAddress: string, block?: number) {
   return client.query({
