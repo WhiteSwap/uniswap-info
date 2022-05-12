@@ -134,15 +134,6 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
         return order ? direction : direction * -1
       })
       .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-      .map(
-        (pair, index) =>
-          pair && (
-            <div key={index}>
-              <ListItem index={(page - 1) * ITEMS_PER_PAGE + index + 1} pairData={pair} />
-              <Divider />
-            </div>
-          )
-      )
 
   return (
     <div>
@@ -193,7 +184,16 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
           )}
         </DashGrid>
         <Divider />
-        <List p={0}>{!pairList ? <LocalLoader /> : pairList}</List>
+        <List p={0}>
+          {!pairList ? (
+            <LocalLoader />
+          ) : (
+            pairList.map(
+              (pair, index) =>
+                pair && <ListItem key={index} index={(page - 1) * ITEMS_PER_PAGE + index + 1} pairData={pair} />
+            )
+          )}
+        </List>
       </Panel>
       <PageButtons>
         <div

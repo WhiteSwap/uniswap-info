@@ -10,7 +10,7 @@ import Percent from 'components/Percent'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import Search from 'components/Search'
 import TokenLogo from 'components/TokenLogo'
-import TxnList from 'components/TxnList'
+import { TransactionTable } from 'components/TransactionTable'
 import Warning from 'components/Warning'
 import { PAIR_BLACKLIST } from 'constants/index'
 import { useFormatPath } from 'hooks'
@@ -362,7 +362,7 @@ const PairPage = () => {
             <TYPE.main fontSize={22} fontWeight={500}>
               {t('transactions')}
             </TYPE.main>{' '}
-            {transactions ? <TxnList transactions={transactions} /> : <Loader />}
+            {transactions ? <TransactionTable transactions={transactions} /> : <Loader />}
           </DashboardWrapper>
           <DashboardWrapper style={{ marginTop: '1rem' }}>
             <RowBetween>

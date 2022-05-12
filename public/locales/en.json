@@ -93,5 +93,10 @@
   "viewTokenContractOnEtherscan": "View token contract on Etherscan",
   "viewPairContractOnEtherscan": "View pair contract on Etherscan",
   "iUnderstand": "I understand",
-  "latestBlock": "Latest synced block:"
+  "latestBlock": "Latest synced block:",
+  "transaction": {
+    "add": "Add {{tokenOneSymbol}} and {{tokenTwoSymbol}}",
+    "remove": "Remove {{tokenOneSymbol}} and {{tokenTwoSymbol}}",
+    "swap": "Swap {{tokenOneSymbol}} and {{tokenTwoSymbol}}"
+  }
 }

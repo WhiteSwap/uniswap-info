@@ -8,3 +8,7 @@ export const TOKEN_OVERRIDES: { [address: string]: { name: string; symbol: strin
     symbol: 'NGRE'
   }
 }
+
+export const TOKEN_SYMBOL_OVERRIDES: Record<string, string> = {
+  WETH: 'ETH'
+}

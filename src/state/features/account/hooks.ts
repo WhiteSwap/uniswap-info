@@ -28,7 +28,7 @@ export function useUserTransactions(account: string) {
     }
   }, [account, transactions, activeNetwork])
 
-  return transactions || {}
+  return transactions
 }
 
 /**

@@ -92,7 +92,6 @@ export const MINT_DETAILS = gql`
       }
     }
     to
-    liquidity
     amount0
     amount1
     amountUSD
@@ -115,7 +114,6 @@ export const BURN_DETAILS = gql`
     }
     sender
     to
-    liquidity
     amount0
     amount1
     amountUSD

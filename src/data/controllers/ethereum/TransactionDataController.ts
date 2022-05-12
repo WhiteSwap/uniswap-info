@@ -7,6 +7,7 @@ import {
   TransactionQuery,
   UserTransactionQueryVariables
 } from 'service/generated/ethereumGraphql'
+import { transactionsMapper } from 'data/mappers/ethereum/transactionMapper'
 
 export default class TransactionDataController implements ITransactionDataController {
   async getTransactions(allPairs: string[]) {
@@ -16,7 +17,7 @@ export default class TransactionDataController implements ITransactionDataContro
         allPairs
       }
     })
-    return result.data
+    return transactionsMapper(result.data)
   }
   async getUserTransactions(account: string) {
     const result = await client.query<TransactionQuery, UserTransactionQueryVariables>({
@@ -26,14 +27,14 @@ export default class TransactionDataController implements ITransactionDataContro
       },
       fetchPolicy: 'no-cache'
     })
-    return result.data
+    return transactionsMapper(result.data)
   }
   async getAllTransactions() {
     const result = await client.query<GlobalTransactionsResponse>({
       query: GLOBAL_TXNS
     })
 
-    return result.data.transactions.reduce<Transactions>(
+    const allTransactions = result.data.transactions.reduce<RawTransactions>(
       (acc, cur) => {
         return {
           mints: acc.mints.concat(cur.mints),
@@ -47,5 +48,6 @@ export default class TransactionDataController implements ITransactionDataContro
         burns: []
       }
     )
+    return transactionsMapper(allTransactions)
   }
 }

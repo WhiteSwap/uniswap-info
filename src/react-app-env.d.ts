@@ -12,6 +12,8 @@ declare enum SupportedNetwork {
   TRON = 'trx'
 }
 
+type TransactionType = 'swap' | 'mint' | 'burn' | 'all'
+
 type BlockHeight = {
   timestamp: string
   number: number
@@ -30,7 +32,10 @@ interface TransactionData {
     token0: Pick<Token, 'symbol'>
     token1: Pick<Token, 'symbol'>
   }
-  transaction: Transaction
+  transaction: {
+    timestamp: string
+    id: string
+  }
   to: string
 }
 
@@ -38,7 +43,6 @@ interface BurnTransaction extends TransactionData {
   amount0: string
   amount1: string
   amountUSD: string
-  liquidity: string
   sender: string
 }
 
@@ -46,10 +50,9 @@ interface MintTransaction extends TransactionData {
   amount0: string
   amount1: string
   amountUSD: string
-  liquidity: string
 }
 
-interface SwapTransactions extends TransactionData {
+interface SwapTransaction extends TransactionData {
   amount0In: string
   amount0Out: string
   amount1In: string
@@ -57,7 +60,7 @@ interface SwapTransactions extends TransactionData {
   amountUSD: string
 }
 
-interface TransactionV2 {
+interface Transaction {
   hash: string
   timestamp: number
   tokenOneAmount: number
@@ -66,18 +69,19 @@ interface TransactionV2 {
   tokenTwoSymbol: string
   amountUSD: number
   account: string
-}
-
-interface TransactionsV2 {
-  burns: TransactionV2[]
-  mints: TransactionV2[]
-  swaps: TransactionV2[]
+  type: TransactionType
 }
 
 interface Transactions {
+  burns: Transaction[]
+  mints: Transaction[]
+  swaps: Transaction[]
+}
+
+interface RawTransactions {
   burns: BurnTransaction[]
   mints: MintTransaction[]
-  swaps: SwapTransactions[]
+  swaps: SwapTransaction[]
 }
 
 interface TimeWindowItem {

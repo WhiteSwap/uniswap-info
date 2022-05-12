@@ -3,6 +3,7 @@ import DropdownSelect from 'components/DropdownSelect'
 import LocalLoader from 'components/LocalLoader'
 import Panel from 'components/Panel'
 import { RowBetween, RowFixed } from 'components/Row'
+import { TOKEN_SYMBOL_OVERRIDES } from 'constants/tokens'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
@@ -13,7 +14,7 @@ import { formattedNum, formatTime, getBlockChainScanLink } from 'utils'
 import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, Arrow } from './styled'
 
 interface ITransactionTable {
-  transactions: TransactionsV2
+  transactions: Transactions
   color?: string
 }
 
@@ -24,22 +25,20 @@ enum TransactionSortField {
   Timestamp = 'Timestamp'
 }
 
-enum TransactionType {
+enum TransactionSelect {
   All = 'All',
-  Swap = 'Swap',
-  Add = 'Add',
-  Remove = 'Remove'
+  Swaps = 'Swaps',
+  Adds = 'Adds',
+  Removes = 'Removes'
 }
-
-type TransactionItem = TransactionV2 & { type: TransactionType }
 
 function getTransactionType(type: TransactionType): string {
   switch (type) {
-    case TransactionType.Add:
+    case 'mint':
       return 'transaction.add'
-    case TransactionType.Remove:
+    case 'burn':
       return 'transaction.remove'
-    case TransactionType.Swap:
+    case 'swap':
       return 'transaction.swap'
     default:
       return ''
@@ -60,31 +59,24 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
   const [maxPage, setMaxPage] = useState(1)
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(TransactionSortField.Timestamp)
-  const [transactionType, setTransactionType] = useState(TransactionType.All)
+  const [transactionType, setTransactionType] = useState<TransactionSelect>(TransactionSelect.All)
 
-  const transactionsData = useMemo(() => {
-    return {
-      mints: transactions?.mints?.map(el => ({ ...el, type: TransactionType.Add })) || [],
-      swaps: transactions?.swaps?.map(el => ({ ...el, type: TransactionType.Swap })) || [],
-      burns: transactions?.burns?.map(el => ({ ...el, type: TransactionType.Remove })) || []
-    }
-  }, [transactions])
   const transactionList = useMemo(() => {
-    let list: TransactionItem[] = []
+    let list: Transaction[] = []
 
     switch (transactionType) {
-      case TransactionType.Add:
-        list = transactionsData.mints
+      case TransactionSelect.Adds:
+        list = [...transactions.mints]
         break
-      case TransactionType.Remove:
-        list = transactionsData.burns
+      case TransactionSelect.Removes:
+        list = [...transactions.burns]
         break
-      case TransactionType.Swap:
-        list = transactionsData.swaps
+      case TransactionSelect.Swaps:
+        list = [...transactions.swaps]
         break
-      case TransactionType.All:
+      case TransactionSelect.All:
       default:
-        list = [...transactionsData.mints, ...transactionsData.burns, ...transactionsData.swaps]
+        list = [...transactions.mints, ...transactions.burns, ...transactions.swaps]
         break
     }
 
@@ -110,9 +102,9 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
     })
 
     return list
-  }, [transactionType, sortedColumn, sortDirection, transactionsData])
+  }, [transactionType, sortedColumn, sortDirection, transactions])
 
-  const changeTransactionType = (type: TransactionType) => {
+  const changeTransactionType = (type: TransactionSelect) => {
     return () => {
       setTransactionType(type)
     }
@@ -124,14 +116,9 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
     }
   }
 
-  const ListItem = useCallback(({ item }: { item: TransactionItem }) => {
-    if (item.tokenOneSymbol === 'WETH') {
-      item.tokenOneSymbol = 'ETH'
-    }
-
-    if (item.tokenTwoSymbol === 'WETH') {
-      item.tokenTwoSymbol = 'ETH'
-    }
+  const ListItem = useCallback(({ item }: { item: Transaction }) => {
+    const tokenOneSymbol = TOKEN_SYMBOL_OVERRIDES[item.tokenOneSymbol] ?? item.tokenOneSymbol
+    const tokenTwoSymbol = TOKEN_SYMBOL_OVERRIDES[item.tokenTwoSymbol] ?? item.tokenTwoSymbol
 
     return (
       <DashGrid>
@@ -142,8 +129,8 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             style={{ fontWeight: 700 }}
           >
             {t(getTransactionType(item.type), {
-              tokenOneSymbol: item.tokenTwoSymbol,
-              tokenTwoSymbol: item.tokenOneSymbol
+              tokenOneSymbol: tokenTwoSymbol,
+              tokenTwoSymbol: tokenOneSymbol
             })}
           </CustomLink>
         </DataText>
@@ -151,10 +138,10 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         {!below780 && (
           <>
             <DataText>
-              {formattedNum(item.tokenTwoAmount) + ' '} {item.tokenTwoSymbol}
+              {formattedNum(item.tokenTwoAmount) + ' '} {tokenTwoSymbol}
             </DataText>
             <DataText>
-              {formattedNum(item.tokenOneAmount) + ' '} {item.tokenOneSymbol}
+              {formattedNum(item.tokenOneAmount) + ' '} {tokenOneSymbol}
             </DataText>
           </>
         )}
@@ -199,7 +186,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           {below780 ? (
             <RowBetween>
               <DropdownSelect
-                options={TransactionType}
+                options={TransactionSelect}
                 active={transactionType}
                 setActive={setTransactionType}
                 color={color}
@@ -208,26 +195,26 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           ) : (
             <RowFixed pl={4}>
               <SortText
-                onClick={changeTransactionType(TransactionType.All)}
-                active={transactionType === TransactionType.All}
+                onClick={changeTransactionType(TransactionSelect.All)}
+                active={transactionType === TransactionSelect.All}
               >
                 {t('all')}
               </SortText>
               <SortText
-                onClick={changeTransactionType(TransactionType.Swap)}
-                active={transactionType === TransactionType.Swap}
+                onClick={changeTransactionType(TransactionSelect.Swaps)}
+                active={transactionType === TransactionSelect.Swaps}
               >
                 {t('swaps')}
               </SortText>
               <SortText
-                onClick={changeTransactionType(TransactionType.Add)}
-                active={transactionType === TransactionType.Add}
+                onClick={changeTransactionType(TransactionSelect.Adds)}
+                active={transactionType === TransactionSelect.Adds}
               >
                 {t('adds')}
               </SortText>
               <SortText
-                onClick={changeTransactionType(TransactionType.Remove)}
-                active={transactionType === TransactionType.Remove}
+                onClick={changeTransactionType(TransactionSelect.Removes)}
+                active={transactionType === TransactionSelect.Removes}
               >
                 {t('removes')}
               </SortText>
@@ -273,12 +260,9 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         <List p={0}>
           {!transactions ? <LocalLoader /> : undefined}
           {transactionList.length > 0 ? (
-            transactionList.slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE).map(item => (
-              <div key={item.hash}>
-                <ListItem item={item} />
-                <Divider />
-              </div>
-            ))
+            transactionList
+              .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
+              .map(item => <ListItem key={item.hash} item={item} />)
           ) : (
             <EmptyCard>{t('noRecentTransactions')}</EmptyCard>
           )}

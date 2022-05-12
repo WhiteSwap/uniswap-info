@@ -61,7 +61,7 @@ export function useTokenTransactions(tokenAddress: string) {
     checkForTransactions()
   }, [tokenTransactions, tokenAddress, tokenPairs, activeNetwork])
 
-  return tokenTransactions || []
+  return tokenTransactions
 }
 
 export function useTokenPairsIds(tokenAddress: string) {

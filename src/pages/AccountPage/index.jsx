@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
-import TxnList from 'components/TxnList'
 import { useParams, Navigate } from 'react-router-dom'
 import Panel from 'components/Panel'
 import { formattedNum, getBlockChainScanLink, getViewOnScanKey, isValidAddress } from 'utils'
@@ -23,6 +22,8 @@ import Search from 'components/Search'
 import { useTranslation } from 'react-i18next'
 import { AccountWrapper, DropdownWrapper, Flyout, Header, MenuRow, Warning } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { TransactionTable } from 'components/TransactionTable'
+import LocalLoader from 'components/LocalLoader'
 
 function AccountPage() {
   const { t } = useTranslation()
@@ -253,7 +254,7 @@ function AccountPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          <TxnList transactions={transactions} />
+          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
         </DashboardWrapper>
 
         <DashboardWrapper>

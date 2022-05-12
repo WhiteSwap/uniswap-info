@@ -323,14 +323,9 @@ function TopTokenList({ tokens, itemMax = 10 }) {
         <Divider />
         <List p={0}>
           {filteredList &&
-            filteredList.map((item, index) => {
-              return (
-                <div key={index}>
-                  <ListItem key={index} index={(page - 1) * itemMax + index + 1} item={item} />
-                  <Divider />
-                </div>
-              )
-            })}
+            filteredList.map((item, index) => (
+              <ListItem key={index} index={(page - 1) * itemMax + index + 1} item={item} />
+            ))}
         </List>
       </Panel>
       <PageButtons>

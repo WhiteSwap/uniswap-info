@@ -4,7 +4,6 @@ import { AutoRow, RowBetween } from '../components/Row'
 import { AutoColumn } from '../components/Column'
 import PairList from '../components/PairList'
 import TopTokenList from '../components/TokenList'
-import TxnList from '../components/TxnList'
 import Search from '../components/Search'
 import GlobalStats from '../components/GlobalStats'
 
@@ -25,6 +24,8 @@ import Percent from 'components/Percent'
 import DropdownSelect from 'components/DropdownSelect'
 import { SeriesChart } from 'components/SeriesChart'
 import { useState } from 'react'
+import { TransactionTable } from 'components/TransactionTable'
+import LocalLoader from 'components/LocalLoader'
 
 const ListOptions = styled(AutoRow)`
   height: 40px;
@@ -193,7 +194,7 @@ function GlobalPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          <TxnList transactions={transactions} />
+          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
         </DashboardWrapper>
       </ContentWrapper>
     </PageWrapper>

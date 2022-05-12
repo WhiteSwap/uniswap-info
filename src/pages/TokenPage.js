@@ -10,7 +10,6 @@ import Loader from 'components/LocalLoader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Column, { AutoColumn } from 'components/Column'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
-import TxnList from 'components/TxnList'
 import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
@@ -38,6 +37,7 @@ import { TYPE, DashboardWrapper } from 'Theme'
 import { useTranslation } from 'react-i18next'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import Percent from 'components/Percent'
+import { TransactionTable } from 'components/TransactionTable'
 
 const PanelWrapper = styled.div`
   grid-template-columns: repeat(3, 1fr);
@@ -360,7 +360,7 @@ function TokenPage() {
             <TYPE.main fontSize={22} fontWeight={500}>
               {t('transactions')}
             </TYPE.main>
-            {transactions ? <TxnList color={backgroundColor} transactions={transactions} /> : <Loader />}
+            {transactions ? <TransactionTable color={backgroundColor} transactions={transactions} /> : <Loader />}
           </DashboardWrapper>
           <DashboardWrapper style={{ marginTop: '1.5rem' }}>
             <TYPE.main fontSize={22} fontWeight={500}>

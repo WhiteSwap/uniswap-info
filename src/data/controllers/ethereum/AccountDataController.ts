@@ -204,10 +204,10 @@ export default class AccountDataController implements IAccountDataController {
           const pairData = allPairs[entry.pair.id]
           return topLps.push({
             user: entry.user,
-            pairName: pairData.token0.symbol + '-' + pairData.token1.symbol,
+            pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
             pairAddress: entry.pair.id,
-            token0: pairData.token0.id,
-            token1: pairData.token1.id,
+            token0: pairData.tokenOne.id,
+            token1: pairData.tokenTwo.id,
             usd:
               (parseFloat(entry.liquidityTokenBalance) / parseFloat(pairData.totalSupply)) *
               parseFloat(pairData.reserveUSD)

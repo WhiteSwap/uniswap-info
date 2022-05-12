@@ -35,8 +35,6 @@ export const DashGrid = styled.div`
   grid-template-areas: 'txn value time';
   border-top: 1px solid ${({ theme }) => theme.bg7};
   padding: 1rem 2rem;
-  height: fit-content;
-  border: unset;
 
   > * {
     justify-content: flex-end;
