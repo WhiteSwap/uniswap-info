@@ -1,14 +1,6 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import Row from 'components/Row'
-
-export const AccountWrapper = styled.div`
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 6px 16px;
-  border-radius: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+import { Bookmark } from 'react-feather'
 
 export const Header = styled.div``
 
@@ -52,4 +44,20 @@ export const Warning = styled.div`
   border-radius: 10px;
   margin-bottom: 1rem;
   width: calc(100% - 2rem);
+`
+
+export const StyledBookmark = styled(Bookmark)<{ $saved: boolean }>`
+  color: ${({ theme }) => theme.text1};
+  cursor: pointer;
+  transition: 0.25s;
+
+  :hover {
+    opacity: 0.8;
+  }
+
+  ${({ $saved = false, theme }) =>
+    $saved &&
+    css`
+      fill: ${theme.text1};
+    `}
 `

@@ -14,15 +14,16 @@ import { DashboardWrapper, TYPE } from 'Theme'
 import { ButtonDropdown } from 'components/ButtonStyled'
 import { PageWrapper, ContentWrapper, StyledIcon } from 'components'
 import DoubleTokenLogo from 'components/DoubleLogo'
-import { Bookmark, Activity } from 'react-feather'
+import { Activity } from 'react-feather'
 import Link from 'components/Link'
 import { FEE_WARNING_TOKENS } from 'constants/index'
 import { BasicLink } from 'components/Link'
 import { useMedia } from 'react-use'
 import Search from 'components/Search'
 import { useTranslation } from 'react-i18next'
-import { AccountWrapper, DropdownWrapper, Flyout, Header, MenuRow, Warning } from './styled'
+import { DropdownWrapper, Flyout, Header, MenuRow, Warning, StyledBookmark } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { useSavedAccounts } from 'state/features/user/hooks'
 
 function AccountPage() {
   const { t } = useTranslation()
@@ -33,6 +34,9 @@ function AccountPage() {
   if (!isValidAddress(accountAddress, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
+
+  const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
+  const isSaved = savedAccounts.find(acc => acc === accountAddress) ? true : false
 
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
@@ -121,11 +125,13 @@ function AccountPage() {
                 <TYPE.main fontSize={14}>{t(getViewOnScanKey(activeNetworkId))}</TYPE.main>
               </Link>
             </span>
-            <AccountWrapper>
-              <StyledIcon>
-                <Bookmark style={{ opacity: 0.4 }} />
-              </StyledIcon>
-            </AccountWrapper>
+
+            <StyledBookmark
+              $saved={isSaved}
+              onClick={() => {
+                isSaved ? removeAccount(accountAddress) : addAccount(accountAddress)
+              }}
+            />
           </RowBetween>
         </Header>
         {showWarning && <Warning>{t('feesCantBeCalc')}</Warning>}
