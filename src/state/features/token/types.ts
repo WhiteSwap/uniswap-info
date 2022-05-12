@@ -1,34 +1,19 @@
-import { MappedToken, MappedTokenDayData } from 'data/mappers/tokenMappers.types'
-
-export interface TokenDetails extends MappedToken {
+export interface TokenDetails extends Token {
   transactions?: Transactions
-  chartData?: MappedTokenDayData[]
+  chartData?: TokenDayData[]
   tokenPairs?: string[]
   timeWindowData?: Record<string, Record<string, TimeWindowItem[]>>
-}
-
-export type TokenDayData = {
-  dailyVolumeETH?: string
-  dailyVolumeToken?: string
-  dailyVolumeUSD: number
-  date: number
-  id?: string
-  priceUSD: string
-  totalLiquidityETH?: string
-  totalLiquidityToken?: string
-  totalLiquidityUSD: string
-  dayString?: number
 }
 
 export type TokenState = Record<SupportedNetwork, Record<string, TokenDetails>>
 
 export type UpdateTokenPayload = ParamsWithNetwork<{
   tokenAddress: string
-  data: MappedToken
+  data: Token
 }>
 
 export type UpdateTopTokensPayload = ParamsWithNetwork<{
-  topTokens: MappedToken[]
+  topTokens: Token[]
 }>
 
 export type UpdateTransactionsPayload = ParamsWithNetwork<{
@@ -38,7 +23,7 @@ export type UpdateTransactionsPayload = ParamsWithNetwork<{
 
 export type UpdateChartDataPayload = ParamsWithNetwork<{
   address: string
-  chartData: MappedTokenDayData[]
+  chartData: TokenDayData[]
 }>
 
 export type UpdatePriceDataPayload = ParamsWithNetwork<{

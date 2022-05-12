@@ -1,11 +1,10 @@
 import { TOKEN_OVERRIDES } from 'constants/tokens'
-import { ITokenDataController } from 'data/types/TokenController.interface'
+import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import { PRICES_BY_BLOCK } from 'service/queries/ethereum/global'
 import { GET_TOKENS, TOKEN_CHART, TOKEN_DATA, TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { TokensQuery, Token as ETHToken, TokenDataQuery } from 'service/generated/ethereumGraphql'
-import { TokenDayData } from 'state/features/token/types'
 import {
   getBlockFromTimestamp,
   get2DayPercentChange,
@@ -13,7 +12,7 @@ import {
   getBlocksFromTimestamps,
   splitQuery
 } from 'utils'
-import { tokenChartDataMapper, tokenMapper, topTokensMapper } from 'data/mappers/tokenMappers'
+import { tokenChartDataMapper, tokenMapper } from 'data/mappers/ethereum/tokenMappers'
 
 async function fetchTokens(block?: number) {
   return client.query<TokensQuery>({
@@ -63,7 +62,7 @@ function parseToken(
   const currentLiquidityUSD = +data?.totalLiquidity * price * +data?.derivedETH
   const oldLiquidityUSD = oneDayTotalLiquidity * priceOld * oneDayDerivedEth
 
-  const tokenInfo: Token = {
+  const tokenInfo: EthereumToken = {
     ...data,
     totalLiquidity: +data.totalLiquidity,
     tradeVolumeUSD: +data.tradeVolumeUSD,
@@ -90,7 +89,7 @@ function parseToken(
     tokenInfo.oneDayTxns = +data.txCount
   }
 
-  return tokenInfo
+  return tokenMapper(tokenInfo)
 }
 
 export default class TokenDataController implements ITokenDataController {
@@ -149,7 +148,7 @@ export default class TokenDataController implements ITokenDataController {
           })
       )
 
-      return topTokensMapper(bulkResults)
+      return bulkResults
     } catch (e) {
       return []
     }
@@ -173,7 +172,7 @@ export default class TokenDataController implements ITokenDataController {
       const twoDayResult = await fetchTokenData(address, twoDayBlock)
       const twoDayData = { ...twoDayResult.data.tokens[0] }
 
-      return tokenMapper(parseToken(data, price, priceOld, oneDayData, twoDayData))
+      return parseToken(data, price, priceOld, oneDayData, twoDayData)
     }
     return
   }

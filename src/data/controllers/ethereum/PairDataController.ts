@@ -1,6 +1,6 @@
 import { TOKEN_OVERRIDES } from 'constants/tokens'
-import { pairListMapper } from 'data/mappers/pairMappers'
-import { IPairDataController } from 'data/types/PairController.interface'
+import { pairListMapper } from 'data/mappers/ethereum/pairMappers'
+import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {
@@ -142,7 +142,7 @@ export default class PairDataController implements IPairDataController {
       return { ...obj, [cur.id]: cur }
     }, {})
 
-    const pairData: Pair[] = await Promise.all(
+    const pairData: EthereumPair[] = await Promise.all(
       current &&
         current.data.pairs.map(async (pair: { id: string }) => {
           let oneDayHistory = oneDayData?.[pair.id]

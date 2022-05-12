@@ -1,4 +1,4 @@
-import { IGlobalDataController } from 'data/types/GlobalController.interface'
+import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 import { GlobalDataMock, HealthStatusMock, PriceMock } from '__mocks__/global'
 import { client } from 'service/client'
 import { GlobalChartQuery, GlobalChartQueryVariables } from 'service/generated/tronGraphql'

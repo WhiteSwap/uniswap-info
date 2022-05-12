@@ -32,7 +32,6 @@ export const TOKEN_CHART = gql`
     }
   }
 `
-// ! need mapped
 export const GET_TOKENS = gql`
   ${TOKEN_FIELDS}
   query Tokens($block: Block_height) {
@@ -41,7 +40,7 @@ export const GET_TOKENS = gql`
     }
   }
 `
-// ! need mapped
+
 export const TOKEN_DATA = gql`
   ${TOKEN_FIELDS}
   query TokenData($tokenAddress: String!, $block: Int) {

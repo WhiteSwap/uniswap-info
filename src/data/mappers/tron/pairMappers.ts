@@ -1,6 +1,4 @@
-import { MappedPair } from './pairMappers.types'
-
-export function pairMapper(payload: any): MappedPair {
+export function pairMapper(payload: TronPair): Pair {
   return {
     id: payload.id ? payload.id.toString() : '',
     token0: {
@@ -8,30 +6,20 @@ export function pairMapper(payload: any): MappedPair {
       symbol: payload.token0?.symbol ? payload.token0.symbol.toString() : '',
       name: payload.token0?.name ? payload.token0.name.toString() : '',
       totalLiquidity: 0,
-      derivedCoin: payload.token0?.derivedETH
-        ? +payload.token0.derivedETH
-        : payload.token0?.derivedTRX
-        ? +payload.token0.derivedTRX
-        : 0,
-      __typename: payload.token0?.__typename ? payload.token0.__typename.toString() : ''
+      derived: payload.token0?.derivedTRX ? +payload.token0.derivedTRX : 0
     },
     token1: {
       id: payload.token1?.id ? payload.token1?.id.toString() : '',
       symbol: payload.token1?.symbol ? payload.token1.symbol.toString() : '',
       name: payload.token1?.name ? payload.token1.name.toString() : '',
       totalLiquidity: 0,
-      derivedCoin: payload.token1?.derivedETH
-        ? +payload.token1.derivedETH
-        : payload.token1?.derivedTRX
-        ? +payload.token1.derivedTRX
-        : 0,
-      __typename: payload.token1?.__typename ? payload.token1.__typename.toString() : ''
+      derived: payload.token1?.derivedTRX ? +payload.token1.derivedTRX : 0
     },
     reserve0: payload.reserve0 ? payload.reserve0.toString() : '',
     reserve1: payload.reserve1 ? payload.reserve1.toString() : '',
     reserveUSD: payload.reserveUSD ? payload.reserveUSD.toString() : '',
     totalSupply: payload.totalSupply ? payload.totalSupply.toString() : '',
-    trackedReserveCoin: payload.trackedReserveCoin ? payload.trackedReserveCoin.toString() : '',
+    trackedReserveCoin: payload.trackedReserveTRX ? payload.trackedReserveTRX.toString() : '',
     volumeUSD: payload.volumeUSD ? payload.volumeUSD.toString() : '',
     untrackedVolumeUSD: payload.untrackedVolumeUSD ? payload.untrackedVolumeUSD.toString() : '',
     token0Price: payload.token0Price ? payload.token0Price.toString() : '',
@@ -48,6 +36,6 @@ export function pairMapper(payload: any): MappedPair {
   }
 }
 
-export function pairListMapper(payload: any[]): MappedPair[] {
+export function pairListMapper(payload: TronPair[]): Pair[] {
   return payload.map(pair => pairMapper(pair))
 }
