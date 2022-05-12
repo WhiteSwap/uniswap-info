@@ -1,38 +1,28 @@
 export function pairMapper(payload: any): Pair {
   return {
-    id: payload.id ? payload.id.toString() : '',
-    token0: {
-      id: payload.token0?.id ? payload.token0.id.toString() : '',
-      symbol: payload.token0?.symbol ? payload.token0.symbol.toString() : '',
-      name: payload.token0?.name ? payload.token0.name.toString() : '',
-      totalLiquidity: 0,
-      derived: payload.token0?.derivedTRX ? +payload.token0.derivedTRX : 0
+    id: payload.id || '',
+    tokenOne: {
+      id: payload.token0?.id || '',
+      symbol: payload.token0?.symbol || '',
+      derivedPrice: payload.token0?.derivedTRX ? +payload.token0.derivedTRX : 0
     },
-    token1: {
-      id: payload.token1?.id ? payload.token1?.id.toString() : '',
-      symbol: payload.token1?.symbol ? payload.token1.symbol.toString() : '',
-      name: payload.token1?.name ? payload.token1.name.toString() : '',
-      totalLiquidity: 0,
-      derived: payload.token1?.derivedTRX ? +payload.token1.derivedTRX : 0
+    tokenTwo: {
+      id: payload.token1?.id || '',
+      symbol: payload.token1?.symbol || '',
+      derivedPrice: payload.token1?.derivedTRX ? +payload.token1.derivedTRX : 0
     },
-    reserve0: payload.reserve0 ? payload.reserve0.toString() : '',
-    reserve1: payload.reserve1 ? payload.reserve1.toString() : '',
-    reserveUSD: payload.reserveUSD ? payload.reserveUSD.toString() : '',
-    totalSupply: payload.totalSupply ? payload.totalSupply.toString() : '',
-    trackedReserveCoin: payload.trackedReserveTRX ? payload.trackedReserveTRX.toString() : '',
-    volumeUSD: payload.volumeUSD ? payload.volumeUSD.toString() : '',
+    dayFees: +payload.oneDayVolumeUSD * 0.003,
+    apy: (+payload.oneDayVolumeUSD * 0.003 * 365 * 100) / +payload.reserveUSD,
+    reserveOne: payload.reserve0 ? +payload.reserve0 : 0,
+    reserveTwo: payload.reserve1 ? +payload.reserve1 : 0,
+    totalLiquidityUSD: payload.reserveUSD ? +payload.reserveUSD : 0,
     untrackedVolumeUSD: payload.untrackedVolumeUSD ? payload.untrackedVolumeUSD.toString() : '',
-    token0Price: payload.token0Price ? payload.token0Price.toString() : '',
-    token1Price: payload.token1Price ? payload.token1Price.toString() : '',
-    createdAtTimestamp: payload.createdAtTimestamp ? payload.createdAtTimestamp.toString() : '',
-    oneDayVolumeUSD: payload.oneDayVolumeUSD ? +payload.oneDayVolumeUSD : 0,
-    oneWeekVolumeUSD: payload.oneWeekVolumeUSD ? +payload.oneWeekVolumeUSD : 0,
+    dayVolumeUSD: payload.oneDayVolumeUSD ? +payload.oneDayVolumeUSD : 0,
+    weekVolumeUSD: payload.oneWeekVolumeUSD ? +payload.oneWeekVolumeUSD : 0,
     volumeChangeUSD: payload.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
     oneDayVolumeUntracked: payload.oneDayVolumeUntracked ? +payload.oneDayVolumeUntracked : 0,
     volumeChangeUntracked: payload.volumeChangeUntracked ? +payload.volumeChangeUntracked : 0,
-    trackedReserveUSD: payload.trackedReserveUSD ? +payload.trackedReserveUSD : 0,
-    liquidityChangeUSD: payload.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0,
-    __typename: payload.__typename ? payload.__typename.toString() : ''
+    liquidityChangeUSD: payload.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0
   }
 }
 

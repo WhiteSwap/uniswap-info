@@ -120,7 +120,7 @@ interface TokenDayData {
 
 type PairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>
 
-interface PairV2 {
+interface Pair {
   id: string
   totalLiquidityUSD: number
   liquidityChangeUSD: number
@@ -128,18 +128,17 @@ interface PairV2 {
   volumeChangeUSD: number
   weekVolumeUSD: number
   dayFees: number
-  feeChangeUSD: number
   apy: number
   reserveOne: number
   reserveTwo: number
-  tokenOne: Pick<Token, 'id' | 'symbol' | 'derivedETH'>
-  tokenTwo: Pick<Token, 'id' | 'symbol' | 'derivedETH'>
+  tokenOne: Pick<Token, 'id' | 'symbol' | 'derivedPrice'>
+  tokenTwo: Pick<Token, 'id' | 'symbol' | 'derivedPrice'>
   oneDayVolumeUntracked?: number
   untrackedVolumeUSD?: string
   volumeChangeUntracked?: number
 }
 
-interface Pair {
+interface OldPair {
   createdAtTimestamp: string
   id: string
   liquidityChangeUSD: number
@@ -163,9 +162,9 @@ interface Pair {
   __typename?: string
 }
 
-type PositionPair = Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>
+type PositionPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>
 
-type SnapshotPair = Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
+type SnapshotPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
   token0: Pick<Token, 'id'>
   token1: Pick<Token, 'id'>
 }

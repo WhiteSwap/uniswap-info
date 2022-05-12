@@ -94,12 +94,12 @@ export default class PairDataController implements IPairDataController {
   async getPairList(price: number) {
     const {
       data: { pairs }
-    } = await client.query({
+    } = await client.query<{ pairs: Array<{ id: string }> }>({
       query: PAIRS_CURRENT
     })
 
     // format as array of addresses
-    const formattedPairs = pairs.map((pair: Pair) => {
+    const formattedPairs = pairs.map(pair => {
       return pair.id
     })
 
