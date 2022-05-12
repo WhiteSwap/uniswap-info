@@ -57,6 +57,23 @@ interface SwapTransactions extends TransactionData {
   amountUSD: string
 }
 
+interface TransactionV2 {
+  id: string
+  timestamp: string
+  tokenOneAmount: number
+  tokenOneSymbol: string
+  tokenTwoAmount: number
+  tokenTwoSymbol: string
+  amountUSD: number
+  account: string
+}
+
+interface TransactionsV2 {
+  burns: TransactionV2[]
+  mints: TransactionV2[]
+  swaps: TransactionV2[]
+}
+
 interface Transactions {
   burns: BurnTransaction[]
   mints: MintTransaction[]
@@ -113,6 +130,25 @@ interface Pair {
   volumeChangeUSD: number
   volumeChangeUntracked: number
   volumeUSD: string
+}
+
+interface PairV2 {
+  id: string
+  totalLiquidityUSD: number
+  liquidityChangeUSD: number
+  dayVolumeUSD: number
+  volumeChangeUSD: number
+  weekVolumeUSD: number
+  dayFees: number
+  feeChangeUSD: number
+  apy: number
+  reserveOne: number
+  reserveTwo: number
+  tokenOne: Pick<Token, 'id' | 'symbol' | 'derivedETH'>
+  tokenTwo: Pick<Token, 'id' | 'symbol' | 'derivedETH'>
+  oneDayVolumeUntracked?: number
+  untrackedVolumeUSD?: string
+  volumeChangeUntracked?: number
 }
 
 type PositionPair = Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>

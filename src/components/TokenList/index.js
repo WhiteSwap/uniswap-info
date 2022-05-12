@@ -163,31 +163,24 @@ function TopTokenList({ tokens, itemMax = 10 }) {
     setPage(1)
   }, [tokens])
 
-  const formattedTokens = useMemo(() => {
-    return (
-      tokens &&
-      Object.keys(tokens)
-        .filter(key => {
-          return !OVERVIEW_TOKEN_BLACKLIST.includes(key)
-        })
-        .map(key => tokens[key])
-    )
+  const whiteListTokens = useMemo(() => {
+    return tokens && Object.values(tokens).filter(token => !OVERVIEW_TOKEN_BLACKLIST.includes(token.id))
   }, [tokens])
 
   useEffect(() => {
-    if (tokens && formattedTokens) {
+    if (tokens && whiteListTokens) {
       let extraPages = 1
-      if (formattedTokens.length % itemMax === 0) {
+      if (whiteListTokens.length % itemMax === 0) {
         extraPages = 0
       }
-      setMaxPage(Math.floor(formattedTokens.length / itemMax) + extraPages)
+      setMaxPage(Math.floor(whiteListTokens.length / itemMax) + extraPages)
     }
-  }, [tokens, formattedTokens, itemMax])
+  }, [tokens, whiteListTokens, itemMax])
 
   const filteredList = useMemo(() => {
     return (
-      formattedTokens &&
-      formattedTokens
+      whiteListTokens &&
+      whiteListTokens
         .sort((a, b) => {
           if (sortedColumn === SORT_FIELD.SYMBOL || sortedColumn === SORT_FIELD.NAME) {
             return a[sortedColumn] > b[sortedColumn] ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
@@ -198,7 +191,7 @@ function TopTokenList({ tokens, itemMax = 10 }) {
         })
         .slice(itemMax * (page - 1), page * itemMax)
     )
-  }, [formattedTokens, itemMax, page, sortDirection, sortedColumn])
+  }, [whiteListTokens, itemMax, page, sortDirection, sortedColumn])
 
   const ListItem = ({ item, index }) => {
     return (
@@ -255,7 +248,7 @@ function TopTokenList({ tokens, itemMax = 10 }) {
               fontWeight="500"
               onClick={() => {
                 setSortedColumn(SORT_FIELD.NAME)
-                setSortDirection(sortedColumn !== SORT_FIELD.NAMe ? true : !sortDirection)
+                setSortDirection(sortedColumn !== SORT_FIELD.NAME ? true : !sortDirection)
               }}
             >
               {below680 ? t('symbol') : t('name')}{' '}
