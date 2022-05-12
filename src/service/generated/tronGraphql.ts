@@ -15,8 +15,9 @@ export type Scalars = {
 export type RootQuery = {
   __typename?: 'RootQuery'
   token?: Maybe<Token>
+  tokens?: Maybe<Array<Maybe<Token>>>
   tokens_collection?: Maybe<TokenCollection>
-  whiteSwapDayDatas?: Maybe<Array<Maybe<WhiteSwapDayData>>>
+  whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
 }
 
 export type RootQueryTokenArgs = {
@@ -24,20 +25,36 @@ export type RootQueryTokenArgs = {
 }
 
 export type RootQueryWhiteSwapDayDatasArgs = {
-  startTime?: InputMaybe<Scalars['Int']>
+  startTime: Scalars['Int']
 }
 
 /** Crypto token */
 export type Token = {
   __typename?: 'Token'
+  /** Token derived TRX */
+  derivedTRX: Scalars['Float']
   /** Token address */
-  address?: Maybe<Scalars['String']>
-  /** Token code */
-  code?: Maybe<Scalars['String']>
-  /** Token id */
-  id?: Maybe<Scalars['Int']>
+  id: Scalars['String']
+  /** Token liquidity Change USD */
+  liquidityChangeUSD: Scalars['Int']
   /** Token name */
-  name?: Maybe<Scalars['String']>
+  name: Scalars['String']
+  /** Token one Day Txns */
+  oneDayTxns: Scalars['Int']
+  /** Token price Change USD */
+  priceChangeUSD: Scalars['Int']
+  /** Token price USD */
+  priceUSD: Scalars['Float']
+  /** Token symbol */
+  symbol: Scalars['String']
+  /** Token total Liquidity USD */
+  totalLiquidityUSD: Scalars['Float']
+  /** Token trade Volume USD */
+  tradeVolumeUSD: Scalars['Float']
+  /** Token txn Change */
+  txnChange: Scalars['Int']
+  /** Token volume Change USD */
+  volumeChangeUSD: Scalars['Int']
 }
 
 /** Tokens list */
@@ -51,11 +68,11 @@ export type TokenCollection = {
 export type WhiteSwapDayData = {
   __typename?: 'WhiteSwapDayData'
   /** Data dailyVolumeUSD */
-  dailyVolumeUSD?: Maybe<Scalars['String']>
+  dailyVolumeUSD: Scalars['Float']
   /** Data date */
-  date?: Maybe<Scalars['Int']>
+  date: Scalars['Int']
   /** Data totalLiquidityUSD */
-  totalLiquidityUSD?: Maybe<Scalars['String']>
+  totalLiquidityUSD: Scalars['Float']
 }
 
 export type GlobalChartQueryVariables = Exact<{
@@ -66,8 +83,8 @@ export type GlobalChartQuery = {
   __typename?: 'RootQuery'
   whiteSwapDayDatas?: Array<{
     __typename?: 'WhiteSwapDayData'
-    date?: number | null
-    dailyVolumeUSD?: string | null
-    totalLiquidityUSD?: string | null
-  } | null> | null
+    date: number
+    dailyVolumeUSD: number
+    totalLiquidityUSD: number
+  }> | null
 }
