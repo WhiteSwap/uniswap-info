@@ -1,5 +1,3 @@
-import { TokenDayData } from 'state/features/token/types'
-
 export interface ITokenDataController {
   getTopTokens(price: number, priceOld: number): Promise<Token[]>
   getTokenData(address: string, price: number, priceOld: number): Promise<Token | undefined>

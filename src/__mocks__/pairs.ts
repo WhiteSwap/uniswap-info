@@ -1,27 +1,25 @@
-export const PairListMock = [
+export const TronPairListMock = [
   {
     id: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
     token0: {
       id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-      symbol: 'ETH',
+      symbol: 'TRX',
       name: 'Ether (Wrapped)',
       totalLiquidity: 11.049537683966,
-      derivedETH: 1,
-      __typename: 'Token'
+      derivedTRX: 1
     },
     token1: {
       id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       symbol: 'USDT',
       name: 'Tether USD',
       totalLiquidity: 48129.157681,
-      derivedETH: 0.0003604278,
-      __typename: 'Token'
+      derivedTRX: 0.0003604278
     },
     reserve0: '9.266108317973354039',
     reserve1: '25708.635871',
     reserveUSD: '51481.78070956633144714465392160739',
     totalSupply: '0.000062912561080272',
-    trackedReserveETH: '18.53221663594670807799999999999999',
+    trackedReserveTRX: '18.53221663594670807799999999999999',
     volumeUSD: '9944229.970965634522059318704069328',
     untrackedVolumeUSD: '9944229.970965634522059318704069327',
     token0Price: '0.0003604278486213172301770472261865271',
@@ -43,22 +41,20 @@ export const PairListMock = [
       symbol: 'WSD',
       name: 'WhiteSwap',
       totalLiquidity: 1895.03028999,
-      derivedETH: 0.0034738345,
-      __typename: 'Token'
+      derivedTRX: 0.0034738345
     },
     token1: {
       id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       symbol: 'USDT',
       name: 'Tether USD',
       totalLiquidity: 48129.157681,
-      derivedETH: 0.00036042784,
-      __typename: 'Token'
+      derivedTRX: 0.00036042784
     },
     reserve0: '1895.030289991385010155',
     reserve1: '18264.464529',
     reserveUSD: '36574.75886226615075655372060495971',
     totalSupply: '0.000428489367852875',
-    trackedReserveETH: '13.16604331281566020765041490528333',
+    trackedReserveTRX: '13.16604331281566020765041490528333',
     volumeUSD: '44363.72607300615991153899352971799',
     untrackedVolumeUSD: '43456.96721309563004793491661598112',
     token0Price: '0.1037550423108484118513519000959921',
@@ -80,22 +76,20 @@ export const PairListMock = [
       symbol: 'TUSD',
       name: 'TrueUSD',
       totalLiquidity: 4092.470334426,
-      derivedETH: 0.00039,
-      __typename: 'Token'
+      derivedTRX: 0.00039
     },
     token1: {
       id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       symbol: 'USDT',
       name: 'Tether USD',
       totalLiquidity: 48129.157681,
-      derivedETH: 0.000360427,
-      __typename: 'Token'
+      derivedTRX: 0.000360427
     },
     reserve0: '4092.47033442614552979',
     reserve1: '4100.470402',
     reserveUSD: '8196.012191620334004405554470564732',
     totalSupply: '0.00407475789640052',
-    trackedReserveETH: '3.194028470604969453777262803072883',
+    trackedReserveTRX: '3.194028470604969453777262803072883',
     volumeUSD: '1092242.139844892334301698753233004',
     untrackedVolumeUSD: '1092242.139844892334301698753233004',
     token0Price: '0.9980489878502836050442975493522414',
@@ -117,22 +111,20 @@ export const PairListMock = [
       symbol: 'DAI',
       name: 'Dai Stablecoin',
       totalLiquidity: 191.07530863,
-      derivedETH: 0.000307096,
-      __typename: 'Token'
+      derivedTRX: 0.000307096
     },
     token1: {
       id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       symbol: 'USDT',
       name: 'Tether USD',
       totalLiquidity: 48129.157681,
-      derivedETH: 0.00036042,
-      __typename: 'Token'
+      derivedTRX: 0.00036042
     },
     reserve0: '53.62438106285687384',
     reserve1: '53.58426',
     reserveUSD: '106.1527345344743259839624738830722',
     totalSupply: '0.000053594916011245',
-    trackedReserveETH: '0.03320768277514886329627897118087156',
+    trackedReserveTRX: '0.03320768277514886329627897118087156',
     volumeUSD: '23462.19581563520220154065339807195',
     untrackedVolumeUSD: '23462.19581563520220154065339807195',
     token0Price: '1.000748747166740267384489400432142',

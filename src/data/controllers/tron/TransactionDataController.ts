@@ -1,4 +1,4 @@
-import { ITransactionDataController } from 'data/types/TransactionController.interface'
+import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
 import { TransactionsMock } from '__mocks__/transactions'
 
 export default class TransactionDataController implements ITransactionDataController {
