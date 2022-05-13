@@ -159,11 +159,13 @@ function AccountPage() {
               <Flyout>
                 <AutoColumn gap="0px">
                   {positions?.map((p, i) => {
-                    if (p.pair.token1.symbol === 'WETH') {
-                      p.pair.token1.symbol = 'ETH'
+                    let token0Symbol = p.pair.token0.symbol
+                    let token1Symbol = p.pair.token1.symbol
+                    if (token0Symbol === 'WETH') {
+                      token0Symbol = 'ETH'
                     }
-                    if (p.pair.token0.symbol === 'WETH') {
-                      p.pair.token0.symbol = 'ETH'
+                    if (token1Symbol === 'WETH') {
+                      token1Symbol = 'ETH'
                     }
                     return (
                       p.pair.id !== activePosition?.pair.id && (
@@ -176,7 +178,7 @@ function AccountPage() {
                         >
                           <DoubleTokenLogo a0={p.pair.token0.id} a1={p.pair.token1.id} size={16} />
                           <TYPE.body ml={'16px'}>
-                            {p.pair.token0.symbol}-{p.pair.token1.symbol} {t('position')}
+                            {token0Symbol}-{token1Symbol} {t('position')}
                           </TYPE.body>
                         </MenuRow>
                       )

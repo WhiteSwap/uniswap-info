@@ -13,14 +13,14 @@ export const DropdownWrapper = styled.div`
 
 export const Flyout = styled.div`
   position: absolute;
-  top: 38px;
+  top: 48px;
   left: -1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg1};
-  z-index: 999;
+  width: calc(100% + 2px);
+  background-color: ${({ theme }) => theme.bg2};
+  z-index: 10;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
-  padding-top: 4px;
+  padding: 10px 0;
   border: 1px solid #edeef2;
   border-top: none;
 `
@@ -32,7 +32,7 @@ export const MenuRow = styled(Row)`
 
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.bg1};
   }
 `
 
