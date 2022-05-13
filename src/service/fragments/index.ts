@@ -85,9 +85,11 @@ export const MINT_DETAILS = gql`
     }
     pair {
       token0 {
+        id
         symbol
       }
       token1 {
+        id
         symbol
       }
     }
@@ -106,9 +108,11 @@ export const BURN_DETAILS = gql`
     }
     pair {
       token0 {
+        id
         symbol
       }
       token1 {
+        id
         symbol
       }
     }
@@ -128,9 +132,11 @@ export const SWAP_DETAILS = gql`
     }
     pair {
       token0 {
+        id
         symbol
       }
       token1 {
+        id
         symbol
       }
     }

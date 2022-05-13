@@ -1,4 +1,3 @@
-import { TOKEN_OVERRIDES } from 'constants/tokens'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
@@ -10,7 +9,8 @@ import {
   get2DayPercentChange,
   getPercentChange,
   getBlocksFromTimestamps,
-  splitQuery
+  splitQuery,
+  parseTokenInfo
 } from 'utils'
 import { tokenChartDataMapper } from 'data/mappers/ethereum/tokenMappers'
 
@@ -76,8 +76,8 @@ function parseToken(
     liquidityChangeUSD: getPercentChange(currentLiquidityUSD ?? 0, oldLiquidityUSD ?? 0),
     oneDayTxns,
     txnChange,
-    name: TOKEN_OVERRIDES[data.id]?.name ?? data.name,
-    symbol: TOKEN_OVERRIDES[data.id]?.symbol ?? data.symbol
+    name: parseTokenInfo('name', data.id, data.name),
+    symbol: parseTokenInfo('symbol', data.id, data.symbol)
   }
 
   // new tokens

@@ -1,10 +1,11 @@
 import { Token as TronToken, TokensQuery } from 'service/generated/tronGraphql'
+import { parseTokenInfo } from 'utils'
 
 export function tokenMapper(payload?: TronToken | null): Token {
   return {
     id: payload?.id || '',
-    name: payload?.name || '',
-    symbol: payload?.symbol || '',
+    name: parseTokenInfo('name', payload?.id, payload?.name),
+    symbol: parseTokenInfo('symbol', payload?.id, payload?.symbol),
     derivedPrice: payload?.derivedTRX ? +payload.derivedTRX : 0,
     tradeVolumeUSD: payload?.tradeVolumeUSD ? +payload.tradeVolumeUSD : 0,
     priceUSD: payload?.priceUSD ? +payload.priceUSD : 0,

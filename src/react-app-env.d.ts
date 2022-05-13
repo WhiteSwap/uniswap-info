@@ -29,8 +29,8 @@ type ParamsWithNetwork<T = unknown> = T & {
 
 interface TransactionData {
   pair: {
-    token0: Pick<Token, 'symbol'>
-    token1: Pick<Token, 'symbol'>
+    token0: Pick<Token, 'symbol' | 'id'>
+    token1: Pick<Token, 'symbol' | 'id'>
   }
   transaction: {
     timestamp: string

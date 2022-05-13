@@ -1,4 +1,5 @@
 import { EthereumPair } from 'data/controllers/types/ethTypes'
+import { parseTokenInfo } from 'utils'
 
 export function pairMapper(payload: EthereumPair, ethPrice: number): Pair {
   const tokenOnePrice = payload.reserve1 && payload.reserve0 ? +payload.reserve1 / +payload.reserve0 : 0
@@ -10,14 +11,14 @@ export function pairMapper(payload: EthereumPair, ethPrice: number): Pair {
     id: payload.id || '',
     tokenOne: {
       id: payload.token0?.id || '',
-      symbol: payload.token0?.symbol || '',
+      symbol: parseTokenInfo('symbol', payload.token0?.id, payload.token0?.symbol),
       reserve: payload.reserve0 ? +payload.reserve0 : 0,
       price: tokenOnePrice,
       priceUSD: (payload.token0.derivedETH || 0) * ethPrice
     },
     tokenTwo: {
       id: payload.token1?.id || '',
-      symbol: payload.token1?.symbol || '',
+      symbol: parseTokenInfo('symbol', payload.token1?.id, payload.token1?.symbol),
       reserve: payload.reserve1 ? +payload.reserve1 : 0,
       price: tokenTwoPrice,
       priceUSD: (payload.token1.derivedETH || 0) * ethPrice

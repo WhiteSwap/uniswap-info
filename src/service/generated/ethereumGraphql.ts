@@ -256,10 +256,12 @@ export type TransactionQuery = {
     pair: {
       token0: {
         symbol: string
+        id: string
         __typename: 'Token'
       }
       token1: {
         symbol: string
+        id: string
         __typename: 'Token'
       }
     }
@@ -278,10 +280,12 @@ export type TransactionQuery = {
     to: string
     pair: {
       token0: {
+        id: string
         symbol: string
         __typename: 'Token'
       }
       token1: {
+        id: string
         symbol: string
         __typename: 'Token'
       }
@@ -302,10 +306,12 @@ export type TransactionQuery = {
     to: string
     pair: {
       token0: {
+        id: string
         symbol: string
         __typename: 'Token'
       }
       token1: {
+        id: string
         symbol: string
         __typename: 'Token'
       }

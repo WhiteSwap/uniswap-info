@@ -1,4 +1,3 @@
-import { TOKEN_OVERRIDES } from 'constants/tokens'
 import { pairListMapper } from 'data/mappers/ethereum/pairMappers'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import dayjs from 'dayjs'
@@ -17,7 +16,8 @@ import {
   getBlocksFromTimestamps,
   get2DayPercentChange,
   getPercentChange,
-  splitQuery
+  splitQuery,
+  parseTokenInfo
 } from 'utils'
 import { EthereumPair } from 'data/controllers/types/ethTypes'
 
@@ -53,13 +53,13 @@ function parseData(data: any, oneDayData: any, twoDayData: any, oneWeekData: any
   parsedData.volumeChangeUntracked = volumeChangeUntracked
   parsedData.token0 = {
     ...parsedData.token0,
-    name: TOKEN_OVERRIDES[data.token0.id]?.name ?? parsedData.token0.name,
-    symbol: TOKEN_OVERRIDES[data.token0.id]?.symbol ?? parsedData.token0.symbol
+    name: parseTokenInfo('name', data.token0.id, parsedData.token0.name),
+    symbol: parseTokenInfo('symbol', data.token0.id, parsedData.token0.symbol)
   }
   parsedData.token1 = {
     ...parsedData.token1,
-    name: TOKEN_OVERRIDES[data.token1.id]?.name ?? parsedData.token1.name,
-    symbol: TOKEN_OVERRIDES[data.token1.id]?.symbol ?? parsedData.token1.symbol
+    name: parseTokenInfo('name', data.token1.id, parsedData.token1.name),
+    symbol: parseTokenInfo('symbol', data.token1.id, parsedData.token1.symbol)
   }
   // set liquidity properties
   // TODO: trackedReserveETH

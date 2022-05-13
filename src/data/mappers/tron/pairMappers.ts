@@ -1,16 +1,18 @@
+import { parseTokenInfo } from 'utils'
+
 export function pairMapper(payload: any): Pair {
   return {
     id: payload.id || '',
     tokenOne: {
       id: payload.token0?.id || '',
-      symbol: payload.token0?.symbol || '',
+      symbol: parseTokenInfo('symbol', payload.token0?.id, payload.token0?.symbol),
       reserve: payload.reserve0 ? +payload.reserve0 : 0,
       price: 0,
       priceUSD: 0
     },
     tokenTwo: {
       id: payload.token1?.id || '',
-      symbol: payload.token1?.symbol || '',
+      symbol: parseTokenInfo('symbol', payload.token1?.id, payload.token1?.symbol),
       reserve: payload.reserve1 ? +payload.reserve1 : 0,
       price: 0,
       priceUSD: 0

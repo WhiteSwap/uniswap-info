@@ -97,6 +97,6 @@
   "transaction": {
     "add": "Add {{tokenOneSymbol}} and {{tokenTwoSymbol}}",
     "remove": "Remove {{tokenOneSymbol}} and {{tokenTwoSymbol}}",
-    "swap": "Swap {{tokenOneSymbol}} and {{tokenTwoSymbol}}"
+    "swap": "Swap {{tokenOneSymbol}} for {{tokenTwoSymbol}}"
   }
 }

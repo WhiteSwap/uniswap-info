@@ -3,7 +3,6 @@ import DropdownSelect from 'components/DropdownSelect'
 import LocalLoader from 'components/LocalLoader'
 import Panel from 'components/Panel'
 import { RowBetween, RowFixed } from 'components/Row'
-import { TOKEN_SYMBOL_OVERRIDES } from 'constants/tokens'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
@@ -116,11 +115,8 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
     }
   }
 
-  const ListItem = useCallback(({ item }: { item: Transaction }) => {
-    const tokenOneSymbol = TOKEN_SYMBOL_OVERRIDES[item.tokenOneSymbol] ?? item.tokenOneSymbol
-    const tokenTwoSymbol = TOKEN_SYMBOL_OVERRIDES[item.tokenTwoSymbol] ?? item.tokenTwoSymbol
-
-    return (
+  const ListItem = useCallback(
+    ({ item }: { item: Transaction }) => (
       <DashGrid>
         <DataText fontWeight="500">
           <CustomLink
@@ -129,8 +125,8 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             style={{ fontWeight: 700 }}
           >
             {t(getTransactionType(item.type), {
-              tokenOneSymbol: tokenTwoSymbol,
-              tokenTwoSymbol: tokenOneSymbol
+              tokenOneSymbol: item.tokenTwoSymbol,
+              tokenTwoSymbol: item.tokenOneSymbol
             })}
           </CustomLink>
         </DataText>
@@ -138,10 +134,10 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         {!below780 && (
           <>
             <DataText>
-              {formattedNum(item.tokenTwoAmount) + ' '} {tokenTwoSymbol}
+              {formattedNum(item.tokenTwoAmount) + ' '} {item.tokenTwoSymbol}
             </DataText>
             <DataText>
-              {formattedNum(item.tokenOneAmount) + ' '} {tokenOneSymbol}
+              {formattedNum(item.tokenOneAmount) + ' '} {item.tokenOneSymbol}
             </DataText>
           </>
         )}
@@ -154,8 +150,9 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         )}
         <DataText>{formatTime(item.timestamp)}</DataText>
       </DashGrid>
-    )
-  }, [])
+    ),
+    []
+  )
 
   useEffect(() => {
     let extraPages = 1
