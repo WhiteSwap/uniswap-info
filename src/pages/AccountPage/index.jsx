@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
 import TxnList from 'components/TxnList'
 import { useParams, Navigate } from 'react-router-dom'
@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { DropdownWrapper, Flyout, Header, MenuRow, Warning, StyledBookmark } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useSavedAccounts } from 'state/features/user/hooks'
+import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 
 function AccountPage() {
   const { t } = useTranslation()
@@ -95,6 +96,9 @@ function AccountPage() {
       : null
   }, [dynamicPositions])
 
+  const node = useRef(null)
+  useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
+
   return (
     <PageWrapper>
       <ContentWrapper>
@@ -136,7 +140,7 @@ function AccountPage() {
         </Header>
         {showWarning && <Warning>{t('feesCantBeCalc')}</Warning>}
         {!hideLPContent && (
-          <DropdownWrapper>
+          <DropdownWrapper ref={node}>
             <ButtonDropdown width="100%" onClick={() => setShowDropdown(!showDropdown)} open={showDropdown}>
               {!activePosition && (
                 <RowFixed>
