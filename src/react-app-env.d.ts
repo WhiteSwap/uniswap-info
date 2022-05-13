@@ -63,10 +63,8 @@ interface SwapTransaction extends TransactionData {
 interface Transaction {
   hash: string
   timestamp: number
-  tokenOneAmount: number
-  tokenOneSymbol: string
-  tokenTwoAmount: number
-  tokenTwoSymbol: string
+  tokenOne: Pick<Token, 'id' | 'symbol'> & { amount: number }
+  tokenTwo: Pick<Token, 'id' | 'symbol'> & { amount: number }
   amountUSD: number
   account: string
   type: TransactionType

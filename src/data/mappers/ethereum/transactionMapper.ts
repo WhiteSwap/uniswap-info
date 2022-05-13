@@ -4,10 +4,16 @@ export function mintTransactionMapper(payload: MintTransaction): Transaction {
   return {
     hash: payload.transaction.id || '',
     timestamp: +payload.transaction.timestamp || 0,
-    tokenOneAmount: +payload.amount0 || 0,
-    tokenOneSymbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
-    tokenTwoAmount: +payload.amount1 || 0,
-    tokenTwoSymbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+    tokenOne: {
+      id: payload.pair.token0.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
+      amount: +payload.amount0 || 0
+    },
+    tokenTwo: {
+      id: payload.pair.token1.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+      amount: +payload.amount1 || 0
+    },
     amountUSD: +payload.amountUSD || 0,
     account: payload.to || '',
     type: 'mint'
@@ -21,23 +27,35 @@ export function swapTransactionMapper(payload: SwapTransaction): Transaction {
   const transaction: Transaction = {
     hash: payload.transaction.id || '',
     timestamp: +payload.transaction.timestamp || 0,
-    tokenOneSymbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
-    tokenOneAmount: 0,
-    tokenTwoSymbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
-    tokenTwoAmount: 0,
+    tokenOne: {
+      id: payload.pair.token0.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
+      amount: 0
+    },
+    tokenTwo: {
+      id: payload.pair.token1.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+      amount: 0
+    },
     amountUSD: +payload.amountUSD || 0,
     account: payload.to || '',
     type: 'swap'
   }
 
   if (netTokenOne < 0) {
-    transaction.tokenOneAmount = Math.abs(netTokenOne)
-    transaction.tokenTwoAmount = Math.abs(netTokenTwo)
+    transaction.tokenOne.amount = Math.abs(netTokenOne)
+    transaction.tokenTwo.amount = Math.abs(netTokenTwo)
   } else if (netTokenTwo < 0) {
-    transaction.tokenOneSymbol = parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol)
-    transaction.tokenOneAmount = Math.abs(netTokenTwo)
-    transaction.tokenTwoSymbol = parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol)
-    transaction.tokenTwoAmount = Math.abs(netTokenOne)
+    transaction.tokenOne = {
+      id: payload.pair?.token1?.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+      amount: Math.abs(netTokenTwo)
+    }
+    transaction.tokenTwo = {
+      id: payload.pair?.token0?.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
+      amount: Math.abs(netTokenOne)
+    }
   }
   return transaction
 }
@@ -46,10 +64,16 @@ export function burnTransactionMapper(payload: BurnTransaction): Transaction {
   return {
     hash: payload.transaction.id || '',
     timestamp: +payload.transaction.timestamp || 0,
-    tokenOneAmount: +payload.amount0 || 0,
-    tokenOneSymbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
-    tokenTwoAmount: +payload.amount1 || 0,
-    tokenTwoSymbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+    tokenOne: {
+      id: payload.pair.token0.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
+      amount: +payload.amount0 || 0
+    },
+    tokenTwo: {
+      id: payload.pair.token1.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+      amount: +payload.amount1 || 0
+    },
     amountUSD: +payload.amountUSD || 0,
     account: payload.sender || '',
     type: 'burn'

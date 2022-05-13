@@ -87,10 +87,10 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           order = a.amountUSD > b.amountUSD
           break
         case TransactionSortField.TokenOneAmount:
-          order = a.tokenOneAmount > b.tokenOneAmount
+          order = a.tokenOne.amount > b.tokenOne.amount
           break
         case TransactionSortField.TokenTwoAmount:
-          order = a.tokenTwoAmount > b.tokenTwoAmount
+          order = a.tokenTwo.amount > b.tokenTwo.amount
           break
         case TransactionSortField.Timestamp:
         default:
@@ -125,8 +125,8 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             style={{ fontWeight: 700 }}
           >
             {t(getTransactionType(item.type), {
-              tokenOneSymbol: item.tokenTwoSymbol,
-              tokenTwoSymbol: item.tokenOneSymbol
+              tokenOneSymbol: item.tokenTwo.symbol,
+              tokenTwoSymbol: item.tokenOne.symbol
             })}
           </CustomLink>
         </DataText>
@@ -134,10 +134,10 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         {!below780 && (
           <>
             <DataText>
-              {formattedNum(item.tokenTwoAmount) + ' '} {item.tokenTwoSymbol}
+              {formattedNum(item.tokenTwo.amount) + ' '} {item.tokenTwo.symbol}
             </DataText>
             <DataText>
-              {formattedNum(item.tokenOneAmount) + ' '} {item.tokenOneSymbol}
+              {formattedNum(item.tokenOne.amount) + ' '} {item.tokenOne.symbol}
             </DataText>
           </>
         )}
