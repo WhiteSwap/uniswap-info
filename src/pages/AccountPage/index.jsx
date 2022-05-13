@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
 import TxnList from 'components/TxnList'
 import { useParams, Navigate } from 'react-router-dom'
@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { DropdownWrapper, Flyout, Header, MenuRow, Warning, StyledBookmark } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useToggleSavedAccount } from 'state/features/user/hooks'
+import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 
 function AccountPage() {
   const { t } = useTranslation()
@@ -94,6 +95,9 @@ function AccountPage() {
       : null
   }, [dynamicPositions])
 
+  const node = useRef(null)
+  useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
+
   return (
     <PageWrapper>
       <ContentWrapper>
@@ -130,7 +134,7 @@ function AccountPage() {
         </Header>
         {showWarning && <Warning>{t('feesCantBeCalc')}</Warning>}
         {!hideLPContent && (
-          <DropdownWrapper>
+          <DropdownWrapper ref={node}>
             <ButtonDropdown width="100%" onClick={() => setShowDropdown(!showDropdown)} open={showDropdown}>
               {!activePosition && (
                 <RowFixed>
@@ -153,11 +157,13 @@ function AccountPage() {
               <Flyout>
                 <AutoColumn gap="0px">
                   {positions?.map((p, i) => {
-                    if (p.pair.token1.symbol === 'WETH') {
-                      p.pair.token1.symbol = 'ETH'
+                    let token0Symbol = p.pair.token0.symbol
+                    let token1Symbol = p.pair.token1.symbol
+                    if (token0Symbol === 'WETH') {
+                      token0Symbol = 'ETH'
                     }
-                    if (p.pair.token0.symbol === 'WETH') {
-                      p.pair.token0.symbol = 'ETH'
+                    if (token1Symbol === 'WETH') {
+                      token1Symbol = 'ETH'
                     }
                     return (
                       p.pair.id !== activePosition?.pair.id && (
@@ -170,7 +176,7 @@ function AccountPage() {
                         >
                           <DoubleTokenLogo a0={p.pair.token0.id} a1={p.pair.token1.id} size={16} />
                           <TYPE.body ml={'16px'}>
-                            {p.pair.token0.symbol}-{p.pair.token1.symbol} {t('position')}
+                            {token0Symbol}-{token1Symbol} {t('position')}
                           </TYPE.body>
                         </MenuRow>
                       )

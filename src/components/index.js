@@ -92,6 +92,7 @@ export const PageWrapper = styled.div`
   padding-top: 36px;
   padding-bottom: 80px;
   background: ${({ theme }) => theme.bg7};
+  min-height: 100vh;
 
   @media screen and (max-width: 600px) {
     & > * {
