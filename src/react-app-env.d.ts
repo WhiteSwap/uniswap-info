@@ -135,6 +135,7 @@ interface Pair {
   apy: number
   reserveOne: number
   reserveTwo: number
+  totalSupply: number
   tokenOne: Pick<Token, 'id' | 'symbol' | 'derivedPrice'>
   tokenTwo: Pick<Token, 'id' | 'symbol' | 'derivedPrice'>
   oneDayVolumeUntracked?: number

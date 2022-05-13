@@ -172,10 +172,10 @@ export default class AccountDataController implements IAccountDataController {
     }
     return []
   }
-  async getTopLps(allPairs: any) {
+  async getTopLps(allPairs: Record<string, Pair>) {
     // get top 20 by reserves
     const topPairs = Object.keys(allPairs)
-      ?.sort((a, b) => (allPairs[a].reserveUSD > allPairs[b].reserveUSD ? -1 : 1))
+      ?.sort((a, b) => (allPairs[a].totalLiquidityUSD > allPairs[b].totalLiquidityUSD ? -1 : 1))
       ?.slice(0, 99)
       .map(pair => pair)
 
@@ -208,9 +208,7 @@ export default class AccountDataController implements IAccountDataController {
             pairAddress: entry.pair.id,
             token0: pairData.tokenOne.id,
             token1: pairData.tokenTwo.id,
-            usd:
-              (parseFloat(entry.liquidityTokenBalance) / parseFloat(pairData.totalSupply)) *
-              parseFloat(pairData.reserveUSD)
+            usd: (parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD
           })
         })
       })
