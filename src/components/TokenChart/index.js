@@ -1,33 +1,18 @@
 import { useState, useRef, useEffect } from 'react'
-import styled from 'styled-components/macro'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
-
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from '../../utils'
-import { OptionButton } from '../ButtonStyled'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { OptionButton } from 'components/ButtonStyled'
 import { useMedia, usePrevious } from 'react-use'
-import { timeframeOptions } from '../../constants'
+import { timeframeOptions } from 'constants/index'
 import { useTokenChartData, useTokenPriceData } from 'state/features/token/hooks'
-import DropdownSelect from '../DropdownSelect'
-import CandleStickChart from '../CandleChart'
-import LocalLoader from '../LocalLoader'
-import { AutoColumn } from '../Column'
+import DropdownSelect from 'components/DropdownSelect'
+import CandleStickChart from 'components/CandleChart'
+import LocalLoader from 'components/LocalLoader'
 import { Activity } from 'react-feather'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { useTranslation } from 'react-i18next'
-
-const ChartWrapper = styled.div`
-  height: 100%;
-  min-height: 300px;
-
-  @media screen and (max-width: 600px) {
-    min-height: 200px;
-  }
-`
-
-const PriceOption = styled(OptionButton)`
-  border-radius: 2px;
-`
+import { ChartButtonsGrid, ChartWrapper, PriceOption } from './styled'
 
 const CHART_VIEW = {
   VOLUME: 'Volume',
@@ -137,68 +122,32 @@ const TokenChart = ({ address, color, base }) => {
           <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} color={color} />
         </RowBetween>
       ) : (
-        <RowBetween
-          mb={
-            chartFilter === CHART_VIEW.LIQUIDITY ||
-            chartFilter === CHART_VIEW.VOLUME ||
-            (chartFilter === CHART_VIEW.PRICE && frequency === DATA_FREQUENCY.LINE)
-              ? 40
-              : 0
-          }
-          align="flex-start"
-        >
-          <AutoColumn gap="8px">
-            <RowFixed>
-              <OptionButton
-                active={chartFilter === CHART_VIEW.LIQUIDITY}
-                onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
-                style={{ marginRight: '6px' }}
-              >
-                {t('liquidity')}
-              </OptionButton>
-              <OptionButton
-                active={chartFilter === CHART_VIEW.VOLUME}
-                onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
-                style={{ marginRight: '6px' }}
-              >
-                {t('volume')}
-              </OptionButton>
-              <OptionButton
-                active={chartFilter === CHART_VIEW.PRICE}
-                onClick={() => {
-                  setChartFilter(CHART_VIEW.PRICE)
-                }}
-              >
-                {t('price')}
-              </OptionButton>
-            </RowFixed>
-            {chartFilter === CHART_VIEW.PRICE && (
-              <AutoRow gap="4px">
-                <PriceOption
-                  active={frequency === DATA_FREQUENCY.DAY}
-                  onClick={() => {
-                    setTimeWindow(timeframeOptions.MONTH)
-                    setFrequency(DATA_FREQUENCY.DAY)
-                  }}
-                >
-                  D
-                </PriceOption>
-                <PriceOption
-                  active={frequency === DATA_FREQUENCY.HOUR}
-                  onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}
-                >
-                  H
-                </PriceOption>
-                <PriceOption
-                  active={frequency === DATA_FREQUENCY.LINE}
-                  onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
-                >
-                  <Activity size={14} />
-                </PriceOption>
-              </AutoRow>
-            )}
-          </AutoColumn>
-          <AutoRow justify="flex-end" gap="6px" align="flex-start">
+        <ChartButtonsGrid>
+          <RowFixed>
+            <OptionButton
+              active={chartFilter === CHART_VIEW.LIQUIDITY}
+              onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
+              style={{ marginRight: '6px' }}
+            >
+              {t('liquidity')}
+            </OptionButton>
+            <OptionButton
+              active={chartFilter === CHART_VIEW.VOLUME}
+              onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
+              style={{ marginRight: '6px' }}
+            >
+              {t('volume')}
+            </OptionButton>
+            <OptionButton
+              active={chartFilter === CHART_VIEW.PRICE}
+              onClick={() => {
+                setChartFilter(CHART_VIEW.PRICE)
+              }}
+            >
+              {t('price')}
+            </OptionButton>
+          </RowFixed>
+          <AutoRow justify="flex-end" gap="6px">
             <OptionButton
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
@@ -218,7 +167,26 @@ const TokenChart = ({ address, color, base }) => {
               {t('all')}
             </OptionButton>
           </AutoRow>
-        </RowBetween>
+          {chartFilter === CHART_VIEW.PRICE && (
+            <AutoRow gap="4px">
+              <PriceOption
+                active={frequency === DATA_FREQUENCY.DAY}
+                onClick={() => {
+                  setTimeWindow(timeframeOptions.MONTH)
+                  setFrequency(DATA_FREQUENCY.DAY)
+                }}
+              >
+                D
+              </PriceOption>
+              <PriceOption active={frequency === DATA_FREQUENCY.HOUR} onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}>
+                H
+              </PriceOption>
+              <PriceOption active={frequency === DATA_FREQUENCY.LINE} onClick={() => setFrequency(DATA_FREQUENCY.LINE)}>
+                <Activity size={14} />
+              </PriceOption>
+            </AutoRow>
+          )}
+        </ChartButtonsGrid>
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>
