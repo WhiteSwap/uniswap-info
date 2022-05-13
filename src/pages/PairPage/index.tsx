@@ -21,7 +21,6 @@ import { useParams, useLocation, Navigate, Link as RouterLink } from 'react-rout
 import { useMedia } from 'react-use'
 import { useListedTokens } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
 import { usePathDismissed, useSavedPairs } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
@@ -93,18 +92,6 @@ const PairPage = () => {
   }, [dayVolumeUSD])
 
   const volumeChange = !usingUtVolume ? volumeChangeUSD : volumeChangeUntracked
-
-  // token data for usd
-  const activeTokenPrice = useActiveTokenPrice()
-  const token0USD =
-    tokenOne?.derivedPrice && activeTokenPrice ? formattedNum(tokenOne.derivedPrice * activeTokenPrice, true) : 0
-
-  const token1USD =
-    tokenTwo?.derivedPrice && activeTokenPrice ? formattedNum(tokenTwo.derivedPrice * activeTokenPrice, true) : 0
-
-  // rates
-  const token0Rate = reserveOne && reserveTwo ? formattedNum(reserveTwo / reserveOne) : '-'
-  const token1Rate = reserveOne && reserveTwo ? formattedNum(reserveOne / reserveTwo) : '-'
 
   // formatted symbols for overflow
   const formattedSymbol0 = tokenOne?.symbol.length > 6 ? tokenOne?.symbol.slice(0, 5) + '...' : tokenOne?.symbol
@@ -232,8 +219,8 @@ const PairPage = () => {
                   <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size={'1rem'} />
                   <TYPE.light fontSize=".875rem" lineHeight="1rem" fontWeight={700} ml=".25rem" mr="3.75rem">
                     {tokenOne && tokenTwo
-                      ? `1 ${formattedSymbol0} = ${token0Rate} ${formattedSymbol1} ${
-                          tokenOne?.derivedPrice ? '(' + token0USD + ')' : ''
+                      ? `1 ${formattedSymbol0} = ${formattedNum(tokenOne.price) || '-'} ${formattedSymbol1} ${
+                          tokenOne.priceUSD ? '(' + formattedNum(tokenOne.priceUSD, true) + ')' : undefined
                         }`
                       : '-'}
                   </TYPE.light>
@@ -245,8 +232,8 @@ const PairPage = () => {
                   <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} size={'16px'} />
                   <TYPE.light fontSize={'.875rem'} lineHeight={'1rem'} fontWeight={700} ml={'.25rem'}>
                     {tokenOne && tokenTwo
-                      ? `1 ${formattedSymbol1} = ${token1Rate} ${formattedSymbol0}  ${
-                          tokenTwo?.derivedPrice ? '(' + token1USD + ')' : ''
+                      ? `1 ${formattedSymbol1} = ${formattedNum(tokenTwo.price) || '-'} ${formattedSymbol0}  ${
+                          tokenTwo?.priceUSD ? '(' + formattedNum(tokenTwo.priceUSD, true) + ')' : ''
                         }`
                       : '-'}
                   </TYPE.light>

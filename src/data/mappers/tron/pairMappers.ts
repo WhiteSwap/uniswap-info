@@ -4,12 +4,14 @@ export function pairMapper(payload: any): Pair {
     tokenOne: {
       id: payload.token0?.id || '',
       symbol: payload.token0?.symbol || '',
-      derivedPrice: payload.token0?.derivedTRX ? +payload.token0.derivedTRX : 0
+      price: 0,
+      priceUSD: 0
     },
     tokenTwo: {
       id: payload.token1?.id || '',
       symbol: payload.token1?.symbol || '',
-      derivedPrice: payload.token1?.derivedTRX ? +payload.token1.derivedTRX : 0
+      price: 0,
+      priceUSD: 0
     },
     dayFees: +payload.oneDayVolumeUSD * 0.003,
     apy: (+payload.oneDayVolumeUSD * 0.003 * 365 * 100) / +payload.reserveUSD,

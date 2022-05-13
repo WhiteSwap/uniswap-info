@@ -1,20 +1,27 @@
 import { EthereumPair } from 'data/controllers/types/ethTypes'
 
-export function pairMapperV2(payload: EthereumPair): Pair {
+export function pairMapper(payload: EthereumPair, ethPrice: number): Pair {
+  const tokenOnePrice = payload.reserve1 && payload.reserve0 ? +payload.reserve1 / +payload.reserve0 : 0
+  const tokenTwoPrice = payload.reserve1 && payload.reserve0 ? +payload.reserve0 / +payload.reserve1 : 0
+  const apy = (+payload.oneDayVolumeUSD * 0.003 * 365 * 100) / +payload.reserveUSD
+  const dayFees = +payload.oneDayVolumeUSD * 0.003
+
   return {
     id: payload.id || '',
     tokenOne: {
       id: payload.token0?.id || '',
       symbol: payload.token0?.symbol || '',
-      derivedPrice: payload.token0?.derivedETH ? +payload.token0.derivedETH : 0
+      price: tokenOnePrice,
+      priceUSD: (payload.token0.derivedETH || 0) * ethPrice
     },
     tokenTwo: {
       id: payload.token1?.id || '',
       symbol: payload.token1?.symbol || '',
-      derivedPrice: payload.token1?.derivedETH ? +payload.token1.derivedETH : 0
+      price: tokenTwoPrice,
+      priceUSD: (payload.token1.derivedETH || 0) * ethPrice
     },
-    dayFees: +payload.oneDayVolumeUSD * 0.003,
-    apy: (+payload.oneDayVolumeUSD * 0.003 * 365 * 100) / +payload.reserveUSD,
+    dayFees,
+    apy,
     reserveOne: payload.reserve0 ? +payload.reserve0 : 0,
     reserveTwo: payload.reserve1 ? +payload.reserve1 : 0,
     totalSupply: +payload.totalSupply || 0,
@@ -30,6 +37,6 @@ export function pairMapperV2(payload: EthereumPair): Pair {
   }
 }
 
-export function pairListMapper(payload: EthereumPair[]): Pair[] {
-  return payload.map(pair => pairMapperV2(pair))
+export function pairListMapper(payload: EthereumPair[], ethPrice: number): Pair[] {
+  return payload.map(pair => pairMapper(pair, ethPrice))
 }

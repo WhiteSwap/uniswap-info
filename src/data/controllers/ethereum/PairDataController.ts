@@ -164,7 +164,7 @@ export default class PairDataController implements IPairDataController {
           return parseData(pair, oneDayHistory, twoDayHistory, oneWeekHistory, price, b1)
         })
     )
-    return pairListMapper(pairData)
+    return pairListMapper(pairData, price)
   }
 
   async getPairChartData(pairAddress: string) {

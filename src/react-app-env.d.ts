@@ -136,8 +136,14 @@ interface Pair {
   reserveOne: number
   reserveTwo: number
   totalSupply: number
-  tokenOne: Pick<Token, 'id' | 'symbol' | 'derivedPrice'>
-  tokenTwo: Pick<Token, 'id' | 'symbol' | 'derivedPrice'>
+  tokenOne: Pick<Token, 'id' | 'symbol'> & {
+    price: number
+    priceUSD: number
+  }
+  tokenTwo: Pick<Token, 'id' | 'symbol'> & {
+    price: number
+    priceUSD: number
+  }
   oneDayVolumeUntracked?: number
   untrackedVolumeUSD?: string
   volumeChangeUntracked?: number
