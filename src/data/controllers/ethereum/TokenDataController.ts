@@ -42,8 +42,7 @@ function parseToken(
 ): Token {
   const oneDayDerivedEth = oneDayHistory ? +oneDayHistory.derivedETH : 0
   const oneDayTotalLiquidity = oneDayHistory ? +oneDayHistory.totalLiquidity : 0
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, volumeChangeUSD] = get2DayPercentChange(
+  const [dayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
     data.tradeVolumeUSD,
     oneDayHistory?.tradeVolumeUSD ?? 0,
     twoDayHistory?.tradeVolumeUSD ?? 0
@@ -65,7 +64,7 @@ function parseToken(
 
   const tokenInfo: Token = {
     id: data.id,
-    tradeVolumeUSD: +data.tradeVolumeUSD,
+    dayVolumeUSD,
     derivedPrice: +data.derivedETH,
     priceUSD: +data?.derivedETH * price,
     totalLiquidityUSD: currentLiquidityUSD,
