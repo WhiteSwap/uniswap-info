@@ -23,7 +23,7 @@ import Search from 'components/Search'
 import { useTranslation } from 'react-i18next'
 import { DropdownWrapper, Flyout, Header, MenuRow, Warning, StyledBookmark } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-import { useSavedAccounts } from 'state/features/user/hooks'
+import { useToggleSavedAccount } from 'state/features/user/hooks'
 
 function AccountPage() {
   const { t } = useTranslation()
@@ -35,8 +35,7 @@ function AccountPage() {
     return <Navigate to={formatPath('/')} />
   }
 
-  const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
-  const isSaved = savedAccounts.find(acc => acc === accountAddress) ? true : false
+  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
 
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
@@ -126,12 +125,7 @@ function AccountPage() {
               </Link>
             </span>
 
-            <StyledBookmark
-              $saved={isSaved}
-              onClick={() => {
-                isSaved ? removeAccount(accountAddress) : addAccount(accountAddress)
-              }}
-            />
+            <StyledBookmark $saved={isSaved} onClick={toggleSavedAccount} />
           </RowBetween>
         </Header>
         {showWarning && <Warning>{t('feesCantBeCalc')}</Warning>}

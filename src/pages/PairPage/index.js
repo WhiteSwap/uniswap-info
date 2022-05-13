@@ -23,7 +23,7 @@ import TokenLogo from 'components/TokenLogo'
 import { Hover } from 'components'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import Warning from 'components/Warning'
-import { usePathDismissed, useSavedPairs } from 'state/features/user/hooks'
+import { usePathDismissed, useToggleSavedPair } from 'state/features/user/hooks'
 import { useFormatPath } from 'hooks'
 import FormattedName from 'components/FormattedName'
 import { useListedTokens } from 'state/features/application/hooks'
@@ -130,8 +130,13 @@ function PairPage() {
   const below440 = useMedia('(max-width: 440px)')
 
   const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
-  const [savedPairs, addPair, removePair] = useSavedPairs()
-  const isPairSaved = savedPairs[pairAddress] ? true : false
+  const [isPairSaved, toggleSavedPair] = useToggleSavedPair(
+    pairAddress,
+    token0?.id,
+    token1?.id,
+    token0?.symbol,
+    token1?.symbol
+  )
 
   const listedTokens = useListedTokens()
 
@@ -204,12 +209,7 @@ function PairPage() {
                     flexDirection: below1080 ? 'row-reverse' : 'initial'
                   }}
                 >
-                  <StyledBookmark
-                    $saved={isPairSaved}
-                    onClick={() => {
-                      isPairSaved ? removePair(pairAddress) : addPair(pairAddress)
-                    }}
-                  />
+                  <StyledBookmark $saved={isPairSaved} onClick={toggleSavedPair} />
 
                   <Link external href={getPoolLink(activeNetworkId, token0?.id, token1?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
