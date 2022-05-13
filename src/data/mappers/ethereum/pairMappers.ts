@@ -11,19 +11,19 @@ export function pairMapper(payload: EthereumPair, ethPrice: number): Pair {
     tokenOne: {
       id: payload.token0?.id || '',
       symbol: payload.token0?.symbol || '',
+      reserve: payload.reserve0 ? +payload.reserve0 : 0,
       price: tokenOnePrice,
       priceUSD: (payload.token0.derivedETH || 0) * ethPrice
     },
     tokenTwo: {
       id: payload.token1?.id || '',
       symbol: payload.token1?.symbol || '',
+      reserve: payload.reserve1 ? +payload.reserve1 : 0,
       price: tokenTwoPrice,
       priceUSD: (payload.token1.derivedETH || 0) * ethPrice
     },
     dayFees,
     apy,
-    reserveOne: payload.reserve0 ? +payload.reserve0 : 0,
-    reserveTwo: payload.reserve1 ? +payload.reserve1 : 0,
     totalSupply: +payload.totalSupply || 0,
     totalLiquidityUSD: payload.reserveUSD ? +payload.reserveUSD : 0,
     untrackedVolumeUSD: payload.untrackedVolumeUSD ? payload.untrackedVolumeUSD.toString() : '',

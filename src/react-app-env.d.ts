@@ -133,14 +133,14 @@ interface Pair {
   weekVolumeUSD: number
   dayFees: number
   apy: number
-  reserveOne: number
-  reserveTwo: number
   totalSupply: number
   tokenOne: Pick<Token, 'id' | 'symbol'> & {
+    reserve: number
     price: number
     priceUSD: number
   }
   tokenTwo: Pick<Token, 'id' | 'symbol'> & {
+    reserve: number
     price: number
     priceUSD: number
   }

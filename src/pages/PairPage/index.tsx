@@ -50,8 +50,6 @@ const PairPage = () => {
   const {
     tokenOne,
     tokenTwo,
-    reserveOne,
-    reserveTwo,
     totalLiquidityUSD,
     trackedReserveUSD,
     dayFees,
@@ -311,7 +309,7 @@ const PairPage = () => {
                         <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {reserveOne ? formattedNum(reserveOne) : ''} {tokenOne?.symbol ?? ''}
+                            {tokenOne.reserve ? formattedNum(tokenOne.reserve) : ''} {tokenOne?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
@@ -321,7 +319,7 @@ const PairPage = () => {
                         <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {reserveTwo ? formattedNum(reserveTwo) : ''} {tokenTwo?.symbol ?? ''}
+                            {tokenTwo.reserve ? formattedNum(tokenTwo.reserve) : ''} {tokenTwo?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
@@ -338,8 +336,8 @@ const PairPage = () => {
                   <PairChart
                     address={pairAddress}
                     color={'#2E69BB'}
-                    base0={reserveTwo / reserveOne}
-                    base1={reserveOne / reserveTwo}
+                    base0={tokenTwo.reserve / tokenOne.reserve}
+                    base1={tokenOne.reserve / tokenTwo.reserve}
                   />
                 </Panel>
               </PanelWrapper>
