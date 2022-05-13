@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useParams, Navigate, Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
 import Panel from 'components/Panel'
-import { PageWrapper, ContentWrapperLarge, StyledIcon } from 'components/index'
+import { PageWrapper, ContentWrapperLarge } from 'components/index'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Column, { AutoColumn } from 'components/Column'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
@@ -26,89 +25,19 @@ import { useActiveTokenPrice } from 'state/features/global/selectors'
 import Warning from 'components/Warning'
 import { usePathDismissed, useSavedPairs } from 'state/features/user/hooks'
 import { useFormatPath } from 'hooks'
-import { Bookmark, PlusCircle } from 'react-feather'
 import FormattedName from 'components/FormattedName'
 import { useListedTokens } from 'state/features/application/hooks'
 import { useTranslation } from 'react-i18next'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import Percent from 'components/Percent'
-
-const PanelWrapper = styled.div`
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: max-content;
-  gap: 14px;
-  display: inline-grid;
-  width: 100%;
-  align-items: start;
-
-  @media screen and (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-    > * {
-      grid-column: 1 / 4;
-    }
-
-    > * {
-      &:first-child {
-        width: 100%;
-      }
-    }
-  }
-`
-
-const TokenDetailsLayout = styled.div`
-  display: inline-grid;
-  width: 100%;
-  grid-template-columns: auto auto auto auto 1fr;
-  column-gap: 60px;
-  align-items: start;
-
-  &:last-child {
-    align-items: center;
-    justify-items: end;
-  }
-  @media screen and (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-
-    > * {
-      grid-column: 1 / 4;
-      margin-bottom: 1.5rem;
-    }
-
-    &:last-child {
-      align-items: start;
-      justify-items: start;
-    }
-  }
-`
-
-const FixedPanel = styled(Panel)`
-  width: fit-content;
-  padding: 0;
-  border: 0;
-  background: unset;
-  cursor: pointer;
-  box-shadow: unset;
-`
-
-const TokenSymbolLink = styled(RouterLink)`
-  color: ${({ theme }) => theme.white};
-
-  :hover {
-    cursor: pointer;
-    opacity: 0.7;
-  }
-`
-
-const WarningGrouping = styled.div`
-  opacity: ${({ disabled }) => disabled && '0.4'};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
-`
-
-const CustomFormattedName = styled(FormattedName)`
-  color: ${({ theme }) => theme.text1};
-`
+import {
+  PanelWrapper,
+  TokenDetailsLayout,
+  FixedPanel,
+  TokenSymbolLink,
+  WarningGrouping,
+  StyledBookmark
+} from './styled'
 
 function PairPage() {
   const { t } = useTranslation()
@@ -201,7 +130,8 @@ function PairPage() {
   const below440 = useMedia('(max-width: 440px)')
 
   const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
-  const [savedPairs, addPair] = useSavedPairs()
+  const [savedPairs, addPair, removePair] = useSavedPairs()
+  const isPairSaved = savedPairs[pairAddress] ? true : false
 
   const listedTokens = useListedTokens()
 
@@ -274,19 +204,12 @@ function PairPage() {
                     flexDirection: below1080 ? 'row-reverse' : 'initial'
                   }}
                 >
-                  {!savedPairs[pairAddress] && !below1080 ? (
-                    <Hover onClick={() => addPair(pairAddress, token0.id, token1.id, token0.symbol, token1.symbol)}>
-                      <StyledIcon>
-                        <PlusCircle style={{ marginRight: '0.5rem' }} />
-                      </StyledIcon>
-                    </Hover>
-                  ) : !below1080 ? (
-                    <StyledIcon>
-                      <Bookmark style={{ marginRight: '0.5rem', opacity: 0.4 }} />
-                    </StyledIcon>
-                  ) : (
-                    <></>
-                  )}
+                  <StyledBookmark
+                    $saved={isPairSaved}
+                    onClick={() => {
+                      isPairSaved ? removePair(pairAddress) : addPair(pairAddress)
+                    }}
+                  />
 
                   <Link external href={getPoolLink(activeNetworkId, token0?.id, token1?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
@@ -465,9 +388,9 @@ function PairPage() {
                   <TYPE.light>{t('pairName')}</TYPE.light>
                   <TYPE.main style={{ marginTop: '.5rem' }}>
                     <RowFixed>
-                      <CustomFormattedName text={token0?.symbol ?? ''} maxCharacters={8} />
+                      <FormattedName text={token0?.symbol ?? ''} maxCharacters={8} />
                       -
-                      <CustomFormattedName text={token1?.symbol ?? ''} maxCharacters={8} />
+                      <FormattedName text={token1?.symbol ?? ''} maxCharacters={8} />
                     </RowFixed>
                   </TYPE.main>
                 </Column>
