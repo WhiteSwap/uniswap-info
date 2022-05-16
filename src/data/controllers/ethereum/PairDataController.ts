@@ -1,4 +1,4 @@
-import { pairListMapper } from 'data/mappers/ethereum/pairMappers'
+import { pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
@@ -29,6 +29,66 @@ async function fetchPairData(pairAddress: string, block?: number) {
       block: block ? { number: block } : null
     }
   })
+}
+
+async function fetchHistoricalPairData(pairList: string[], price: number) {
+  const [t1, t2, tWeek] = getTimestampsForChanges()
+  const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek])
+
+  const current = await client.query({
+    query: PAIRS_BULK,
+    variables: {
+      allPairs: pairList
+    }
+  })
+
+  const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
+    [b1, b2, bWeek].map(async block => {
+      const result = await client.query({
+        query: PAIRS_HISTORICAL_BULK,
+        variables: {
+          pairs: pairList,
+          block: block ? { number: block } : null
+        }
+      })
+      return result
+    })
+  )
+
+  const oneDayData = oneDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
+    return { ...obj, [cur.id]: cur }
+  }, {})
+
+  const twoDayData = twoDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
+    return { ...obj, [cur.id]: cur }
+  }, {})
+
+  const oneWeekData = oneWeekResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
+    return { ...obj, [cur.id]: cur }
+  }, {})
+
+  const pairData: EthereumPair[] = await Promise.all(
+    current &&
+      current.data.pairs.map(async (pair: { id: string }) => {
+        let oneDayHistory = oneDayData?.[pair.id]
+        if (!oneDayHistory) {
+          const newData = await fetchPairData(pair.id, b1)
+          oneDayHistory = newData.data.pairs[0]
+        }
+        let twoDayHistory = twoDayData?.[pair.id]
+        if (!twoDayHistory) {
+          const newData = await fetchPairData(pair.id, b2)
+          twoDayHistory = newData.data.pairs[0]
+        }
+        let oneWeekHistory = oneWeekData?.[pair.id]
+        if (!oneWeekHistory) {
+          const newData = await fetchPairData(pair.id, bWeek)
+          oneWeekHistory = newData.data.pairs[0]
+        }
+        return parseData(pair, oneDayHistory, twoDayHistory, oneWeekHistory, price, b1)
+      })
+  )
+  return pairData
 }
 
 function parseData(data: any, oneDayData: any, twoDayData: any, oneWeekData: any, price: number, oneDayBlock: number) {
@@ -99,72 +159,16 @@ export default class PairDataController implements IPairDataController {
     })
 
     // format as array of addresses
-    const formattedPairs = pairs.map(pair => {
-      return pair.id
-    })
+    const formattedPairs = pairs.map(pair => pair.id)
 
     // get data for every pair in list
-    return this.getBulkPairData(formattedPairs, price)
+    const pairsData = await fetchHistoricalPairData(formattedPairs, price)
+    return pairListMapper(pairsData, price)
   }
 
-  async getBulkPairData(pairList: string[], price: number) {
-    const [t1, t2, tWeek] = getTimestampsForChanges()
-    const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek])
-
-    const current = await client.query({
-      query: PAIRS_BULK,
-      variables: {
-        allPairs: pairList
-      }
-    })
-
-    const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
-      [b1, b2, bWeek].map(async block => {
-        const result = await client.query({
-          query: PAIRS_HISTORICAL_BULK,
-          variables: {
-            pairs: pairList,
-            block: block ? { number: block } : null
-          }
-        })
-        return result
-      })
-    )
-
-    const oneDayData = oneDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
-
-    const twoDayData = twoDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
-
-    const oneWeekData = oneWeekResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
-
-    const pairData: EthereumPair[] = await Promise.all(
-      current &&
-        current.data.pairs.map(async (pair: { id: string }) => {
-          let oneDayHistory = oneDayData?.[pair.id]
-          if (!oneDayHistory) {
-            const newData = await fetchPairData(pair.id, b1)
-            oneDayHistory = newData.data.pairs[0]
-          }
-          let twoDayHistory = twoDayData?.[pair.id]
-          if (!twoDayHistory) {
-            const newData = await fetchPairData(pair.id, b2)
-            twoDayHistory = newData.data.pairs[0]
-          }
-          let oneWeekHistory = oneWeekData?.[pair.id]
-          if (!oneWeekHistory) {
-            const newData = await fetchPairData(pair.id, bWeek)
-            oneWeekHistory = newData.data.pairs[0]
-          }
-          return parseData(pair, oneDayHistory, twoDayHistory, oneWeekHistory, price, b1)
-        })
-    )
-    return pairListMapper(pairData, price)
+  async getPairData(pairAddress: string, price: number) {
+    const pairData = await fetchHistoricalPairData([pairAddress], price)
+    return pairMapper(pairData[0], price)
   }
 
   async getPairChartData(pairAddress: string) {

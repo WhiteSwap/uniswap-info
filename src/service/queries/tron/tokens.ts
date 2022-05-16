@@ -6,8 +6,7 @@ export const TOKENS = gql`
       id
       name
       symbol
-      derivedTRX
-      tradeVolumeUSD
+      dayVolumeUSD
       totalLiquidityUSD
       priceUSD
       liquidityChangeUSD
@@ -25,8 +24,7 @@ export const TOKEN_BY_ADDRESS = gql`
       id
       name
       symbol
-      derivedTRX
-      tradeVolumeUSD
+      dayVolumeUSD
       totalLiquidityUSD
       priceUSD
       liquidityChangeUSD

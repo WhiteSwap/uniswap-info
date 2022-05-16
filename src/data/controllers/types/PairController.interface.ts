@@ -9,7 +9,7 @@ export interface IPairDataController {
    * @param  {string[]} pairs - list of pair addresses which user provide liquidity
    * @param  {number} startDateTimestamp - selected period of time
    */
-  getBulkPairData(pairList: string[], price: number): Promise<Pair[]>
+  getPairData(pairList: string, price: number): Promise<Pair>
   getPairChartData(pairAddress: string): Promise<PairDayData[]>
   getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number): Promise<TimeWindowItem[][]>
   searchPair(tokens: string[], id: string): any

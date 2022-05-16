@@ -44,8 +44,8 @@ export function usePairData(pairAddress: string) {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await DataService.pairs.getBulkPairData([pairAddress], price)
-      data && dispatch(setPair({ networkId: activeNetwork, pairAddress, data: data[0] }))
+      const data = await DataService.pairs.getPairData(pairAddress, price)
+      data && dispatch(setPair({ networkId: activeNetwork, pairAddress, data }))
     }
     if (!pairData && pairAddress && price && isValidAddress(pairAddress, activeNetwork)) {
       fetchData()

@@ -14,6 +14,7 @@ export type Scalars = {
 
 export type RootQuery = {
   __typename?: 'RootQuery'
+  pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
   tokens?: Maybe<Array<Maybe<Token>>>
   tokens_collection?: Maybe<TokenCollection>
@@ -28,33 +29,69 @@ export type RootQueryWhiteSwapDayDatasArgs = {
   startTime: Scalars['Int']
 }
 
+/** Pair */
+export type Pair = {
+  __typename?: 'Pair'
+  /** Day Volume Usd */
+  dayVolumeUSD: Scalars['Float']
+  /** Pair address */
+  id: Scalars['String']
+  /** Liquidity Change Usd */
+  liquidityChangeUSD: Scalars['Float']
+  /** Token one */
+  tokenOne: TokenPair
+  /** Token two */
+  tokenTwo: TokenPair
+  /** Total Liquidity Usd */
+  totalLiquidityUSD: Scalars['Float']
+  /** Volume Change Usd */
+  volumeChangeUSD: Scalars['Float']
+  /** Week Volume Usd */
+  weekVolumeUSD: Scalars['Float']
+}
+
+/** Crypto token */
+export type TokenPair = {
+  __typename?: 'TokenPair'
+  /** Token derived Price */
+  derivedPrice: Scalars['Float']
+  /** Token address */
+  id: Scalars['String']
+  /** Token name */
+  name: Scalars['String']
+  /** Token price */
+  price: Scalars['Float']
+  /** Token reserve */
+  reserve: Scalars['Float']
+  /** Token symbol */
+  symbol: Scalars['String']
+}
+
 /** Crypto token */
 export type Token = {
   __typename?: 'Token'
-  /** Token derived TRX */
-  derivedTRX: Scalars['Float']
+  /** Token day Volume USD */
+  dayVolumeUSD: Scalars['Float']
   /** Token address */
   id: Scalars['String']
   /** Token liquidity Change USD */
-  liquidityChangeUSD: Scalars['Int']
+  liquidityChangeUSD: Scalars['Float']
   /** Token name */
   name: Scalars['String']
   /** Token one Day Txns */
   oneDayTxns: Scalars['Int']
   /** Token price Change USD */
-  priceChangeUSD: Scalars['Int']
+  priceChangeUSD: Scalars['Float']
   /** Token price USD */
   priceUSD: Scalars['Float']
   /** Token symbol */
   symbol: Scalars['String']
   /** Token total Liquidity USD */
   totalLiquidityUSD: Scalars['Float']
-  /** Token trade Volume USD */
-  tradeVolumeUSD: Scalars['Float']
   /** Token txn Change */
-  txnChange: Scalars['Int']
+  txnChange: Scalars['Float']
   /** Token volume Change USD */
-  volumeChangeUSD: Scalars['Int']
+  volumeChangeUSD: Scalars['Float']
 }
 
 /** Tokens list */
@@ -89,6 +126,39 @@ export type GlobalChartQuery = {
   }> | null
 }
 
+export type PairListQueryVariables = Exact<{ [key: string]: never }>
+
+export type PairListQuery = {
+  __typename?: 'RootQuery'
+  pairs?: Array<{
+    __typename?: 'Pair'
+    id: string
+    totalLiquidityUSD: number
+    dayVolumeUSD: number
+    weekVolumeUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    tokenOne: {
+      __typename?: 'TokenPair'
+      id: string
+      name: string
+      symbol: string
+      reserve: number
+      price: number
+      derivedPrice: number
+    }
+    tokenTwo: {
+      __typename?: 'TokenPair'
+      id: string
+      name: string
+      symbol: string
+      reserve: number
+      price: number
+      derivedPrice: number
+    }
+  } | null> | null
+}
+
 export type TokensQueryVariables = Exact<{ [key: string]: never }>
 
 export type TokensQuery = {
@@ -98,8 +168,7 @@ export type TokensQuery = {
     id: string
     name: string
     symbol: string
-    derivedTRX: number
-    tradeVolumeUSD: number
+    dayVolumeUSD: number
     totalLiquidityUSD: number
     priceUSD: number
     liquidityChangeUSD: number
@@ -121,8 +190,7 @@ export type TokenByAddressQuery = {
     id: string
     name: string
     symbol: string
-    derivedTRX: number
-    tradeVolumeUSD: number
+    dayVolumeUSD: number
     totalLiquidityUSD: number
     priceUSD: number
     liquidityChangeUSD: number

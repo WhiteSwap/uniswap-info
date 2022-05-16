@@ -94,7 +94,6 @@ interface Token {
   id: string
   name: string
   symbol: string
-  derivedPrice: number
   dayVolumeUSD: number
   totalLiquidityUSD: number
   priceUSD: number

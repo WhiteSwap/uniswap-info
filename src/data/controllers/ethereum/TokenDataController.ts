@@ -65,7 +65,6 @@ function parseToken(
   const tokenInfo: Token = {
     id: data.id,
     dayVolumeUSD,
-    derivedPrice: +data.derivedETH,
     priceUSD: +data?.derivedETH * price,
     totalLiquidityUSD: currentLiquidityUSD,
     oneDayVolumeUT: oneDayVolumeUT,
