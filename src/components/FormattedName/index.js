@@ -2,6 +2,7 @@ import { transparentize } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { Tooltip } from '../QuestionHelper'
+import PropTypes from 'prop-types'
 
 const TextWrapper = styled.div`
   position: relative;
@@ -18,11 +19,11 @@ const TextWrapper = styled.div`
   }
 `
 
-const FormattedName = ({ text, maxCharacters, margin = false, adjustSize = false, fontSize, link, ...rest }) => {
+const FormattedName = ({ text, maxCharacters, margin = false, adjustSize = false, link = false, ...rest }) => {
   const [showHover, setShowHover] = useState(false)
 
   if (!text) {
-    return ''
+    return null
   }
 
   if (text.length > maxCharacters) {
@@ -34,7 +35,7 @@ const FormattedName = ({ text, maxCharacters, margin = false, adjustSize = false
           margin={margin}
           adjustSize={adjustSize}
           link={link}
-          fontSize={fontSize}
+          fontSize={rest.fontSize}
           {...rest}
         >
           {' ' + text.slice(0, maxCharacters - 1) + '...'}
@@ -44,10 +45,19 @@ const FormattedName = ({ text, maxCharacters, margin = false, adjustSize = false
   }
 
   return (
-    <TextWrapper margin={margin} adjustSize={adjustSize} link={link} fontSize={fontSize} {...rest}>
+    <TextWrapper margin={margin} adjustSize={adjustSize} link={link} fontSize={rest.fontSize} {...rest}>
       {text}
     </TextWrapper>
   )
+}
+
+FormattedName.propTypes = {
+  text: PropTypes.string,
+  maxCharacters: PropTypes.number,
+  fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  link: PropTypes.any,
+  margin: PropTypes.bool,
+  adjustSize: PropTypes.bool
 }
 
 export default FormattedName

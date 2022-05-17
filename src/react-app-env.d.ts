@@ -12,6 +12,8 @@ declare enum SupportedNetwork {
   TRON = 'trx'
 }
 
+type TransactionType = 'swap' | 'mint' | 'burn' | 'all'
+
 type BlockHeight = {
   timestamp: string
   number: number
@@ -27,10 +29,13 @@ type ParamsWithNetwork<T = unknown> = T & {
 
 interface TransactionData {
   pair: {
-    token0: Pick<Token, 'symbol'>
-    token1: Pick<Token, 'symbol'>
+    token0: Pick<Token, 'symbol' | 'id'>
+    token1: Pick<Token, 'symbol' | 'id'>
   }
-  transaction: Transaction
+  transaction: {
+    timestamp: string
+    id: string
+  }
   to: string
 }
 
@@ -38,7 +43,6 @@ interface BurnTransaction extends TransactionData {
   amount0: string
   amount1: string
   amountUSD: string
-  liquidity: string
   sender: string
 }
 
@@ -46,10 +50,9 @@ interface MintTransaction extends TransactionData {
   amount0: string
   amount1: string
   amountUSD: string
-  liquidity: string
 }
 
-interface SwapTransactions extends TransactionData {
+interface SwapTransaction extends TransactionData {
   amount0In: string
   amount0Out: string
   amount1In: string
@@ -57,10 +60,26 @@ interface SwapTransactions extends TransactionData {
   amountUSD: string
 }
 
+interface Transaction {
+  hash: string
+  timestamp: number
+  tokenOne: Pick<Token, 'id' | 'symbol'> & { amount: number }
+  tokenTwo: Pick<Token, 'id' | 'symbol'> & { amount: number }
+  amountUSD: number
+  account: string
+  type: TransactionType
+}
+
 interface Transactions {
+  burns: Transaction[]
+  mints: Transaction[]
+  swaps: Transaction[]
+}
+
+interface RawTransactions {
   burns: BurnTransaction[]
   mints: MintTransaction[]
-  swaps: SwapTransactions[]
+  swaps: SwapTransaction[]
 }
 
 interface TimeWindowItem {
@@ -75,27 +94,17 @@ interface Token {
   id: string
   name: string
   symbol: string
-  derived: number
-  liquidityChangeUSD: number
-  oneDayTxns: number
-  oneDayVolumeUSD: number
-  oneDayVolumeUT: number
-  priceChangeUSD: number
-  priceUSD: number
-  totalLiquidity: number
+  dayVolumeUSD: number
   totalLiquidityUSD: number
-  tradeVolume: number
-  tradeVolumeUSD: number
-  txCount: number
-  txnChange: number
-  untrackedVolumeUSD: number
+  priceUSD: number
+  liquidityChangeUSD: number
   volumeChangeUSD: number
-  volumeChangeUT: number
-  __typename?: string
+  priceChangeUSD: number
+  oneDayTxns: number
+  txnChange: number
+  oneDayVolumeUT?: number
+  volumeChangeUT?: number
 }
-
-type EthereumToken = Omit<Token, 'derived'> & { derivedETH: number }
-type TronToken = Omit<Token, 'derived'> & { derivedTRX: number }
 
 interface TokenDayData {
   dailyVolumeCoin?: string
@@ -108,23 +117,37 @@ interface TokenDayData {
   totalLiquidityToken?: string
   totalLiquidityUSD: string
   dayString?: number
-  __typename?: string
-}
-
-type EthereumTokenDayData = Omit<TokenDayData, 'dailyVolumeCoin' | 'totalLiquidityCoin'> & {
-  dailyVolumeETH?: string
-  totalLiquidityETH?: string
-}
-type TronTokenDayData = Omit<TokenDayData, 'dailyVolumeCoin' | 'totalLiquidityCoin'> & {
-  dailyVolumeTRX?: string
-  totalLiquidityTRX?: string
 }
 
 type PairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>
-type EthereumPairToken = Omit<PairToken, 'derived'> & { derivedETH: number }
-type TronPairToken = Omit<PairToken, 'derived'> & { derivedTRX: number }
 
 interface Pair {
+  id: string
+  totalLiquidityUSD: number
+  liquidityChangeUSD: number
+  dayVolumeUSD: number
+  volumeChangeUSD: number
+  weekVolumeUSD: number
+  dayFees: number
+  apy: number
+  totalSupply: number
+  tokenOne: Pick<Token, 'id' | 'symbol'> & {
+    reserve: number
+    price: number
+    priceUSD: number
+  }
+  tokenTwo: Pick<Token, 'id' | 'symbol'> & {
+    reserve: number
+    price: number
+    priceUSD: number
+  }
+  oneDayVolumeUntracked?: number
+  untrackedVolumeUSD?: string
+  volumeChangeUntracked?: number
+  trackedReserveUSD?: number
+}
+
+interface OldPair {
   createdAtTimestamp: string
   id: string
   liquidityChangeUSD: number
@@ -148,20 +171,9 @@ interface Pair {
   __typename?: string
 }
 
-type EthereumPair = Omit<Pair, 'trackedReserveCoin' | 'token0' | 'token1'> & {
-  trackedReserveETH: string
-  token0: EthereumPairToken
-  token1: EthereumPairToken
-}
-type TronPair = Omit<Pair, 'trackedReserveCoin' | 'token0' | 'token1'> & {
-  trackedReserveTRX: string
-  token0: TronPairToken
-  token1: TronPairToken
-}
+type PositionPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>
 
-type PositionPair = Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>
-
-type SnapshotPair = Pick<Pair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
+type SnapshotPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
   token0: Pick<Token, 'id'>
   token1: Pick<Token, 'id'>
 }

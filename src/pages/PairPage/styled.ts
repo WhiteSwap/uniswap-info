@@ -92,3 +92,10 @@ export const StyledBookmark = styled(Bookmark)<{ $saved: boolean }>`
       fill: ${theme.text1};
     `}
 `
+
+export const TokenLink = styled(RouterLink)`
+  :hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+`

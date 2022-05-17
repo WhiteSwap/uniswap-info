@@ -22,7 +22,7 @@ function AllPairsPage() {
             <TYPE.largeHeader>{t('topPairs')}</TYPE.largeHeader>
             {!below800 && <Search small={true} />}
           </RowBetween>
-          <PairList pairs={allPairs} disbaleLinks={true} maxItems={50} />
+          <PairList pairs={allPairs} maxItems={50} />
         </DashboardWrapper>
       </FullWrapper>
     </PageWrapper>

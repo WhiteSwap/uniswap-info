@@ -14,9 +14,11 @@ export type Scalars = {
 
 export type RootQuery = {
   __typename?: 'RootQuery'
+  pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
+  tokens?: Maybe<Array<Maybe<Token>>>
   tokens_collection?: Maybe<TokenCollection>
-  whiteSwapDayDatas?: Maybe<Array<Maybe<WhiteSwapDayData>>>
+  whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
 }
 
 export type RootQueryTokenArgs = {
@@ -24,20 +26,72 @@ export type RootQueryTokenArgs = {
 }
 
 export type RootQueryWhiteSwapDayDatasArgs = {
-  startTime?: InputMaybe<Scalars['Int']>
+  startTime: Scalars['Int']
+}
+
+/** Pair */
+export type Pair = {
+  __typename?: 'Pair'
+  /** Day Volume Usd */
+  dayVolumeUSD: Scalars['Float']
+  /** Pair address */
+  id: Scalars['String']
+  /** Liquidity Change Usd */
+  liquidityChangeUSD: Scalars['Float']
+  /** Token one */
+  tokenOne: TokenPair
+  /** Token two */
+  tokenTwo: TokenPair
+  /** Total Liquidity Usd */
+  totalLiquidityUSD: Scalars['Float']
+  /** Volume Change Usd */
+  volumeChangeUSD: Scalars['Float']
+  /** Week Volume Usd */
+  weekVolumeUSD: Scalars['Float']
+}
+
+/** Crypto token */
+export type TokenPair = {
+  __typename?: 'TokenPair'
+  /** Token derived Price */
+  derivedPrice: Scalars['Float']
+  /** Token address */
+  id: Scalars['String']
+  /** Token name */
+  name: Scalars['String']
+  /** Token price */
+  price: Scalars['Float']
+  /** Token reserve */
+  reserve: Scalars['Float']
+  /** Token symbol */
+  symbol: Scalars['String']
 }
 
 /** Crypto token */
 export type Token = {
   __typename?: 'Token'
+  /** Token day Volume USD */
+  dayVolumeUSD: Scalars['Float']
   /** Token address */
-  address?: Maybe<Scalars['String']>
-  /** Token code */
-  code?: Maybe<Scalars['String']>
-  /** Token id */
-  id?: Maybe<Scalars['Int']>
+  id: Scalars['String']
+  /** Token liquidity Change USD */
+  liquidityChangeUSD: Scalars['Float']
   /** Token name */
-  name?: Maybe<Scalars['String']>
+  name: Scalars['String']
+  /** Token one Day Txns */
+  oneDayTxns: Scalars['Int']
+  /** Token price Change USD */
+  priceChangeUSD: Scalars['Float']
+  /** Token price USD */
+  priceUSD: Scalars['Float']
+  /** Token symbol */
+  symbol: Scalars['String']
+  /** Token total Liquidity USD */
+  totalLiquidityUSD: Scalars['Float']
+  /** Token txn Change */
+  txnChange: Scalars['Float']
+  /** Token volume Change USD */
+  volumeChangeUSD: Scalars['Float']
 }
 
 /** Tokens list */
@@ -51,11 +105,11 @@ export type TokenCollection = {
 export type WhiteSwapDayData = {
   __typename?: 'WhiteSwapDayData'
   /** Data dailyVolumeUSD */
-  dailyVolumeUSD?: Maybe<Scalars['String']>
+  dailyVolumeUSD: Scalars['Float']
   /** Data date */
-  date?: Maybe<Scalars['Int']>
+  date: Scalars['Int']
   /** Data totalLiquidityUSD */
-  totalLiquidityUSD?: Maybe<Scalars['String']>
+  totalLiquidityUSD: Scalars['Float']
 }
 
 export type GlobalChartQueryVariables = Exact<{
@@ -66,8 +120,83 @@ export type GlobalChartQuery = {
   __typename?: 'RootQuery'
   whiteSwapDayDatas?: Array<{
     __typename?: 'WhiteSwapDayData'
-    date?: number | null
-    dailyVolumeUSD?: string | null
-    totalLiquidityUSD?: string | null
+    date: number
+    dailyVolumeUSD: number
+    totalLiquidityUSD: number
+  }> | null
+}
+
+export type PairListQueryVariables = Exact<{ [key: string]: never }>
+
+export type PairListQuery = {
+  __typename?: 'RootQuery'
+  pairs?: Array<{
+    __typename?: 'Pair'
+    id: string
+    totalLiquidityUSD: number
+    dayVolumeUSD: number
+    weekVolumeUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    tokenOne: {
+      __typename?: 'TokenPair'
+      id: string
+      name: string
+      symbol: string
+      reserve: number
+      price: number
+      derivedPrice: number
+    }
+    tokenTwo: {
+      __typename?: 'TokenPair'
+      id: string
+      name: string
+      symbol: string
+      reserve: number
+      price: number
+      derivedPrice: number
+    }
   } | null> | null
+}
+
+export type TokensQueryVariables = Exact<{ [key: string]: never }>
+
+export type TokensQuery = {
+  __typename?: 'RootQuery'
+  tokens?: Array<{
+    __typename?: 'Token'
+    id: string
+    name: string
+    symbol: string
+    dayVolumeUSD: number
+    totalLiquidityUSD: number
+    priceUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    priceChangeUSD: number
+    oneDayTxns: number
+    txnChange: number
+  } | null> | null
+}
+
+export type TokenByAddressQueryVariables = Exact<{
+  address: Scalars['Int']
+}>
+
+export type TokenByAddressQuery = {
+  __typename?: 'RootQuery'
+  token?: {
+    __typename?: 'Token'
+    id: string
+    name: string
+    symbol: string
+    dayVolumeUSD: number
+    totalLiquidityUSD: number
+    priceUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    priceChangeUSD: number
+    oneDayTxns: number
+    txnChange: number
+  } | null
 }
