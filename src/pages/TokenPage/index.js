@@ -28,7 +28,7 @@ import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
 import CopyHelper from 'components/Copy'
 import { useMedia } from 'react-use'
 import Warning from 'components/Warning'
-import { usePathDismissed, useSavedTokens } from 'state/features/user/hooks'
+import { usePathDismissed, useToggleSavedToken } from 'state/features/user/hooks'
 import { PageWrapper, ContentWrapper } from 'components'
 import FormattedName from 'components/FormattedName'
 import { useListedTokens } from 'state/features/application/hooks'
@@ -110,8 +110,7 @@ const TokenPage = () => {
   const formattedSymbol = symbol?.length > LENGTH ? symbol.slice(0, LENGTH) + '...' : symbol
 
   const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
-  const [savedTokens, addToken, removeToken] = useSavedTokens()
-  const isTokenSaved = savedTokens[tokenAddress] ? true : false
+  const [isTokenSaved, toggleSavedToken] = useToggleSavedToken(tokenAddress, symbol)
 
   const listedTokens = useListedTokens()
 
@@ -169,7 +168,7 @@ const TokenPage = () => {
                       <FormattedName text={name ? name + ' ' : ''} maxCharacters={16} style={{ marginRight: '6px' }} />{' '}
                       {formattedSymbol ? `(${formattedSymbol})` : ''}
                     </RowFixed>
-                  </TYPE.main>{' '}
+                  </TYPE.main>
                   {!below1080 && (
                     <>
                       <TYPE.main fontSize={'1.5rem'} fontWeight={500} style={{ marginRight: '1rem' }}>
@@ -181,12 +180,7 @@ const TokenPage = () => {
                 </RowFixed>
               </RowFixed>
               <RowFixed>
-                <StyledBookmark
-                  $saved={isTokenSaved}
-                  onClick={() => {
-                    isTokenSaved ? removeToken(tokenAddress) : addToken(tokenAddress)
-                  }}
-                />
+                <StyledBookmark $saved={isTokenSaved} onClick={toggleSavedToken} />
                 <Link href={getPoolLink(activeNetworkId, tokenAddress)} target="_blank">
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>

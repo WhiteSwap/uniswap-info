@@ -10,6 +10,7 @@ import {
   removeToken
 } from './slice'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { SavedPair, SavedToken } from './types'
 
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useAppDispatch()
@@ -48,7 +49,28 @@ export function useSavedAccounts(): [string[], (account: string) => void, (accou
   return [savedAccounts, addSavedAccount, removeSavedAccount]
 }
 
-export function useSavedPairs() {
+export function useToggleSavedAccount(account?: string): [boolean, () => void] {
+  const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
+  const isSaved = account && savedAccounts.find(acc => acc === account) ? true : false
+
+  const toggleSavedAccount = () => {
+    if (account) {
+      if (isSaved) {
+        removeAccount(account)
+      } else {
+        addAccount(account)
+      }
+    }
+  }
+
+  return [isSaved, toggleSavedAccount]
+}
+
+export function useSavedPairs(): [
+  Record<string, SavedPair>,
+  (address: string, token0Address: string, token1Address: string, token0Symbol: string, token1Symbol: string) => void,
+  (address: string) => void
+] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const savedPairs = useAppSelector(state => state.user[activeNetwork].savedPairs)
@@ -81,7 +103,36 @@ export function useSavedPairs() {
   return [savedPairs, addSavedPair, removeSavedPair]
 }
 
-export function useSavedTokens() {
+export function useToggleSavedPair(
+  address?: string,
+  token0Address?: string,
+  token1Address?: string,
+  token0Symbol?: string,
+  token1Symbol?: string
+): [boolean, () => void] {
+  const [savedPairs, addSavedPair, removeSavedPair] = useSavedPairs()
+  const isSaved = address && typeof savedPairs === 'object' && savedPairs[address] ? true : false
+
+  const toggleSavedPair = () => {
+    if (address) {
+      if (isSaved) {
+        removeSavedPair(address)
+      } else {
+        if (token0Address && token1Address && token0Symbol && token1Symbol) {
+          addSavedPair(address, token0Address, token1Address, token0Symbol, token1Symbol)
+        }
+      }
+    }
+  }
+
+  return [isSaved, toggleSavedPair]
+}
+
+export function useSavedTokens(): [
+  Record<string, SavedToken>,
+  (address: string, symbol: string) => void,
+  (address: string) => void
+] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const savedTokens = useAppSelector(state => state.user[activeNetwork].savedTokens)
@@ -95,4 +146,21 @@ export function useSavedTokens() {
   }
 
   return [savedTokens, addSavedToken, removeSavedToken]
+}
+
+export function useToggleSavedToken(tokenAddress?: string, symbol?: string): [boolean, () => void] {
+  const [savedTokens, addSavedToken, removeSavedToken] = useSavedTokens()
+  const isSaved = tokenAddress && typeof savedTokens === 'object' && savedTokens[tokenAddress] ? true : false
+
+  const toggleSavedToken = () => {
+    if (tokenAddress && symbol) {
+      if (isSaved) {
+        removeSavedToken(tokenAddress)
+      } else {
+        addSavedToken(tokenAddress, symbol)
+      }
+    }
+  }
+
+  return [isSaved, toggleSavedToken]
 }
