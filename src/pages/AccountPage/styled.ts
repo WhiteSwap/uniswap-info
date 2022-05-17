@@ -1,14 +1,6 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import Row from 'components/Row'
-
-export const AccountWrapper = styled.div`
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 6px 16px;
-  border-radius: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+import { Bookmark } from 'react-feather'
 
 export const Header = styled.div``
 
@@ -21,14 +13,14 @@ export const DropdownWrapper = styled.div`
 
 export const Flyout = styled.div`
   position: absolute;
-  top: 38px;
+  top: 48px;
   left: -1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg1};
-  z-index: 999;
+  width: calc(100% + 2px);
+  background-color: ${({ theme }) => theme.bg2};
+  z-index: 10;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
-  padding-top: 4px;
+  padding: 10px 0;
   border: 1px solid #edeef2;
   border-top: none;
 `
@@ -40,7 +32,7 @@ export const MenuRow = styled(Row)`
 
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.bg1};
   }
 `
 
@@ -52,4 +44,20 @@ export const Warning = styled.div`
   border-radius: 10px;
   margin-bottom: 1rem;
   width: calc(100% - 2rem);
+`
+
+export const StyledBookmark = styled(Bookmark)<{ $saved: boolean }>`
+  color: ${({ theme }) => theme.text1};
+  cursor: pointer;
+  transition: 0.25s;
+
+  :hover {
+    opacity: 0.8;
+  }
+
+  ${({ $saved = false, theme }) =>
+    $saved &&
+    css`
+      fill: ${theme.text1};
+    `}
 `

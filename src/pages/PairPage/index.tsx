@@ -1,8 +1,9 @@
-import { PageWrapper, ContentWrapperLarge, Hover, StyledIcon } from 'components'
+import { PageWrapper, ContentWrapperLarge } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import Column, { AutoColumn } from 'components/Column'
 import CopyHelper from 'components/Copy'
 import DoubleTokenLogo from 'components/DoubleLogo'
+import FormattedName from 'components/FormattedName'
 import Link, { BasicLink } from 'components/Link'
 import PairChart from 'components/PairChart'
 import Panel from 'components/Panel'
@@ -15,14 +16,14 @@ import Warning from 'components/Warning'
 import { PAIR_BLACKLIST } from 'constants/index'
 import { useFormatPath } from 'hooks'
 import { useState, useEffect } from 'react'
-import { PlusCircle, Bookmark, Loader } from 'react-feather'
+import { Loader } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useParams, useLocation, Navigate, Link as RouterLink } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { useListedTokens } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
-import { usePathDismissed, useSavedPairs } from 'state/features/user/hooks'
+import { usePathDismissed, useToggleSavedPair } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
 import { isValidAddress, formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, getViewOnScanKey } from 'utils'
 import {
@@ -32,7 +33,7 @@ import {
   PanelWrapper,
   TokenDetailsLayout,
   TokenLink,
-  CustomFormattedName
+  StyledBookmark
 } from './styled'
 
 const PairPage = () => {
@@ -101,10 +102,15 @@ const PairPage = () => {
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
 
-  const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
-  const [savedPairs, addPair] = useSavedPairs()
-
   const listedTokens = useListedTokens()
+  const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
+  const [isPairSaved, toggleSavedPair] = useToggleSavedPair(
+    pairAddress,
+    tokenOne?.id,
+    tokenTwo?.id,
+    tokenOne?.symbol,
+    tokenTwo?.symbol
+  )
 
   return (
     <PageWrapper>
@@ -176,22 +182,7 @@ const PairPage = () => {
                     flexDirection: below1080 ? 'row-reverse' : 'initial'
                   }}
                 >
-                  {!savedPairs[pairAddress] && !below1080 ? (
-                    <Hover
-                      onClick={() => addPair(pairAddress, tokenOne.id, tokenTwo.id, tokenOne.symbol, tokenTwo.symbol)}
-                    >
-                      <StyledIcon>
-                        <PlusCircle style={{ marginRight: '0.5rem' }} />
-                      </StyledIcon>
-                    </Hover>
-                  ) : !below1080 ? (
-                    <StyledIcon>
-                      <Bookmark style={{ marginRight: '0.5rem', opacity: 0.4 }} />
-                    </StyledIcon>
-                  ) : (
-                    <></>
-                  )}
-
+                  <StyledBookmark $saved={isPairSaved} onClick={toggleSavedPair} />
                   <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>
@@ -366,9 +357,9 @@ const PairPage = () => {
                   <TYPE.light>{t('pairName')}</TYPE.light>
                   <TYPE.main style={{ marginTop: '.5rem' }}>
                     <RowFixed>
-                      <CustomFormattedName text={tokenOne?.symbol ?? ''} maxCharacters={8} />
+                      <FormattedName text={tokenOne?.symbol ?? ''} maxCharacters={8} />
                       -
-                      <CustomFormattedName text={tokenTwo?.symbol ?? ''} maxCharacters={8} />
+                      <FormattedName text={tokenTwo?.symbol ?? ''} maxCharacters={8} />
                     </RowFixed>
                   </TYPE.main>
                 </Column>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useParams, Navigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
 import Link from 'components/Link'
 import Panel from 'components/Panel'
 import TokenLogo from 'components/TokenLogo'
@@ -28,71 +27,18 @@ import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
 import CopyHelper from 'components/Copy'
 import { useMedia } from 'react-use'
 import Warning from 'components/Warning'
-import { usePathDismissed, useSavedTokens } from 'state/features/user/hooks'
-import { Hover, PageWrapper, ContentWrapper, StyledIcon } from '../components'
-import { PlusCircle, Bookmark } from 'react-feather'
+import { usePathDismissed, useToggleSavedToken } from 'state/features/user/hooks'
+import { PageWrapper, ContentWrapper } from 'components'
 import FormattedName from 'components/FormattedName'
 import { useListedTokens } from 'state/features/application/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
 import { useTranslation } from 'react-i18next'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import Percent from 'components/Percent'
+import { PanelWrapper, TokenDetailsLayout, WarningGrouping, StyledBookmark } from './styled'
 import { TransactionTable } from 'components/TransactionTable'
 
-const PanelWrapper = styled.div`
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: max-content;
-  gap: 6px;
-  display: inline-grid;
-  width: 100%;
-  align-items: start;
-  @media screen and (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-    > * {
-      grid-column: 1 / 4;
-    }
-
-    > * {
-      &:first-child {
-        width: 100%;
-      }
-    }
-  }
-`
-
-const TokenDetailsLayout = styled.div`
-  display: inline-grid;
-  width: 100%;
-  grid-template-columns: auto auto auto 1fr;
-  column-gap: 30px;
-  align-items: start;
-
-  &:last-child {
-    align-items: center;
-    justify-items: end;
-  }
-  @media screen and (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-    > * {
-      grid-column: 1 / 4;
-      margin-bottom: 1rem;
-    }
-
-    &:last-child {
-      align-items: start;
-      justify-items: start;
-    }
-  }
-`
-
-const WarningGrouping = styled.div`
-  opacity: ${({ disabled }) => disabled && '0.4'};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
-`
-
-function TokenPage() {
+const TokenPage = () => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
 
@@ -156,9 +102,7 @@ function TokenPage() {
 
   const below1080 = useMedia('(max-width: 1080px)')
   const below1024 = useMedia('(max-width: 1024px)')
-  const below800 = useMedia('(max-width: 800px)')
   const below600 = useMedia('(max-width: 600px)')
-  const below500 = useMedia('(max-width: 500px)')
   const below440 = useMedia('(max-width: 440px)')
 
   // format for long symbol
@@ -166,7 +110,8 @@ function TokenPage() {
   const formattedSymbol = symbol?.length > LENGTH ? symbol.slice(0, LENGTH) + '...' : symbol
 
   const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
-  const [savedTokens, addToken] = useSavedTokens()
+  const [isTokenSaved, toggleSavedToken] = useToggleSavedToken(tokenAddress, symbol)
+
   const listedTokens = useListedTokens()
 
   return (
@@ -200,7 +145,7 @@ function TokenPage() {
 
         <WarningGrouping disabled={!dismissed && listedTokens && !listedTokens.includes(tokenAddress)}>
           <DashboardWrapper style={{ marginTop: below1080 ? '0' : '1rem' }}>
-            <RowFixed
+            <RowBetween
               style={{
                 flexWrap: 'wrap',
                 marginBottom: '2rem',
@@ -223,7 +168,7 @@ function TokenPage() {
                       <FormattedName text={name ? name + ' ' : ''} maxCharacters={16} style={{ marginRight: '6px' }} />{' '}
                       {formattedSymbol ? `(${formattedSymbol})` : ''}
                     </RowFixed>
-                  </TYPE.main>{' '}
+                  </TYPE.main>
                   {!below1080 && (
                     <>
                       <TYPE.main fontSize={'1.5rem'} fontWeight={500} style={{ marginRight: '1rem' }}>
@@ -234,32 +179,18 @@ function TokenPage() {
                   )}
                 </RowFixed>
               </RowFixed>
-              <span>
-                <RowFixed ml={below500 ? '0' : '2.5rem'} mt={below500 ? '1rem' : '0'}>
-                  {!savedTokens[tokenAddress] && !below800 ? (
-                    <Hover onClick={() => addToken(tokenAddress, symbol)}>
-                      <StyledIcon>
-                        <PlusCircle style={{ marginRight: '0.5rem' }} />
-                      </StyledIcon>
-                    </Hover>
-                  ) : !below1080 ? (
-                    <StyledIcon>
-                      <Bookmark style={{ marginRight: '0.5rem', opacity: 0.4 }} />
-                    </StyledIcon>
-                  ) : (
-                    <></>
-                  )}
-                  <Link href={getPoolLink(activeNetworkId, tokenAddress)} target="_blank">
-                    <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
-                  </Link>
-                  <Link href={getSwapLink(activeNetworkId, tokenAddress)} target="_blank">
-                    <ButtonDark ml={'.5rem'} color={backgroundColor}>
-                      {t('trade')}
-                    </ButtonDark>
-                  </Link>
-                </RowFixed>
-              </span>
-            </RowFixed>
+              <RowFixed>
+                <StyledBookmark $saved={isTokenSaved} onClick={toggleSavedToken} />
+                <Link href={getPoolLink(activeNetworkId, tokenAddress)} target="_blank">
+                  <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
+                </Link>
+                <Link href={getSwapLink(activeNetworkId, tokenAddress)} target="_blank">
+                  <ButtonDark ml={'.5rem'} color={backgroundColor}>
+                    {t('trade')}
+                  </ButtonDark>
+                </Link>
+              </RowFixed>
+            </RowBetween>
 
             <PanelWrapper style={{ marginTop: below1080 ? '0' : '1rem' }}>
               {below1080 && price && (
