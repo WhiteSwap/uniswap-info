@@ -14,6 +14,7 @@ export type Scalars = {
 
 export type RootQuery = {
   __typename?: 'RootQuery'
+  pair?: Maybe<Pair>
   pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
   tokens?: Maybe<Array<Maybe<Token>>>
@@ -21,8 +22,12 @@ export type RootQuery = {
   whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
 }
 
+export type RootQueryPairArgs = {
+  id: Scalars['String']
+}
+
 export type RootQueryTokenArgs = {
-  id?: InputMaybe<Scalars['Int']>
+  id: Scalars['String']
 }
 
 export type RootQueryWhiteSwapDayDatasArgs = {
@@ -126,6 +131,34 @@ export type GlobalChartQuery = {
   }> | null
 }
 
+export type PairDataFragment = {
+  __typename?: 'Pair'
+  id: string
+  totalLiquidityUSD: number
+  dayVolumeUSD: number
+  weekVolumeUSD: number
+  liquidityChangeUSD: number
+  volumeChangeUSD: number
+  tokenOne: {
+    __typename?: 'TokenPair'
+    id: string
+    name: string
+    symbol: string
+    reserve: number
+    price: number
+    derivedPrice: number
+  }
+  tokenTwo: {
+    __typename?: 'TokenPair'
+    id: string
+    name: string
+    symbol: string
+    reserve: number
+    price: number
+    derivedPrice: number
+  }
+}
+
 export type PairListQueryVariables = Exact<{ [key: string]: never }>
 
 export type PairListQuery = {
@@ -159,6 +192,41 @@ export type PairListQuery = {
   } | null> | null
 }
 
+export type PairQueryVariables = Exact<{
+  address: Scalars['String']
+}>
+
+export type PairQuery = {
+  __typename?: 'RootQuery'
+  pair?: {
+    __typename?: 'Pair'
+    id: string
+    totalLiquidityUSD: number
+    dayVolumeUSD: number
+    weekVolumeUSD: number
+    liquidityChangeUSD: number
+    volumeChangeUSD: number
+    tokenOne: {
+      __typename?: 'TokenPair'
+      id: string
+      name: string
+      symbol: string
+      reserve: number
+      price: number
+      derivedPrice: number
+    }
+    tokenTwo: {
+      __typename?: 'TokenPair'
+      id: string
+      name: string
+      symbol: string
+      reserve: number
+      price: number
+      derivedPrice: number
+    }
+  } | null
+}
+
 export type TokensQueryVariables = Exact<{ [key: string]: never }>
 
 export type TokensQuery = {
@@ -179,11 +247,11 @@ export type TokensQuery = {
   } | null> | null
 }
 
-export type TokenByAddressQueryVariables = Exact<{
-  address: Scalars['Int']
+export type TokenQueryVariables = Exact<{
+  address: Scalars['String']
 }>
 
-export type TokenByAddressQuery = {
+export type TokenQuery = {
   __typename?: 'RootQuery'
   token?: {
     __typename?: 'Token'

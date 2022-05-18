@@ -18,8 +18,8 @@ export const TOKENS = gql`
   }
 `
 
-export const TOKEN_BY_ADDRESS = gql`
-  query TokenByAddress($address: Int!) {
+export const TOKEN = gql`
+  query Token($address: String!) {
     token(id: $address) {
       id
       name
