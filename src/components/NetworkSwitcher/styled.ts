@@ -86,8 +86,8 @@ export const NetworkListItemLink = styled(Link)`
 export const NetworkBlurb = styled.span`
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text3};
+  background-color: rgba(86, 90, 105, 0.5);
+  color: ${({ theme }) => theme.white};
 
   @media screen and (max-width: 1080px) {
     padding: 0.25rem;
