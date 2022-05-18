@@ -17,10 +17,12 @@ import {
   LatestBlockContainer,
   LatestBlockText,
   LatestBlock,
-  LatestBlockDot
+  LatestBlockDot,
+  Badge
 } from './styled'
 import MobileMenu from './MobileMenu'
-import { useLatestBlock } from 'state/features/application/selectors'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { SupportedNetwork } from 'constants/networks'
 
 const navigationLinks = [
   {
@@ -77,6 +79,7 @@ function Navigation() {
   const below1080 = useMedia('(max-width: 1080px)')
   const [isDark, toggleDarkMode] = useDarkModeManager()
   const formatPath = useFormatPath()
+  const activeNetwork = useActiveNetworkId()
   const latestBlock = useLatestBlock()
 
   return below1080 ? (
@@ -91,14 +94,20 @@ function Navigation() {
         <Title />
         <NetworkSwitcher />
         <AutoColumn as="nav" style={{ marginTop: '5.25rem' }}>
-          {navigationLinks.map(({ route, key, Icon, label }) => (
-            <NavigationLink key={key} to={formatPath(route)}>
-              <StyledNavButton>
-                <Icon size={20} />
-              </StyledNavButton>
-              {t(label)}
-            </NavigationLink>
-          ))}
+          {navigationLinks.map(({ route, key, Icon, label }) => {
+            // temporary disable account link for beta version
+            const isSoon = key === 'accounts' && activeNetwork === SupportedNetwork.TRON
+
+            return (
+              <NavigationLink isDisabled={isSoon} key={key} to={formatPath(route)}>
+                <StyledNavButton>
+                  <Icon size={20} />
+                </StyledNavButton>
+                {t(label)}
+                {isSoon ? <Badge>{t('soon')}</Badge> : undefined}
+              </NavigationLink>
+            )
+          })}
         </AutoColumn>
       </AutoColumn>
       <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem' }}>

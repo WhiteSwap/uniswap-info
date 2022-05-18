@@ -1,7 +1,7 @@
 import { darken } from 'polished'
 import { NavLink } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Aside = styled.aside`
   height: 100vh;
@@ -19,13 +19,13 @@ export const Aside = styled.aside`
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
 `
 
-export const NavigationLink = styled(NavLink)`
+export const NavigationLink = styled(NavLink)<{ isDisabled?: boolean }>`
   font-weight: 500;
   font-size: 1rem;
   opacity: 0.6;
   color: ${({ theme }) => theme.text1};
   display: flex;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 0 0.5rem 1.5rem;
   position: relative;
   align-items: center;
   width: 100%;
@@ -57,6 +57,22 @@ export const NavigationLink = styled(NavLink)`
       background: ${({ theme }) => theme.blueGrey};
     }
   }
+  ${({ isDisabled }) =>
+    isDisabled &&
+    css`
+      pointer-events: none;
+      opacity: 1;
+      color: ${({ theme }) => theme.text4};
+    `}
+`
+
+export const Badge = styled.span`
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  background-color: rgba(102, 129, 167, 0.1);
+  margin-left: 0.5rem;
+  color: ${({ theme }) => theme.blueGrey};
 `
 
 export const StyledNavButton = styled.div`
