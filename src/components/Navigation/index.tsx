@@ -20,9 +20,9 @@ import {
   LatestBlockDot,
   Badge
 } from './styled'
-import MobileMenu from './MobileMenu'
 import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
+import MobileMenu from './MobileMenu'
 
 const navigationLinks = [
   {
@@ -99,7 +99,7 @@ function Navigation() {
             const isSoon = key === 'accounts' && activeNetwork === SupportedNetwork.TRON
 
             return (
-              <NavigationLink isDisabled={isSoon} key={key} to={formatPath(route)}>
+              <NavigationLink disabled={isSoon} key={key} to={formatPath(route)}>
                 <StyledNavButton>
                   <Icon size={20} />
                 </StyledNavButton>

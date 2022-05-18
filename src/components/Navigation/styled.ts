@@ -1,4 +1,5 @@
 import { darken } from 'polished'
+import { Menu } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
 import styled, { css } from 'styled-components'
@@ -19,7 +20,7 @@ export const Aside = styled.aside`
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
 `
 
-export const NavigationLink = styled(NavLink)<{ isDisabled?: boolean }>`
+export const NavigationLink = styled(NavLink)<{ disabled?: boolean }>`
   font-weight: 500;
   font-size: 1rem;
   opacity: 0.6;
@@ -57,8 +58,8 @@ export const NavigationLink = styled(NavLink)<{ isDisabled?: boolean }>`
       background: ${({ theme }) => theme.blueGrey};
     }
   }
-  ${({ isDisabled }) =>
-    isDisabled &&
+  ${({ disabled }) =>
+    disabled &&
     css`
       pointer-events: none;
       opacity: 1;
@@ -147,4 +148,72 @@ export const LatestBlock = styled.span`
 
 export const LatestBlockText = styled.span`
   color: ${({ theme }) => theme.text3};
+`
+
+export const MenuWrapper = styled.div`
+  position: relative;
+  height: 2rem;
+`
+
+export const MenuButton = styled(Menu)`
+  width: 2rem;
+  height: 2rem;
+  color: ${({ theme }) => theme.text2};
+  cursor: pointer;
+`
+
+export const MenuList = styled.ul`
+  position: absolute;
+  transition: 0.2s ease;
+  transform: translate(calc(2.5rem - 100%), 16px);
+  border: 1px solid ${({ theme }) => theme.mercuryGray};
+  animation: 0.3s ease-in-out;
+  background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+  list-style: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  width: 200px;
+  margin: 0;
+  padding: 0;
+`
+
+export const MenuItemLink = styled(NavLink)<{ disabled: boolean }>`
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+  color: ${({ theme }) => theme.text2};
+  opacity: 0.9;
+  cursor: pointer;
+
+  :hover {
+    background-color: ${({ theme }) => theme.bg1};
+    opacity: 1;
+  }
+
+  &.active {
+    opacity: 1;
+    color: ${({ theme }) => theme.blueGrey};
+    background: rgba(102, 129, 167, 0.1);
+    font-weight: 700;
+
+    div {
+      background: ${({ theme }) => theme.blueGrey};
+
+      svg {
+        stroke: ${({ theme }) => theme.lightText1};
+      }
+    }
+  }
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      pointer-events: none;
+      opacity: 1;
+      color: ${({ theme }) => theme.text4};
+    `}
+`
+
+export const MenuItemName = styled.span`
+  margin-left: 0.5rem;
 `
