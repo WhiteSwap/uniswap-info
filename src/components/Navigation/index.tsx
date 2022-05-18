@@ -24,21 +24,25 @@ import { useLatestBlock } from 'state/features/application/selectors'
 
 const navigationLinks = [
   {
+    key: 'home',
     route: '/',
     Icon: TrendingUp,
     label: 'sideNav.overview'
   },
   {
+    key: 'tokens',
     route: '/tokens',
     Icon: Disc,
     label: 'sideNav.tokens'
   },
   {
+    key: 'pairs',
     route: '/pairs',
     Icon: PieChart,
     label: 'sideNav.pairs'
   },
   {
+    key: 'accounts',
     route: '/accounts',
     Icon: List,
     label: 'sideNav.accounts'
@@ -87,8 +91,8 @@ function Navigation() {
         <Title />
         <NetworkSwitcher />
         <AutoColumn as="nav" style={{ marginTop: '5.25rem' }}>
-          {navigationLinks.map(({ route, Icon, label }) => (
-            <NavigationLink key={route} to={formatPath(route)}>
+          {navigationLinks.map(({ route, key, Icon, label }) => (
+            <NavigationLink key={key} to={formatPath(route)}>
               <StyledNavButton>
                 <Icon size={20} />
               </StyledNavButton>
