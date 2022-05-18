@@ -50,7 +50,9 @@ export const tokenSlice = createSlice({
       }
     },
     setTokenPairs: (state, { payload: { networkId, address, allPairs } }: PayloadAction<UpdateAllPairsPayload>) => {
-      state[networkId][address].tokenPairs = allPairs
+      if (state[networkId][address]) {
+        state[networkId][address].tokenPairs = allPairs
+      }
     }
   }
 })

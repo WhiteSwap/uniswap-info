@@ -12,15 +12,7 @@ import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
-import {
-  formattedNum,
-  getPoolLink,
-  getSwapLink,
-  localNumber,
-  getBlockChainScanLink,
-  getViewOnScanKey,
-  isValidAddress
-} from 'utils'
+import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, getViewOnScanKey, isValidAddress } from 'utils'
 import { useTokenData, useTokenTransactions, useTokenPairsIds, useTokenPairs } from 'state/features/token/hooks'
 import { useFormatPath, useColor } from 'hooks'
 import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
@@ -40,22 +32,30 @@ import { TransactionTable } from 'components/TransactionTable'
 
 const TokenPage = () => {
   const { t } = useTranslation()
-  const formatPath = useFormatPath()
-
-  const location = useLocation()
   const { tokenAddress } = useParams()
+  const location = useLocation()
+  const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
 
-  if (OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) || !isValidAddress(tokenAddress, activeNetworkId)) {
+  if (
+    !tokenAddress ||
+    OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) ||
+    !isValidAddress(tokenAddress, activeNetworkId)
+  ) {
     return <Navigate to={formatPath('/')} />
   }
+
+  const below1080 = useMedia('(max-width: 1080px)')
+  const below1024 = useMedia('(max-width: 1024px)')
+  const below600 = useMedia('(max-width: 600px)')
+  const below440 = useMedia('(max-width: 440px)')
 
   const {
     id,
     name,
     symbol,
     priceUSD,
-    oneDayVolumeUSD,
+    dayVolumeUSD,
     totalLiquidityUSD,
     volumeChangeUSD,
     oneDayVolumeUT,
@@ -81,29 +81,19 @@ const TokenPage = () => {
 
   // volume
   const volume =
-    oneDayVolumeUSD || oneDayVolumeUSD === 0
-      ? formattedNum(oneDayVolumeUSD === 0 ? oneDayVolumeUT : oneDayVolumeUSD, true)
-      : oneDayVolumeUSD === 0
+    dayVolumeUSD || dayVolumeUSD === 0
+      ? formattedNum(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
+      : dayVolumeUSD === 0
       ? '$0'
       : '-'
 
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
-  useEffect(() => {
-    setUsingUtVolume(oneDayVolumeUSD === 0 ? true : false)
-  }, [oneDayVolumeUSD])
 
-  const volumeChange = !usingUtVolume ? volumeChangeUSD : volumeChangeUT
+  const volumeChange = (!usingUtVolume ? volumeChangeUSD : volumeChangeUT) || 0
 
   // liquidity
   const liquidity = totalLiquidityUSD ? formattedNum(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
-
-  // transactions
-
-  const below1080 = useMedia('(max-width: 1080px)')
-  const below1024 = useMedia('(max-width: 1024px)')
-  const below600 = useMedia('(max-width: 600px)')
-  const below440 = useMedia('(max-width: 440px)')
 
   // format for long symbol
   const LENGTH = below1080 ? 10 : 16
@@ -114,16 +104,19 @@ const TokenPage = () => {
 
   const listedTokens = useListedTokens()
 
+  useEffect(() => {
+    setUsingUtVolume(dayVolumeUSD === 0 ? true : false)
+  }, [dayVolumeUSD])
+
   return (
     <PageWrapper>
       <Warning
-        type={'token'}
         show={!dismissed && listedTokens.length > 0 && !listedTokens.includes(tokenAddress)}
         setShow={markAsDismissed}
         address={tokenAddress}
       />
       <ContentWrapper>
-        <RowBetween style={{ flexWrap: 'wrap', alingItems: 'start' }}>
+        <RowBetween style={{ flexWrap: 'wrap', alignItems: 'flex-start' }}>
           <AutoRow align="flex-end" style={{ width: 'fit-content' }}>
             <TYPE.body>
               <BasicLink to={formatPath(`/tokens`)}>{`${t('tokens')} `}</BasicLink>→ {symbol}
@@ -164,7 +157,7 @@ const TokenPage = () => {
                     fontSize={!below1080 ? '2.5rem' : below440 ? '1.25rem' : '1.5rem'}
                     style={{ margin: '0 1rem' }}
                   >
-                    <RowFixed gap="6px">
+                    <RowFixed>
                       <FormattedName text={name ? name + ' ' : ''} maxCharacters={16} style={{ marginRight: '6px' }} />{' '}
                       {formattedSymbol ? `(${formattedSymbol})` : ''}
                     </RowFixed>
@@ -181,10 +174,10 @@ const TokenPage = () => {
               </RowFixed>
               <RowFixed>
                 <StyledBookmark $saved={isTokenSaved} onClick={toggleSavedToken} />
-                <Link href={getPoolLink(activeNetworkId, tokenAddress)} target="_blank">
+                <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>
-                <Link href={getSwapLink(activeNetworkId, tokenAddress)} target="_blank">
+                <Link href={getSwapLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonDark ml={'.5rem'} color={backgroundColor}>
                     {t('trade')}
                   </ButtonDark>
@@ -257,7 +250,7 @@ const TokenPage = () => {
                   </RowBetween>
                   <RowBetween align="flex-end">
                     <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
-                      {oneDayTxns ? localNumber(oneDayTxns) : oneDayTxns === 0 ? 0 : '-'}
+                      {oneDayTxns ? oneDayTxns : '-'}
                     </TYPE.main>
                     <TYPE.main>
                       <Percent percent={txnChange} />
@@ -271,7 +264,7 @@ const TokenPage = () => {
                   gridRow: below1080 ? '' : '1/4'
                 }}
               >
-                <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} />
+                {priceUSD ? <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} /> : undefined}
               </Panel>
             </PanelWrapper>
           </DashboardWrapper>
@@ -280,11 +273,7 @@ const TokenPage = () => {
             <TYPE.main fontSize={22} fontWeight={500}>
               {t('topPairs')}
             </TYPE.main>
-            {tokenAddress && pairsList ? (
-              <PairList color={backgroundColor} address={tokenAddress} pairs={pairsList} />
-            ) : (
-              <Loader />
-            )}
+            {tokenAddress && Object.keys(pairsList).length > 0 ? <PairList pairs={pairsList} /> : <Loader />}
           </DashboardWrapper>
 
           <DashboardWrapper style={{ marginTop: '1.5rem' }}>
@@ -298,7 +287,6 @@ const TokenPage = () => {
               Token Information
             </TYPE.main>
             <Panel
-              rounded
               style={{
                 marginTop: below440 ? '.75rem' : '1.5rem'
               }}
