@@ -300,7 +300,7 @@ const PairPage = () => {
                         <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {tokenOne.reserve ? formattedNum(tokenOne.reserve) : ''} {tokenOne?.symbol ?? ''}
+                            {tokenOne?.reserve ? formattedNum(tokenOne.reserve) : ''} {tokenOne?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
@@ -310,7 +310,7 @@ const PairPage = () => {
                         <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {tokenTwo.reserve ? formattedNum(tokenTwo.reserve) : ''} {tokenTwo?.symbol ?? ''}
+                            {tokenTwo?.reserve ? formattedNum(tokenTwo.reserve) : ''} {tokenTwo?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
@@ -324,12 +324,14 @@ const PairPage = () => {
                     width: '100%'
                   }}
                 >
-                  <PairChart
-                    address={pairAddress}
-                    color={'#2E69BB'}
-                    base0={tokenTwo.reserve / tokenOne.reserve}
-                    base1={tokenOne.reserve / tokenTwo.reserve}
-                  />
+                  {tokenOne && tokenTwo ? (
+                    <PairChart
+                      address={pairAddress}
+                      color={'#2E69BB'}
+                      base0={tokenTwo.reserve / tokenOne.reserve}
+                      base1={tokenOne.reserve / tokenTwo.reserve}
+                    />
+                  ) : undefined}
                 </Panel>
               </PanelWrapper>
             </>
