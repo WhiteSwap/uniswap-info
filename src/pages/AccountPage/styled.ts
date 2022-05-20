@@ -1,12 +1,10 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import Row from 'components/Row'
-import { Bookmark } from 'react-feather'
 
 export const Header = styled.div``
 
 export const DropdownWrapper = styled.div`
   position: relative;
-  margin-bottom: 1rem;
   border: 1px solid #edeef2;
   border-radius: 12px;
 `
@@ -46,18 +44,9 @@ export const Warning = styled.div`
   width: calc(100% - 2rem);
 `
 
-export const StyledBookmark = styled(Bookmark)<{ $saved: boolean }>`
-  color: ${({ theme }) => theme.text1};
-  cursor: pointer;
-  transition: 0.25s;
-
-  :hover {
-    opacity: 0.8;
-  }
-
-  ${({ $saved = false, theme }) =>
-    $saved &&
-    css`
-      fill: ${theme.text1};
-    `}
+export const ActionsContainer = styled.div`
+  display: grid;
+  gap: 0.75rem;
+  grid-auto-flow: column;
+  align-items: center;
 `

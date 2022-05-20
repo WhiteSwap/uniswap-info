@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
 import { useParams, Navigate } from 'react-router-dom'
 import Panel from 'components/Panel'
-import { formattedNum, getBlockChainScanLink, getViewOnScanKey, isValidAddress } from 'utils'
+import { formattedNum, getBlockChainScanLink, isValidAddress } from 'utils'
 import { AutoRow, RowFixed, RowBetween } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import UserChart from 'components/UserChart'
@@ -11,7 +11,7 @@ import PositionList from 'components/PositionList'
 import { useFormatPath } from 'hooks'
 import { DashboardWrapper, TYPE } from 'Theme'
 import { ButtonDropdown } from 'components/ButtonStyled'
-import { PageWrapper, ContentWrapper, StyledIcon } from 'components'
+import { PageWrapper, StyledIcon, StarIcon, ExternalLinkIcon, ContentWrapperLarge } from 'components'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import { Activity } from 'react-feather'
 import Link from 'components/Link'
@@ -20,7 +20,7 @@ import { BasicLink } from 'components/Link'
 import { useMedia } from 'react-use'
 import Search from 'components/Search'
 import { useTranslation } from 'react-i18next'
-import { DropdownWrapper, Flyout, Header, MenuRow, Warning, StyledBookmark } from './styled'
+import { DropdownWrapper, Flyout, Header, MenuRow, Warning, ActionsContainer } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TransactionTable } from 'components/TransactionTable'
 import LocalLoader from 'components/LocalLoader'
@@ -101,36 +101,31 @@ function AccountPage() {
 
   return (
     <PageWrapper>
-      <ContentWrapper>
+      <ContentWrapperLarge>
         <RowBetween>
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
-            <Link
-              lineHeight={'145.23%'}
-              href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')}
-              target="_blank"
-            >
-              {accountAddress?.slice(0, 42)}
+            <Link href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
+              {accountAddress.slice(0, 6) + '...' + accountAddress.slice(38, 42)}
             </Link>
           </TYPE.body>
           {!below600 && <Search small={true} />}
         </RowBetween>
         <Header>
           <RowBetween>
-            <span>
-              <TYPE.header fontSize={24}>
-                {accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(38, 42)}
-              </TYPE.header>
-              <Link
-                lineHeight={'145.23%'}
+            <TYPE.header fontSize={24}>
+              {accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(38, 42)}
+            </TYPE.header>
+            <ActionsContainer>
+              <StarIcon filled={isSaved} onClick={toggleSavedAccount} />
+              <a
                 href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')}
                 target="_blank"
+                rel="noopener nofollow noreferrer"
               >
-                <TYPE.main fontSize={14}>{t(getViewOnScanKey(activeNetworkId))}</TYPE.main>
-              </Link>
-            </span>
-
-            <StyledBookmark $saved={isSaved} onClick={toggleSavedAccount} />
+                <ExternalLinkIcon />
+              </a>
+            </ActionsContainer>
           </RowBetween>
         </Header>
         {showWarning && <Warning>{t('feesCantBeCalc')}</Warning>}
@@ -203,66 +198,6 @@ function AccountPage() {
             )}
           </DropdownWrapper>
         )}
-        {!hideLPContent && (
-          <DashboardWrapper>
-            <AutoRow gap="1.5rem">
-              <AutoColumn gap="10px">
-                <RowBetween>
-                  <TYPE.light fontSize={below440 ? 12 : 14} fontWeight={500}>
-                    {t('liquidityIncludingFees')}
-                  </TYPE.light>
-                  <div />
-                </RowBetween>
-                <RowFixed>
-                  <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1}>
-                    {positionValue
-                      ? formattedNum(positionValue, true)
-                      : positionValue === 0
-                      ? formattedNum(0, true)
-                      : '-'}
-                  </TYPE.header>
-                </RowFixed>
-              </AutoColumn>
-              <AutoColumn gap="10px">
-                <RowBetween>
-                  <TYPE.light fontSize={below440 ? 12 : 14} fontWeight={500}>
-                    {t('feesEarnedCumulative')}
-                  </TYPE.light>
-                  <div />
-                </RowBetween>
-                <RowFixed align="flex-end">
-                  <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={aggregateFees && 'green'}>
-                    {aggregateFees ? formattedNum(aggregateFees, true, true) : '-'}
-                  </TYPE.header>
-                </RowFixed>
-              </AutoColumn>
-            </AutoRow>
-          </DashboardWrapper>
-        )}
-        {!hideLPContent && (
-          <DashboardWrapper>
-            {activePosition ? (
-              <PairReturnsChart account={accountAddress} position={activePosition} />
-            ) : (
-              <UserChart account={accountAddress} />
-            )}
-          </DashboardWrapper>
-        )}
-
-        <DashboardWrapper>
-          <TYPE.main fontSize={22} fontWeight={500}>
-            {t('positions')}
-          </TYPE.main>
-          <PositionList positions={positions} />
-        </DashboardWrapper>
-
-        <DashboardWrapper>
-          <TYPE.main fontSize={22} fontWeight={500}>
-            {t('transactions')}
-          </TYPE.main>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
-        </DashboardWrapper>
-
         <DashboardWrapper>
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('walletStats')}
@@ -310,7 +245,68 @@ function AccountPage() {
             )}
           </Panel>
         </DashboardWrapper>
-      </ContentWrapper>
+        {!hideLPContent && (
+          <DashboardWrapper>
+            <AutoRow gap="1.5rem">
+              <AutoColumn gap="10px">
+                <RowBetween>
+                  <TYPE.light fontSize={below440 ? 12 : 14} fontWeight={500}>
+                    {t('liquidityIncludingFees')}
+                  </TYPE.light>
+                  <div />
+                </RowBetween>
+                <RowFixed>
+                  <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1}>
+                    {positionValue
+                      ? formattedNum(positionValue, true)
+                      : positionValue === 0
+                      ? formattedNum(0, true)
+                      : '-'}
+                  </TYPE.header>
+                </RowFixed>
+              </AutoColumn>
+              <AutoColumn gap="10px">
+                <RowBetween>
+                  <TYPE.light fontSize={below440 ? 12 : 14} fontWeight={500}>
+                    {t('feesEarnedCumulative')}
+                  </TYPE.light>
+                  <div />
+                </RowBetween>
+                <RowFixed align="flex-end">
+                  <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={aggregateFees && 'green'}>
+                    {aggregateFees ? formattedNum(aggregateFees, true, true) : '-'}
+                  </TYPE.header>
+                </RowFixed>
+              </AutoColumn>
+            </AutoRow>
+          </DashboardWrapper>
+        )}
+        {!hideLPContent && (
+          <DashboardWrapper style={{ display: 'grid' }}>
+            <Panel style={{ width: '100%' }}>
+              {activePosition ? (
+                <PairReturnsChart account={accountAddress} position={activePosition} />
+              ) : (
+                <UserChart account={accountAddress} />
+              )}
+            </Panel>
+          </DashboardWrapper>
+        )}
+
+        <DashboardWrapper>
+          <TYPE.main fontSize={22} fontWeight={500}>
+            {t('positions')}
+          </TYPE.main>
+          <PositionList positions={positions} />
+        </DashboardWrapper>
+
+        <DashboardWrapper>
+          <TYPE.main fontSize={22} fontWeight={500}>
+            {t('transactions')}
+          </TYPE.main>
+          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
+        </DashboardWrapper>
+      </ContentWrapperLarge>
     </PageWrapper>
   )
 }

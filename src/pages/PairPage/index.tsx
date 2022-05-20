@@ -1,10 +1,8 @@
-import { PageWrapper, ContentWrapperLarge } from 'components'
+import { PageWrapper, ContentWrapperLarge, StarIcon, ExternalLinkIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
-import Column, { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/Column'
 import ComingSoon from 'components/ComingSoon'
-import CopyHelper from 'components/Copy'
 import DoubleTokenLogo from 'components/DoubleLogo'
-import FormattedName from 'components/FormattedName'
 import Link, { BasicLink } from 'components/Link'
 import PairChart from 'components/PairChart'
 import Panel from 'components/Panel'
@@ -27,16 +25,8 @@ import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
 import { usePathDismissed, useToggleSavedPair } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
-import { isValidAddress, formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, getViewOnScanKey } from 'utils'
-import {
-  WarningGrouping,
-  TokenSymbolLink,
-  FixedPanel,
-  PanelWrapper,
-  TokenDetailsLayout,
-  TokenLink,
-  StyledBookmark
-} from './styled'
+import { isValidAddress, formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink } from 'utils'
+import { WarningGrouping, TokenSymbolLink, FixedPanel, PanelWrapper, TokenLink, ActionsContainer } from './styled'
 
 const PairPage = () => {
   const { t } = useTranslation()
@@ -116,7 +106,6 @@ const PairPage = () => {
 
   return (
     <PageWrapper>
-      <span />
       <Warning
         show={
           !dismissed &&
@@ -177,23 +166,22 @@ const PairPage = () => {
                     </TYPE.main>
                   </RowFixed>
                 </RowFixed>
-                <RowFixed
-                  ml={below900 ? '0' : '2.5rem'}
-                  mt={below1080 ? '1rem' : '0'}
-                  style={{
-                    flexDirection: below1080 ? 'row-reverse' : 'initial'
-                  }}
-                >
-                  <StyledBookmark $saved={isPairSaved} onClick={toggleSavedPair} />
+                <ActionsContainer>
+                  <StarIcon filled={isPairSaved} onClick={toggleSavedPair} />
                   <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>
                   <Link external href={getSwapLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
-                    <ButtonDark ml={!below1080 ? '.5rem' : '0'} mr={below1080 ? '.5rem' : '0'}>
-                      {t('trade')}
-                    </ButtonDark>
+                    <ButtonDark>{t('trade')}</ButtonDark>
                   </Link>
-                </RowFixed>
+                  <a
+                    href={getBlockChainScanLink(activeNetworkId, pairAddress, 'address')}
+                    target="_blank"
+                    rel="noopener nofollow noreferrer"
+                  >
+                    <ExternalLinkIcon />
+                  </a>
+                </ActionsContainer>
               </div>
             </AutoColumn>
             <AutoRow
@@ -344,72 +332,6 @@ const PairPage = () => {
               {t('transactions')}
             </TYPE.main>{' '}
             {transactions ? <TransactionTable transactions={transactions} /> : <Loader />}
-          </DashboardWrapper>
-          <DashboardWrapper style={{ marginTop: '1rem' }}>
-            <RowBetween>
-              <TYPE.main fontSize={22} fontWeight={500}>
-                {t('pairInformation')}
-              </TYPE.main>{' '}
-            </RowBetween>
-            <Panel
-              style={{
-                marginTop: below440 ? '.75rem' : '1.5rem'
-              }}
-              p={20}
-            >
-              <TokenDetailsLayout>
-                <Column>
-                  <TYPE.light>{t('pairName')}</TYPE.light>
-                  <TYPE.main style={{ marginTop: '.5rem' }}>
-                    <RowFixed>
-                      <FormattedName text={tokenOne?.symbol ?? ''} maxCharacters={8} />
-                      -
-                      <FormattedName text={tokenTwo?.symbol ?? ''} maxCharacters={8} />
-                    </RowFixed>
-                  </TYPE.main>
-                </Column>
-                <Column>
-                  <TYPE.light>{t('pairAddress')}</TYPE.light>
-                  <RowBetween style={{ marginTop: '-5px' }}>
-                    <TYPE.main style={{ marginTop: '.5rem' }}>
-                      {pairAddress.slice(0, 6) + '...' + pairAddress.slice(38, 42)}
-                    </TYPE.main>
-                    <CopyHelper toCopy={pairAddress} />
-                  </RowBetween>
-                </Column>
-                <Column>
-                  <TYPE.light>
-                    <RowFixed>
-                      {tokenOne?.symbol ?? ''} <span style={{ marginLeft: '4px' }}>{t('address')}</span>
-                    </RowFixed>
-                  </TYPE.light>
-                  <RowBetween style={{ marginTop: '-5px' }}>
-                    <TYPE.main style={{ marginTop: '.5rem' }}>
-                      {tokenOne && tokenOne.id.slice(0, 6) + '...' + tokenOne.id.slice(38, 42)}
-                    </TYPE.main>
-                    <CopyHelper toCopy={tokenOne?.id} />
-                  </RowBetween>
-                </Column>
-                <Column>
-                  <TYPE.light>
-                    <RowFixed>
-                      {tokenTwo?.symbol ?? ''} <span style={{ marginLeft: '4px' }}>{t('address')}</span>
-                    </RowFixed>
-                  </TYPE.light>
-                  <RowBetween style={{ marginTop: '-5px' }}>
-                    <TYPE.main style={{ marginTop: '.5rem' }}>
-                      {tokenTwo && tokenTwo.id.slice(0, 6) + '...' + tokenTwo.id.slice(38, 42)}
-                    </TYPE.main>
-                    <CopyHelper toCopy={tokenTwo?.id} />
-                  </RowBetween>
-                </Column>
-                <ButtonLight>
-                  <Link external href={getBlockChainScanLink(activeNetworkId, pairAddress, 'address')}>
-                    {t(getViewOnScanKey(activeNetworkId))} ↗
-                  </Link>
-                </ButtonLight>
-              </TokenDetailsLayout>
-            </Panel>
           </DashboardWrapper>
         </WarningGrouping>
       </ContentWrapperLarge>
