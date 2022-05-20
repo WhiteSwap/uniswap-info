@@ -8,10 +8,8 @@ export const NetworkSwitcherContainer = styled.div`
 `
 
 export const CurrentNetwork = styled.div<{ bgColor?: string }>`
-  display: grid;
-  grid-template-columns: 1.5rem 1fr min-content;
+  display: flex;
   align-items: center;
-  gap: 0 0.5rem;
   padding: 0.75rem 1rem;
   margin: 0 0.5rem;
   align-items: center;
@@ -19,7 +17,6 @@ export const CurrentNetwork = styled.div<{ bgColor?: string }>`
   border-radius: 0.5rem;
   color: ${({ theme }) => theme.text2};
   cursor: pointer;
-  min-width: 203px;
 
   :hover {
     opacity: 0.9;
@@ -30,17 +27,16 @@ export const CurrentNetwork = styled.div<{ bgColor?: string }>`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
+    margin-left: 0.5rem;
     background-color: ${({ theme }) => theme.green1};
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 1080px) {
       content: unset;
     }
   }
 
-  @media screen and (max-width: 600px) {
-    grid-template-columns: 2rem;
-    padding: 0;
-    background-color: unset;
+  @media screen and (max-width: 1080px) {
+    padding: 0.5rem;
     min-width: auto;
     margin: 0;
   }
@@ -61,12 +57,7 @@ export const NetworkList = styled.ul`
 
   @media screen and (max-width: 1080px) {
     border-radius: 0 0 0.5rem 0.5rem;
-    transform: translate(0, 1rem);
-  }
-
-  @media screen and (max-width: 600px) {
-    border-radius: 0 0 0.5rem 0.5rem;
-    transform: translate(calc(-100% + 2.5rem), 1rem);
+    transform: translate(calc(-100% + 7.5rem), 0.95rem);
     width: 200px;
   }
 `
@@ -86,7 +77,7 @@ export const NetworkListItem = styled.li`
 export const NetworkListItemLink = styled(Link)`
   padding: 0.75rem 1rem;
   display: grid;
-  grid-template-columns: 1.5rem 1fr min-content;
+  grid-template-columns: min-content 1fr min-content;
   align-items: center;
   gap: 0 0.5rem;
   color: ${({ theme }) => theme.text2};
@@ -95,17 +86,31 @@ export const NetworkListItemLink = styled(Link)`
 export const NetworkBlurb = styled.span`
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text3};
+  font-size: 0.75rem;
+  background-color: rgba(86, 90, 105, 0.5);
+  color: ${({ theme }) => theme.text6};
+
+  @media screen and (max-width: 1080px) {
+    padding: 0.25rem;
+  }
 `
 
 export const NetworkLogo = styled.img`
-  width: 100%;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
+
+  @media screen and (max-width: 1080px) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `
 
 export const NetworkName = styled.span`
-  @media screen and (max-width: 600px) {
-    display: none;
+  margin-left: 0.5rem;
+  margin-right: auto;
+
+  @media screen and (max-width: 1080px) {
+    margin: 0 0.5rem;
   }
 `
