@@ -7,27 +7,26 @@ import TokenLogo from 'components/TokenLogo'
 import PairList from 'components/PairList'
 import Loader from 'components/LocalLoader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import Column, { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/Column'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
-import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, getViewOnScanKey, isValidAddress } from 'utils'
+import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, isValidAddress } from 'utils'
 import { useTokenData, useTokenTransactions, useTokenPairsIds, useTokenPairs } from 'state/features/token/hooks'
 import { useFormatPath, useColor } from 'hooks'
 import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
-import CopyHelper from 'components/Copy'
 import { useMedia } from 'react-use'
 import Warning from 'components/Warning'
 import { usePathDismissed, useToggleSavedToken } from 'state/features/user/hooks'
-import { PageWrapper, ContentWrapper } from 'components'
+import { PageWrapper, ContentWrapper, StarIcon, ExternalLinkIcon } from 'components'
 import FormattedName from 'components/FormattedName'
 import { useListedTokens } from 'state/features/application/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
 import { useTranslation } from 'react-i18next'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import Percent from 'components/Percent'
-import { PanelWrapper, TokenDetailsLayout, WarningGrouping, StyledBookmark } from './styled'
+import { ActionsContainer, PanelWrapper, WarningGrouping } from './styled'
 import { TransactionTable } from 'components/TransactionTable'
 
 const TokenPage = () => {
@@ -116,7 +115,7 @@ const TokenPage = () => {
         address={tokenAddress}
       />
       <ContentWrapper>
-        <RowBetween style={{ flexWrap: 'wrap', alignItems: 'flex-start' }}>
+        <RowBetween style={{ flexWrap: 'wrap', alignItems: 'center' }}>
           <AutoRow align="flex-end" style={{ width: 'fit-content' }}>
             <TYPE.body>
               <BasicLink to={formatPath(`/tokens`)}>{`${t('tokens')} `}</BasicLink>→ {symbol}
@@ -141,8 +140,8 @@ const TokenPage = () => {
             <RowBetween
               style={{
                 flexWrap: 'wrap',
-                marginBottom: '2rem',
-                alignItems: 'flex-start'
+                marginBottom: below600 ? '1rem' : '2rem',
+                alignItems: 'center'
               }}
             >
               <RowFixed style={{ flexWrap: 'wrap' }}>
@@ -172,20 +171,25 @@ const TokenPage = () => {
                   )}
                 </RowFixed>
               </RowFixed>
-              <RowFixed>
-                <StyledBookmark $saved={isTokenSaved} onClick={toggleSavedToken} />
+              <ActionsContainer>
+                <StarIcon filled={isTokenSaved} onClick={toggleSavedToken} />
                 <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>
                 <Link href={getSwapLink(activeNetworkId, tokenAddress, null)} target="_blank">
-                  <ButtonDark ml={'.5rem'} color={backgroundColor}>
-                    {t('trade')}
-                  </ButtonDark>
+                  <ButtonDark color={backgroundColor}>{t('trade')}</ButtonDark>
                 </Link>
-              </RowFixed>
+                <a
+                  href={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
+                  target="_blank"
+                  rel="noopener nofollow noreferrer"
+                >
+                  <ExternalLinkIcon />
+                </a>
+              </ActionsContainer>
             </RowBetween>
 
-            <PanelWrapper style={{ marginTop: below1080 ? '0' : '1rem' }}>
+            <PanelWrapper>
               {below1080 && price && (
                 <Panel>
                   <AutoColumn gap="20px">
@@ -281,50 +285,6 @@ const TokenPage = () => {
               {t('transactions')}
             </TYPE.main>
             {transactions ? <TransactionTable color={backgroundColor} transactions={transactions} /> : <Loader />}
-          </DashboardWrapper>
-          <DashboardWrapper style={{ marginTop: '1.5rem' }}>
-            <TYPE.main fontSize={22} fontWeight={500}>
-              Token Information
-            </TYPE.main>
-            <Panel
-              style={{
-                marginTop: below440 ? '.75rem' : '1.5rem'
-              }}
-              p={20}
-            >
-              <TokenDetailsLayout>
-                <Column>
-                  <TYPE.light>{t('symbol')}</TYPE.light>
-                  <TYPE.main style={{ marginTop: '.5rem' }} fontWeight="500">
-                    {symbol}
-                  </TYPE.main>
-                </Column>
-                <Column>
-                  <TYPE.light>{t('name')}</TYPE.light>
-                  <TYPE.main style={{ marginTop: '.5rem' }} fontWeight="500">
-                    {name}
-                  </TYPE.main>
-                </Column>
-                <Column>
-                  <TYPE.light>{t('address')}</TYPE.light>
-                  <RowBetween style={{ marginTop: '-5px' }}>
-                    <TYPE.main style={{ marginTop: '.5rem' }} fontWeight="500">
-                      {tokenAddress.slice(0, 8) + '...' + tokenAddress.slice(36, 42)}
-                    </TYPE.main>
-                    <CopyHelper toCopy={tokenAddress} />
-                  </RowBetween>
-                </Column>
-                <ButtonLight color={backgroundColor}>
-                  <Link
-                    color={backgroundColor}
-                    external
-                    href={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
-                  >
-                    {t(getViewOnScanKey(activeNetworkId))} ↗
-                  </Link>
-                </ButtonLight>
-              </TokenDetailsLayout>
-            </Panel>
           </DashboardWrapper>
         </WarningGrouping>
       </ContentWrapper>
