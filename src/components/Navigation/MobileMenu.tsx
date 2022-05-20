@@ -1,28 +1,33 @@
 import { useFormatPath } from 'hooks'
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { MenuWrapper, MenuButton, MenuList, MenuItem, MenuLinkSpan } from './styled'
+import { MenuWrapper, MenuButton, MenuList, Badge, MenuItemLink, MenuItemName } from './styled'
 import { TrendingUp, List, PieChart, Disc } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { SupportedNetwork } from 'constants/networks'
 
 const MENU_LINKS = [
   {
+    key: 'home',
     route: '/',
     Icon: TrendingUp,
     label: 'sideNav.overview'
   },
   {
+    key: 'tokens',
     route: '/tokens',
     Icon: Disc,
     label: 'sideNav.tokens'
   },
   {
+    key: 'pairs',
     route: '/pairs',
     Icon: PieChart,
     label: 'sideNav.pairs'
   },
   {
+    key: 'accounts',
     route: '/accounts',
     Icon: List,
     label: 'sideNav.accounts'
@@ -32,7 +37,7 @@ const MENU_LINKS = [
 const MobileMenu = () => {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
+  const activeNetwork = useActiveNetworkId()
   const formatPath = useFormatPath()
 
   const node = useRef(null)
@@ -43,18 +48,18 @@ const MobileMenu = () => {
       <MenuButton onClick={() => setIsOpen(!isOpen)} />
       {isOpen ? (
         <MenuList ref={node}>
-          {MENU_LINKS.map(({ route, Icon, label }) => (
-            <MenuItem
-              key={route}
-              onClick={() => {
-                navigate(formatPath(route))
-                setIsOpen(false)
-              }}
-            >
-              <Icon />
-              <MenuLinkSpan>{t(label)}</MenuLinkSpan>
-            </MenuItem>
-          ))}
+          {MENU_LINKS.map(({ key, route, Icon, label }) => {
+            // temporary disable account link for beta version
+            const isSoon = key === 'accounts' && activeNetwork === SupportedNetwork.TRON
+
+            return (
+              <MenuItemLink disabled={isSoon} key={key} to={formatPath(route)} onClick={() => setIsOpen(false)}>
+                <Icon />
+                <MenuItemName>{t(label)}</MenuItemName>
+                {isSoon ? <Badge>{t('soon')}</Badge> : undefined}
+              </MenuItemLink>
+            )
+          })}
         </MenuList>
       ) : null}
     </MenuWrapper>

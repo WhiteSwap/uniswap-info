@@ -259,7 +259,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           {transactionList.length > 0 ? (
             transactionList
               .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-              .map(item => <ListItem key={item.hash} item={item} />)
+              .map((item, i) => <ListItem key={`${item.hash}-${i}`} item={item} />)
           ) : (
             <EmptyCard>{t('noRecentTransactions')}</EmptyCard>
           )}

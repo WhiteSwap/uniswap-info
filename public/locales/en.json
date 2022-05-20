@@ -99,5 +99,6 @@
     "remove": "Remove {{tokenOneSymbol}} and {{tokenTwoSymbol}}",
     "swap": "Swap {{tokenOneSymbol}} for {{tokenTwoSymbol}}"
   },
+  "soon": "Soon",
   "comingSoon": "Coming soon"
 }
