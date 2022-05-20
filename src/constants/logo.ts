@@ -18,5 +18,7 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9':
       'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png'
   },
-  [SupportedNetwork.TRON]: {}
+  [SupportedNetwork.TRON]: {
+    TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR: `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/info/logo.png`
+  }
 }
