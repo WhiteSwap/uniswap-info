@@ -3,26 +3,20 @@ import { NavLink } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-export const Wrapper = styled.div<{ isMobile: boolean }>`
-  height: ${({ isMobile }) => (isMobile ? 'initial' : '100vh')};
+export const Aside = styled.aside`
+  height: 100vh;
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   color: ${({ theme }) => theme.text1};
   position: sticky;
   top: 0px;
   z-index: 9999;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border-right: 1px solid ${({ theme }) => theme.mercuryGray};
   color: ${({ theme }) => theme.bg2};
-
-  @media screen and (max-width: 1080px) {
-    border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
-    padding: 1rem;
-  }
-
-  @media screen and (max-width: 800px) {
-    grid-template-columns: 1fr;
-    position: relative;
-  }
+  border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
 `
 
 export const NavigationLink = styled(NavLink)`
@@ -72,19 +66,27 @@ export const StyledNavButton = styled.div`
   margin-right: 1rem;
 `
 
-export const DesktopWrapper = styled.div`
+export const SideBar = styled.aside`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
 `
 
-export const MobileWrapper = styled.div`
+export const Header = styled.header`
+  background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+  width: 100%;
+  padding: 0 1rem;
+  top: 0px;
+  z-index: 9999;
   display: grid;
   justify-content: space-between;
   align-items: center;
   grid-template-columns: 1fr min-content min-content;
   gap: 1rem;
+  position: fixed;
+  height: 4.5rem;
+  border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
 `
 
 export const HeaderText = styled.div`

@@ -17,7 +17,7 @@ export const MenuButton = styled(Menu)`
 export const MenuList = styled.ul`
   position: absolute;
   transition: 0.2s ease;
-  transform: translate(calc(2.5rem - 100%), 21px);
+  transform: translate(calc(2.5rem - 100%), 16px);
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   animation: 0.3s ease-in-out;
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
@@ -26,10 +26,6 @@ export const MenuList = styled.ul`
   width: 200px;
   margin: 0;
   padding: 0;
-
-  @media screen and (max-width: 600px) {
-    transform: translate(calc(2.5rem - 100%), 13px);
-  }
 `
 
 export const MenuItem = styled.li`

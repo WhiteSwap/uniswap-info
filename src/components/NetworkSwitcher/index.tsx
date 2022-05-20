@@ -44,6 +44,7 @@ const NetworkSwitcher = () => {
       <CurrentNetwork onClick={() => setIsOpen(!isOpen)}>
         <NetworkLogo src={activeNetwork.imageURL} alt={activeNetwork.name} />
         <NetworkName>{activeNetwork.name}</NetworkName>
+        {activeNetwork.blurb ? <NetworkBlurb>{activeNetwork.blurb}</NetworkBlurb> : undefined}
       </CurrentNetwork>
       {isOpen ? (
         <NetworkList ref={node}>

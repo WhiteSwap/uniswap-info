@@ -28,6 +28,8 @@ import { useActiveNetworkId } from 'state/features/application/selectors'
 import Percent from 'components/Percent'
 import { ActionsContainer, PanelWrapper, WarningGrouping } from './styled'
 import { TransactionTable } from 'components/TransactionTable'
+import { SupportedNetwork } from 'constants/networks'
+import ComingSoon from 'components/ComingSoon'
 
 const TokenPage = () => {
   const { t } = useTranslation()
@@ -268,7 +270,10 @@ const TokenPage = () => {
                   gridRow: below1080 ? '' : '1/4'
                 }}
               >
-                {priceUSD ? <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} /> : undefined}
+                {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
+                {activeNetworkId === SupportedNetwork.ETHEREUM && priceUSD ? (
+                  <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} />
+                ) : undefined}
               </Panel>
             </PanelWrapper>
           </DashboardWrapper>

@@ -1,6 +1,7 @@
 import { PageWrapper, ContentWrapperLarge, StarIcon, ExternalLinkIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
+import ComingSoon from 'components/ComingSoon'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import Link, { BasicLink } from 'components/Link'
 import PairChart from 'components/PairChart'
@@ -12,6 +13,7 @@ import TokenLogo from 'components/TokenLogo'
 import { TransactionTable } from 'components/TransactionTable'
 import Warning from 'components/Warning'
 import { PAIR_BLACKLIST } from 'constants/index'
+import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useState, useEffect } from 'react'
 import { Loader } from 'react-feather'
@@ -312,7 +314,8 @@ const PairPage = () => {
                     width: '100%'
                   }}
                 >
-                  {tokenOne && tokenTwo ? (
+                  {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
+                  {tokenOne && tokenTwo && activeNetworkId === SupportedNetwork.ETHEREUM ? (
                     <PairChart
                       address={pairAddress}
                       color={'#2E69BB'}

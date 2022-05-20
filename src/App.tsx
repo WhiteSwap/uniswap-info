@@ -12,7 +12,7 @@ import AllTokensPage from 'pages/AllTokensPage'
 import AllPairsPage from 'pages/AllPairsPage'
 import PinnedData from 'components/PinnedData'
 import { useFormatPath, useScrollToTop } from './hooks'
-import SideNav from 'components/SideNav'
+import Navigation from 'components/Navigation'
 import AccountLookup from 'pages/AccountLookup'
 import LocalLoader from 'components/LocalLoader'
 import { useLatestBlocks } from 'state/features/application/hooks'
@@ -37,7 +37,7 @@ const ContentWrapper = styled.div<{ open: boolean }>`
   }
 `
 
-const Right = styled.div<{ open: boolean }>`
+const Right = styled.aside<{ open: boolean }>`
   position: fixed;
   right: 0;
   bottom: 0;
@@ -51,10 +51,14 @@ const Right = styled.div<{ open: boolean }>`
   }
 `
 
-const Center = styled.div`
+const Main = styled.main`
   height: 100%;
   transition: width 0.25s ease;
   background-color: ${({ theme }) => theme.onlyLight};
+
+  @media screen and (max-width: 1080px) {
+    padding-top: 4.5rem;
+  }
 `
 
 const WarningWrapper = styled.div`
@@ -100,8 +104,8 @@ function App() {
       )}
       {latestBlock && globalData && globalChartData.length > 0 ? (
         <ContentWrapper open={savedOpen}>
-          <SideNav />
-          <Center id="center">
+          <Navigation />
+          <Main id="center">
             <Routes>
               <Route path="/:networkID" element={<GlobalPage />} />
               <Route path="/:networkID/tokens" element={<AllTokensPage />} />
@@ -112,7 +116,7 @@ function App() {
               <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
               <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
             </Routes>
-          </Center>
+          </Main>
           <Right open={savedOpen}>
             <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
           </Right>
