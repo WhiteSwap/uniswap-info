@@ -27,8 +27,10 @@ import { TYPE, DashboardWrapper } from 'Theme'
 import { useTranslation } from 'react-i18next'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import Percent from 'components/Percent'
+import ComingSoon from 'components/ComingSoon'
 import { PanelWrapper, TokenDetailsLayout, WarningGrouping, StyledBookmark } from './styled'
 import { TransactionTable } from 'components/TransactionTable'
+import { SupportedNetwork } from 'constants/networks'
 
 const TokenPage = () => {
   const { t } = useTranslation()
@@ -264,7 +266,10 @@ const TokenPage = () => {
                   gridRow: below1080 ? '' : '1/4'
                 }}
               >
-                {priceUSD ? <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} /> : undefined}
+                {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
+                {activeNetworkId === SupportedNetwork.ETHEREUM && priceUSD ? (
+                  <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} />
+                ) : undefined}
               </Panel>
             </PanelWrapper>
           </DashboardWrapper>
