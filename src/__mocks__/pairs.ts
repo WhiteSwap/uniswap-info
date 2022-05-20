@@ -1,35 +1,3 @@
-export const TronPairListMock: Pair[] = [
-  {
-    id: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
-    tokenOne: {
-      id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-      symbol: 'TRX',
-      reserve: 123,
-      price: 11.049537683966,
-      priceUSD: 1
-    },
-    tokenTwo: {
-      id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      symbol: 'USDT',
-      reserve: 123,
-      price: 11.049537683966,
-      priceUSD: 1
-    },
-    totalLiquidityUSD: 51481.7809566331,
-    totalSupply: 0.000062912561080272,
-    untrackedVolumeUSD: '9944229.970965634522059318704069327',
-    dayVolumeUSD: 749.3175862468779,
-    weekVolumeUSD: 1902.4093218129128,
-    dayFees: 0,
-    apy: 1,
-    volumeChangeUSD: 11.324568716658147,
-    oneDayVolumeUntracked: 749.3175862468779,
-    volumeChangeUntracked: 11.324568716658147,
-    trackedReserveUSD: 51481.78070956632,
-    liquidityChangeUSD: -2.8252342380985493
-  }
-]
-
 export const PairChartDataMock = [
   {
     date: 1604966400,
