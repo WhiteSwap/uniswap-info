@@ -1,7 +1,6 @@
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import Panel from 'components/Panel'
 import { Link as RouterLink } from 'react-router-dom'
-import { Bookmark } from 'react-feather'
 
 export const PanelWrapper = styled.div`
   grid-template-columns: repeat(3, 1fr);
@@ -63,7 +62,7 @@ export const FixedPanel = styled(Panel)`
 `
 
 export const TokenSymbolLink = styled(RouterLink)`
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.text1};
 
   :hover {
     cursor: pointer;
@@ -76,26 +75,20 @@ export const WarningGrouping = styled.div<{ disabled: boolean }>`
   pointer-events: ${({ disabled }) => disabled && 'none'};
 `
 
-export const StyledBookmark = styled(Bookmark)<{ $saved: boolean }>`
-  color: ${({ theme }) => theme.text1};
-  cursor: pointer;
-  transition: 0.25s;
-  margin: 0 1rem;
-
-  :hover {
-    opacity: 0.8;
-  }
-
-  ${({ $saved = false, theme }) =>
-    $saved &&
-    css`
-      fill: ${theme.text1};
-    `}
-`
-
 export const TokenLink = styled(RouterLink)`
   :hover {
     cursor: pointer;
     opacity: 0.7;
+  }
+`
+
+export const ActionsContainer = styled.div`
+  display: grid;
+  gap: 0.5rem;
+  grid-auto-flow: column;
+  align-items: center;
+
+  @media screen and (max-width: 600px) {
+    margin-top: 0.5rem;
   }
 `
