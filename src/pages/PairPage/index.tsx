@@ -104,7 +104,6 @@ const PairPage = () => {
 
   return (
     <PageWrapper>
-      <span />
       <Warning
         show={
           !dismissed &&
