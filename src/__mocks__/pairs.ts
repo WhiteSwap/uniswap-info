@@ -4,6 +4,7 @@ export const TronPairListMock: Pair[] = [
     tokenOne: {
       id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
       symbol: 'TRX',
+      name: 'Tron',
       reserve: 123,
       price: 11.049537683966,
       priceUSD: 1
@@ -11,6 +12,7 @@ export const TronPairListMock: Pair[] = [
     tokenTwo: {
       id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       symbol: 'USDT',
+      name: 'Tether',
       reserve: 123,
       price: 11.049537683966,
       priceUSD: 1
@@ -26,7 +28,8 @@ export const TronPairListMock: Pair[] = [
     oneDayVolumeUntracked: 749.3175862468779,
     volumeChangeUntracked: 11.324568716658147,
     trackedReserveUSD: 51481.78070956632,
-    liquidityChangeUSD: -2.8252342380985493
+    liquidityChangeUSD: -2.8252342380985493,
+    reserveUSD: '100652.43127238257'
   }
 ]
 

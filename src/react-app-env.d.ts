@@ -119,7 +119,11 @@ interface TokenDayData {
   dayString?: number
 }
 
-type PairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>
+type PairToken = Pick<Token, 'id' | 'symbol' | 'name'> & {
+  reserve: number
+  price: number
+  priceUSD: number
+}
 
 interface Pair {
   id: string
@@ -131,20 +135,13 @@ interface Pair {
   dayFees: number
   apy: number
   totalSupply: number
-  tokenOne: Pick<Token, 'id' | 'symbol'> & {
-    reserve: number
-    price: number
-    priceUSD: number
-  }
-  tokenTwo: Pick<Token, 'id' | 'symbol'> & {
-    reserve: number
-    price: number
-    priceUSD: number
-  }
+  tokenOne: PairToken
+  tokenTwo: PairToken
   oneDayVolumeUntracked?: number
   untrackedVolumeUSD?: string
   volumeChangeUntracked?: number
   trackedReserveUSD?: number
+  reserveUSD: string
 }
 
 interface OldPair {
@@ -171,23 +168,30 @@ interface OldPair {
   __typename?: string
 }
 
-type PositionPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD' | 'totalSupply'>
+type PositionPair = Pick<Pair, 'id' | 'tokenOne' | 'tokenTwo' | 'reserveUSD' | 'totalSupply'>
 
-type SnapshotPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
+type OldSnapshotPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
   token0: Pick<Token, 'id'>
   token1: Pick<Token, 'id'>
 }
 
+type SnapshotPairToken = Pick<Token, 'id' | 'reserve' | 'priceUSD'>
+
+type SnapshotPair = Pick<Pair, 'id' | 'reserveUSD'> & {
+  tokenOne: SnapshotPairToken
+  tokenTwo: SnapshotPairToken
+}
+
 interface Position {
-  pair: PositionPair
+  pair: Pair
   liquidityTokenBalance: string
   feeEarned: number
 }
 
-interface LiquiditySnapshot {
+interface OldLiquiditySnapshot {
   liquidityTokenBalance: string
   liquidityTokenTotalSupply: string
-  pair: SnapshotPair
+  pair: OldSnapshotPair
   reserve0: string
   reserve1: string
   reserveUSD: string
@@ -196,13 +200,21 @@ interface LiquiditySnapshot {
   token1PriceUSD: string
 }
 
+interface LiquiditySnapshot {
+  liquidityTokenBalance: string
+  liquidityTokenTotalSupply: string
+  pair: SnapshotPair
+  reserveUSD: string
+  timestamp: number
+}
+
 type PairReturn = {
   date: number
   fees: number
   usdValue: number
 }
 
-interface LiquidityPosition {
+interface OldLiquidityPosition {
   pairAddress: string
   pairName: string
   token0: string
@@ -211,6 +223,15 @@ interface LiquidityPosition {
   user: {
     id: string
   }
+}
+
+interface LiquidityPosition {
+  pairAddress: string
+  pairName: string
+  tokenOne: string
+  tokenTwo: string
+  usd: number
+  userId: string
 }
 
 interface ChartDailyItem {

@@ -40,27 +40,34 @@ export const UserPositionsMock = [
   {
     pair: {
       id: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
-      reserve0: '9.266108317973354039',
-      reserve1: '25708.635871',
-      reserveUSD: '51481.78070956633144714465392160739',
-      token0: {
+      tokenOne: {
         id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+        name: 'Wrapped Ethereum',
         symbol: 'WETH',
-        derivedETH: '1',
-        __typename: 'Token'
+        price: 1032.232453242,
+        derivedPrice: 1,
+        reserve: 9.266108317354039,
+        __typename: 'TokenPair'
       },
-      token1: {
+      tokenTwo: {
         id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+        name: 'USDT',
         symbol: 'USDT',
-        derivedETH: '0.0003604278486213172301770472261865271',
-        __typename: 'Token'
+        price: 1032.232453242,
+        derivedPrice: 0.000360427813172301,
+        reserve: 25708.635871,
+        __typename: 'TokenPair'
       },
-      totalSupply: '0.000062912561080272',
+      dayVolumeUSD: 231.32,
+      liquidityChangeUSD: 6712.2345628,
+      totalLiquidityUSD: 132.2424533628,
+      volumeChangeUSD: 142.43442628,
+      weekVolumeUSD: 122.2428,
       __typename: 'Pair'
     },
     liquidityTokenBalance: '0.000062112314150737',
-    __typename: 'LiquidityPosition',
-    feeEarned: 51.760385618796036
+    feeEarned: 51.760385618796036,
+    __typename: 'LiquidityPosition'
   }
 ]
 export const TopLpsMock = [

@@ -1,4 +1,5 @@
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
+import { liquiditySnapshotListMapper } from 'data/mappers/ethereum/accountMapper'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {
@@ -36,14 +37,14 @@ export default class AccountDataController implements IAccountDataController {
             user: account
           }
         })
-        allResults = allResults.concat(result.data.liquidityPositionSnapshots)
-        if (result.data.liquidityPositionSnapshots.length < 1000) {
+        allResults = allResults.concat(result.data.LiquidityPositionSnapshots)
+        if (result.data.LiquidityPositionSnapshots.length < 1000) {
           found = true
         } else {
           skip += 1000
         }
       }
-      return allResults
+      return liquiditySnapshotListMapper(allResults)
     } catch (e) {
       console.log(e)
       return []
@@ -181,7 +182,6 @@ export default class AccountDataController implements IAccountDataController {
 
     const topLpLists = await Promise.all(
       topPairs.map(async pair => {
-        // for each one, fetch top LPs
         const { data: results } = await client.query<TopLiquidityPositionQuery, TopLiquidityPositionVariables>({
           query: TOP_LPS_PER_PAIRS,
           variables: {
@@ -200,15 +200,16 @@ export default class AccountDataController implements IAccountDataController {
     topLpLists
       .filter(i => !!i) // check for ones not fetched correctly
       .map(list => {
+        // @ts-ignore
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]
           return topLps.push({
-            user: entry.user,
-            pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
             pairAddress: entry.pair.id,
-            token0: pairData.tokenOne.id,
-            token1: pairData.tokenTwo.id,
-            usd: (parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD
+            pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
+            tokenOne: pairData.tokenOne.id,
+            tokenTwo: pairData.tokenTwo.id,
+            usd: (parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD,
+            userId: entry.user?.id
           })
         })
       })

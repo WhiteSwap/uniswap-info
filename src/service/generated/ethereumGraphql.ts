@@ -59,8 +59,8 @@ export type Pair = {
   createdAtBlockNumber: Scalars['Int']
   liquidityProviderCount: Scalars['Int']
   pairHourData: Array<PairHourData>
-  liquidityPositions: Array<LiquidityPosition>
-  liquidityPositionSnapshots: Array<LiquidityPositionSnapshot>
+  OldLiquidityPositions: Array<OldLiquidityPosition>
+  OldLiquidityPositionSnapshots: Array<OldLiquidityPositionSnapshot>
   mints: Array<Mint>
   burns: Array<Burn>
   swaps: Array<Swap>
@@ -69,22 +69,22 @@ export type Pair = {
 export type User = {
   __typename?: 'User'
   id: Scalars['ID']
-  liquidityPositions?: Maybe<Array<LiquidityPosition>>
+  OldLiquidityPositions?: Maybe<Array<OldLiquidityPosition>>
   usdSwapped: Scalars['Float']
 }
 
-export type LiquidityPosition = {
-  __typename?: 'LiquidityPosition'
+export type OldLiquidityPosition = {
+  __typename?: 'OldLiquidityPosition'
   id: Scalars['ID']
   user: User
   pair: Pair
   liquidityTokenBalance: Scalars['Float']
 }
 
-export type LiquidityPositionSnapshot = {
-  __typename?: 'LiquidityPositionSnapshot'
+export type OldLiquidityPositionSnapshot = {
+  __typename?: 'OldLiquidityPositionSnapshot'
   id: Scalars['ID']
-  liquidityPosition: LiquidityPosition
+  OldLiquidityPosition: OldLiquidityPosition
   timestamp: Scalars['Int']
   block: Scalars['Int']
   user: User
@@ -361,7 +361,7 @@ export type UserLiquidityPositionsQuery = {
       totalSupply: string
       __typename: 'Pair'
     }
-    __typename: 'LiquidityPosition'
+    __typename: 'OldLiquidityPosition'
   }>
 }
 
@@ -380,6 +380,6 @@ export type TopLiquidityPositionQuery = {
       __typename: 'Pair'
     }
     liquidityTokenBalance: string
-    __typename: 'LiquidityPosition'
+    __typename: 'OldLiquidityPosition'
   }>
 }
