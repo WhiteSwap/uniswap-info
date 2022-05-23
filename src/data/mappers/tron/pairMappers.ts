@@ -8,6 +8,7 @@ export function pairMapper(payload?: TronPair | null): Pair {
     tokenOne: {
       id: payload?.tokenOne?.id || '',
       symbol: parseTokenInfo('symbol', payload?.tokenOne?.id, payload?.tokenOne?.symbol),
+      name: parseTokenInfo('name', payload?.tokenOne?.id, payload?.tokenOne?.name),
       reserve: payload?.tokenOne.reserve ? +payload.tokenOne.reserve : 0,
       price: payload?.tokenTwo.derivedPrice ? +payload.tokenTwo.derivedPrice : 0,
       priceUSD: payload?.tokenOne.price ? +payload.tokenOne.price : 0
@@ -15,6 +16,7 @@ export function pairMapper(payload?: TronPair | null): Pair {
     tokenTwo: {
       id: payload?.tokenTwo?.id || '',
       symbol: parseTokenInfo('symbol', payload?.tokenTwo?.id, payload?.tokenTwo?.symbol),
+      name: parseTokenInfo('name', payload?.tokenTwo?.id, payload?.tokenTwo?.name),
       reserve: payload?.tokenTwo.reserve ? +payload.tokenTwo.reserve : 0,
       price: payload?.tokenOne.derivedPrice ? +payload.tokenOne.derivedPrice : 0,
       priceUSD: payload?.tokenTwo.price ? +payload.tokenTwo.price : 0
