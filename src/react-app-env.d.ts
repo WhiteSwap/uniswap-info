@@ -119,7 +119,13 @@ interface TokenDayData {
   dayString?: number
 }
 
-type PairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>
+type OldPairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>
+
+type PairToken = Pick<Token, 'id' | 'symbol' | 'name'> & {
+  reserve: number
+  price: number
+  priceUSD: number
+}
 
 interface Pair {
   id: string
@@ -131,16 +137,8 @@ interface Pair {
   dayFees: number
   apy: number
   totalSupply: number
-  tokenOne: Pick<Token, 'id' | 'symbol' | 'name'> & {
-    reserve: number
-    price: number
-    priceUSD: number
-  }
-  tokenTwo: Pick<Token, 'id' | 'symbol' | 'name'> & {
-    reserve: number
-    price: number
-    priceUSD: number
-  }
+  tokenOne: PairToken
+  tokenTwo: PairToken
   oneDayVolumeUntracked?: number
   untrackedVolumeUSD?: string
   volumeChangeUntracked?: number
@@ -157,8 +155,8 @@ interface OldPair {
   reserve0: string
   reserve1: string
   reserveUSD: string
-  token0: PairToken
-  token1: PairToken
+  token0: OldPairToken
+  token1: OldPairToken
   token0Price: string
   token1Price: string
   totalSupply: string
