@@ -1,8 +1,7 @@
 import { timeframeOptions } from '../../../constants'
 import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useLatestBlocks } from '../application/hooks'
-import { useActiveNetworkId } from '../application/selectors'
+import { useActiveNetworkId, useLatestBlock } from '../application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
 import { useActiveTokenPrice } from '../global/selectors'
@@ -12,7 +11,7 @@ import { isValidAddress } from 'utils'
 export function useHourlyRateData(pairAddress: string, timeWindow: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const [latestBlock] = useLatestBlocks()
+  const latestBlock = useLatestBlock()
   const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.timeWindowData?.[timeWindow])
 
   useEffect(() => {
@@ -25,7 +24,7 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string) {
       const data = await DataService.pairs.getHourlyRateData(pairAddress, startTime, latestBlock)
       dispatch(setHourlyData({ address: pairAddress, hourlyData: data, timeWindow, networkId: activeNetwork }))
     }
-    if (!chartData) {
+    if (!chartData && latestBlock) {
       fetch()
     }
   }, [chartData, timeWindow, pairAddress, latestBlock, activeNetwork])
@@ -64,13 +63,11 @@ export function usePairTransactions(pairAddress: string) {
   const pairTxns = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.txns)
   useEffect(() => {
     async function checkForTxns() {
-      if (!pairTxns) {
-        const transactions = await DataService.transactions.getPairTransactions(pairAddress)
-        dispatch(setPairTransactions({ networkId: activeNetwork, transactions, address: pairAddress }))
-      }
+      const transactions = await DataService.transactions.getPairTransactions(pairAddress)
+      dispatch(setPairTransactions({ networkId: activeNetwork, transactions, address: pairAddress }))
     }
     checkForTxns()
-  }, [pairTxns, pairAddress, activeNetwork])
+  }, [pairAddress, activeNetwork])
   return pairTxns
 }
 

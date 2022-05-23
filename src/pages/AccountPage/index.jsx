@@ -117,7 +117,7 @@ function AccountPage() {
               {accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(38, 42)}
             </TYPE.header>
             <ActionsContainer>
-              <StarIcon filled={isSaved} onClick={toggleSavedAccount} />
+              <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a
                 href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')}
                 target="_blank"

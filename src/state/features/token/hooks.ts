@@ -1,8 +1,7 @@
 import { timeframeOptions } from '../../../constants'
 import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useLatestBlocks } from '../application/hooks'
-import { useActiveNetworkId } from '../application/selectors'
+import { useActiveNetworkId, useLatestBlock } from '../application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setTokenPairs, setChartData, setPriceData, setToken, setTopTokens, setTransactions } from './slice'
 import { useActiveTokenOneDayPrice, useActiveTokenPrice } from '../global/selectors'
@@ -117,7 +116,7 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
   const chartData = useAppSelector(
     state => state.token[activeNetwork]?.[tokenAddress]?.timeWindowData?.[timeWindow]?.[interval]
   )
-  const [latestBlock] = useLatestBlocks()
+  const latestBlock = useLatestBlock()
 
   useEffect(() => {
     const currentTime = dayjs.utc()
@@ -129,7 +128,7 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
       const data = await DataService.tokens.getIntervalTokenData(tokenAddress, startTime, interval, latestBlock)
       dispatch(setPriceData({ networkId: activeNetwork, timeWindow, interval, data, address: tokenAddress }))
     }
-    if (!chartData) {
+    if (!chartData && latestBlock) {
       fetch()
     }
   }, [chartData, interval, timeWindow, tokenAddress, latestBlock, activeNetwork])

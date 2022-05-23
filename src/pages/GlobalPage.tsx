@@ -7,10 +7,9 @@ import TopTokenList from '../components/TokenList'
 import Search from '../components/Search'
 import GlobalStats from '../components/GlobalStats'
 
-import { useGlobalTransactions } from 'state/features/global/hooks'
+import { useGlobalChartData, useGlobalTransactions } from 'state/features/global/hooks'
 import {
   useDayVolumeUsd,
-  useGlobalChartDataSelector,
   useLiquidityChangeUsd,
   useTotalLiquidityUsd,
   useVolumeChangeUsd
@@ -31,7 +30,6 @@ import DropdownSelect from 'components/DropdownSelect'
 import { SeriesChart } from 'components/SeriesChart'
 import { useState } from 'react'
 import { TransactionTable } from 'components/TransactionTable'
-import LocalLoader from 'components/LocalLoader'
 
 const ListOptions = styled(AutoRow)`
   height: 40px;
@@ -63,10 +61,10 @@ function GlobalPage() {
   const formatPath = useFormatPath()
 
   // get data for lists and totals
+  const chartData = useGlobalChartData()
   const allPairs = usePairs()
   const allTokens = useTokens()
   const transactions = useGlobalTransactions()
-  const chartData = useGlobalChartDataSelector()
   const [chartView, setChartView] = useState(CHART_VIEW.LIQUIDITY)
   const totalLiquidityUsd = useTotalLiquidityUsd()
   const dayVolumeUsd = useDayVolumeUsd()
@@ -207,7 +205,7 @@ function GlobalPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
+          <TransactionTable transactions={transactions} />
         </DashboardWrapper>
       </ContentWrapper>
     </PageWrapper>

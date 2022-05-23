@@ -198,12 +198,10 @@ export default class PairDataController implements IPairDataController {
       const dayIndexSet = new Set()
       const dayIndexArray: any = []
       const oneDay = 24 * 60 * 60
-      data.forEach((dayData: any, i: number) => {
+      data.forEach((_: any, i: number) => {
         // add the day index to the set of days
         dayIndexSet.add((data[i].date / oneDay).toFixed(0))
         dayIndexArray.push(data[i])
-        dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD)
-        dayData.reserveUSD = parseFloat(dayData.reserveUSD)
       })
 
       if (data[0]) {

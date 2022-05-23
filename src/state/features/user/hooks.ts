@@ -1,14 +1,5 @@
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import {
-  removeAccount,
-  addAccount,
-  setDarkMode,
-  setDismissedPath,
-  addPair,
-  removePair,
-  addToken,
-  removeToken
-} from './slice'
+import { removeAccount, addAccount, setDarkMode, addPair, removePair, addToken, removeToken } from './slice'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SavedPair, SavedToken } from './types'
 
@@ -19,18 +10,6 @@ export function useDarkModeManager(): [boolean, () => void] {
     dispatch(setDarkMode(!isDarkMode))
   }
   return [isDarkMode, toggleDarkMode]
-}
-
-export function usePathDismissed(path: string) {
-  const activeNetwork = useActiveNetworkId()
-  const dispatch = useAppDispatch()
-  const dismissedPaths = useAppSelector(state => state.user[activeNetwork].dismissedPaths)
-
-  const markDismissedPath = () => {
-    dispatch(setDismissedPath({ id: path, networkId: activeNetwork }))
-  }
-
-  return [dismissedPaths?.[path], markDismissedPath]
 }
 
 export function useSavedAccounts(): [string[], (account: string) => void, (account: string) => void] {

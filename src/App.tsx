@@ -4,7 +4,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import GlobalPage from 'pages/GlobalPage'
 import TokenPage from 'pages/TokenPage'
 import PairPage from 'pages/PairPage'
-import { useGlobalChartData, useFetchActiveTokenPrice } from 'state/features/global/hooks'
+import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
 import { useFetchPairs } from 'state/features/pairs/hooks'
 import { useFetchTokens } from 'state/features/token/hooks'
 import AccountPage from 'pages/AccountPage'
@@ -18,6 +18,7 @@ import LocalLoader from 'components/LocalLoader'
 import { useLatestBlocks } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -85,6 +86,7 @@ function App() {
 
   const globalChartData = useGlobalChartData()
   const [latestBlock, headBlock] = useLatestBlocks()
+  const price = useActiveTokenPrice()
   const formatPath = useFormatPath()
   const activeNetwork = useActiveNetworkId()
   // show warning
@@ -104,7 +106,7 @@ function App() {
           </WarningBanner>
         </WarningWrapper>
       )}
-      {latestBlock && globalChartData.length > 0 ? (
+      {latestBlock && headBlock && price && Object.keys(globalChartData).length > 0 ? (
         <ContentWrapper open={savedOpen}>
           <Navigation />
           <Main id="center">

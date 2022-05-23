@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useLocation, useParams, Navigate } from 'react-router-dom'
+import { useParams, Navigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import Link from 'components/Link'
 import Panel from 'components/Panel'
 import TokenLogo from 'components/TokenLogo'
 import PairList from 'components/PairList'
-import Loader from 'components/LocalLoader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
@@ -18,11 +17,9 @@ import { useTokenPairs } from 'state/features/token/selectors'
 import { useFormatPath, useColor } from 'hooks'
 import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
 import { useMedia } from 'react-use'
-import Warning from 'components/Warning'
-import { usePathDismissed, useToggleSavedToken } from 'state/features/user/hooks'
+import { useToggleSavedToken } from 'state/features/user/hooks'
 import { PageWrapper, ContentWrapper, StarIcon, ExternalLinkIcon } from 'components'
 import FormattedName from 'components/FormattedName'
-import { useListedTokens } from 'state/features/application/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
 import { useTranslation } from 'react-i18next'
 import { useActiveNetworkId } from 'state/features/application/selectors'
@@ -35,7 +32,6 @@ import ComingSoon from 'components/ComingSoon'
 const TokenPage = () => {
   const { t } = useTranslation()
   const { tokenAddress } = useParams()
-  const location = useLocation()
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
 
@@ -101,10 +97,7 @@ const TokenPage = () => {
   const LENGTH = below1080 ? 10 : 16
   const formattedSymbol = symbol?.length > LENGTH ? symbol.slice(0, LENGTH) + '...' : symbol
 
-  const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
   const [isTokenSaved, toggleSavedToken] = useToggleSavedToken(tokenAddress, symbol)
-
-  const listedTokens = useListedTokens()
 
   useEffect(() => {
     setUsingUtVolume(dayVolumeUSD === 0 ? true : false)
@@ -112,11 +105,6 @@ const TokenPage = () => {
 
   return (
     <PageWrapper>
-      <Warning
-        show={!dismissed && listedTokens.length > 0 && !listedTokens.includes(tokenAddress.toLowerCase())}
-        setShow={markAsDismissed}
-        address={tokenAddress}
-      />
       <ContentWrapper>
         <RowBetween style={{ flexWrap: 'wrap', alignItems: 'center' }}>
           <AutoRow align="flex-end" style={{ width: 'fit-content' }}>
@@ -137,8 +125,7 @@ const TokenPage = () => {
           </AutoRow>
           {!below600 && <Search />}
         </RowBetween>
-
-        <WarningGrouping disabled={!dismissed && listedTokens && !listedTokens.includes(tokenAddress)}>
+        <WarningGrouping disabled={!id}>
           <DashboardWrapper style={{ marginTop: below1080 ? '0' : '1rem' }}>
             <RowBetween
               style={{
@@ -175,7 +162,7 @@ const TokenPage = () => {
                 </RowFixed>
               </RowFixed>
               <ActionsContainer>
-                <StarIcon filled={isTokenSaved} onClick={toggleSavedToken} />
+                <StarIcon $filled={isTokenSaved} onClick={toggleSavedToken} />
                 <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>
@@ -246,7 +233,6 @@ const TokenPage = () => {
                   </RowBetween>
                 </AutoColumn>
               </Panel>
-
               <Panel>
                 <AutoColumn gap="20px">
                   <RowBetween>
@@ -278,19 +264,17 @@ const TokenPage = () => {
               </Panel>
             </PanelWrapper>
           </DashboardWrapper>
-
           <DashboardWrapper style={{ marginTop: '1.5rem' }}>
             <TYPE.main fontSize={22} fontWeight={500}>
               {t('topPairs')}
             </TYPE.main>
-            {tokenAddress && Object.keys(pairsList).length > 0 ? <PairList pairs={pairsList} /> : <Loader />}
+            <PairList pairs={pairsList} />
           </DashboardWrapper>
-
           <DashboardWrapper style={{ marginTop: '1.5rem' }}>
             <TYPE.main fontSize={22} fontWeight={500}>
               {t('transactions')}
             </TYPE.main>
-            {transactions ? <TransactionTable color={backgroundColor} transactions={transactions} /> : <Loader />}
+            <TransactionTable color={backgroundColor} transactions={transactions} />
           </DashboardWrapper>
         </WarningGrouping>
       </ContentWrapper>
