@@ -120,7 +120,7 @@ const PairPage = () => {
           <TYPE.body>
             <BasicLink to={formatPath('/pairs')}>{'Pairs '}</BasicLink>→ {tokenOne?.symbol}-{tokenTwo?.symbol}
           </TYPE.body>
-          {!below600 && <Search small={true} />}
+          {!below600 && <Search />}
         </RowBetween>
         <WarningGrouping
           disabled={

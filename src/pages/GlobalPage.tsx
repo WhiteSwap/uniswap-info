@@ -77,7 +77,7 @@ function GlobalPage() {
               <TYPE.largeHeader>
                 {below800 ? t('protocolAnalytics') : `WhiteSwap ${t('protocolAnalytics')}`}
               </TYPE.largeHeader>
-              {!below800 && <Search small={true} />}
+              {!below800 && <Search />}
             </RowBetween>
             <GlobalStats />
           </AutoColumn>

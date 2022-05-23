@@ -6,7 +6,7 @@ export type OverrideUrls = Record<SupportedNetwork, Record<string, string>>
 export const LOGO_SOURCE: LogoUrls = {
   [SupportedNetwork.ETHEREUM]:
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets',
-  [SupportedNetwork.TRON]: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets'
+  [SupportedNetwork.TRON]: 'https://coin.top/production/upload/logo'
 }
 
 export const LOGO_OVERRIDES: OverrideUrls = {
@@ -18,5 +18,8 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9':
       'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png'
   },
-  [SupportedNetwork.TRON]: {}
+  [SupportedNetwork.TRON]: {
+    TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png'
+  }
 }
