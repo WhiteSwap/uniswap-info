@@ -1,23 +1,7 @@
 import { useAppSelector } from 'state/hooks'
+import { getPercentChange } from 'utils'
+import { calculateDayFees } from 'utils/pair'
 import { useActiveNetworkId } from '../application/selectors'
-import { GlobalData } from './types'
-
-export function useGlobalDataSelector() {
-  const activeNetwork = useActiveNetworkId()
-  return useAppSelector<GlobalData>(
-    state =>
-      state.global[activeNetwork]?.globalData || {
-        pairCount: 0,
-        oneDayVolumeUSD: 0,
-        volumeChangeUSD: 0,
-        liquidityChangeUSD: 0,
-        oneDayTxns: 0,
-        oneWeekVolume: 0,
-        weeklyVolumeChange: 0,
-        totalLiquidityUSD: 0
-      }
-  )
-}
 
 export function useGlobalChartDataSelector() {
   const activeNetwork = useActiveNetworkId()
@@ -37,4 +21,63 @@ export function useActiveTokenPrice() {
 export function useActiveTokenOneDayPrice() {
   const activeNetwork = useActiveNetworkId()
   return useAppSelector(state => state.global[activeNetwork]?.oneDayPrice)
+}
+
+export function useDayVolumeUsd() {
+  const activeNetwork = useActiveNetworkId()
+  return useAppSelector(state => {
+    const chart = state.global[activeNetwork]?.chartData
+    if (chart) {
+      const currentChartData = chart[chart.length - 1]
+      return currentChartData.dailyVolumeUSD
+    }
+    return 0
+  })
+}
+
+export function useTotalLiquidityUsd() {
+  const activeNetwork = useActiveNetworkId()
+  return useAppSelector(state => {
+    const chart = state.global[activeNetwork]?.chartData
+    if (chart) {
+      const currentChartData = chart[chart.length - 1]
+      return currentChartData.totalLiquidityUSD
+    }
+    return 0
+  })
+}
+
+export function useVolumeChangeUsd() {
+  const activeNetwork = useActiveNetworkId()
+  return useAppSelector(state => {
+    const chart = state.global[activeNetwork]?.chartData
+    if (chart) {
+      const currentVolume = chart[chart.length - 1]?.dailyVolumeUSD
+      const previousVolume = chart[chart.length - 2]?.dailyVolumeUSD
+      if (previousVolume) {
+        return getPercentChange(currentVolume, previousVolume)
+      }
+    }
+    return null
+  })
+}
+
+export function useLiquidityChangeUsd() {
+  const activeNetwork = useActiveNetworkId()
+  return useAppSelector(state => {
+    const chart = state.global[activeNetwork]?.chartData
+    if (chart) {
+      const currentLiquidity = chart[chart.length - 1]?.totalLiquidityUSD
+      const previousLiquidity = chart[chart.length - 2]?.totalLiquidityUSD
+      if (previousLiquidity) {
+        return getPercentChange(currentLiquidity, previousLiquidity)
+      }
+    }
+    return null
+  })
+}
+
+export function useDayFeesUsd() {
+  const dayVolumeUsd = useDayVolumeUsd()
+  return calculateDayFees(dayVolumeUsd)
 }

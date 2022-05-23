@@ -1,20 +1,8 @@
-import { FACTORY_ADDRESS } from 'constants/index'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
-import { ETH_PRICE, GLOBAL_CHART, GLOBAL_DATA, SUBGRAPH_HEALTH } from 'service/queries/ethereum/global'
-import { getBlocksFromTimestamps, get2DayPercentChange, getPercentChange, getBlockFromTimestamp } from 'utils'
-import { GlobalData } from 'state/features/global/types'
+import { ETH_PRICE, GLOBAL_CHART, SUBGRAPH_HEALTH } from 'service/queries/ethereum/global'
+import { getPercentChange, getBlockFromTimestamp } from 'utils'
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
-
-async function fetchGlobalData(block?: number) {
-  return client.query({
-    query: GLOBAL_DATA,
-    variables: {
-      block: block ? { number: block } : null,
-      factoryAddress: FACTORY_ADDRESS
-    }
-  })
-}
 
 async function fetchPrice(block?: number) {
   return client.query({
@@ -36,96 +24,6 @@ export default class GlobalDataController implements IGlobalDataController {
     const syncedBlock = +res.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number
     const headBlock = +res.data.indexingStatusForCurrentVersion.chains[0].chainHeadBlock.number
     return { syncedBlock, headBlock }
-  }
-  async getGlobalData(price: number, oldPrice: number): Promise<GlobalData> {
-    // data for each day , historic data used for % changes
-    const data: GlobalData = {
-      pairCount: 0,
-      oneDayVolumeUSD: 0,
-      volumeChangeUSD: 0,
-      liquidityChangeUSD: 0,
-      oneDayTxns: 0,
-      oneWeekVolume: 0,
-      weeklyVolumeChange: 0,
-      totalLiquidityUSD: 0
-    }
-
-    try {
-      // get timestamps for the days
-      const utcCurrentTime = dayjs()
-      const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
-      const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').unix()
-      const utcOneWeekBack = utcCurrentTime.subtract(1, 'week').unix()
-      const utcTwoWeeksBack = utcCurrentTime.subtract(2, 'week').unix()
-
-      // get the blocks needed for time travel queries
-      const [oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] = await getBlocksFromTimestamps([
-        utcOneDayBack,
-        utcTwoDaysBack,
-        utcOneWeekBack,
-        utcTwoWeeksBack
-      ])
-
-      // fetch the global data
-      const result = await fetchGlobalData()
-      const globalData = result.data.whiteSwapFactories[0]
-
-      // fetch the historical data
-      const oneDayResult = await fetchGlobalData(oneDayBlock?.number)
-      const oneDayData = oneDayResult.data.whiteSwapFactories[0]
-
-      const twoDayResult = await fetchGlobalData(twoDayBlock?.number)
-      const twoDayData = twoDayResult.data.whiteSwapFactories[0]
-
-      const oneWeekResult = await fetchGlobalData(oneWeekBlock?.number)
-      const oneWeekData = oneWeekResult.data.whiteSwapFactories[0]
-
-      const twoWeekResult = await fetchGlobalData(twoWeekBlock?.number)
-      const twoWeekData = twoWeekResult.data.whiteSwapFactories[0]
-
-      if (globalData && oneDayData && twoDayData) {
-        const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
-          globalData.totalVolumeUSD,
-          oneDayData.totalVolumeUSD ? oneDayData.totalVolumeUSD : 0,
-          twoDayData.totalVolumeUSD ? twoDayData.totalVolumeUSD : 0
-        )
-
-        const [oneDayTxns] = get2DayPercentChange(
-          globalData.txCount,
-          oneDayData.txCount ? oneDayData.txCount : 0,
-          twoDayData.txCount ? twoDayData.txCount : 0
-        )
-
-        // format the total liquidity in USD
-        data.totalLiquidityUSD = globalData.totalLiquidityETH * price
-        const liquidityChangeUSD = getPercentChange(
-          globalData.totalLiquidityETH * price,
-          oneDayData.totalLiquidityETH * oldPrice
-        )
-
-        // add relevant fields with the calculated amounts
-        data.oneDayVolumeUSD = oneDayVolumeUSD
-        data.volumeChangeUSD = volumeChangeUSD
-        data.liquidityChangeUSD = liquidityChangeUSD
-        data.oneDayTxns = oneDayTxns
-        data.pairCount = globalData.pairCount
-        // data.txnChange = txnChange
-      }
-
-      if (globalData && oneDayData && twoDayData && twoWeekData) {
-        const [oneWeekVolume, weeklyVolumeChange] = get2DayPercentChange(
-          globalData.totalVolumeUSD,
-          oneWeekData.totalVolumeUSD,
-          twoWeekData.totalVolumeUSD
-        )
-        data.oneWeekVolume = oneWeekVolume
-        data.weeklyVolumeChange = weeklyVolumeChange
-      }
-    } catch (e) {
-      console.log(e)
-    }
-
-    return data
   }
   async getChartData(oldestDateToFetch: number): Promise<ChartDailyItem[]> {
     let data: ChartDailyItem[] = []

@@ -15,7 +15,7 @@ interface ISeriesChart {
   data: SingleValueData[]
   type: SeriesType
   base: number
-  baseChange: number
+  baseChange: number | null
   title: string
 }
 
@@ -212,7 +212,8 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
             </>
           ) : (
             <div>
-              <ChartInfoPrice>{formattedNum(base ?? 0, true)}</ChartInfoPrice> <Percent percent={baseChange} />
+              <ChartInfoPrice>{formattedNum(base ?? 0, true)}</ChartInfoPrice>{' '}
+              {baseChange !== null ? <Percent percent={baseChange} /> : undefined}
             </div>
           )}
         </ChartInfo>

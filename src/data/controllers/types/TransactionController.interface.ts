@@ -9,4 +9,5 @@ export interface ITransactionDataController {
    * Get and format transactions for global page
    */
   getAllTransactions(): Promise<Transactions>
+  getDayTransactionCount(): Promise<number>
 }

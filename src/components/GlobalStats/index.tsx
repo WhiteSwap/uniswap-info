@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { RowFixed, RowBetween } from '../Row'
 import { useMedia } from 'react-use'
-import { useGlobalDataSelector, useActiveTokenPrice } from 'state/features/global/selectors'
+import { useActiveTokenPrice, useDayFeesUsd } from 'state/features/global/selectors'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
 import { formattedNum, localNumber } from '../../utils'
@@ -10,6 +10,8 @@ import { formattedNum, localNumber } from '../../utils'
 import UniPrice from '../UniPrice'
 import { TYPE } from '../../Theme'
 import { useTranslation } from 'react-i18next'
+import { usePairCount } from 'state/features/pairs/selectors'
+import { useDayTransactionCount } from 'state/features/global/hooks'
 
 const Header = styled.div`
   width: 100%;
@@ -27,11 +29,12 @@ export default function GlobalStats() {
 
   const [showPriceCard, setShowPriceCard] = useState(false)
 
-  const { oneDayVolumeUSD, oneDayTxns, pairCount } = useGlobalDataSelector()
-  const activeTokenPrice = useActiveTokenPrice()
   const activeNetworkId = useActiveNetworkId()
+  const dayTransactionCount = useDayTransactionCount()
+  const pairCount = usePairCount()
+  const dayFees = useDayFeesUsd()
+  const activeTokenPrice = useActiveTokenPrice()
   const formattedPrice = activeTokenPrice ? formattedNum(activeTokenPrice, true) : '-'
-  const oneDayFees = oneDayVolumeUSD ? formattedNum(oneDayVolumeUSD * 0.003, true) : ''
 
   return (
     <Header>
@@ -63,7 +66,7 @@ export default function GlobalStats() {
 
             {!below1180 && (
               <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
-                {t('transactions')} (24H): {localNumber(oneDayTxns)}
+                {t('transactions')} (24H): {localNumber(dayTransactionCount)}
               </TYPE.light>
             )}
             {!below1024 && (
@@ -73,7 +76,7 @@ export default function GlobalStats() {
             )}
             {!below1295 && (
               <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
-                {t('fees24hrs')}: {oneDayFees}&nbsp;
+                {t('fees24hrs')}: {formattedNum(dayFees, true)}&nbsp;
               </TYPE.light>
             )}
           </RowFixed>

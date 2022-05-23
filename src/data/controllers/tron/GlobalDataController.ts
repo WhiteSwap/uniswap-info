@@ -1,5 +1,5 @@
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
-import { GlobalDataMock, HealthStatusMock, PriceMock } from '__mocks__/global'
+import { HealthStatusMock, PriceMock } from '__mocks__/global'
 import { client } from 'service/client'
 import { GlobalChartQuery, GlobalChartQueryVariables } from 'service/generated/tronGraphql'
 import { GLOBAL_CHART } from 'service/queries/tron/global'
@@ -8,12 +8,6 @@ export default class GlobalDataController implements IGlobalDataController {
   async getHealthStatus() {
     return Promise.resolve(HealthStatusMock)
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getGlobalData(_price: number, _oldPrice: number) {
-    return Promise.resolve(GlobalDataMock)
-  }
-
   async getChartData(oldestDateToFetch: number): Promise<ChartDailyItem[]> {
     const { data } = await client.query<GlobalChartQuery, GlobalChartQueryVariables>({
       query: GLOBAL_CHART,

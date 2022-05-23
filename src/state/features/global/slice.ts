@@ -4,15 +4,15 @@ import {
   GlobalNetworkState,
   GlobalState,
   UpdateChartPayload,
-  UpdateGlobalDataPayload,
+  UpdateTransactionCountPayload,
   UpdatePricePayload,
   UpdateTransactionsPayload
 } from './types'
 
 const initialGlobalNetworkState: GlobalNetworkState = {
-  globalData: undefined,
   chartData: undefined,
   transactions: undefined,
+  dayTransactionCount: 0,
   price: 0,
   oneDayPrice: 0,
   priceChange: 0
@@ -27,8 +27,11 @@ export const globalSlice = createSlice({
   name: 'global',
   initialState,
   reducers: {
-    setGlobalData: (state, { payload: { networkId, data } }: PayloadAction<UpdateGlobalDataPayload>) => {
-      state[networkId].globalData = data
+    setTransactionCount: (
+      state,
+      { payload: { networkId, dayTransactionCount } }: PayloadAction<UpdateTransactionCountPayload>
+    ) => {
+      state[networkId].dayTransactionCount = dayTransactionCount
     },
     setTransactions: (state, { payload: { networkId, transactions } }: PayloadAction<UpdateTransactionsPayload>) => {
       state[networkId].transactions = transactions
@@ -47,6 +50,6 @@ export const globalSlice = createSlice({
   }
 })
 
-export const { setGlobalData, setTransactions, setChart, setPrice } = globalSlice.actions
+export const { setTransactionCount, setTransactions, setChart, setPrice } = globalSlice.actions
 
 export default globalSlice.reducer

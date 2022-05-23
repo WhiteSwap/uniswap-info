@@ -1,20 +1,9 @@
 import { SupportedNetwork } from 'constants/networks'
 
-export interface GlobalData {
-  pairCount: number
-  oneDayVolumeUSD: number
-  volumeChangeUSD: number
-  liquidityChangeUSD: number
-  oneDayTxns: number
-  oneWeekVolume: number
-  weeklyVolumeChange: number
-  totalLiquidityUSD: number
-}
-
 export interface GlobalNetworkState {
-  globalData?: GlobalData
   chartData?: ChartDailyItem[]
   transactions?: Transactions
+  dayTransactionCount: number
   price: number
   oneDayPrice: number
   priceChange: number
@@ -22,8 +11,8 @@ export interface GlobalNetworkState {
 
 export type GlobalState = Record<SupportedNetwork, GlobalNetworkState>
 
-export type UpdateGlobalDataPayload = ParamsWithNetwork<{
-  data: GlobalData
+export type UpdateTransactionCountPayload = ParamsWithNetwork<{
+  dayTransactionCount: number
 }>
 
 export type UpdateTransactionsPayload = ParamsWithNetwork<{

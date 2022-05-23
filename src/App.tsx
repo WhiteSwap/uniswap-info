@@ -4,7 +4,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import GlobalPage from 'pages/GlobalPage'
 import TokenPage from 'pages/TokenPage'
 import PairPage from 'pages/PairPage'
-import { useGlobalData, useGlobalChartData, useFetchActiveTokenPrice } from 'state/features/global/hooks'
+import { useGlobalChartData, useFetchActiveTokenPrice } from 'state/features/global/hooks'
 import { useFetchPairs } from 'state/features/pairs/hooks'
 import { useFetchTokens } from 'state/features/token/hooks'
 import AccountPage from 'pages/AccountPage'
@@ -83,7 +83,6 @@ const BLOCK_DIFFERENCE_THRESHOLD = 30
 function App() {
   const [savedOpen, setSavedOpen] = useState(false)
 
-  const globalData = useGlobalData()
   const globalChartData = useGlobalChartData()
   const [latestBlock, headBlock] = useLatestBlocks()
   const formatPath = useFormatPath()
@@ -105,7 +104,7 @@ function App() {
           </WarningBanner>
         </WarningWrapper>
       )}
-      {latestBlock && globalData && globalChartData.length > 0 ? (
+      {latestBlock && globalChartData.length > 0 ? (
         <ContentWrapper open={savedOpen}>
           <Navigation />
           <Main id="center">

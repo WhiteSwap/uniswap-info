@@ -98,7 +98,7 @@ export function getWhiteSwapAppLink(network: SupportedNetwork, linkVariable: str
   return `${baseWhiteSwapUrl}/${network.toUpperCase()}/${linkVariable}`
 }
 
-export function localNumber(val: string) {
+export function localNumber(val: string | number) {
   return Numeral(val).format('0,0')
 }
 
