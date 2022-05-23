@@ -13,7 +13,8 @@ import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
 import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, isValidAddress } from 'utils'
-import { useTokenData, useTokenTransactions, useTokenPairsIds, useTokenPairs } from 'state/features/token/hooks'
+import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
+import { useTokenPairs } from 'state/features/token/selectors'
 import { useFormatPath, useColor } from 'hooks'
 import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
 import { useMedia } from 'react-use'
@@ -112,7 +113,7 @@ const TokenPage = () => {
   return (
     <PageWrapper>
       <Warning
-        show={!dismissed && listedTokens.length > 0 && !listedTokens.includes(tokenAddress)}
+        show={!dismissed && listedTokens.length > 0 && !listedTokens.includes(tokenAddress.toLowerCase())}
         setShow={markAsDismissed}
         address={tokenAddress}
       />

@@ -8,6 +8,7 @@ import { setTokenPairs, setChartData, setPriceData, setToken, setTopTokens, setT
 import { useActiveTokenOneDayPrice, useActiveTokenPrice } from '../global/selectors'
 import DataService from 'data/DataService'
 import { isValidAddress } from 'utils'
+import { SupportedNetwork } from 'constants/networks'
 
 export function useFetchTokens() {
   const dispatch = useAppDispatch()
@@ -51,15 +52,20 @@ export function useTokenTransactions(tokenAddress: string) {
   const tokenTransactions = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress]?.transactions)
   const tokenPairs = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress]?.tokenPairs)
 
-  useEffect(() => {
-    async function checkForTransactions() {
-      if (!tokenTransactions && tokenPairs) {
-        const transactions = await DataService.transactions.getTransactions(tokenPairs)
+  useEffect(
+    () => {
+      async function checkForTransactions() {
+        const transactions = await DataService.transactions.getTokenTransactions(tokenAddress, tokenPairs)
         dispatch(setTransactions({ networkId: activeNetwork, transactions, address: tokenAddress }))
       }
-    }
-    checkForTransactions()
-  }, [tokenTransactions, tokenAddress, tokenPairs, activeNetwork])
+      // eth subgraph need to pass token pairs array
+      // tron need to pass only token address
+      if (activeNetwork === SupportedNetwork.TRON || tokenPairs) {
+        checkForTransactions()
+      }
+    },
+    activeNetwork === SupportedNetwork.ETHEREUM ? [tokenPairs] : []
+  )
 
   return tokenTransactions
 }
@@ -80,13 +86,6 @@ export function useTokenPairsIds(tokenAddress: string) {
   }, [tokenAddress, tokenPairs, activeNetwork])
 
   return tokenPairs || []
-}
-
-export function useTokenPairs(pairIds: string[]) {
-  const activeNetwork = useActiveNetworkId()
-  const pairs = useAppSelector(state => state.pairs[activeNetwork])
-  const tokenPairs = Object.fromEntries(Object.entries(pairs).filter(([key]) => pairIds.indexOf(key) >= 0))
-  return tokenPairs
 }
 
 export function useTokenChartData(tokenAddress: string) {

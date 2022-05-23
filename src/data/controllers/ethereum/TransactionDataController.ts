@@ -54,11 +54,20 @@ export default class TransactionDataController implements ITransactionDataContro
 
     return 0
   }
-  async getTransactions(allPairs: string[]) {
+  async getPairTransactions(pairAddress: string): Promise<Transactions> {
     const result = await client.query<TransactionQuery, FilteredTransactionsQueryVariables>({
       query: FILTERED_TRANSACTIONS,
       variables: {
-        allPairs
+        allPairs: [pairAddress]
+      }
+    })
+    return transactionsMapper(result.data)
+  }
+  async getTokenTransactions(_: string, tokenAddress: string[]): Promise<Transactions> {
+    const result = await client.query<TransactionQuery, FilteredTransactionsQueryVariables>({
+      query: FILTERED_TRANSACTIONS,
+      variables: {
+        allPairs: tokenAddress
       }
     })
     return transactionsMapper(result.data)

@@ -124,7 +124,9 @@ const PairPage = () => {
         </RowBetween>
         <WarningGrouping
           disabled={
-            !dismissed && listedTokens && !(listedTokens.includes(tokenOne?.id) && listedTokens.includes(tokenTwo?.id))
+            !dismissed &&
+            listedTokens &&
+            !(listedTokens.includes(tokenOne?.id.toLowerCase()) && listedTokens.includes(tokenTwo?.id.toLowerCase()))
           }
         >
           <DashboardWrapper>

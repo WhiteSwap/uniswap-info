@@ -65,7 +65,7 @@ export function usePairTransactions(pairAddress: string) {
   useEffect(() => {
     async function checkForTxns() {
       if (!pairTxns) {
-        const transactions = await DataService.transactions.getTransactions([pairAddress])
+        const transactions = await DataService.transactions.getPairTransactions(pairAddress)
         dispatch(setPairTransactions({ networkId: activeNetwork, transactions, address: pairAddress }))
       }
     }
