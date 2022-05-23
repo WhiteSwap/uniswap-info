@@ -1,4 +1,8 @@
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
+import { transactionsMapper } from 'data/mappers/tron/transactionMapper'
+import { client } from 'service/client'
+import { GlobalTransactionsQuery } from 'service/generated/tronGraphql'
+import { GLOBAL_TRANSACTIONS } from 'service/queries/tron/transactions'
 import { TransactionsMock } from '__mocks__/transactions'
 
 export default class TransactionDataController implements ITransactionDataController {
@@ -14,6 +18,7 @@ export default class TransactionDataController implements ITransactionDataContro
     return Promise.resolve(TransactionsMock)
   }
   async getAllTransactions() {
-    return Promise.resolve(TransactionsMock)
+    const { data } = await client.query<GlobalTransactionsQuery>({ query: GLOBAL_TRANSACTIONS })
+    return transactionsMapper(data)
   }
 }
