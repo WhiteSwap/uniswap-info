@@ -1,4 +1,4 @@
-import { pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
+import { pairChartMapper, pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
@@ -20,6 +20,7 @@ import {
   parseTokenInfo
 } from 'utils'
 import { EthereumPair } from 'data/controllers/types/ethTypes'
+import { PairChartQuery } from 'service/generated/ethereumGraphql'
 
 async function fetchPairData(pairAddress: string, block?: number) {
   return client.query({
@@ -181,7 +182,7 @@ export default class PairDataController implements IPairDataController {
       let allFound = false
       let skip = 0
       while (!allFound) {
-        const result = await client.query({
+        const result = await client.query<PairChartQuery>({
           query: PAIR_CHART,
           variables: {
             pairAddress,
@@ -215,9 +216,8 @@ export default class PairDataController implements IPairDataController {
           if (!dayIndexSet.has(currentDayIndex)) {
             data.push({
               date: nextDay,
-              dayString: nextDay,
               dailyVolumeUSD: 0,
-              reserveUSD: latestLiquidityUSD
+              reserveUSD: +latestLiquidityUSD
             })
           } else {
             latestLiquidityUSD = dayIndexArray[index].reserveUSD
@@ -232,7 +232,7 @@ export default class PairDataController implements IPairDataController {
       console.log(e)
     }
 
-    return data
+    return pairChartMapper(data)
   }
 
   async getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number) {

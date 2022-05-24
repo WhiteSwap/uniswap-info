@@ -7,11 +7,8 @@ export interface PairDetails extends Pair {
 }
 
 export interface PairDayData {
-  dailyVolumeToken0?: string
-  dailyVolumeToken1?: string
   dailyVolumeUSD: number
   date: number
-  dayString?: number
   reserveUSD: number
 }
 

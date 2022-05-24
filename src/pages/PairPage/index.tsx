@@ -56,7 +56,7 @@ const PairPage = () => {
     ? formattedNum(trackedReserveUSD, true)
     : totalLiquidityUSD
     ? formattedNum(totalLiquidityUSD, true)
-    : '-'
+    : '$0'
 
   // mark if using untracked liquidity
   const [usingTracked, setUsingTracked] = useState(true)

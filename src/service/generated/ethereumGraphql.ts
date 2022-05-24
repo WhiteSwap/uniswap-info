@@ -204,8 +204,6 @@ export type PairDayData = {
   reserve1: Scalars['Float']
   totalSupply: Scalars['Float']
   reserveUSD: Scalars['Float']
-  dailyVolumeToken0: Scalars['Float']
-  dailyVolumeToken1: Scalars['Float']
   dailyVolumeUSD: Scalars['Float']
   dailyTxns: Scalars['Int']
 }
@@ -382,4 +380,14 @@ export type TopLiquidityPositionQuery = {
     liquidityTokenBalance: string
     __typename: 'LiquidityPosition'
   }>
+}
+
+export type PairChartItem = {
+  date: Scalars['Int']
+  dailyVolumeUSD: Scalars['Float']
+  reserveUSD: Scalars['Float']
+}
+
+export type PairChartQuery = {
+  pairDayDatas: Array<PairChartItem>
 }

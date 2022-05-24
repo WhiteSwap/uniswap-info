@@ -20,8 +20,6 @@ export const PAIR_CHART = gql`
   query PairChart($pairAddress: Bytes!, $skip: Int!) {
     pairDayDatas(first: 1000, skip: $skip, orderBy: date, orderDirection: asc, where: { pairAddress: $pairAddress }) {
       date
-      dailyVolumeToken0
-      dailyVolumeToken1
       dailyVolumeUSD
       reserveUSD
     }
@@ -39,8 +37,6 @@ export const PAIR_DAY_DATA_BULK = gql`
       id
       pairAddress
       date
-      dailyVolumeToken0
-      dailyVolumeToken1
       dailyVolumeUSD
       totalSupply
       reserveUSD

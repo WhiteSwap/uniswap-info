@@ -279,11 +279,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
             ))}
           {chartFilter === CHART_VIEW.VOLUME && (
             <ResponsiveContainer aspect={aspect}>
-              <BarChart
-                margin={{ top: 0, right: 0, bottom: 6, left: below1080 ? 0 : 10 }}
-                barCategoryGap={1}
-                data={chartData}
-              >
+              <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={chartData}>
                 <XAxis
                   tickLine={false}
                   axisLine={false}
@@ -299,11 +295,11 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 <YAxis
                   type="number"
                   axisLine={false}
-                  tickMargin={16}
+                  tickMargin={30}
                   tickFormatter={tick => '$' + toK(tick)}
                   tickLine={false}
-                  interval="preserveEnd"
                   orientation="right"
+                  interval="preserveEnd"
                   minTickGap={80}
                   yAxisId={0}
                   tick={{ fill: textColor }}

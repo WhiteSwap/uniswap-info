@@ -303,7 +303,6 @@ export default class TokenDataController implements ITokenDataController {
         if (!dayIndexSet.has(currentDayIndex)) {
           data.push({
             date: nextDay,
-            dayString: nextDay,
             dailyVolumeUSD: 0,
             priceUSD: latestPriceUSD,
             totalLiquidityUSD: latestLiquidityUSD
