@@ -83,8 +83,8 @@ export function useFetchActiveTokenPrice() {
 
   useEffect(() => {
     async function checkForPrice() {
-      const [newPrice, newOneDayPrice, priceChange] = await DataService.global.getPrice()
-      dispatch(setPrice({ price: newPrice, oneDayPrice: newOneDayPrice, priceChange, networkId: activeNetwork }))
+      const [newPrice, newOneDayPrice] = await DataService.global.getPrice()
+      dispatch(setPrice({ price: newPrice, oneDayPrice: newOneDayPrice, networkId: activeNetwork }))
     }
     checkForPrice()
   }, [activeNetwork])

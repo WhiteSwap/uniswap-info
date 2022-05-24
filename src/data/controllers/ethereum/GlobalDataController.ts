@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import { ETH_PRICE, GLOBAL_CHART, SUBGRAPH_HEALTH } from 'service/queries/ethereum/global'
-import { getPercentChange, getBlockFromTimestamp } from 'utils'
+import { getBlockFromTimestamp } from 'utils'
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 
 async function fetchPrice(block?: number) {
@@ -96,7 +96,6 @@ export default class GlobalDataController implements IGlobalDataController {
 
     let price = 0
     let priceOneDay = 0
-    let priceChange = 0
 
     try {
       const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
@@ -104,13 +103,12 @@ export default class GlobalDataController implements IGlobalDataController {
       const resultOneDay = await fetchPrice(oneDayBlock)
       const currentPrice = +result?.data?.bundles[0]?.ethPrice
       const oneDayBackPrice = +resultOneDay?.data?.bundles[0]?.ethPrice
-      priceChange = getPercentChange(currentPrice, oneDayBackPrice)
       price = currentPrice
       priceOneDay = oneDayBackPrice
     } catch (e) {
       console.log(e)
     }
 
-    return [price, priceOneDay, priceChange]
+    return [price, priceOneDay]
   }
 }
