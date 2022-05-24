@@ -1,5 +1,5 @@
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
-import { liquiditySnapshotListMapper } from 'data/mappers/ethereum/accountMapper'
+import { liquiditySnapshotListMapper, userPositionListMapper } from 'data/mappers/ethereum/accountMapper'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {
@@ -37,8 +37,8 @@ export default class AccountDataController implements IAccountDataController {
             user: account
           }
         })
-        allResults = allResults.concat(result.data.LiquidityPositionSnapshots)
-        if (result.data.LiquidityPositionSnapshots.length < 1000) {
+        allResults = allResults.concat(result.data.liquidityPositionSnapshots)
+        if (result.data.liquidityPositionSnapshots.length < 1000) {
           found = true
         } else {
           skip += 1000
@@ -162,11 +162,11 @@ export default class AccountDataController implements IAccountDataController {
             const feeEarned = await getLPReturnsOnPair(positionData.pair, price, snapshots)
             return {
               ...positionData,
-              feeEarned
+              feeEarned: feeEarned ?? 0
             }
           })
         )
-        return formattedPositions
+        return userPositionListMapper(formattedPositions)
       }
     } catch (e) {
       console.log(e)

@@ -72,11 +72,10 @@ function AccountPage() {
     return dynamicPositions
       ? dynamicPositions.reduce((total, position) => {
           const calcPos =
-            position?.pair && position.pair.trackedReserveUSD
+            position?.pair && position.pair.reserveUSD
               ? (parseFloat(position.liquidityTokenBalance) / position.pair.totalSupply) *
-                position.pair.trackedReserveUSD
+                parseFloat(position.pair.reserveUSD)
               : 0
-
           return total + calcPos
         }, 0)
       : null
@@ -91,7 +90,7 @@ function AccountPage() {
         <RowBetween>
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
-            <Link href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
+            <Link to={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
               {accountAddress.slice(0, 6) + '...' + accountAddress.slice(38, 42)}
             </Link>
           </TYPE.body>
@@ -103,7 +102,7 @@ function AccountPage() {
               {accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(38, 42)}
             </TYPE.header>
             <ActionsContainer>
-              <StarIcon filled={isSaved} onClick={toggleSavedAccount} />
+              <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a
                 href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')}
                 target="_blank"
@@ -128,12 +127,12 @@ function AccountPage() {
               {activePosition && (
                 <RowFixed>
                   <DoubleTokenLogo
-                    a0={activePosition.pair.tokenOne.id}
-                    a1={activePosition.pair.tokenTwo.id}
+                    a0={activePosition.pair.tokenOne?.id}
+                    a1={activePosition.pair.tokenTwo?.id}
                     size={16}
                   />
                   <TYPE.body ml={'16px'}>
-                    {activePosition.pair.tokenOne.symbol}-{activePosition.pair.tokenTwo.symbol} {t('position')}
+                    {activePosition.pair.tokenOne?.symbol}-{activePosition.pair.tokenTwo?.symbol} {t('position')}
                   </TYPE.body>
                 </RowFixed>
               )}
@@ -142,8 +141,8 @@ function AccountPage() {
               <Flyout>
                 <AutoColumn gap="0px">
                   {positions?.map((p, i) => {
-                    let tokenOneSymbol = p.pair.tokenOne.symbol
-                    let tokenTwoSymbol = p.pair.tokenTwo.symbol
+                    let tokenOneSymbol = p.pair.tokenOne?.symbol
+                    let tokenTwoSymbol = p.pair.tokenTwo?.symbol
                     if (tokenOneSymbol === 'WETH') {
                       tokenOneSymbol = 'ETH'
                     }
@@ -159,7 +158,7 @@ function AccountPage() {
                           }}
                           key={i}
                         >
-                          <DoubleTokenLogo a0={p.pair.tokenOne.id} a1={p.pair.tokenTwo.id} size={16} />
+                          <DoubleTokenLogo a0={p.pair.tokenOne?.id} a1={p.pair.tokenTwo?.id} size={16} />
                           <TYPE.body ml={'16px'}>
                             {tokenOneSymbol}-{tokenTwoSymbol} {t('position')}
                           </TYPE.body>

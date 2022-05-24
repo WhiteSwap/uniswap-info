@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost'
 
 export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
   query LpSnapshots($user: Bytes!, $skip: Int!) {
-    OldLiquidityPositionSnapshots(first: 1000, skip: $skip, where: { user: $user }) {
+    liquidityPositionSnapshots(first: 1000, skip: $skip, where: { user: $user }) {
       timestamp
       reserveUSD
       liquidityTokenBalance
@@ -28,8 +28,8 @@ export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
 `
 // ! need mapped
 export const USER_LIQUIDITY_POSITIONS = gql`
-  query OldLiquidityPositions($user: Bytes!) {
-    OldLiquidityPositions(where: { user: $user }) {
+  query LiquidityPositions($user: Bytes!) {
+    liquidityPositions(where: { user: $user }) {
       pair {
         id
         reserve0
@@ -53,8 +53,8 @@ export const USER_LIQUIDITY_POSITIONS = gql`
 `
 
 export const TOP_LPS_PER_PAIRS = gql`
-  query TopOldLiquidityPositions($pair: Bytes!) {
-    OldLiquidityPositions(where: { pair: $pair }, orderBy: liquidityTokenBalance, orderDirection: desc, first: 10) {
+  query TopLiquidityPositions($pair: Bytes!) {
+    liquidityPositions(where: { pair: $pair }, orderBy: liquidityTokenBalance, orderDirection: desc, first: 10) {
       user {
         id
       }

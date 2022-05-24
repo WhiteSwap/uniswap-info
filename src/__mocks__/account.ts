@@ -26,6 +26,7 @@ export const UserHistoryMock = [
     __typename: 'LiquidityPositionSnapshot'
   }
 ]
+
 export const UserLiquidityChartMock = [
   {
     date: 1647354226,
@@ -36,6 +37,7 @@ export const UserLiquidityChartMock = [
     valueUSD: 0
   }
 ]
+
 export const UserPositionsMock = [
   {
     pair: {
@@ -70,10 +72,11 @@ export const UserPositionsMock = [
     __typename: 'LiquidityPosition'
   }
 ]
+
 export const TopLpsMock = [
   {
     user: {
-      id: '0xb41c0bf57b94fc923940868f66e77e78d546af30',
+      id: 'TM1zzNDZD2DPASbKcgdVoTYhfmYgtfwx9R',
       __typename: 'User'
     },
     pairName: 'ETH-USDT',
@@ -84,13 +87,13 @@ export const TopLpsMock = [
   },
   {
     user: {
-      id: '0x263a8b92d21749a3f8df2d507abec129793f041d',
+      id: 'TVMC8C7Y4f4ABr48PJencVdunVVB4XUW96',
       __typename: 'User'
     },
-    pairName: 'WSD-USDT',
-    pairAddress: '0x8b40ca14faf036125bea70fdbd59601115b2e597',
-    token0: '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9',
+    pairName: 'ETH-USDT',
+    pairAddress: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
+    token0: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     token1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    usd: 36573.90528778785
+    usd: 50826.93315237885
   }
 ]

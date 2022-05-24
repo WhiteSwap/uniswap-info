@@ -144,36 +144,7 @@ interface Pair {
   reserveUSD: string
 }
 
-interface OldPair {
-  createdAtTimestamp: string
-  id: string
-  liquidityChangeUSD: number
-  oneDayVolumeUSD: number
-  oneDayVolumeUntracked: number
-  oneWeekVolumeUSD: number
-  reserve0: string
-  reserve1: string
-  reserveUSD: string
-  token0: PairToken
-  token1: PairToken
-  token0Price: string
-  token1Price: string
-  totalSupply: string
-  trackedReserveCoin: string
-  trackedReserveUSD: number
-  untrackedVolumeUSD: string
-  volumeChangeUSD: number
-  volumeChangeUntracked: number
-  volumeUSD: string
-  __typename?: string
-}
-
 type PositionPair = Pick<Pair, 'id' | 'tokenOne' | 'tokenTwo' | 'reserveUSD' | 'totalSupply'>
-
-type OldSnapshotPair = Pick<OldPair, 'id' | 'reserve0' | 'reserve1' | 'reserveUSD'> & {
-  token0: Pick<Token, 'id'>
-  token1: Pick<Token, 'id'>
-}
 
 type SnapshotPairToken = Pick<Token, 'id' | 'reserve' | 'priceUSD'>
 
@@ -188,18 +159,6 @@ interface Position {
   feeEarned: number
 }
 
-interface OldLiquiditySnapshot {
-  liquidityTokenBalance: string
-  liquidityTokenTotalSupply: string
-  pair: OldSnapshotPair
-  reserve0: string
-  reserve1: string
-  reserveUSD: string
-  timestamp: number
-  token0PriceUSD: string
-  token1PriceUSD: string
-}
-
 interface LiquiditySnapshot {
   liquidityTokenBalance: string
   liquidityTokenTotalSupply: string
@@ -212,17 +171,6 @@ type PairReturn = {
   date: number
   fees: number
   usdValue: number
-}
-
-interface OldLiquidityPosition {
-  pairAddress: string
-  pairName: string
-  token0: string
-  token1: string
-  usd: number
-  user: {
-    id: string
-  }
 }
 
 interface LiquidityPosition {

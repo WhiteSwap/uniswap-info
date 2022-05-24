@@ -32,7 +32,7 @@ function AccountLookup() {
 
         <DashboardWrapper>
           <TYPE.main fontSize={22} fontWeight={500}>
-            {t('topOldLiquidityPositions')}
+            {t('topLiquidityPositions')}
           </TYPE.main>
           {topLps && topLps.length > 0 ? <LPList lps={topLps} maxItems={200} /> : <LocalLoader />}
         </DashboardWrapper>

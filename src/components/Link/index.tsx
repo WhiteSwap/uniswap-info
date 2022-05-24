@@ -1,13 +1,20 @@
 import { Link as RebassLink } from 'rebass'
-import { Link as RouterLink } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import { Link as RouterLink, LinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { lighten, darken } from 'polished'
+import { PropsWithChildren } from 'react'
 
-const WrappedLink = ({ external, children, ...rest }) => (
+type WrappedLinkProps = PropsWithChildren<
+  {
+    external?: boolean
+    color?: string
+  } & LinkProps
+>
+
+const WrappedLink = ({ external, children, ...rest }: WrappedLinkProps) => (
   <RebassLink
-    target={external ? '_blank' : null}
-    rel={external ? 'noopener noreferrer' : null}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
     color="#6681A7"
     {...rest}
   >
@@ -15,22 +22,17 @@ const WrappedLink = ({ external, children, ...rest }) => (
   </RebassLink>
 )
 
-WrappedLink.propTypes = {
-  external: PropTypes.bool
-}
-
 const Link = styled(WrappedLink)`
   color: ${({ color, theme }) => (color ? color : theme.link)};
 `
 
-export default Link
-
-export const CustomLink = styled(RouterLink)`
+export const CustomLink = styled(RouterLink)<{ color?: string }>`
   text-decoration: none;
   font-size: 14px;
   font-weight: 700;
   color: ${({ color, theme }) => (color ? color : theme.blueGrey)};
   cursor: pointer;
+  white-space: 'nowrap';
 
   &:visited {
     color: ${({ color, theme }) => (color ? lighten(0.1, color) : lighten(0.1, theme.blueGrey))};
@@ -52,6 +54,7 @@ export const BasicLink = styled(RouterLink)`
   &:hover {
     cursor: pointer;
     text-decoration: none;
-    underline: none;
   }
 `
+
+export default Link

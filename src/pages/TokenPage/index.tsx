@@ -127,7 +127,7 @@ const TokenPage = () => {
               style={{ width: 'fit-content' }}
               color={backgroundColor}
               external
-              href={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
+              to={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
             >
               <Text style={{ marginLeft: '.15rem' }} fontSize={'14px'} fontWeight={400}>
                 ({tokenAddress.slice(0, 8) + '...' + tokenAddress.slice(36, 42)})
@@ -174,11 +174,11 @@ const TokenPage = () => {
                 </RowFixed>
               </RowFixed>
               <ActionsContainer>
-                <StarIcon filled={isTokenSaved} onClick={toggleSavedToken} />
-                <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
+                <StarIcon $filled={isTokenSaved} onClick={toggleSavedToken} />
+                <Link to={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>
-                <Link href={getSwapLink(activeNetworkId, tokenAddress, null)} target="_blank">
+                <Link to={getSwapLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonDark color={backgroundColor}>{t('trade')}</ButtonDark>
                 </Link>
                 <a

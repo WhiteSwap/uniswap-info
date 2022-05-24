@@ -1,11 +1,11 @@
 import { TronPosition } from 'data/controllers/types/trxTypes'
 import { pairMapper } from 'data/mappers/tron/pairMappers'
 
-export function userPositionMapper(payload: TronPosition): Position {
+export function userPositionMapper(payload: TronPosition | null): Position {
   return {
-    pair: pairMapper(payload.pair),
-    liquidityTokenBalance: payload.liquidityTokenBalance ?? '',
-    feeEarned: payload.feeEarned ?? 0
+    pair: pairMapper(payload?.pair),
+    liquidityTokenBalance: payload?.liquidityTokenBalance ?? '',
+    feeEarned: payload?.feeEarned ?? 0
   }
 }
 
@@ -13,44 +13,44 @@ export function userPositionListMapper(payload?: TronPosition[] | null): Positio
   return payload?.map(position => userPositionMapper(position)) || []
 }
 
-export function liquiditySnapshotMapper(payload: any): LiquiditySnapshot {
+export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot {
   return {
-    liquidityTokenBalance: payload.liquidityTokenBalance,
-    liquidityTokenTotalSupply: '',
+    liquidityTokenBalance: payload?.liquidityTokenBalance || '',
+    liquidityTokenTotalSupply: payload?.liquidityTokenTotalSupply || '',
     pair: {
-      id: '',
-      reserveUSD: '',
+      id: payload?.pair.id || '',
+      reserveUSD: payload?.pair.reserveUSD || '',
       tokenOne: {
-        id: '',
-        reserve: '',
-        priceUSD: 0
+        id: payload?.pair.tokenOne?.id || '',
+        reserve: payload?.pair.tokenOne?.reserve || '',
+        priceUSD: payload?.pair.tokenOne?.priceUSD || 0
       },
       tokenTwo: {
-        id: '',
-        reserve: '',
-        priceUSD: 0
+        id: payload.pair.tokenTwo?.id || '',
+        reserve: payload.pair.tokenTwo?.reserve || '',
+        priceUSD: payload.pair.tokenTwo?.priceUSD || 0
       }
     },
-    reserveUSD: '',
-    timestamp: 0
+    reserveUSD: payload.reserveUSD || '',
+    timestamp: payload.timestamp || new Date().getTime()
   }
 }
 
-export function liquiditySnapshotListMapper(payload: any[]): LiquiditySnapshot[] {
+export function liquiditySnapshotListMapper(payload: any[] | null): LiquiditySnapshot[] {
   return payload?.map(snapshot => liquiditySnapshotMapper(snapshot)) || []
 }
 
-export function liquidityPositionMapper(payload: any): LiquidityPosition {
+export function liquidityPositionMapper(payload: any | null): LiquidityPosition {
   return {
-    pairAddress: payload.pairAddress ?? '',
-    pairName: payload.pairName ?? '',
-    tokenOne: payload.token0 ?? '',
-    tokenTwo: payload.token1 ?? '',
-    usd: payload.usd ? +payload.usd : 0,
-    userId: payload.user?.id ?? ''
+    pairAddress: payload?.pairAddress ?? '',
+    pairName: payload?.pairName ?? '',
+    tokenOne: payload?.tokenOne ?? '',
+    tokenTwo: payload?.tokenTwo ?? '',
+    usd: payload?.usd ? +payload.usd : 0,
+    userId: payload?.user?.id ?? ''
   }
 }
 
-export function liquidityPositionListMapper(payload: any[]): LiquidityPosition[] {
+export function liquidityPositionListMapper(payload: any[] | null): LiquidityPosition[] {
   return payload?.map(position => liquidityPositionMapper(position)) || []
 }

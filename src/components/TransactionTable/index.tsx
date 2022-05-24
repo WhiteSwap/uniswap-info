@@ -121,7 +121,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         <DataText fontWeight="500">
           <CustomLink
             external
-            href={getBlockChainScanLink(activeNetworkId, item.hash, 'transaction')}
+            to={getBlockChainScanLink(activeNetworkId, item.hash, 'transaction')}
             style={{ fontWeight: 700 }}
           >
             {t(getTransactionType(item.type), {
@@ -143,7 +143,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         )}
         {!below1080 && (
           <DataText>
-            <CustomLink external href={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
+            <CustomLink external to={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
               {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
             </CustomLink>
           </DataText>
