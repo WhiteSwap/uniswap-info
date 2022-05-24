@@ -23,11 +23,7 @@ export const TOKEN_CHART = gql`
       id
       date
       priceUSD
-      totalLiquidityToken
       totalLiquidityUSD
-      totalLiquidityETH
-      dailyVolumeETH
-      dailyVolumeToken
       dailyVolumeUSD
     }
   }
