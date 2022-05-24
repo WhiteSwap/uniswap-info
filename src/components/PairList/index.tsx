@@ -161,7 +161,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
           {!below1080 && (
             <Flex alignItems="center" justifyContent="flexEnd">
               <ClickableText onClick={changeSortDirection(PairSortField.WeekVolume)}>
-                {'volume'} (7d) {sortedColumn === PairSortField.WeekVolume ? (!sortDirection ? '↑' : '↓') : ''}
+                {t('volume')} (7d) {sortedColumn === PairSortField.WeekVolume ? (!sortDirection ? '↑' : '↓') : ''}
               </ClickableText>
             </Flex>
           )}

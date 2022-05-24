@@ -94,7 +94,7 @@ function AccountPage() {
               {accountAddress.slice(0, 6) + '...' + accountAddress.slice(38, 42)}
             </Link>
           </TYPE.body>
-          {!below600 && <Search small={true} />}
+          {!below600 && <Search />}
         </RowBetween>
         <Header>
           <RowBetween>

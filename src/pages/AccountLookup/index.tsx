@@ -23,7 +23,7 @@ function AccountLookup() {
         <DashboardWrapper>
           <RowBetween>
             <TYPE.largeHeader>{t('walletAnalytics')}</TYPE.largeHeader>
-            {!below600 && <Search small={true} />}
+            {!below600 && <Search />}
           </RowBetween>
           <AccountWrapper>
             <AccountSearch />

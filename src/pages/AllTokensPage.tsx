@@ -20,7 +20,7 @@ function AllTokensPage() {
         <DashboardWrapper>
           <RowBetween>
             <TYPE.largeHeader>{t('topTokens')}</TYPE.largeHeader>
-            {!below600 && <Search small={true} />}
+            {!below600 && <Search />}
           </RowBetween>
           <TopTokenList tokens={allTokens} itemMax={50} />
         </DashboardWrapper>

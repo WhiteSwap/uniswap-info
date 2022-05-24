@@ -134,7 +134,7 @@ const TokenPage = () => {
               </Text>
             </Link>
           </AutoRow>
-          {!below600 && <Search small={true} />}
+          {!below600 && <Search />}
         </RowBetween>
 
         <WarningGrouping disabled={!dismissed && listedTokens && !listedTokens.includes(tokenAddress)}>
