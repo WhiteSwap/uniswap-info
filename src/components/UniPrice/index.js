@@ -34,27 +34,27 @@ export default function UniPrice() {
       : 0
   }, [daiPair, usdcPair, usdtPair])
 
-  const daiPerEth = daiPair?.tokenTwo.priceUSD.toFixed(2) || '-'
-  const usdcPerEth = usdcPair?.tokenTwo.priceUSD.toFixed(2) || '-'
-  const usdtPerEth = usdtPair?.tokenOne.priceUSD.toFixed(2) || '-'
+  const daiPerEth = daiPair?.tokenTwo ? formattedNum(daiPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
+  const usdcPerEth = usdcPair?.tokenTwo ? formattedNum(usdcPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
+  const usdtPerEth = usdtPair?.tokenOne ? formattedNum(usdtPair.tokenOne.priceUSD.toFixed(2), true) : '-'
 
   return (
     <PriceCard>
       <AutoColumn gap="10px">
         <RowFixed>
-          <TYPE.main>DAI/ETH: {formattedNum(daiPerEth, true)}</TYPE.main>
+          <TYPE.main>DAI/ETH: {daiPerEth}</TYPE.main>
           <TYPE.light style={{ marginLeft: '10px' }}>
             {daiPair && totalLiquidity ? formatPercent(daiPair.trackedReserveUSD / totalLiquidity) : '-'}
           </TYPE.light>
         </RowFixed>
         <RowFixed>
-          <TYPE.main>USDC/ETH: {formattedNum(usdcPerEth, true)}</TYPE.main>
+          <TYPE.main>USDC/ETH: {usdcPerEth}</TYPE.main>
           <TYPE.light style={{ marginLeft: '10px' }}>
             {usdcPair && totalLiquidity ? formatPercent(usdcPair.trackedReserveUSD / totalLiquidity) : '-'}
           </TYPE.light>
         </RowFixed>
         <RowFixed>
-          <TYPE.main>USDT/ETH: {formattedNum(usdtPerEth, true)}</TYPE.main>
+          <TYPE.main>USDT/ETH: {usdtPerEth}</TYPE.main>
           <TYPE.light style={{ marginLeft: '10px' }}>
             {usdtPair && totalLiquidity ? formatPercent(usdtPair.trackedReserveUSD / totalLiquidity) : '-'}
           </TYPE.light>
