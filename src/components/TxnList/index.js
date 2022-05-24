@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 import PropTypes from 'prop-types'
-import { formatTime, formattedNum, getBlockChainScanLink } from '../../utils'
+import { formatTime, formattedNum, getBlockChainScanLink, ellipsisAddress } from '../../utils'
 import { useMedia } from 'react-use'
 import { RowFixed, RowBetween } from '../Row'
 
@@ -343,7 +343,7 @@ function TxnList({ transactions, color }) {
         {!below1080 && (
           <DataText area="account">
             <CustomLink external href={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
-              {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+              {item.account && ellipsisAddress(item.account)}
             </CustomLink>
           </DataText>
         )}

@@ -9,7 +9,7 @@ import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TYPE } from 'Theme'
-import { formattedNum, formatTime, getBlockChainScanLink } from 'utils'
+import { ellipsisAddress, formattedNum, formatTime, getBlockChainScanLink } from 'utils'
 import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, Arrow } from './styled'
 
 interface ITransactionTable {
@@ -144,7 +144,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         {!below1080 && (
           <DataText>
             <CustomLink external href={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
-              {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+              {item.account && ellipsisAddress(item.account)}
             </CustomLink>
           </DataText>
         )}

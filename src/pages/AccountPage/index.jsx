@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
 import { useParams, Navigate } from 'react-router-dom'
 import Panel from 'components/Panel'
-import { formattedNum, getBlockChainScanLink, isValidAddress } from 'utils'
+import { ellipsisAddress, formattedNum, getBlockChainScanLink, isValidAddress } from 'utils'
 import { AutoRow, RowFixed, RowBetween } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import UserChart from 'components/UserChart'
@@ -106,16 +106,14 @@ function AccountPage() {
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
             <Link href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
-              {accountAddress.slice(0, 6) + '...' + accountAddress.slice(38, 42)}
+              {ellipsisAddress(accountAddress)}
             </Link>
           </TYPE.body>
           {!below600 && <Search small={true} />}
         </RowBetween>
         <Header>
           <RowBetween>
-            <TYPE.header fontSize={24}>
-              {accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(38, 42)}
-            </TYPE.header>
+            <TYPE.header fontSize={24}>{ellipsisAddress(accountAddress)}</TYPE.header>
             <ActionsContainer>
               <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a

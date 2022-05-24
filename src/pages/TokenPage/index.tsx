@@ -11,7 +11,7 @@ import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
-import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, isValidAddress } from 'utils'
+import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, isValidAddress, ellipsisAddress } from 'utils'
 import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
 import { useTokenPairs } from 'state/features/token/selectors'
 import { useFormatPath, useColor } from 'hooks'
@@ -119,7 +119,7 @@ const TokenPage = () => {
               href={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
             >
               <Text style={{ marginLeft: '.15rem' }} fontSize={'14px'} fontWeight={400}>
-                ({tokenAddress.slice(0, 8) + '...' + tokenAddress.slice(36, 42)})
+                ({ellipsisAddress(tokenAddress)})
               </Text>
             </Link>
           </AutoRow>

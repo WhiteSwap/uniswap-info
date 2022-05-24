@@ -533,3 +533,8 @@ export function getChartData(data: ChartDailyItem[], field: keyof ChartDailyItem
 export function parseTokenInfo(field: 'name' | 'symbol', address?: string, defaultValue?: string) {
   return TOKEN_OVERRIDES[address || '']?.[field] || defaultValue || ''
 }
+
+export function ellipsisAddress(address: string): string {
+  const length = address.length
+  return address.slice(0, 6) + '...' + address.slice(length - 4, length)
+}
