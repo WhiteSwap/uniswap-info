@@ -41,20 +41,20 @@ export const UserLiquidityChartMock = [
 export const UserPositionsMock = [
   {
     pair: {
-      id: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
+      id: 'TF93BSusoPh9fPa6fizSnRFV4zuyVgEwFY',
       tokenOne: {
-        id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-        name: 'Wrapped Ethereum',
-        symbol: 'WETH',
+        id: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
+        name: 'Tether',
+        symbol: 'USDT',
         price: 1032.232453242,
         derivedPrice: 1,
         reserve: 9.266108317354039,
         __typename: 'TokenPair'
       },
       tokenTwo: {
-        id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-        name: 'USDT',
-        symbol: 'USDT',
+        id: 'THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu',
+        name: 'WSEDAO',
+        symbol: 'WSD',
         price: 1032.232453242,
         derivedPrice: 0.000360427813172301,
         reserve: 25708.635871,
