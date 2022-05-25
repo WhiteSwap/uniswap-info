@@ -333,6 +333,12 @@ export type TokenQuery = {
   } | null
 }
 
+export type TokenPairsQueryVariables = Exact<{
+  tokenAddress: Scalars['String']
+}>
+
+export type TokenPairsQuery = { __typename?: 'RootQuery'; tokenPairs?: Array<string | null> | null }
+
 export type TransactionDetailsFragment = {
   __typename?: 'Transaction'
   hash: string

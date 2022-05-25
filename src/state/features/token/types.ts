@@ -35,5 +35,5 @@ export type UpdatePriceDataPayload = ParamsWithNetwork<{
 
 export type UpdateAllPairsPayload = ParamsWithNetwork<{
   address: string
-  allPairs: string[]
+  allPairs?: string[]
 }>

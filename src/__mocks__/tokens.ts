@@ -1,10 +1,3 @@
-export const TokenPairsMock = [
-  '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
-  '0x8b40ca14faf036125bea70fdbd59601115b2e597',
-  '0x0882de41d9119d422faf021b84c4747a303930fc',
-  '0x3b29f82cadc1185372fc8b15503691bc0d0cb168'
-]
-
 export const IntervalTokenDataMock = [
   {
     timestamp: '1649232000',

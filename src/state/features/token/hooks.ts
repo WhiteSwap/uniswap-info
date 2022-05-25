@@ -52,7 +52,7 @@ export function useTokenTransactions(tokenAddress: string) {
   useEffect(
     () => {
       async function checkForTransactions() {
-        const transactions = await DataService.transactions.getTokenTransactions(tokenAddress, tokenPairs)
+        const transactions = await DataService.transactions.getTokenTransactions(tokenAddress, tokenPairs!)
         dispatch(setTransactions({ networkId: activeNetwork, transactions, address: tokenAddress }))
       }
       // eth subgraph need to pass token pairs array
