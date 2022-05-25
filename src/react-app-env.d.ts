@@ -144,7 +144,10 @@ interface Pair {
   reserveUSD: string
 }
 
-type PositionPair = Pick<Pair, 'id' | 'tokenOne' | 'tokenTwo' | 'reserveUSD' | 'totalSupply'>
+type PositionPair = Pick<Pair, 'id' | 'reserveUSD' | 'totalSupply'> & {
+  tokenOne: PairToken
+  tokenTwo: PairToken
+}
 
 type SnapshotPairToken = Pick<Token, 'id' | 'reserve' | 'priceUSD'>
 

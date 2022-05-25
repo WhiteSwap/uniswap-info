@@ -168,10 +168,10 @@ const PairPage = () => {
                 </RowFixed>
                 <ActionsContainer>
                   <StarIcon $filled={isPairSaved} onClick={toggleSavedPair} />
-                  <Link external to={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
+                  <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>
-                  <Link external to={getSwapLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
+                  <Link external href={getSwapLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonDark>{t('trade')}</ButtonDark>
                   </Link>
                   <a

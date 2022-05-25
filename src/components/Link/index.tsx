@@ -1,19 +1,14 @@
-import { Link as RebassLink } from 'rebass'
-import { Link as RouterLink, LinkProps } from 'react-router-dom'
+import { Link as RebassLink, LinkProps } from 'rebass'
+import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { lighten, darken } from 'polished'
 import { PropsWithChildren } from 'react'
 
-type WrappedLinkProps = PropsWithChildren<
-  {
-    external?: boolean
-    color?: string
-  } & LinkProps
->
+type WrappedLinkProps = PropsWithChildren<{ external?: boolean; color?: string } & LinkProps>
 
-const WrappedLink = ({ external, children, ...rest }: WrappedLinkProps) => (
+const WrappedLink = ({ external, target, children, ...rest }: WrappedLinkProps) => (
   <RebassLink
-    target={external ? '_blank' : undefined}
+    target={external || !target ? '_blank' : target}
     rel={external ? 'noopener noreferrer' : undefined}
     color="#6681A7"
     {...rest}
@@ -24,6 +19,7 @@ const WrappedLink = ({ external, children, ...rest }: WrappedLinkProps) => (
 
 const Link = styled(WrappedLink)`
   color: ${({ color, theme }) => (color ? color : theme.link)};
+  cursor: pointer;
 `
 
 export const CustomLink = styled(RouterLink)<{ color?: string }>`

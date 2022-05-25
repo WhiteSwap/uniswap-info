@@ -96,7 +96,7 @@ const PositionList = ({ positions }: Props) => {
             <ButtonsContainer justify="flex-start">
               <Link
                 external
-                to={getPoolLink(activeNetworkId, position.pair.tokenOne?.id, position.pair.tokenTwo?.id)}
+                href={getPoolLink(activeNetworkId, position.pair.tokenOne?.id, position.pair.tokenTwo?.id)}
                 style={{ marginRight: '.5rem' }}
               >
                 <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('add')}</ButtonLight>
@@ -104,7 +104,7 @@ const PositionList = ({ positions }: Props) => {
               {poolOwnership > 0 && (
                 <Link
                   external
-                  to={getPoolLink(activeNetworkId, position.pair.tokenOne?.id, position.pair.tokenTwo?.id, true)}
+                  href={getPoolLink(activeNetworkId, position.pair.tokenOne?.id, position.pair.tokenTwo?.id, true)}
                 >
                   <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('remove')}</ButtonLight>
                 </Link>

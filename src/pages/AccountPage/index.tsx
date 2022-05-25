@@ -90,7 +90,7 @@ function AccountPage() {
         <RowBetween>
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
-            <Link to={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
+            <Link href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
               {accountAddress.slice(0, 6) + '...' + accountAddress.slice(38, 42)}
             </Link>
           </TYPE.body>
