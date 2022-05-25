@@ -15,3 +15,9 @@ export const CURRENT_TRX_PRICE = gql`
     trxPrice
   }
 `
+
+export const LAST_BLOCK = gql`
+  query LastBlock {
+    lastBlock
+  }
+`
