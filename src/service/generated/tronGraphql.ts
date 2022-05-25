@@ -18,7 +18,7 @@ export type RootQuery = {
   pair?: Maybe<Pair>
   pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
-  tokenPairs?: Maybe<Array<Maybe<Scalars['String']>>>
+  tokenPairs?: Maybe<Array<Scalars['String']>>
   tokens?: Maybe<Array<Maybe<Token>>>
   transactions?: Maybe<TransactionsCollection>
   trxPrice?: Maybe<Scalars['Float']>
@@ -337,7 +337,7 @@ export type TokenPairsQueryVariables = Exact<{
   tokenAddress: Scalars['String']
 }>
 
-export type TokenPairsQuery = { __typename?: 'RootQuery'; tokenPairs?: Array<string | null> | null }
+export type TokenPairsQuery = { __typename?: 'RootQuery'; tokenPairs?: Array<string> | null }
 
 export type TransactionDetailsFragment = {
   __typename?: 'Transaction'

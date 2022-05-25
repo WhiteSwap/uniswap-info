@@ -38,7 +38,7 @@ export default class TokenDataController implements ITokenDataController {
       query: TOKEN_PAIRS,
       variables: { tokenAddress }
     })
-    return data.tokenPairs as string[]
+    return data.tokenPairs
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getIntervalTokenData(_tokenAddress: string, _startTime: number, _interval: number, _latestBlock: number) {
