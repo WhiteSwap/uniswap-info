@@ -16,8 +16,8 @@ import Navigation from 'components/Navigation'
 import AccountLookup from 'pages/AccountLookup'
 import LocalLoader from 'components/LocalLoader'
 import { useLatestBlocks } from 'state/features/application/hooks'
-// import { useActiveNetworkId } from 'state/features/application/selectors'
-// import { SupportedNetwork } from 'constants/networks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { SupportedNetwork } from 'constants/networks'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -87,7 +87,7 @@ function App() {
   const globalChartData = useGlobalChartData()
   const [latestBlock, headBlock] = useLatestBlocks()
   const formatPath = useFormatPath()
-  // const activeNetwork = useActiveNetworkId()
+  const activeNetwork = useActiveNetworkId()
   // show warning
   const showWarning = headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
   useScrollToTop()
@@ -115,12 +115,12 @@ function App() {
               <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
               <Route path="/:networkID/pairs" element={<AllPairsPage />} />
               <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
-              {/* {activeNetwork === SupportedNetwork.ETHEREUM ? (
-                <> */}
-              <Route path="/:networkID/accounts" element={<AccountLookup />} />
-              <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
-              {/* </>
-              ) : undefined} */}
+              {activeNetwork === SupportedNetwork.ETHEREUM ? (
+                <>
+                  <Route path="/:networkID/accounts" element={<AccountLookup />} />
+                  <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
+                </>
+              ) : undefined}
               <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
             </Routes>
           </Main>
