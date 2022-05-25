@@ -70,7 +70,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
       rightPriceScale: {
         scaleMargins: {
           top: type === 'Area' ? 0.32 : 0.2,
-          bottom: 0
+          bottom: 0.08
         },
         borderVisible: false
       },
