@@ -15,7 +15,7 @@ export function transactionMapper(type: TransactionType, payload?: TronTransacti
       symbol: parseTokenInfo('symbol', payload?.tokenTwo.id, payload?.tokenTwo.symbol),
       amount: payload?.tokenTwo.amount ? +payload.tokenTwo.amount : 0
     },
-    amountUSD: payload?.tokenTwo.amount ? +payload.totalUSD : 0,
+    amountUSD: payload?.totalUSD ? +payload.totalUSD : 0,
     account: payload?.account || '',
     type
   }
