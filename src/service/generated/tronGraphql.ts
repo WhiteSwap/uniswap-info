@@ -14,11 +14,14 @@ export type Scalars = {
 
 export type RootQuery = {
   __typename?: 'RootQuery'
+  countTransactions?: Maybe<Scalars['Int']>
   pair?: Maybe<Pair>
   pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
+  tokenPairs?: Maybe<Array<Maybe<Scalars['String']>>>
   tokens?: Maybe<Array<Maybe<Token>>>
   transactions?: Maybe<TransactionsCollection>
+  trxPrice?: Maybe<Scalars['Float']>
   whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
 }
 
@@ -27,6 +30,10 @@ export type RootQueryPairArgs = {
 }
 
 export type RootQueryTokenArgs = {
+  id: Scalars['String']
+}
+
+export type RootQueryTokenPairsArgs = {
   id: Scalars['String']
 }
 
@@ -183,6 +190,10 @@ export type GlobalChartQuery = {
     totalLiquidityUSD: number
   }> | null
 }
+
+export type CurrentTrxPriceQueryVariables = Exact<{ [key: string]: never }>
+
+export type CurrentTrxPriceQuery = { __typename?: 'RootQuery'; trxPrice?: number | null }
 
 export type PairDataFragment = {
   __typename?: 'Pair'

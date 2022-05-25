@@ -9,3 +9,9 @@ export const GLOBAL_CHART = gql`
     }
   }
 `
+
+export const CURRENT_TRX_PRICE = gql`
+  query CurrentTrxPrice {
+    trxPrice
+  }
+`

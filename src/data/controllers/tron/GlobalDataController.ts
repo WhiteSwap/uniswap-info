@@ -1,8 +1,8 @@
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
-import { HealthStatusMock, PriceMock } from '__mocks__/global'
+import { HealthStatusMock } from '__mocks__/global'
 import { client } from 'service/client'
-import { GlobalChartQuery, GlobalChartQueryVariables } from 'service/generated/tronGraphql'
-import { GLOBAL_CHART } from 'service/queries/tron/global'
+import { CurrentTrxPriceQuery, GlobalChartQuery, GlobalChartQueryVariables } from 'service/generated/tronGraphql'
+import { CURRENT_TRX_PRICE, GLOBAL_CHART } from 'service/queries/tron/global'
 
 export default class GlobalDataController implements IGlobalDataController {
   async getHealthStatus() {
@@ -23,6 +23,7 @@ export default class GlobalDataController implements IGlobalDataController {
   }
 
   async getPrice() {
-    return Promise.resolve<number>(PriceMock)
+    const { data } = await client.query<CurrentTrxPriceQuery>({ query: CURRENT_TRX_PRICE })
+    return data.trxPrice ? +data.trxPrice : 0
   }
 }
