@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useActiveNetworkId, useLatestBlock } from '../application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setTokenPairs, setChartData, setPriceData, setToken, setTopTokens, setTransactions } from './slice'
-import { useActiveTokenOneDayPrice, useActiveTokenPrice } from '../global/selectors'
+import { useActiveTokenPrice } from '../global/selectors'
 import DataService from 'data/DataService'
 import { isValidAddress } from 'utils'
 import { SupportedNetwork } from 'constants/networks'
@@ -13,34 +13,32 @@ export function useFetchTokens() {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const price = useActiveTokenPrice()
-  const oneDayPrice = useActiveTokenOneDayPrice()
 
   useEffect(() => {
     async function fetchData() {
       // get top pairs for overview list
-      const topTokens = await DataService.tokens.getTopTokens(price, oneDayPrice)
+      const topTokens = await DataService.tokens.getTopTokens(price)
       topTokens && dispatch(setTopTokens({ networkId: activeNetwork, topTokens }))
     }
-    price && oneDayPrice && fetchData()
-  }, [price, oneDayPrice, activeNetwork])
+    price && fetchData()
+  }, [price, activeNetwork])
 }
 
 export function useTokenData(tokenAddress: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const price = useActiveTokenPrice()
-  const oneDayPrice = useActiveTokenOneDayPrice()
   const tokenData = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress])
 
   useEffect(() => {
     async function fetchData() {
-      const data = await DataService.tokens.getTokenData(tokenAddress, price, oneDayPrice)
+      const data = await DataService.tokens.getTokenData(tokenAddress, price)
       data && dispatch(setToken({ tokenAddress, networkId: activeNetwork, data }))
     }
-    if (!tokenData && price && oneDayPrice && isValidAddress(tokenAddress, activeNetwork)) {
+    if (!tokenData && price && isValidAddress(tokenAddress, activeNetwork)) {
       fetchData()
     }
-  }, [price, oneDayPrice, tokenAddress, tokenData, activeNetwork])
+  }, [price, tokenAddress, tokenData, activeNetwork])
 
   return tokenData || {}
 }

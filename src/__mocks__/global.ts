@@ -21,4 +21,4 @@ export const GlobalDataMock = {
   __typename: 'WhiteSwapFactory'
 }
 
-export const PriceMock = [2777.9613, 2943.2, -5.614322311298876]
+export const PriceMock = 2777.961376

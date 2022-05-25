@@ -23,6 +23,6 @@ export default class GlobalDataController implements IGlobalDataController {
   }
 
   async getPrice() {
-    return Promise.resolve<number[]>(PriceMock)
+    return Promise.resolve<number>(PriceMock)
   }
 }

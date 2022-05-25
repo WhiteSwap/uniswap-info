@@ -1,6 +1,6 @@
 export interface ITokenDataController {
-  getTopTokens(price: number, priceOld: number): Promise<Token[]>
-  getTokenData(address: string, price: number, priceOld: number): Promise<Token | undefined>
+  getTopTokens(price: number): Promise<Token[]>
+  getTokenData(address: string, price: number): Promise<Token | undefined>
   getTokenPairs(tokenAddress: string): Promise<string[]>
   getIntervalTokenData(
     tokenAddress: string,

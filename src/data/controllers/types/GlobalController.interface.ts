@@ -10,6 +10,6 @@ export interface IGlobalDataController {
   /**
    * Gets the current price  of ETH, 24 hour price, and % change between them
    */
-  getPrice(): Promise<number[]>
+  getPrice(): Promise<number>
   getHealthStatus(): Promise<HealthStatus>
 }

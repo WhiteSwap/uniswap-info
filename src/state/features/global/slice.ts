@@ -13,8 +13,7 @@ const initialGlobalNetworkState: GlobalNetworkState = {
   chartData: undefined,
   transactions: undefined,
   dayTransactionCount: 0,
-  price: 0,
-  oneDayPrice: 0
+  price: 0
 }
 
 const initialState: GlobalState = {
@@ -38,9 +37,8 @@ export const globalSlice = createSlice({
     setChart: (state, { payload: { networkId, data } }: PayloadAction<UpdateChartPayload>) => {
       state[networkId].chartData = data
     },
-    setPrice: (state, { payload: { networkId, price, oneDayPrice } }: PayloadAction<UpdatePricePayload>) => {
+    setPrice: (state, { payload: { networkId, price } }: PayloadAction<UpdatePricePayload>) => {
       state[networkId].price = price
-      state[networkId].oneDayPrice = oneDayPrice
     }
   }
 })

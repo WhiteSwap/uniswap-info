@@ -18,11 +18,6 @@ export function useActiveTokenPrice() {
   return useAppSelector(state => state.global[activeNetwork]?.price)
 }
 
-export function useActiveTokenOneDayPrice() {
-  const activeNetwork = useActiveNetworkId()
-  return useAppSelector(state => state.global[activeNetwork]?.oneDayPrice)
-}
-
 export function useDayVolumeUsd() {
   const activeNetwork = useActiveNetworkId()
   return useAppSelector(state => {

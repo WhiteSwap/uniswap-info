@@ -5,7 +5,6 @@ export interface GlobalNetworkState {
   transactions?: Transactions
   dayTransactionCount: number
   price: number
-  oneDayPrice: number
 }
 
 export type GlobalState = Record<SupportedNetwork, GlobalNetworkState>
@@ -24,5 +23,4 @@ export type UpdateChartPayload = ParamsWithNetwork<{
 
 export type UpdatePricePayload = ParamsWithNetwork<{
   price: number
-  oneDayPrice: number
 }>
