@@ -454,3 +454,7 @@ export type PairTransactionsQuery = {
     } | null> | null
   } | null
 }
+
+export type TransactionCountQueryVariables = Exact<{ [key: string]: never }>
+
+export type TransactionCountQuery = { __typename?: 'RootQuery'; countTransactions?: number | null }

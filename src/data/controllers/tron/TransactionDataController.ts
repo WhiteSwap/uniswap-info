@@ -6,14 +6,21 @@ import {
   PairTransactionsQuery,
   PairTransactionsQueryVariables,
   TokenTransactionsQuery,
-  TokenTransactionsQueryVariables
+  TokenTransactionsQueryVariables,
+  TransactionCountQuery
 } from 'service/generated/tronGraphql'
-import { GLOBAL_TRANSACTIONS, PAIR_TRANSACTIONS, TOKEN_TRANSACTIONS } from 'service/queries/tron/transactions'
+import {
+  GLOBAL_TRANSACTIONS,
+  PAIR_TRANSACTIONS,
+  TOKEN_TRANSACTIONS,
+  TRANSACTION_COUNT
+} from 'service/queries/tron/transactions'
 import { TransactionsMock } from '__mocks__/transactions'
 
 export default class TransactionDataController implements ITransactionDataController {
-  getDayTransactionCount(): Promise<number> {
-    return Promise.resolve(0)
+  async getDayTransactionCount() {
+    const { data } = await client.query<TransactionCountQuery>({ query: TRANSACTION_COUNT })
+    return data.countTransactions || 0
   }
   async getPairTransactions(pairAddress: string): Promise<Transactions> {
     const { data } = await client.query<PairTransactionsQuery, PairTransactionsQueryVariables>({

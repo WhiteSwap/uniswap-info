@@ -69,3 +69,9 @@ export const PAIR_TRANSACTIONS = gql`
     }
   }
 `
+
+export const TRANSACTION_COUNT = gql`
+  query TransactionCount {
+    countTransactions
+  }
+`
