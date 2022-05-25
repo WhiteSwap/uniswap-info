@@ -89,7 +89,7 @@ export const Search = () => {
     return combinedPools
       .filter(t => {
         const regexMatches = Object.keys(t || {}).map(key => {
-          const isAddress = value.slice(0, 2) === '0x'
+          const isAddress = isValidAddress(value, activeNetwork)
           if (key === 'id' && isAddress) {
             return t[key].match(new RegExp(escapeRegExp(value), 'i'))
           }
