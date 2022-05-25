@@ -7,9 +7,10 @@ import TopTokenList from '../components/TokenList'
 import Search from '../components/Search'
 import GlobalStats from '../components/GlobalStats'
 
-import { useGlobalChartData, useGlobalTransactions } from 'state/features/global/hooks'
+import { useGlobalTransactions } from 'state/features/global/hooks'
 import {
   useDayVolumeUsd,
+  useGlobalChartDataSelector,
   useLiquidityChangeUsd,
   useTotalLiquidityUsd,
   useVolumeChangeUsd
@@ -60,11 +61,10 @@ function GlobalPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
 
-  // get data for lists and totals
-  const chartData = useGlobalChartData()
   const allPairs = usePairs()
   const allTokens = useTokens()
   const transactions = useGlobalTransactions()
+  const chartData = useGlobalChartDataSelector()
   const [chartView, setChartView] = useState(CHART_VIEW.LIQUIDITY)
   const totalLiquidityUsd = useTotalLiquidityUsd()
   const dayVolumeUsd = useDayVolumeUsd()
