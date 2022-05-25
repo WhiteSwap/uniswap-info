@@ -29,6 +29,7 @@ import { TokenDetails } from 'state/features/token/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { SupportedNetwork } from 'constants/networks'
 
 export const Search = () => {
   const { t } = useTranslation()
@@ -134,10 +135,11 @@ export const Search = () => {
         console.log(e)
       }
     }
-    if (value && value.length > 0) {
+    // TODO: temporary search token & pairs by API only in ETH blockchain
+    if (value && value.length > 0 && activeNetwork === SupportedNetwork.ETHEREUM) {
       fetch()
     }
-  }, [value])
+  }, [value, activeNetwork])
 
   useOnClickOutside(wrapperRef, () => {
     setPairsShown(3)
