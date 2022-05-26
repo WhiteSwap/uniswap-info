@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { ButtonLight, ButtonFaded } from 'components/ButtonStyled'
 import { AutoRow, RowBetween } from 'components/Row'
-import { isValidAddress } from 'utils'
+import { ellipsisAddress, isValidAddress } from 'utils'
 import { useSavedAccounts } from 'state/features/user/hooks'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'Theme'
@@ -70,7 +70,7 @@ function AccountSearch({ small }: Props) {
                   <DashGrid key={account} padding="1rem 0 0 0">
                     <Flex justifyContent="space-between">
                       <AccountLink as={Link} to={formatPath(`/accounts/${account}`)}>
-                        {account?.slice(0, 42)}
+                        {account}
                       </AccountLink>
                       <Hover onClick={() => removeAccount(account)}>
                         <StyledIcon>
@@ -96,9 +96,9 @@ function AccountSearch({ small }: Props) {
                   <RowBetween key={account}>
                     <ButtonFaded as={Link} to={formatPath(`/accounts/${account}`)}>
                       {small ? (
-                        <TYPE.header>{account?.slice(0, 6) + '...' + account?.slice(38, 42)}</TYPE.header>
+                        <TYPE.header>{ellipsisAddress(account)}</TYPE.header>
                       ) : (
-                        <AccountLink>{account?.slice(0, 42)}</AccountLink>
+                        <AccountLink>{account}</AccountLink>
                       )}
                     </ButtonFaded>
                     <Hover onClick={() => removeAccount(account)}>
@@ -110,7 +110,7 @@ function AccountSearch({ small }: Props) {
                 )
               })
             ) : (
-              <TYPE.light>{t('noPinnedWallets')}</TYPE.light>
+              <TYPE.light>{t('noSavedAccounts')}</TYPE.light>
             )}
           </>
         )}

@@ -9,11 +9,11 @@ import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TYPE } from 'Theme'
-import { formattedNum, formatTime, getBlockChainScanLink } from 'utils'
+import { ellipsisAddress, formattedNum, formatTime, getBlockChainScanLink } from 'utils'
 import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, Arrow } from './styled'
 
 interface ITransactionTable {
-  transactions: Transactions
+  transactions?: Transactions
   color?: string
 }
 
@@ -62,44 +62,44 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
 
   const transactionList = useMemo(() => {
     let list: Transaction[] = []
-
-    switch (transactionType) {
-      case TransactionSelect.Adds:
-        list = [...transactions.mints]
-        break
-      case TransactionSelect.Removes:
-        list = [...transactions.burns]
-        break
-      case TransactionSelect.Swaps:
-        list = [...transactions.swaps]
-        break
-      case TransactionSelect.All:
-      default:
-        list = [...transactions.mints, ...transactions.burns, ...transactions.swaps]
-        break
-    }
-
-    list.sort((a, b) => {
-      let order = false
-      const direction = sortDirection ? -1 : 1
-      switch (sortedColumn) {
-        case TransactionSortField.AmountUSD:
-          order = a.amountUSD > b.amountUSD
+    if (transactions) {
+      switch (transactionType) {
+        case TransactionSelect.Adds:
+          list = [...transactions.mints]
           break
-        case TransactionSortField.TokenOneAmount:
-          order = a.tokenOne.amount > b.tokenOne.amount
+        case TransactionSelect.Removes:
+          list = [...transactions.burns]
           break
-        case TransactionSortField.TokenTwoAmount:
-          order = a.tokenTwo.amount > b.tokenTwo.amount
+        case TransactionSelect.Swaps:
+          list = [...transactions.swaps]
           break
-        case TransactionSortField.Timestamp:
+        case TransactionSelect.All:
         default:
-          order = a.timestamp > b.timestamp
+          list = [...transactions.mints, ...transactions.burns, ...transactions.swaps]
           break
       }
-      return order ? direction : direction * -1
-    })
 
+      list.sort((a, b) => {
+        let order = false
+        const direction = sortDirection ? -1 : 1
+        switch (sortedColumn) {
+          case TransactionSortField.AmountUSD:
+            order = a.amountUSD > b.amountUSD
+            break
+          case TransactionSortField.TokenOneAmount:
+            order = a.tokenOne.amount > b.tokenOne.amount
+            break
+          case TransactionSortField.TokenTwoAmount:
+            order = a.tokenTwo.amount > b.tokenTwo.amount
+            break
+          case TransactionSortField.Timestamp:
+          default:
+            order = a.timestamp > b.timestamp
+            break
+        }
+        return order ? direction : direction * -1
+      })
+    }
     return list
   }, [transactionType, sortedColumn, sortDirection, transactions])
 
@@ -144,7 +144,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         {!below1080 && (
           <DataText>
             <CustomLink external href={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
-              {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+              {item.account && ellipsisAddress(item.account)}
             </CustomLink>
           </DataText>
         )}
@@ -254,16 +254,21 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           </>
         </DashGrid>
         <Divider />
-        <List p={0}>
-          {!transactions ? <LocalLoader /> : undefined}
-          {transactionList.length > 0 ? (
-            transactionList
-              .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-              .map((item, i) => <ListItem key={`${item.hash}-${i}`} item={item} />)
-          ) : (
-            <EmptyCard>{t('noRecentTransactions')}</EmptyCard>
-          )}
-        </List>
+        {!transactions ? (
+          <List p={0}>
+            <LocalLoader />
+          </List>
+        ) : (
+          <List p={0}>
+            {transactionList.length > 0 ? (
+              transactionList
+                .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
+                .map((item, i) => <ListItem key={`${item.hash}-${i}`} item={item} />)
+            ) : (
+              <EmptyCard>{t('noRecentTransactions')}</EmptyCard>
+            )}
+          </List>
+        )}
       </Panel>
       <PageButtons>
         <div

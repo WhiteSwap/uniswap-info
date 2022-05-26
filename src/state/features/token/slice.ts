@@ -20,10 +20,11 @@ export const tokenSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, { payload: { networkId, data, tokenAddress } }: PayloadAction<UpdateTokenPayload>) => {
-      state[networkId][tokenAddress] = data
+      state[networkId][tokenAddress] = { ...state[networkId][tokenAddress], ...data }
     },
     setTopTokens: (state, { payload: { networkId, topTokens } }: PayloadAction<UpdateTopTokensPayload>) => {
-      state[networkId] = topTokens.reduce((acc, pair) => ({ ...acc, [pair.id]: pair }), {})
+      const tokens = topTokens.reduce((acc, pair) => ({ ...acc, [pair.id]: pair }), {})
+      state[networkId] = { ...tokens, ...state[networkId] }
     },
     setTransactions: (
       state,
@@ -50,8 +51,12 @@ export const tokenSlice = createSlice({
       }
     },
     setTokenPairs: (state, { payload: { networkId, address, allPairs } }: PayloadAction<UpdateAllPairsPayload>) => {
-      if (state[networkId][address]) {
-        state[networkId][address].tokenPairs = allPairs
+      state[networkId] = {
+        ...state[networkId],
+        [address]: {
+          ...state[networkId][address],
+          tokenPairs: allPairs
+        }
       }
     }
   }

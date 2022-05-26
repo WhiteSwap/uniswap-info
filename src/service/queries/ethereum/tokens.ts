@@ -23,11 +23,7 @@ export const TOKEN_CHART = gql`
       id
       date
       priceUSD
-      totalLiquidityToken
       totalLiquidityUSD
-      totalLiquidityETH
-      dailyVolumeETH
-      dailyVolumeToken
       dailyVolumeUSD
     }
   }
@@ -43,7 +39,7 @@ export const GET_TOKENS = gql`
 
 export const TOKEN_DATA = gql`
   ${TOKEN_FIELDS}
-  query TokenData($tokenAddress: String!, $block: Int) {
+  query TokenData($tokenAddress: String!, $block: Block_height) {
     tokens(block: $block, where: { id: $tokenAddress }) {
       ...TokenFields
     }

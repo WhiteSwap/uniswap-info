@@ -3,7 +3,6 @@ import { SupportedNetwork } from 'constants/networks'
 import { AddPairPayload, AddTokenPayload, SavedItemPayload, UserState } from './types'
 
 const initialNetworkSavedState = {
-  dismissedPaths: {},
   savedAccounts: [],
   savedTokens: {},
   savedPairs: {}
@@ -21,9 +20,6 @@ export const userSlice = createSlice({
   reducers: {
     setDarkMode: (state, action: PayloadAction<boolean>) => {
       state.darkMode = action.payload
-    },
-    setDismissedPath: (state, { payload: { id, networkId } }: PayloadAction<SavedItemPayload>) => {
-      state[networkId].dismissedPaths[id] = true
     },
     addToken: (state, { payload: { id, networkId, symbol } }: PayloadAction<AddTokenPayload>) => {
       state[networkId].savedTokens[id] = { symbol }
@@ -50,7 +46,6 @@ export const userSlice = createSlice({
   }
 })
 
-export const { setDismissedPath, addPair, removePair, addToken, removeToken, addAccount, removeAccount, setDarkMode } =
-  userSlice.actions
+export const { addPair, removePair, addToken, removeToken, addAccount, removeAccount, setDarkMode } = userSlice.actions
 
 export default userSlice.reducer

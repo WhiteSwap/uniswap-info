@@ -107,16 +107,11 @@ interface Token {
 }
 
 interface TokenDayData {
-  dailyVolumeCoin?: string
-  dailyVolumeToken?: string
   dailyVolumeUSD: number
   date: number
   id?: string
   priceUSD: string
-  totalLiquidityCoin?: string
-  totalLiquidityToken?: string
   totalLiquidityUSD: string
-  dayString?: number
 }
 
 type OldPairToken = Pick<Token, 'derived' | 'id' | 'name' | 'symbol' | 'totalLiquidity'>

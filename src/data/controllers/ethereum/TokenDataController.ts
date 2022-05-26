@@ -1,7 +1,7 @@
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
-import { PRICES_BY_BLOCK } from 'service/queries/ethereum/global'
+import { ETH_PRICE, PRICES_BY_BLOCK } from 'service/queries/ethereum/global'
 import { GET_TOKENS, TOKEN_CHART, TOKEN_DATA, TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { TokensQuery, Token as ETHToken, TokenDataQuery } from 'service/generated/ethereumGraphql'
 import {
@@ -97,12 +97,19 @@ export default class TokenDataController implements ITokenDataController {
     })
   }
 
-  async getTopTokens(price: number, priceOld: number) {
+  async getTopTokens(price: number) {
     const utcCurrentTime = dayjs()
     const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
     const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').unix()
     const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
     const twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack)
+    const oneDayEthPriceResult = await client.query({
+      query: ETH_PRICE,
+      variables: {
+        block: { number: oneDayBlock }
+      }
+    })
+    const oneDayEthPrice = +oneDayEthPriceResult?.data?.bundles[0]?.ethPrice
 
     try {
       const current = await fetchTokens()
@@ -138,7 +145,7 @@ export default class TokenDataController implements ITokenDataController {
               const twoDayResult = await fetchTokenData(token.id, twoDayBlock)
               twoDayHistory = twoDayResult.data.tokens[0]
             }
-            return parseToken(data, price, priceOld, oneDayHistory, twoDayHistory)
+            return parseToken(data, price, oneDayEthPrice, oneDayHistory, twoDayHistory)
           })
       )
 
@@ -147,12 +154,19 @@ export default class TokenDataController implements ITokenDataController {
       return []
     }
   }
-  async getTokenData(address: string, price: number, priceOld: number) {
+  async getTokenData(address: string, price: number) {
     const utcCurrentTime = dayjs()
     const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
     const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
     const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
     const twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack)
+    const oneDayEthPriceResult = await client.query({
+      query: ETH_PRICE,
+      variables: {
+        block: { number: oneDayBlock }
+      }
+    })
+    const oneDayEthPrice = +oneDayEthPriceResult?.data?.bundles[0]?.ethPrice
 
     // fetch all current and historical data
     const result = await fetchTokenData(address)
@@ -166,7 +180,7 @@ export default class TokenDataController implements ITokenDataController {
       const twoDayResult = await fetchTokenData(address, twoDayBlock)
       const twoDayData = { ...twoDayResult.data.tokens[0] }
 
-      return parseToken(data, price, priceOld, oneDayData, twoDayData)
+      return parseToken(data, price, oneDayEthPrice, oneDayData, twoDayData)
     }
     return
   }
@@ -303,7 +317,6 @@ export default class TokenDataController implements ITokenDataController {
         if (!dayIndexSet.has(currentDayIndex)) {
           data.push({
             date: nextDay,
-            dayString: nextDay,
             dailyVolumeUSD: 0,
             priceUSD: latestPriceUSD,
             totalLiquidityUSD: latestLiquidityUSD

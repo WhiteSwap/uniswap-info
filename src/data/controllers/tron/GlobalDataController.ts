@@ -1,19 +1,19 @@
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
-import { GlobalDataMock, HealthStatusMock, PriceMock } from '__mocks__/global'
 import { client } from 'service/client'
-import { GlobalChartQuery, GlobalChartQueryVariables } from 'service/generated/tronGraphql'
-import { GLOBAL_CHART } from 'service/queries/tron/global'
+import {
+  CurrentTrxPriceQuery,
+  GlobalChartQuery,
+  GlobalChartQueryVariables,
+  LastBlockQuery
+} from 'service/generated/tronGraphql'
+import { CURRENT_TRX_PRICE, GLOBAL_CHART, LAST_BLOCK } from 'service/queries/tron/global'
 
 export default class GlobalDataController implements IGlobalDataController {
   async getHealthStatus() {
-    return Promise.resolve(HealthStatusMock)
+    const { data } = await client.query<LastBlockQuery>({ query: LAST_BLOCK })
+    // lastBlock === headBlock because TRONWEB cannot return headBlock
+    return { syncedBlock: data.lastBlock, headBlock: data.lastBlock }
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getGlobalData(_price: number, _oldPrice: number) {
-    return Promise.resolve(GlobalDataMock)
-  }
-
   async getChartData(oldestDateToFetch: number): Promise<ChartDailyItem[]> {
     const { data } = await client.query<GlobalChartQuery, GlobalChartQueryVariables>({
       query: GLOBAL_CHART,
@@ -29,6 +29,7 @@ export default class GlobalDataController implements IGlobalDataController {
   }
 
   async getPrice() {
-    return Promise.resolve<number[]>(PriceMock)
+    const { data } = await client.query<CurrentTrxPriceQuery>({ query: CURRENT_TRX_PRICE })
+    return data.trxPrice ? +data.trxPrice : 0
   }
 }

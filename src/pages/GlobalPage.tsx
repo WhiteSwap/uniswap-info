@@ -8,7 +8,13 @@ import Search from '../components/Search'
 import GlobalStats from '../components/GlobalStats'
 
 import { useGlobalTransactions } from 'state/features/global/hooks'
-import { useGlobalChartDataSelector, useGlobalDataSelector } from 'state/features/global/selectors'
+import {
+  useDayVolumeUsd,
+  useGlobalChartDataSelector,
+  useLiquidityChangeUsd,
+  useTotalLiquidityUsd,
+  useVolumeChangeUsd
+} from 'state/features/global/selectors'
 import { useFormatPath } from 'hooks'
 import { usePairs } from 'state/features/pairs/selectors'
 import { useMedia } from 'react-use'
@@ -25,7 +31,6 @@ import DropdownSelect from 'components/DropdownSelect'
 import { SeriesChart } from 'components/SeriesChart'
 import { useState } from 'react'
 import { TransactionTable } from 'components/TransactionTable'
-import LocalLoader from 'components/LocalLoader'
 
 const ListOptions = styled(AutoRow)`
   height: 40px;
@@ -56,13 +61,15 @@ function GlobalPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
 
-  // get data for lists and totals
   const allPairs = usePairs()
   const allTokens = useTokens()
   const transactions = useGlobalTransactions()
   const chartData = useGlobalChartDataSelector()
   const [chartView, setChartView] = useState(CHART_VIEW.LIQUIDITY)
-  const { totalLiquidityUSD, oneDayVolumeUSD, volumeChangeUSD, liquidityChangeUSD } = useGlobalDataSelector()
+  const totalLiquidityUsd = useTotalLiquidityUsd()
+  const dayVolumeUsd = useDayVolumeUsd()
+  const volumeChange = useVolumeChangeUsd()
+  const liquidityChange = useLiquidityChangeUsd()
 
   // breakpoints
   const below440 = useMedia('(max-width: 440px)')
@@ -94,11 +101,13 @@ function GlobalPage() {
                   </RowBetween>
                   <RowBetween align="flex-end">
                     <TYPE.main fontSize={below440 ? '1.25rem' : '1.5rem'} lineHeight={1} fontWeight={600}>
-                      {formattedNum(oneDayVolumeUSD, true)}
+                      {formattedNum(dayVolumeUsd, true)}
                     </TYPE.main>
-                    <TYPE.main fontSize={12}>
-                      <Percent percent={volumeChangeUSD} />
-                    </TYPE.main>
+                    {volumeChange && volumeChange !== null ? (
+                      <TYPE.main fontSize={12}>
+                        <Percent percent={volumeChange} />
+                      </TYPE.main>
+                    ) : undefined}
                   </RowBetween>
                 </AutoColumn>
                 <AutoColumn gap="1rem">
@@ -107,11 +116,13 @@ function GlobalPage() {
                   </RowBetween>
                   <RowBetween align="flex-end">
                     <TYPE.main fontSize={below440 ? '1.25rem' : '1.5rem'} lineHeight={1} fontWeight={600}>
-                      {formattedNum(totalLiquidityUSD, true)}
+                      {formattedNum(totalLiquidityUsd, true)}
                     </TYPE.main>
-                    <TYPE.main fontSize={12}>
-                      <Percent percent={liquidityChangeUSD} />
-                    </TYPE.main>
+                    {liquidityChange && liquidityChange !== null ? (
+                      <TYPE.main fontSize={12}>
+                        <Percent percent={liquidityChange} />
+                      </TYPE.main>
+                    ) : undefined}
                   </RowBetween>
                 </AutoColumn>
               </AutoColumn>
@@ -125,8 +136,8 @@ function GlobalPage() {
                 {chartView === CHART_VIEW.LIQUIDITY && (
                   <SeriesChart
                     data={getChartData(chartData, 'totalLiquidityUSD')}
-                    base={totalLiquidityUSD}
-                    baseChange={liquidityChangeUSD}
+                    base={totalLiquidityUsd}
+                    baseChange={liquidityChange}
                     title={t('liquidity')}
                     type="Area"
                   />
@@ -134,8 +145,8 @@ function GlobalPage() {
                 {chartView === CHART_VIEW.VOLUME && (
                   <SeriesChart
                     data={getChartData(chartData, 'dailyVolumeUSD')}
-                    base={oneDayVolumeUSD}
-                    baseChange={volumeChangeUSD}
+                    base={dayVolumeUsd}
+                    baseChange={volumeChange}
                     title={t('volume')}
                     type="Histogram"
                   />
@@ -147,8 +158,8 @@ function GlobalPage() {
               <Panel>
                 <SeriesChart
                   data={getChartData(chartData, 'totalLiquidityUSD')}
-                  base={totalLiquidityUSD}
-                  baseChange={liquidityChangeUSD}
+                  base={totalLiquidityUsd}
+                  baseChange={liquidityChange}
                   title={t('liquidity')}
                   type="Area"
                 />
@@ -156,8 +167,8 @@ function GlobalPage() {
               <Panel>
                 <SeriesChart
                   data={getChartData(chartData, 'dailyVolumeUSD')}
-                  base={oneDayVolumeUSD}
-                  baseChange={volumeChangeUSD}
+                  base={dayVolumeUsd}
+                  baseChange={volumeChange}
                   title={t('volume')}
                   type="Histogram"
                 />
@@ -194,7 +205,7 @@ function GlobalPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
+          <TransactionTable transactions={transactions} />
         </DashboardWrapper>
       </ContentWrapper>
     </PageWrapper>

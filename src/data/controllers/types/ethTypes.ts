@@ -47,7 +47,4 @@ export type EthereumPair = {
   __typename?: string
 }
 
-export type EthereumTokenDayData = Omit<TokenDayData, 'dailyVolumeCoin' | 'totalLiquidityCoin'> & {
-  dailyVolumeETH?: string
-  totalLiquidityETH?: string
-}
+export type EthereumTokenDayData = Omit<TokenDayData, 'dailyVolumeCoin' | 'totalLiquidityCoin'>

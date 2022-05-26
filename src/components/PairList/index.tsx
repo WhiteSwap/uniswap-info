@@ -23,7 +23,7 @@ enum PairSortField {
 }
 
 interface IPairTable {
-  pairs: Record<string, Pair>
+  pairs?: Record<string, Pair>
   maxItems?: number
 }
 

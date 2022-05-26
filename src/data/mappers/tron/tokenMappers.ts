@@ -26,11 +26,7 @@ export function tokenDayDataMapper(payload: any): TokenDayData {
     id: payload.id ? payload.id.toString() : '',
     date: payload.date ?? new Date().getTime(),
     priceUSD: payload.priceUSD ? payload.priceUSD.toString() : '',
-    totalLiquidityToken: payload.totalLiquidityToken ? payload.totalLiquidityToken.toString() : '',
     totalLiquidityUSD: payload.totalLiquidityUSD ? payload.totalLiquidityUSD.toString() : '',
-    totalLiquidityCoin: payload.totalLiquidityTRX ? payload.totalLiquidityTRX.toString() : '',
-    dailyVolumeCoin: payload.dailyVolumeTRX ? payload.dailyVolumeTRX.toString() : '',
-    dailyVolumeToken: payload.dailyVolumeToken ? payload.dailyVolumeToken.toString() : '',
     dailyVolumeUSD: payload.dailyVolumeUSD ? +payload.dailyVolumeUSD : 0
   }
 }

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { timeframeOptions } from '../../../constants'
-import { NetworkInfo, SupportedNetwork } from 'constants/networks'
+import { NetworkInfo } from 'constants/networks'
 import { ApplicationState } from './types'
 import { getCurrentNetwork } from 'utils'
 
@@ -8,10 +8,6 @@ const initialState: ApplicationState = {
   timeKey: timeframeOptions.ALL_TIME,
   latestBlock: 0,
   headBlock: 0,
-  supportedTokens: {
-    [SupportedNetwork.ETHEREUM]: [],
-    [SupportedNetwork.TRON]: []
-  },
   activeNetwork: getCurrentNetwork()
 }
 
@@ -28,16 +24,12 @@ export const applicationSlice = createSlice({
     setHeadBlock: (state, action: PayloadAction<number>) => {
       state.headBlock = action.payload
     },
-    setSupportedTokens: (state, action: PayloadAction<Array<string>>) => {
-      state.supportedTokens[state.activeNetwork.id] = action.payload
-    },
     setActiveNetwork: (state, action: PayloadAction<NetworkInfo>) => {
       state.activeNetwork = action.payload
     }
   }
 })
 
-export const { setTimeFrame, setLatestBlock, setHeadBlock, setSupportedTokens, setActiveNetwork } =
-  applicationSlice.actions
+export const { setTimeFrame, setLatestBlock, setHeadBlock, setActiveNetwork } = applicationSlice.actions
 
 export default applicationSlice.reducer

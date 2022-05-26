@@ -15,6 +15,7 @@ import Panel from '../Panel'
 import { useTranslation } from 'react-i18next'
 import Percent from 'components/Percent'
 import { DashGrid, DataText, ListWrapper, ClickableText, PageButtons, Arrow, List } from './styled'
+import LocalLoader from 'components/LocalLoader'
 
 enum TokenSortField {
   liquidity = 'liquidity',
@@ -196,10 +197,13 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
         </DashGrid>
         <Divider />
         <List p={0}>
-          {filteredList &&
+          {filteredList.length > 0 ? (
             filteredList.map((item, index) => (
               <ListItem key={index} index={(page - 1) * itemMax + index + 1} item={item} />
-            ))}
+            ))
+          ) : (
+            <LocalLoader />
+          )}
         </List>
       </Panel>
       <PageButtons>

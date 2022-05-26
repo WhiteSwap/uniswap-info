@@ -1,7 +1,6 @@
 import { SupportedNetwork } from 'constants/networks'
 
 export interface NetworkSavedState {
-  dismissedPaths: Record<string, boolean>
   savedAccounts: Array<string>
   savedTokens: Record<string, SavedToken>
   savedPairs: Record<string, SavedPair>

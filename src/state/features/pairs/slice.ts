@@ -29,14 +29,14 @@ export const pairsSlice = createSlice({
   initialState,
   reducers: {
     setPair: (state, { payload: { networkId, data, pairAddress } }: PayloadAction<UpdatePairPayload>) => {
-      state[networkId][pairAddress] = data
+      state[networkId][pairAddress] = { ...state[networkId][pairAddress], ...data }
     },
     setTopPairs: (state, { payload: { networkId, topPairs } }: PayloadAction<UpdateTopPairsPayload>) => {
       const added: Record<string, Pair> = {}
       topPairs.map(pair => {
         return (added[pair.id] = pair)
       })
-      state[networkId] = added
+      state[networkId] = { ...added, ...state[networkId] }
     },
     setPairTransactions: (
       state,

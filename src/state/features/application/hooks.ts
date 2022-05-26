@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react'
 import { timeframeOptions } from '../../../constants'
 import dayjs from 'dayjs'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setHeadBlock, setLatestBlock, setSupportedTokens } from './slice'
-import { DEFAULT_LIST_OF_LISTS } from 'constants/lists'
-import getTokenList from 'utils/tokenLists'
+import { setHeadBlock, setLatestBlock } from './slice'
 import { useActiveNetworkId, useTimeFrame } from './selectors'
 import DataService from 'data/DataService'
 
@@ -48,28 +46,4 @@ export function useStartTimestamp() {
   }, [activeWindow, startDateTimestamp])
 
   return startDateTimestamp
-}
-
-export function useListedTokens() {
-  const dispatch = useAppDispatch()
-  const networkId = useActiveNetworkId()
-  const supportedTokens = useAppSelector(state => state.application.supportedTokens[networkId])
-
-  useEffect(() => {
-    async function fetchList() {
-      const allFetched = await Promise.all(
-        DEFAULT_LIST_OF_LISTS[networkId].map(async url => {
-          const tokenList = await getTokenList(url, networkId)
-          return tokenList.tokens
-        })
-      )
-      const formatted = allFetched.flat()?.map(t => t.address.toLowerCase())
-      dispatch(setSupportedTokens(formatted))
-    }
-    if (supportedTokens.length === 0) {
-      fetchList()
-    }
-  }, [supportedTokens, networkId])
-
-  return supportedTokens
 }

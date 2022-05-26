@@ -1,5 +1,6 @@
 export interface ITransactionDataController {
-  getTransactions(allPairs: string[]): Promise<Transactions>
+  getPairTransactions(pairAddress: string): Promise<Transactions>
+  getTokenTransactions(tokenAddress: string, tokenPairs?: string[]): Promise<Transactions>
   /**
    * Fetch information about user mints, burns, swaps transactions
    * @param  {string} account This is user ID
@@ -9,4 +10,5 @@ export interface ITransactionDataController {
    * Get and format transactions for global page
    */
   getAllTransactions(): Promise<Transactions>
+  getDayTransactionCount(): Promise<number>
 }

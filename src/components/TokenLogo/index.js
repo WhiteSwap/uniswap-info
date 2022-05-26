@@ -27,7 +27,7 @@ export default function TokenLogo({ address, size = '24px', alt = 'token', ...re
     setError(false)
   }, [address])
 
-  if (error || BAD_IMAGES[address]) {
+  if (error || BAD_IMAGES[address] || !address) {
     return (
       <Inline>
         <HelpCircle {...rest} alt={alt} size={size} />

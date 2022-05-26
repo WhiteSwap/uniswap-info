@@ -11,6 +11,7 @@ export const Title = styled.p`
 `
 
 export const ChartInfo = styled.div`
+  width: 100%;
   position: absolute;
   font-weight: 500;
   left: -4px;

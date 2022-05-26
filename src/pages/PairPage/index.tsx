@@ -11,19 +11,16 @@ import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import Search from 'components/Search'
 import TokenLogo from 'components/TokenLogo'
 import { TransactionTable } from 'components/TransactionTable'
-import Warning from 'components/Warning'
 import { PAIR_BLACKLIST } from 'constants/index'
 import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useState, useEffect } from 'react'
-import { Loader } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useParams, useLocation, Navigate, Link as RouterLink } from 'react-router-dom'
+import { useParams, Navigate, Link as RouterLink } from 'react-router-dom'
 import { useMedia } from 'react-use'
-import { useListedTokens } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
-import { usePathDismissed, useToggleSavedPair } from 'state/features/user/hooks'
+import { useToggleSavedPair } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
 import { isValidAddress, formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink } from 'utils'
 import { WarningGrouping, TokenSymbolLink, FixedPanel, PanelWrapper, TokenLink, ActionsContainer } from './styled'
@@ -33,7 +30,6 @@ const PairPage = () => {
   const formatPath = useFormatPath()
   const params = useParams()
   const pairAddress = params.pairAddress!
-  const location = useLocation()
   const activeNetworkId = useActiveNetworkId()
 
   if (PAIR_BLACKLIST.includes(pairAddress!.toLowerCase()) || !isValidAddress(pairAddress!, activeNetworkId)) {
@@ -60,7 +56,7 @@ const PairPage = () => {
     ? formattedNum(trackedReserveUSD, true)
     : totalLiquidityUSD
     ? formattedNum(totalLiquidityUSD, true)
-    : '-'
+    : '$0'
 
   // mark if using untracked liquidity
   const [usingTracked, setUsingTracked] = useState(true)
@@ -94,8 +90,6 @@ const PairPage = () => {
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
 
-  const listedTokens = useListedTokens()
-  const [dismissed, markAsDismissed] = usePathDismissed(location.pathname)
   const [isPairSaved, toggleSavedPair] = useToggleSavedPair(
     pairAddress,
     tokenOne?.id,
@@ -106,15 +100,6 @@ const PairPage = () => {
 
   return (
     <PageWrapper>
-      <Warning
-        show={
-          !dismissed &&
-          listedTokens.length > 0 &&
-          !(listedTokens.includes(tokenOne?.id) && listedTokens.includes(tokenTwo?.id))
-        }
-        setShow={markAsDismissed}
-        address={pairAddress}
-      />
       <ContentWrapperLarge>
         <RowBetween>
           <TYPE.body>
@@ -122,11 +107,7 @@ const PairPage = () => {
           </TYPE.body>
           {!below600 && <Search />}
         </RowBetween>
-        <WarningGrouping
-          disabled={
-            !dismissed && listedTokens && !(listedTokens.includes(tokenOne?.id) && listedTokens.includes(tokenTwo?.id))
-          }
-        >
+        <WarningGrouping disabled={!tokenOne && !tokenTwo}>
           <DashboardWrapper>
             <AutoColumn gap="40px" style={{ marginBottom: '1.5rem' }}>
               <div
@@ -167,7 +148,7 @@ const PairPage = () => {
                   </RowFixed>
                 </RowFixed>
                 <ActionsContainer>
-                  <StarIcon filled={isPairSaved} onClick={toggleSavedPair} />
+                  <StarIcon $filled={isPairSaved} onClick={toggleSavedPair} />
                   <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>
@@ -315,12 +296,12 @@ const PairPage = () => {
                   }}
                 >
                   {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
-                  {tokenOne && tokenTwo && activeNetworkId === SupportedNetwork.ETHEREUM ? (
+                  {activeNetworkId === SupportedNetwork.ETHEREUM ? (
                     <PairChart
                       address={pairAddress}
                       color={'#2E69BB'}
-                      base0={tokenTwo.reserve / tokenOne.reserve}
-                      base1={tokenOne.reserve / tokenTwo.reserve}
+                      base0={tokenTwo?.reserve / tokenOne?.reserve}
+                      base1={tokenOne?.reserve / tokenTwo?.reserve}
                     />
                   ) : undefined}
                 </Panel>
@@ -331,7 +312,7 @@ const PairPage = () => {
             <TYPE.main fontSize={22} fontWeight={500}>
               {t('transactions')}
             </TYPE.main>{' '}
-            {transactions ? <TransactionTable transactions={transactions} /> : <Loader />}
+            <TransactionTable transactions={transactions} />
           </DashboardWrapper>
         </WarningGrouping>
       </ContentWrapperLarge>
