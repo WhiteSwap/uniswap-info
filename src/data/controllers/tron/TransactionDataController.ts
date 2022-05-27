@@ -19,20 +19,22 @@ import { TransactionsMock } from '__mocks__/transactions'
 
 export default class TransactionDataController implements ITransactionDataController {
   async getDayTransactionCount() {
-    const { data } = await client.query<TransactionCountQuery>({ query: TRANSACTION_COUNT })
+    const { data } = await client.query<TransactionCountQuery>({ query: TRANSACTION_COUNT, fetchPolicy: 'no-cache' })
     return data.countTransactions || 0
   }
   async getPairTransactions(pairAddress: string): Promise<Transactions> {
     const { data } = await client.query<PairTransactionsQuery, PairTransactionsQueryVariables>({
       query: PAIR_TRANSACTIONS,
-      variables: { pairAddress }
+      variables: { pairAddress },
+      fetchPolicy: 'no-cache'
     })
     return transactionsMapper(data)
   }
   async getTokenTransactions(tokenAddress: string) {
     const { data } = await client.query<TokenTransactionsQuery, TokenTransactionsQueryVariables>({
       query: TOKEN_TRANSACTIONS,
-      variables: { tokenAddress }
+      variables: { tokenAddress },
+      fetchPolicy: 'no-cache'
     })
     return transactionsMapper(data)
   }
@@ -41,7 +43,10 @@ export default class TransactionDataController implements ITransactionDataContro
     return Promise.resolve(TransactionsMock)
   }
   async getAllTransactions() {
-    const { data } = await client.query<GlobalTransactionsQuery>({ query: GLOBAL_TRANSACTIONS })
+    const { data } = await client.query<GlobalTransactionsQuery>({
+      query: GLOBAL_TRANSACTIONS,
+      fetchPolicy: 'no-cache'
+    })
     return transactionsMapper(data)
   }
 }
