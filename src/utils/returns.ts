@@ -230,17 +230,15 @@ export async function getHistoricalPairReturns(
  * @param snapshots
  */
 export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots: any) {
-  // initialize values
   let fees = 0
 
   snapshots = snapshots.filter((entry: any) => {
     return entry.pair.id === pair.id
   })
 
-  // get data about the current position
   const currentPosition: Position = {
     pair: pairMapper(pair, ethPrice),
-    liquidityTokenBalance: +snapshots[snapshots.length - 1]?.liquidityTokenBalance,
+    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance,
     liquidityTokenTotalSupply: pair.totalSupply,
     feeEarned: 0
   }
@@ -251,7 +249,7 @@ export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots:
     const positionT1 = parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[parseInt(index) + 1]
 
     const results = getMetricsForPositionWindow(positionT0, positionT1)
-    fees = fees + results.fees
+    fees = results.fees
   }
 
   return fees
