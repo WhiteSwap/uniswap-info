@@ -30,34 +30,35 @@ interface ReturnMetrics {
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086
 
 export function formatPricesForEarlyTimestamps(position: any): Position {
+  let updatedPosition = position
   if (position.timestamp < PRICE_DISCOVERY_START_TIMESTAMP) {
     if (priceOverrides.includes(position?.pair?.token0.id)) {
-      position = {
-        ...position,
-        tokenOne: { ...position.tokenOne, priceUSD: 1 }
+      updatedPosition = {
+        ...updatedPosition,
+        tokenOne: { ...updatedPosition.tokenOne, priceUSD: 1 }
       }
     }
     if (priceOverrides.includes(position?.pair?.token1.id)) {
-      position = {
-        ...position,
-        tokenTwo: { ...position.tokenTwo, priceUSD: 1 }
+      updatedPosition = {
+        ...updatedPosition,
+        tokenTwo: { ...updatedPosition.tokenTwo, priceUSD: 1 }
       }
     }
     // WETH price
     if (position.pair?.token0.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      position = {
-        ...position,
-        tokenOne: { ...position.tokenOne, priceUSD: 203 }
+      updatedPosition = {
+        ...updatedPosition,
+        tokenOne: { ...updatedPosition.tokenOne, priceUSD: 203 }
       }
     }
     if (position.pair?.token1.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      position = {
-        ...position,
-        tokenTwo: { ...position.tokenTwo, priceUSD: 203 }
+      updatedPosition = {
+        ...updatedPosition,
+        tokenTwo: { ...updatedPosition.tokenTwo, priceUSD: 203 }
       }
     }
   }
-  return position
+  return updatedPosition
 }
 
 /**
@@ -95,8 +96,8 @@ export function getMetricsForPositionWindow(positionT0: Position, positionT1: Po
     token0_amount_no_fees * positionT1.pair.tokenOne.priceUSD +
     token1_amount_no_fees * positionT1.pair.tokenTwo.priceUSD
 
-  const difference_fees_token0 = token0_amount_no_fees - token0_amount_t1
-  const difference_fees_token1 = token1_amount_no_fees - token1_amount_t1
+  const difference_fees_token0 = token0_amount_t1 - token0_amount_no_fees
+  const difference_fees_token1 = token1_amount_t1 - token1_amount_no_fees
   const difference_fees_usd =
     difference_fees_token0 * positionT1.pair.tokenOne.priceUSD +
     difference_fees_token1 * positionT1.pair.tokenTwo.priceUSD
