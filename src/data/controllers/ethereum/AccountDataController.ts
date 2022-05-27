@@ -93,8 +93,9 @@ export default class AccountDataController implements IAccountDataController {
 
       // cycle through relevant positions and update ownership for any that we need to
       const relevantPositions = history.filter(snapshot => {
-        return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
+        return snapshot.timestamp < timestampCeiling || snapshot.timestamp > dayTimestamp
       })
+
       for (const index in relevantPositions) {
         const position = relevantPositions[index]
         // case where pair not added yet

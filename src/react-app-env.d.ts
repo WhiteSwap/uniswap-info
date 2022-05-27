@@ -138,10 +138,10 @@ interface Pair {
   tokenOne: PairToken
   tokenTwo: PairToken
   oneDayVolumeUntracked?: number
-  untrackedVolumeUSD?: string
+  untrackedVolumeUSD?: number
   volumeChangeUntracked?: number
   trackedReserveUSD?: number
-  reserveUSD: string
+  reserveUSD: number
 }
 
 type PositionPair = Pick<Pair, 'id' | 'reserveUSD' | 'totalSupply'> & {
@@ -158,9 +158,19 @@ type SnapshotPair = Pick<Pair, 'id' | 'reserveUSD'> & {
 
 interface Position {
   pair: Pair
-  liquidityTokenBalance: string
+  liquidityTokenBalance: number
+  liquidityTokenTotalSupply: number
   feeEarned: number
 }
+
+// pair: any
+// liquidityTokenBalance: number
+// liquidityTokenTotalSupply: number
+// reserve0: number
+// reserve1: number
+// reserveUSD: number
+// token0PriceUSD: number
+// token1PriceUSD: number
 
 interface LiquiditySnapshot {
   liquidityTokenBalance: string

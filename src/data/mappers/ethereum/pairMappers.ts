@@ -25,7 +25,7 @@ export function pairMapper(payload: EthereumPair, ethPrice?: number): Pair {
     apy: calculateApy(payload.oneDayVolumeUSD, payload.reserveUSD),
     totalSupply: payload.totalSupply ? +payload.totalSupply : 0,
     totalLiquidityUSD: payload.reserveUSD ? +payload.reserveUSD : 0,
-    untrackedVolumeUSD: payload.untrackedVolumeUSD ? payload.untrackedVolumeUSD.toString() : '',
+    untrackedVolumeUSD: payload.untrackedVolumeUSD ? +payload.untrackedVolumeUSD.toString() : 0,
     dayVolumeUSD: payload.oneDayVolumeUSD ? +payload.oneDayVolumeUSD : 0,
     weekVolumeUSD: payload.oneWeekVolumeUSD ? +payload.oneWeekVolumeUSD : 0,
     volumeChangeUSD: payload.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
@@ -33,7 +33,7 @@ export function pairMapper(payload: EthereumPair, ethPrice?: number): Pair {
     volumeChangeUntracked: payload.volumeChangeUntracked ? +payload.volumeChangeUntracked : 0,
     trackedReserveUSD: payload.trackedReserveUSD ? +payload.trackedReserveUSD : 0,
     liquidityChangeUSD: payload.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0,
-    reserveUSD: payload.reserveUSD ? payload.reserveUSD.toString() : ''
+    reserveUSD: payload.reserveUSD ? +payload.reserveUSD : 0
   }
 }
 

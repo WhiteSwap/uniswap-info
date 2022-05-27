@@ -3,9 +3,10 @@ import { pairMapper } from 'data/mappers/ethereum/pairMappers'
 
 export function userPositionMapper(payload: EthereumPosition): Position {
   return {
-    pair: pairMapper(payload.pair),
-    liquidityTokenBalance: payload.liquidityTokenBalance ?? '',
-    feeEarned: payload.feeEarned ? +payload.feeEarned : 0
+    pair: pairMapper(payload?.pair),
+    liquidityTokenBalance: payload?.liquidityTokenBalance ? +payload.liquidityTokenBalance : 0,
+    liquidityTokenTotalSupply: payload?.pair.totalSupply ? +payload.pair.totalSupply : 0,
+    feeEarned: payload?.feeEarned ? +payload.feeEarned : 0
   }
 }
 

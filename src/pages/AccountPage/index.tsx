@@ -71,10 +71,10 @@ function AccountPage() {
   const positionValue = useMemo(() => {
     return dynamicPositions
       ? dynamicPositions.reduce((total, position) => {
+          console.log(position)
           const calcPos =
             position?.pair && position.pair.reserveUSD
-              ? (parseFloat(position.liquidityTokenBalance) / position.pair.totalSupply) *
-                parseFloat(position.pair.reserveUSD)
+              ? (position.liquidityTokenBalance / position.pair.totalSupply) * position.pair.reserveUSD
               : 0
           return total + calcPos
         }, 0)

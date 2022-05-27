@@ -163,6 +163,7 @@ export function useUserLiquidityChart(account: string) {
   useEffect(() => {
     async function fetchData() {
       const formattedHistory = await DataService.accounts.getUserLiquidityChart(startDateTimestamp!, [...history])
+
       setFormattedHistory(formattedHistory)
     }
     if (history && startDateTimestamp && history.length > 0) {

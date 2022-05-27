@@ -4,8 +4,9 @@ import { pairMapper } from 'data/mappers/tron/pairMappers'
 export function userPositionMapper(payload: TronPosition | null): Position {
   return {
     pair: pairMapper(payload?.pair),
-    liquidityTokenBalance: payload?.liquidityTokenBalance ?? '',
-    feeEarned: payload?.feeEarned ?? 0
+    liquidityTokenBalance: payload?.liquidityTokenBalance ? +payload.liquidityTokenBalance : 0,
+    liquidityTokenTotalSupply: payload?.liquidityTokenTotalSupply ? +payload.liquidityTokenTotalSupply : 0,
+    feeEarned: payload?.feeEarned ? payload.feeEarned : 0
   }
 }
 

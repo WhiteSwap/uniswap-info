@@ -30,10 +30,10 @@ export function pairMapper(payload?: TronPair | null): Pair {
       priceUSD: payload?.tokenTwo.price ? +payload.tokenTwo.price : 0
     },
     oneDayVolumeUntracked: 0,
-    untrackedVolumeUSD: '',
+    untrackedVolumeUSD: 0,
     volumeChangeUntracked: 0,
     trackedReserveUSD: 0,
-    reserveUSD: ''
+    reserveUSD: 0
   }
 }
 

@@ -2,7 +2,8 @@ import { Pair as TronPair } from 'service/generated/tronGraphql'
 
 export type TronPosition = {
   pair: TronPair
-  liquidityTokenBalance: string
+  liquidityTokenBalance: number
+  liquidityTokenTotalSupply: number
   feeEarned: number
   __typename: string
 }

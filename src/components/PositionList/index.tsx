@@ -73,8 +73,8 @@ const PositionList = ({ positions }: Props) => {
   const activeTokenPrice = useActiveTokenPrice()
 
   const ListItem = ({ position, index }: { position: Position; index: number }) => {
-    const poolOwnership = parseFloat(position.liquidityTokenBalance) / position.pair.totalSupply
-    const valueUSD = poolOwnership * parseFloat(position.pair.reserveUSD)
+    const poolOwnership = position.liquidityTokenBalance / position.pair.totalSupply
+    const valueUSD = poolOwnership * position.pair.reserveUSD
 
     return (
       <DashGrid style={{ opacity: poolOwnership > 0 ? 1 : 0.6 }}>
@@ -197,8 +197,8 @@ const PositionList = ({ positions }: Props) => {
           return p0?.feeEarned > p1?.feeEarned ? (sortDirection ? -1 : 1) : sortDirection ? 1 : -1
         }
         if (sortedColumn === SORT_FIELD.VALUE) {
-          const bal0 = (parseFloat(p0.liquidityTokenBalance) / p0.pair.totalSupply) * parseFloat(p0.pair.reserveUSD)
-          const bal1 = (parseFloat(p1.liquidityTokenBalance) / p1.pair.totalSupply) * parseFloat(p1.pair.reserveUSD)
+          const bal0 = (p0.liquidityTokenBalance / p0.pair.totalSupply) * p0.pair.reserveUSD
+          const bal1 = (p1.liquidityTokenBalance / p1.pair.totalSupply) * p1.pair.reserveUSD
           return bal0 > bal1 ? (sortDirection ? -1 : 1) : sortDirection ? 1 : -1
         }
         return 1
