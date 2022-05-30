@@ -18,6 +18,7 @@ import LocalLoader from 'components/LocalLoader'
 import { useLatestBlocks } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
+import ErrorBoundary from 'components/ErrorBoundary'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -97,41 +98,43 @@ function App() {
   useFetchTokens()
 
   return (
-    <AppWrapper>
-      {showWarning && (
-        <WarningWrapper>
-          <WarningBanner>
-            {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
-          </WarningBanner>
-        </WarningWrapper>
-      )}
-      {latestBlock && globalData && globalChartData.length > 0 ? (
-        <ContentWrapper open={savedOpen}>
-          <Navigation />
-          <Main id="center">
-            <Routes>
-              <Route path="/:networkID" element={<GlobalPage />} />
-              <Route path="/:networkID/tokens" element={<AllTokensPage />} />
-              <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
-              <Route path="/:networkID/pairs" element={<AllPairsPage />} />
-              <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
-              {activeNetwork === SupportedNetwork.ETHEREUM ? (
-                <>
-                  <Route path="/:networkID/accounts" element={<AccountLookup />} />
-                  <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
-                </>
-              ) : undefined}
-              <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
-            </Routes>
-          </Main>
-          <Right open={savedOpen}>
-            <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
-          </Right>
-        </ContentWrapper>
-      ) : (
-        <LocalLoader fullscreen />
-      )}
-    </AppWrapper>
+    <ErrorBoundary>
+      <AppWrapper>
+        {showWarning && (
+          <WarningWrapper>
+            <WarningBanner>
+              {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
+            </WarningBanner>
+          </WarningWrapper>
+        )}
+        {latestBlock && globalData && globalChartData.length > 0 ? (
+          <ContentWrapper open={savedOpen}>
+            <Navigation />
+            <Main id="center">
+              <Routes>
+                <Route path="/:networkID" element={<GlobalPage />} />
+                <Route path="/:networkID/tokens" element={<AllTokensPage />} />
+                <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
+                <Route path="/:networkID/pairs" element={<AllPairsPage />} />
+                <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
+                {activeNetwork === SupportedNetwork.ETHEREUM ? (
+                  <>
+                    <Route path="/:networkID/accounts" element={<AccountLookup />} />
+                    <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
+                  </>
+                ) : undefined}
+                <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
+              </Routes>
+            </Main>
+            <Right open={savedOpen}>
+              <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
+            </Right>
+          </ContentWrapper>
+        ) : (
+          <LocalLoader fullscreen />
+        )}
+      </AppWrapper>
+    </ErrorBoundary>
   )
 }
 
