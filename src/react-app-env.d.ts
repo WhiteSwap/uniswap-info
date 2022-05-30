@@ -162,15 +162,6 @@ interface Position {
   feeEarned: number
 }
 
-// pair: any
-// liquidityTokenBalance: number
-// liquidityTokenTotalSupply: number
-// reserve0: number
-// reserve1: number
-// reserveUSD: number
-// token0PriceUSD: number
-// token1PriceUSD: number
-
 interface LiquiditySnapshot {
   liquidityTokenBalance: string
   liquidityTokenTotalSupply: string
