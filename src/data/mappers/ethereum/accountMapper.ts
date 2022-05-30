@@ -15,8 +15,8 @@ export function userPositionListMapper(payload?: EthereumPosition[] | null): Pos
 
 export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot {
   return {
-    liquidityTokenBalance: payload?.liquidityTokenBalance || '',
-    liquidityTokenTotalSupply: payload?.liquidityTokenTotalSupply || '',
+    liquidityTokenBalance: payload?.liquidityTokenBalance || 0,
+    liquidityTokenTotalSupply: payload?.liquidityTokenTotalSupply || 0,
     pair: {
       id: payload?.pair.id || '',
       reserveUSD: payload?.pair.reserveUSD || '',

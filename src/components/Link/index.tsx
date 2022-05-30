@@ -28,7 +28,6 @@ export const CustomLink = styled(RouterLink)<{ color?: string }>`
   font-weight: 700;
   color: ${({ color, theme }) => (color ? color : theme.blueGrey)};
   cursor: pointer;
-  white-space: 'nowrap';
 
   &:visited {
     color: ${({ color, theme }) => (color ? lighten(0.1, color) : lighten(0.1, theme.blueGrey))};

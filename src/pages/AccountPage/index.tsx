@@ -243,7 +243,6 @@ function AccountPage() {
                   <TYPE.light fontSize={below440 ? 12 : 14} fontWeight={500}>
                     {t('feesEarnedCumulative')}
                   </TYPE.light>
-                  <div />
                 </RowBetween>
                 <RowFixed align="flex-end">
                   <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={aggregateFees && 'green'}>

@@ -66,7 +66,10 @@ export function formatPricesForEarlyTimestamps(position: any): Position {
  * @param positionT0 // users liquidity info and token rates at beginning of window
  * @param positionT1 // '' at the end of the window
  */
-export function getMetricsForPositionWindow(positionT0: Position, positionT1: Position): ReturnMetrics {
+export function getMetricsForPositionWindow(
+  positionT0: Omit<Position, 'feeEarned'>,
+  positionT1: Omit<Position, 'feeEarned'>
+): ReturnMetrics {
   positionT0 = formatPricesForEarlyTimestamps(positionT0)
   positionT1 = formatPricesForEarlyTimestamps(positionT1)
 
@@ -231,15 +234,20 @@ export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots:
     return entry.pair.id === pair.id
   })
 
-  const currentPosition: Position = {
+  const currentPosition: Omit<Position, 'feeEarned'> = {
     pair: pairMapper(pair, ethPrice),
-    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance,
-    feeEarned: 0
+    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance
   }
 
   for (const index in snapshots) {
     // get positions at both bounds of the window
-    const positionT0 = snapshots[index]
+    const positionT0 = {
+      pair: {
+        ...snapshots[index].pair,
+        totalSupply: snapshots[index]?.liquidityTokenTotalSupply
+      },
+      liquidityTokenBalance: snapshots[index]?.liquidityTokenBalance
+    }
     const positionT1 = parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[parseInt(index) + 1]
 
     const results = getMetricsForPositionWindow(positionT0, positionT1)

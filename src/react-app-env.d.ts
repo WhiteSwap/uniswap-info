@@ -163,10 +163,10 @@ interface Position {
 }
 
 interface LiquiditySnapshot {
-  liquidityTokenBalance: string
-  liquidityTokenTotalSupply: string
+  liquidityTokenBalance: number
+  liquidityTokenTotalSupply: number
   pair: SnapshotPair
-  reserveUSD: string
+  reserveUSD: number
   timestamp: number
 }
 

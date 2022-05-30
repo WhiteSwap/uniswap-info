@@ -19,7 +19,7 @@ import { LiquidityChart } from 'state/features/account/types'
 import { getLPReturnsOnPair } from 'utils/returns'
 
 type OwnershipPair = {
-  lpTokenBalance: string
+  lpTokenBalance: number
   timestamp: number
 }
 
@@ -135,7 +135,7 @@ export default class AccountDataController implements IAccountDataController {
         return (totalUSD =
           totalUSD +
           (ownershipPerPair[dayData.pairAddress]
-            ? (parseFloat(ownershipPerPair[dayData.pairAddress].lpTokenBalance) / parseFloat(dayData.totalSupply)) *
+            ? (ownershipPerPair[dayData.pairAddress].lpTokenBalance / parseFloat(dayData.totalSupply)) *
               parseFloat(dayData.reserveUSD)
             : 0))
       }, 0)
@@ -201,7 +201,6 @@ export default class AccountDataController implements IAccountDataController {
     topLpLists
       .filter(i => !!i) // check for ones not fetched correctly
       .map(list => {
-        // @ts-ignore
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]
           return topLps.push({
