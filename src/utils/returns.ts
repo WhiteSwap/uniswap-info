@@ -71,8 +71,8 @@ export function getMetricsForPositionWindow(positionT0: Position, positionT1: Po
   positionT1 = formatPricesForEarlyTimestamps(positionT1)
 
   // calculate ownership at ends of window, for end of window we need original LP token balance / new total supply
-  const t0Ownership = positionT0.liquidityTokenBalance / positionT0.liquidityTokenTotalSupply
-  const t1Ownership = positionT0.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply
+  const t0Ownership = positionT0.liquidityTokenBalance / positionT0.pair.totalSupply
+  const t1Ownership = positionT0.liquidityTokenBalance / positionT1.pair.totalSupply
 
   // get starting amounts of token0 and token1 deposited by LP
   const token0_amount_t0 = t0Ownership * positionT0.pair.tokenOne.reserve
@@ -192,14 +192,9 @@ export async function getHistoricalPairReturns(
     let positionT1 = shareValuesFormatted[dayTimestamp + 86400]
     if (!positionT1) {
       positionT1 = {
-        pair: currentPairData.id,
+        pair: pairMapper(currentPairData, currentETHPrice),
         liquidityTokenBalance: positionT0.liquidityTokenBalance,
-        totalSupply: currentPairData.totalSupply,
-        reserve0: currentPairData.reserve0,
-        reserve1: currentPairData.reserve1,
-        reserveUSD: currentPairData.reserveUSD,
-        token0PriceUSD: currentPairData.token0.derivedETH * currentETHPrice,
-        token1PriceUSD: currentPairData.token1.derivedETH * currentETHPrice
+        feeEarned: 0
       }
     }
 
@@ -239,7 +234,6 @@ export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots:
   const currentPosition: Position = {
     pair: pairMapper(pair, ethPrice),
     liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance,
-    liquidityTokenTotalSupply: pair.totalSupply,
     feeEarned: 0
   }
 

@@ -159,7 +159,6 @@ type SnapshotPair = Pick<Pair, 'id' | 'reserveUSD'> & {
 interface Position {
   pair: Pair
   liquidityTokenBalance: number
-  liquidityTokenTotalSupply: number
   feeEarned: number
 }
 
