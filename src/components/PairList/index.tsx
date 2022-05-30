@@ -68,14 +68,12 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
       <DashGrid style={{ padding: below440 ? '.75rem' : '.875rem 2rem' }}>
         <DataText fontWeight="500">
           {!below600 && <div style={{ marginRight: '20px', width: '10px' }}>{index}</div>}
-          {!below440 && (
-            <DoubleTokenLogo
-              size={below600 ? 16 : 20}
-              a0={pairData.tokenOne.id}
-              a1={pairData.tokenTwo.id}
-              margin={!below740}
-            />
-          )}
+          <DoubleTokenLogo
+            size={below600 ? 16 : 20}
+            a0={pairData.tokenOne.id}
+            a1={pairData.tokenTwo.id}
+            margin={!below740}
+          />
           <Link to={formatPath(`/pairs/${pairData.id}`)}>
             <FormattedName
               text={pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol}
