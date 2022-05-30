@@ -51,20 +51,12 @@ const PairPage = () => {
 
   const transactions = usePairTransactions(pairAddress!)
 
-  // liquidity
   const liquidity = trackedReserveUSD
     ? formattedNum(trackedReserveUSD, true)
     : totalLiquidityUSD
     ? formattedNum(totalLiquidityUSD, true)
     : '$0'
 
-  // mark if using untracked liquidity
-  const [usingTracked, setUsingTracked] = useState(true)
-  useEffect(() => {
-    setUsingTracked(!trackedReserveUSD ? false : true)
-  }, [trackedReserveUSD])
-
-  // volume	  // volume
   const volume =
     dayVolumeUSD || dayVolumeUSD === 0
       ? formattedNum(dayVolumeUSD === 0 ? oneDayVolumeUntracked : dayVolumeUSD, true)
@@ -207,7 +199,7 @@ const PairPage = () => {
                   <AutoColumn gap="20px">
                     <RowBetween>
                       <TYPE.light fontSize={14} fontWeight={500}>
-                        {t('totalLiquidity')} {!usingTracked ? `(${t('untracked')})` : ''}
+                        {t('totalLiquidity')}
                       </TYPE.light>
                       <div />
                     </RowBetween>
@@ -225,7 +217,7 @@ const PairPage = () => {
                   <AutoColumn gap="20px">
                     <RowBetween>
                       <TYPE.light fontSize={14} fontWeight={500}>
-                        {t('volume24hrs')} {usingUtVolume && `(${t('untracked')})`}
+                        {t('volume24hrs')}
                       </TYPE.light>
                       <div />
                     </RowBetween>

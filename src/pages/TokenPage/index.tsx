@@ -11,7 +11,15 @@ import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
-import { formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink, isValidAddress, ellipsisAddress } from 'utils'
+import {
+  formattedNum,
+  getPoolLink,
+  getSwapLink,
+  getBlockChainScanLink,
+  isValidAddress,
+  ellipsisAddress,
+  localNumber
+} from 'utils'
 import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
 import { useTokenPairs } from 'state/features/token/selectors'
 import { useFormatPath, useColor } from 'hooks'
@@ -219,7 +227,7 @@ const TokenPage = () => {
                 <AutoColumn gap="20px">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
-                      {t('volume24hrs')} {usingUtVolume && `(${t('untracked')})`}
+                      {t('volume24hrs')}
                     </TYPE.light>
                     <div />
                   </RowBetween>
@@ -243,7 +251,7 @@ const TokenPage = () => {
                   </RowBetween>
                   <RowBetween align="flex-end">
                     <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
-                      {oneDayTxns ? oneDayTxns : '-'}
+                      {oneDayTxns ? localNumber(oneDayTxns) : 0}
                     </TYPE.main>
                     <TYPE.main>
                       <Percent percent={txnChange} />
