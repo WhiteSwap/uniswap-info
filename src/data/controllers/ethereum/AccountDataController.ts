@@ -35,7 +35,8 @@ export default class AccountDataController implements IAccountDataController {
           variables: {
             skip: skip,
             user: account
-          }
+          },
+          fetchPolicy: 'no-cache'
         })
         allResults = allResults.concat(result.data.liquidityPositionSnapshots)
         if (result.data.liquidityPositionSnapshots.length < 1000) {
@@ -167,7 +168,7 @@ export default class AccountDataController implements IAccountDataController {
             }
           })
         )
-        return userPositionListMapper(formattedPositions)
+        return userPositionListMapper(price, formattedPositions)
       }
     } catch (e) {
       console.log(e)

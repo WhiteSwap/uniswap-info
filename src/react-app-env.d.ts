@@ -141,6 +141,8 @@ interface Pair {
   untrackedVolumeUSD?: number
   volumeChangeUntracked?: number
   trackedReserveUSD?: number
+  // TODO: remove after mvp
+  createdAtTimestamp?: number
   reserveUSD: number
 }
 
@@ -167,6 +169,8 @@ interface LiquiditySnapshot {
   liquidityTokenTotalSupply: number
   pair: SnapshotPair
   reserveUSD: number
+  reserveOne: number
+  reserveTwo: number
   timestamp: number
 }
 

@@ -220,27 +220,33 @@ export async function getShareValueOverTime(pairAddress: string, timestamps: num
 
   // get historical share values with time travel queries
   const result = await client.query({
-    query: SHARE_VALUE(pairAddress, blocks)
+    query: SHARE_VALUE(pairAddress, blocks),
+    fetchPolicy: 'no-cache'
   })
 
   const values: any[] = []
   for (const row in result?.data) {
     const timestamp = row.split('t')[1]
-    const sharePriceUsd = parseFloat(result.data[row]?.reserveUSD) / parseFloat(result.data[row]?.totalSupply)
     if (timestamp) {
       values.push({
-        timestamp,
-        sharePriceUsd,
-        totalSupply: result.data[row].totalSupply,
-        reserve0: result.data[row].reserve0,
-        reserve1: result.data[row].reserve1,
-        reserveUSD: result.data[row].reserveUSD,
-        token0DerivedETH: result.data[row].token0.derivedETH,
-        token1DerivedETH: result.data[row].token1.derivedETH,
-        roiUsd: values && values[0] ? sharePriceUsd / values[0]['sharePriceUsd'] : 1,
-        ethPrice: 0,
-        token0PriceUSD: 0,
-        token1PriceUSD: 0
+        timestamp: +timestamp,
+        liquidityTokenTotalSupply: +result.data[row].totalSupply,
+        pair: {
+          id: result.data[row].id,
+          tokenOne: {
+            id: result.data[row].token0.id,
+            priceUSD: 0
+          },
+          tokenTwo: {
+            id: result.data[row].token1.id,
+            priceUSD: 0
+          }
+        },
+        reserveOne: +result.data[row].reserve0,
+        reserveTwo: +result.data[row].reserve1,
+        reserveUSD: +result.data[row].reserveUSD,
+        token0DerivedETH: +result.data[row].token0.derivedETH,
+        token1DerivedETH: +result.data[row].token1.derivedETH
       })
     }
   }
@@ -250,9 +256,8 @@ export async function getShareValueOverTime(pairAddress: string, timestamps: num
   for (const brow in result?.data) {
     const timestamp = brow.split('b')[1]
     if (timestamp) {
-      values[index].ethPrice = result.data[brow].ethPrice
-      values[index].token0PriceUSD = result.data[brow].ethPrice * values[index].token0DerivedETH
-      values[index].token1PriceUSD = result.data[brow].ethPrice * values[index].token1DerivedETH
+      values[index].pair.tokenOne.priceUSD = result.data[brow].ethPrice * values[index].token0DerivedETH
+      values[index].pair.tokenTwo.priceUSD = result.data[brow].ethPrice * values[index].token1DerivedETH
       index += 1
     }
   }

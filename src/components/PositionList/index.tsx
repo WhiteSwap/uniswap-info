@@ -8,7 +8,6 @@ import { Divider } from 'components'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import { formattedNum, getPoolLink } from 'utils'
 import { AutoColumn } from 'components/Column'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { RowFixed } from 'components/Row'
 import { ButtonLight } from 'components/ButtonStyled'
 import { TYPE } from 'Theme'
@@ -69,8 +68,6 @@ const PositionList = ({ positions }: Props) => {
       setMaxPage(Math.floor(positions.length / ITEMS_PER_PAGE) + extraPages || 1)
     }
   }, [positions])
-
-  const activeTokenPrice = useActiveTokenPrice()
 
   const ListItem = ({ position, index }: { position: Position; index: number }) => {
     const poolOwnership = position.liquidityTokenBalance / position.pair.totalSupply
@@ -151,10 +148,7 @@ const PositionList = ({ positions }: Props) => {
                 <RowFixed>
                   <DataText fontWeight={400} fontSize={11}>
                     {position.pair.tokenOne?.price > 0
-                      ? formattedNum(
-                          position?.feeEarned / (position.pair.tokenOne?.price * activeTokenPrice) / 2,
-                          false
-                        )
+                      ? formattedNum(position?.feeEarned / position.pair.tokenOne?.priceUSD / 2, false)
                       : 0}
                   </DataText>
                   <FormattedName
@@ -167,10 +161,7 @@ const PositionList = ({ positions }: Props) => {
                 <RowFixed>
                   <DataText fontWeight={400} fontSize={11}>
                     {position.pair.tokenTwo?.price > 0
-                      ? formattedNum(
-                          position?.feeEarned / (position.pair.tokenTwo?.price * activeTokenPrice) / 2,
-                          false
-                        )
+                      ? formattedNum(position?.feeEarned / position.pair.tokenTwo?.priceUSD / 2, false)
                       : 0}
                   </DataText>
                   <FormattedName

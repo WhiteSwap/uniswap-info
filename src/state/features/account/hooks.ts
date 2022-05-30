@@ -95,7 +95,7 @@ export function useUserPositionChart(position: Position, account: string) {
 
   useEffect(() => {
     async function fetchData() {
-      const fetchedData = await getHistoricalPairReturns(startDateTimestamp!, currentPairData, pairSnapshots, price)
+      const fetchedData = await getHistoricalPairReturns(startDateTimestamp!, currentPairData, pairSnapshots)
       dispatch(setPairReturns({ networkId: activeNetwork, account, pairAddress, data: fetchedData }))
     }
     if (
