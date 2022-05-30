@@ -1,6 +1,6 @@
 import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { getHistoricalPairReturns } from 'utils/returns'
 import { useStartTimestamp } from 'state/features/application/hooks'
@@ -215,4 +215,25 @@ export function useTopLiquidityPositions() {
   })
 
   return topLps
+}
+
+export function useAccountData(accountAddress: string) {
+  const transactions = useUserTransactions(accountAddress)
+  const positions = useUserPositions(accountAddress)
+  const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
+
+  const totalSwappedUSD = useMemo(() => {
+    return transactions?.swaps
+      ? transactions?.swaps.reduce((total, swap) => {
+          return total + swap.amountUSD
+        }, 0)
+      : 0
+  }, [transactions])
+
+  return {
+    transactions,
+    positions,
+    transactionCount,
+    totalSwappedUSD
+  }
 }

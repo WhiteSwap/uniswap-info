@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
-import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
+import { useAccountData } from 'state/features/account/hooks'
 import { useParams, Navigate } from 'react-router-dom'
 import Panel from 'components/Panel'
 import { formattedNum, getBlockChainScanLink, isValidAddress } from 'utils'
@@ -36,26 +36,12 @@ function AccountPage() {
     return <Navigate to={formatPath('/')} />
   }
 
-  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
-
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
 
-  // get data for this account
-  const transactions = useUserTransactions(accountAddress)
-  const positions = useUserPositions(accountAddress)
+  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
 
-  // get data for user stats
-  const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
-
-  // get derived totals
-  const totalSwappedUSD = useMemo(() => {
-    return transactions?.swaps
-      ? transactions?.swaps.reduce((total, swap) => {
-          return total + swap.amountUSD
-        }, 0)
-      : 0
-  }, [transactions])
+  const { transactions, positions, transactionCount, totalSwappedUSD } = useAccountData(accountAddress)
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0
