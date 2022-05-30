@@ -98,8 +98,8 @@ function App() {
   useFetchTokens()
 
   return (
-    <ErrorBoundary>
-      <AppWrapper>
+    <AppWrapper>
+      <ErrorBoundary>
         {showWarning && (
           <WarningWrapper>
             <WarningBanner>
@@ -133,8 +133,8 @@ function App() {
         ) : (
           <LocalLoader fullscreen />
         )}
-      </AppWrapper>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </AppWrapper>
   )
 }
 
