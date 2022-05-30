@@ -174,7 +174,7 @@ const TokenPage = () => {
                 </RowFixed>
               </RowFixed>
               <ActionsContainer>
-                <StarIcon filled={isTokenSaved} onClick={toggleSavedToken} />
+                <StarIcon $filled={isTokenSaved} onClick={toggleSavedToken} />
                 <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>

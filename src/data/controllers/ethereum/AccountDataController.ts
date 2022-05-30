@@ -1,4 +1,5 @@
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
+import { liquiditySnapshotListMapper, userPositionListMapper } from 'data/mappers/ethereum/accountMapper'
 import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {
@@ -18,7 +19,7 @@ import { LiquidityChart } from 'state/features/account/types'
 import { getLPReturnsOnPair } from 'utils/returns'
 
 type OwnershipPair = {
-  lpTokenBalance: string
+  lpTokenBalance: number
   timestamp: number
 }
 
@@ -43,7 +44,7 @@ export default class AccountDataController implements IAccountDataController {
           skip += 1000
         }
       }
-      return allResults
+      return liquiditySnapshotListMapper(allResults)
     } catch (e) {
       console.log(e)
       return []
@@ -92,8 +93,9 @@ export default class AccountDataController implements IAccountDataController {
 
       // cycle through relevant positions and update ownership for any that we need to
       const relevantPositions = history.filter(snapshot => {
-        return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
+        return snapshot.timestamp < timestampCeiling || snapshot.timestamp > dayTimestamp
       })
+
       for (const index in relevantPositions) {
         const position = relevantPositions[index]
         // case where pair not added yet
@@ -133,7 +135,7 @@ export default class AccountDataController implements IAccountDataController {
         return (totalUSD =
           totalUSD +
           (ownershipPerPair[dayData.pairAddress]
-            ? (parseFloat(ownershipPerPair[dayData.pairAddress].lpTokenBalance) / parseFloat(dayData.totalSupply)) *
+            ? (ownershipPerPair[dayData.pairAddress].lpTokenBalance / parseFloat(dayData.totalSupply)) *
               parseFloat(dayData.reserveUSD)
             : 0))
       }, 0)
@@ -161,11 +163,11 @@ export default class AccountDataController implements IAccountDataController {
             const feeEarned = await getLPReturnsOnPair(positionData.pair, price, snapshots)
             return {
               ...positionData,
-              feeEarned
+              feeEarned: feeEarned ?? 0
             }
           })
         )
-        return formattedPositions
+        return userPositionListMapper(formattedPositions)
       }
     } catch (e) {
       console.log(e)
@@ -181,7 +183,6 @@ export default class AccountDataController implements IAccountDataController {
 
     const topLpLists = await Promise.all(
       topPairs.map(async pair => {
-        // for each one, fetch top LPs
         const { data: results } = await client.query<TopLiquidityPositionQuery, TopLiquidityPositionVariables>({
           query: TOP_LPS_PER_PAIRS,
           variables: {
@@ -203,12 +204,12 @@ export default class AccountDataController implements IAccountDataController {
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]
           return topLps.push({
-            user: entry.user,
-            pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
             pairAddress: entry.pair.id,
-            token0: pairData.tokenOne.id,
-            token1: pairData.tokenTwo.id,
-            usd: (parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD
+            pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
+            tokenOne: pairData.tokenOne.id,
+            tokenTwo: pairData.tokenTwo.id,
+            usd: (parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD,
+            userId: entry.user?.id
           })
         })
       })

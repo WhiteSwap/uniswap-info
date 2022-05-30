@@ -1,22 +1,29 @@
-import { timeframeOptions } from '../../../constants'
+import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useEffect, useMemo, useState } from 'react'
+import { useAppDispatch } from 'state/hooks'
 import { getHistoricalPairReturns } from 'utils/returns'
-import { useStartTimestamp } from '../application/hooks'
-import { useActiveNetworkId } from '../application/selectors'
-import { usePairData } from '../pairs/hooks'
+import { useStartTimestamp } from 'state/features/application/hooks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { usePairData } from 'state/features/pairs/hooks'
 import { setPairReturns, setPositionHistory, setPositions, setTopLiquidityPositions, setTransactions } from './slice'
 import { LiquidityChart } from './types'
-import { usePairs } from '../pairs/selectors'
-import { useActiveTokenPrice } from '../global/selectors'
-import { useTimeFrame } from '../application/selectors'
+import { usePairs } from 'state/features/pairs/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
+import { useTimeFrame } from 'state/features/application/selectors'
 import DataService from 'data/DataService'
+import {
+  useAccountLiquiditySnapshots,
+  useAccountPairReturns,
+  useAccountPositions,
+  useAccountTransactions,
+  useTopLiquidityPositionList
+} from './selectors'
 
 export function useUserTransactions(account: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const transactions = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.transactions)
+  const transactions = useAccountTransactions(account)
 
   useEffect(() => {
     async function fetchData(account: string) {
@@ -39,7 +46,7 @@ export function useUserTransactions(account: string) {
 export function useUserSnapshots(account: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const snapshots = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.liquiditySnapshots)
+  const snapshots = useAccountLiquiditySnapshots(account)
 
   useEffect(() => {
     async function fetchData() {
@@ -84,9 +91,7 @@ export function useUserPositionChart(position: Position, account: string) {
   const price = useActiveTokenPrice()
 
   // formatetd array to return for chart data
-  const formattedHistory = useAppSelector(
-    state => state.account[activeNetwork].byAddress?.[account]?.pairReturns?.[pairAddress]
-  )
+  const formattedHistory = useAccountPairReturns(account, pairAddress)
 
   useEffect(() => {
     async function fetchData() {
@@ -158,6 +163,7 @@ export function useUserLiquidityChart(account: string) {
   useEffect(() => {
     async function fetchData() {
       const formattedHistory = await DataService.accounts.getUserLiquidityChart(startDateTimestamp!, [...history])
+
       setFormattedHistory(formattedHistory)
     }
     if (history && startDateTimestamp && history.length > 0) {
@@ -171,7 +177,7 @@ export function useUserLiquidityChart(account: string) {
 export function useUserPositions(account: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const positions = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.positions)
+  const positions = useAccountPositions(account)
 
   const snapshots = useUserSnapshots(account)
   const price = useActiveTokenPrice()
@@ -194,7 +200,7 @@ export function useUserPositions(account: string) {
 export function useTopLiquidityPositions() {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const topLps = useAppSelector(state => state.account[activeNetwork].topLiquidityPositions)
+  const topLps = useTopLiquidityPositionList()
   const allPairs = usePairs()
 
   useEffect(() => {
@@ -209,4 +215,25 @@ export function useTopLiquidityPositions() {
   })
 
   return topLps
+}
+
+export function useAccountData(accountAddress: string) {
+  const transactions = useUserTransactions(accountAddress)
+  const positions = useUserPositions(accountAddress)
+  const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
+
+  const totalSwappedUSD = useMemo(() => {
+    return transactions?.swaps
+      ? transactions?.swaps.reduce((total, swap) => {
+          return total + swap.amountUSD
+        }, 0)
+      : 0
+  }, [transactions])
+
+  return {
+    transactions,
+    positions,
+    transactionCount,
+    totalSwappedUSD
+  }
 }

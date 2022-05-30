@@ -1,3 +1,4 @@
+import { pairMapper } from 'data/mappers/ethereum/pairMappers'
 import dayjs from 'dayjs'
 import { getShareValueOverTime } from '.'
 
@@ -15,36 +16,49 @@ interface ReturnMetrics {
 }
 
 // used to calculate returns within a given window bounded by two positions
-interface Position {
-  pair: any
-  liquidityTokenBalance: number
-  liquidityTokenTotalSupply: number
-  reserve0: number
-  reserve1: number
-  reserveUSD: number
-  token0PriceUSD: number
-  token1PriceUSD: number
-}
+// interface Position {
+//   pair: any
+//   liquidityTokenBalance: number
+//   liquidityTokenTotalSupply: number
+//   reserve0: number
+//   reserve1: number
+//   reserveUSD: number
+//   token0PriceUSD: number
+//   token1PriceUSD: number
+// }
 
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086
 
-function formatPricesForEarlyTimestamps(position: any): Position {
+export function formatPricesForEarlyTimestamps(position: any): Position {
+  let updatedPosition = position
   if (position.timestamp < PRICE_DISCOVERY_START_TIMESTAMP) {
     if (priceOverrides.includes(position?.pair?.token0.id)) {
-      position.token0PriceUSD = 1
+      updatedPosition = {
+        ...updatedPosition,
+        tokenOne: { ...updatedPosition.tokenOne, priceUSD: 1 }
+      }
     }
     if (priceOverrides.includes(position?.pair?.token1.id)) {
-      position.token1PriceUSD = 1
+      updatedPosition = {
+        ...updatedPosition,
+        tokenTwo: { ...updatedPosition.tokenTwo, priceUSD: 1 }
+      }
     }
     // WETH price
     if (position.pair?.token0.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      position.token0PriceUSD = 203
+      updatedPosition = {
+        ...updatedPosition,
+        tokenOne: { ...updatedPosition.tokenOne, priceUSD: 203 }
+      }
     }
     if (position.pair?.token1.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      position.token1PriceUSD = 203
+      updatedPosition = {
+        ...updatedPosition,
+        tokenTwo: { ...updatedPosition.tokenTwo, priceUSD: 203 }
+      }
     }
   }
-  return position
+  return updatedPosition
 }
 
 /**
@@ -52,48 +66,57 @@ function formatPricesForEarlyTimestamps(position: any): Position {
  * @param positionT0 // users liquidity info and token rates at beginning of window
  * @param positionT1 // '' at the end of the window
  */
-export function getMetricsForPositionWindow(positionT0: Position, positionT1: Position): ReturnMetrics {
+export function getMetricsForPositionWindow(
+  positionT0: Omit<Position, 'feeEarned'>,
+  positionT1: Omit<Position, 'feeEarned'>
+): ReturnMetrics {
   positionT0 = formatPricesForEarlyTimestamps(positionT0)
   positionT1 = formatPricesForEarlyTimestamps(positionT1)
 
   // calculate ownership at ends of window, for end of window we need original LP token balance / new total supply
-  const t0Ownership = positionT0.liquidityTokenBalance / positionT0.liquidityTokenTotalSupply
-  const t1Ownership = positionT0.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply
+  const t0Ownership = positionT0.liquidityTokenBalance / positionT0.pair.totalSupply
+  const t1Ownership = positionT0.liquidityTokenBalance / positionT1.pair.totalSupply
 
   // get starting amounts of token0 and token1 deposited by LP
-  const token0_amount_t0 = t0Ownership * positionT0.reserve0
-  const token1_amount_t0 = t0Ownership * positionT0.reserve1
+  const token0_amount_t0 = t0Ownership * positionT0.pair.tokenOne.reserve
+  const token1_amount_t0 = t0Ownership * positionT0.pair.tokenTwo.reserve
 
   // get current token values
-  const token0_amount_t1 = t1Ownership * positionT1.reserve0
-  const token1_amount_t1 = t1Ownership * positionT1.reserve1
+  const token0_amount_t1 = t1Ownership * positionT1.pair.tokenOne.reserve
+  const token1_amount_t1 = t1Ownership * positionT1.pair.tokenTwo.reserve
 
   // calculate squares to find imp loss and fee differences
   const sqrK_t0 = Math.sqrt(token0_amount_t0 * token1_amount_t0)
-  // eslint-disable-next-line eqeqeq
-  const priceRatioT1 = positionT1.token0PriceUSD != 0 ? positionT1.token1PriceUSD / positionT1.token0PriceUSD : 0
 
-  const token0_amount_no_fees = positionT1.token1PriceUSD && priceRatioT1 ? sqrK_t0 * Math.sqrt(priceRatioT1) : 0
+  const priceRatioT1 =
+    positionT1.pair.tokenOne.priceUSD !== 0 ? positionT1.pair.tokenTwo.priceUSD / positionT1.pair.tokenOne.priceUSD : 0
+
+  const token0_amount_no_fees =
+    positionT1.pair.tokenTwo.priceUSD && priceRatioT1 ? sqrK_t0 * Math.sqrt(priceRatioT1) : 0
   const token1_amount_no_fees =
-    Number(positionT1.token1PriceUSD) && priceRatioT1 ? sqrK_t0 / Math.sqrt(priceRatioT1) : 0
+    positionT1.pair.tokenTwo.priceUSD && priceRatioT1 ? sqrK_t0 / Math.sqrt(priceRatioT1) : 0
   const no_fees_usd =
-    token0_amount_no_fees * positionT1.token0PriceUSD + token1_amount_no_fees * positionT1.token1PriceUSD
+    token0_amount_no_fees * positionT1.pair.tokenOne.priceUSD +
+    token1_amount_no_fees * positionT1.pair.tokenTwo.priceUSD
 
   const difference_fees_token0 = token0_amount_t1 - token0_amount_no_fees
   const difference_fees_token1 = token1_amount_t1 - token1_amount_no_fees
   const difference_fees_usd =
-    difference_fees_token0 * positionT1.token0PriceUSD + difference_fees_token1 * positionT1.token1PriceUSD
+    difference_fees_token0 * positionT1.pair.tokenOne.priceUSD +
+    difference_fees_token1 * positionT1.pair.tokenTwo.priceUSD
 
   // calculate USD value at t0 and t1 using initial token deposit amounts for asset return
-  const assetValueT0 = token0_amount_t0 * positionT0.token0PriceUSD + token1_amount_t0 * positionT0.token1PriceUSD
-  const assetValueT1 = token0_amount_t0 * positionT1.token0PriceUSD + token1_amount_t0 * positionT1.token1PriceUSD
+  const assetValueT0 =
+    token0_amount_t0 * positionT0.pair.tokenOne.priceUSD + token1_amount_t0 * positionT0.pair.tokenTwo.priceUSD
+  const assetValueT1 =
+    token0_amount_t0 * positionT1.pair.tokenOne.priceUSD + token1_amount_t0 * positionT1.pair.tokenTwo.priceUSD
 
   const imp_loss_usd = no_fees_usd - assetValueT1
   const uniswap_return = difference_fees_usd + imp_loss_usd
 
   // get net value change for combined data
-  const netValueT0 = t0Ownership * positionT0.reserveUSD
-  const netValueT1 = t1Ownership * positionT1.reserveUSD
+  const netValueT0 = t0Ownership * positionT0.pair.reserveUSD
+  const netValueT1 = t1Ownership * positionT1.pair.reserveUSD
 
   return {
     hodleReturn: assetValueT1 - assetValueT0,
@@ -172,14 +195,9 @@ export async function getHistoricalPairReturns(
     let positionT1 = shareValuesFormatted[dayTimestamp + 86400]
     if (!positionT1) {
       positionT1 = {
-        pair: currentPairData.id,
+        pair: pairMapper(currentPairData, currentETHPrice),
         liquidityTokenBalance: positionT0.liquidityTokenBalance,
-        totalSupply: currentPairData.totalSupply,
-        reserve0: currentPairData.reserve0,
-        reserve1: currentPairData.reserve1,
-        reserveUSD: currentPairData.reserveUSD,
-        token0PriceUSD: currentPairData.token0.derivedETH * currentETHPrice,
-        token1PriceUSD: currentPairData.token1.derivedETH * currentETHPrice
+        feeEarned: 0
       }
     }
 
@@ -210,32 +228,30 @@ export async function getHistoricalPairReturns(
  * @param snapshots
  */
 export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots: any) {
-  // initialize values
   let fees = 0
 
   snapshots = snapshots.filter((entry: any) => {
     return entry.pair.id === pair.id
   })
 
-  // get data about the current position
-  const currentPosition: Position = {
-    pair,
-    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance,
-    liquidityTokenTotalSupply: pair.totalSupply,
-    reserve0: pair.reserve0,
-    reserve1: pair.reserve1,
-    reserveUSD: pair.reserveUSD,
-    token0PriceUSD: pair.token0.derivedETH * ethPrice,
-    token1PriceUSD: pair.token1.derivedETH * ethPrice
+  const currentPosition: Omit<Position, 'feeEarned'> = {
+    pair: pairMapper(pair, ethPrice),
+    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance
   }
 
   for (const index in snapshots) {
     // get positions at both bounds of the window
-    const positionT0 = snapshots[index]
+    const positionT0 = {
+      pair: {
+        ...snapshots[index].pair,
+        totalSupply: snapshots[index]?.liquidityTokenTotalSupply
+      },
+      liquidityTokenBalance: snapshots[index]?.liquidityTokenBalance
+    }
     const positionT1 = parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[parseInt(index) + 1]
 
     const results = getMetricsForPositionWindow(positionT0, positionT1)
-    fees = fees + results.fees
+    fees = results.fees
   }
 
   return fees

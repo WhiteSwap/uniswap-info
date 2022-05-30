@@ -120,13 +120,13 @@ export const FullWrapper = styled.div`
   }
 `
 
-export const StarIcon = styled(Star)<{ filled: boolean }>`
+export const StarIcon = styled(Star)<{ $filled: boolean }>`
   width: 1.25rem;
   height: 1.25rem;
   color: ${({ theme }) => theme.text1};
   cursor: pointer;
   transition: 0.25s;
-  fill: ${({ theme, filled }) => filled && theme.text1};
+  fill: ${({ theme, $filled }) => $filled && theme.text1};
 
   :hover {
     opacity: 0.8;

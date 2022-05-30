@@ -167,7 +167,7 @@ const PairPage = () => {
                   </RowFixed>
                 </RowFixed>
                 <ActionsContainer>
-                  <StarIcon filled={isPairSaved} onClick={toggleSavedPair} />
+                  <StarIcon $filled={isPairSaved} onClick={toggleSavedPair} />
                   <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>

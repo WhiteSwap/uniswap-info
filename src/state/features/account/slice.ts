@@ -37,7 +37,10 @@ export const accountSlice = createSlice({
       state,
       { payload: { networkId, account, historyData } }: PayloadAction<UpdatePositionHistoryPayload>
     ) => {
-      state[networkId].byAddress[account] = { ...state[networkId].byAddress[account], liquiditySnapshots: historyData }
+      state[networkId].byAddress[account] = {
+        ...state[networkId].byAddress[account],
+        liquiditySnapshots: historyData
+      }
     },
     setPairReturns: (
       state,
