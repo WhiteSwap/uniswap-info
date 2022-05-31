@@ -52,16 +52,16 @@ export default class AccountDataController implements IAccountDataController {
     }
   }
   async getUserLiquidityChart(startDateTimestamp: number, history: LiquiditySnapshot[]) {
-    let dayIndex = startDateTimestamp / 86400 // get unique day bucket unix
-    const currentDayIndex = dayjs.utc().unix() / 86400
+    let dayIndex = Math.floor(startDateTimestamp / 86400) // get unique day bucket unix
+    const currentDayIndex = Math.floor(dayjs.utc().unix() / 86400)
 
     // sort snapshots in order
     const sortedPositions = history.sort((a, b) => {
       return a.timestamp > b.timestamp ? 1 : -1
     })
     // if UI start time is > first position time - bump start index to this time
-    if (sortedPositions[0].timestamp > dayIndex) {
-      dayIndex = sortedPositions[0].timestamp / 86400
+    if (sortedPositions[0].timestamp > currentDayIndex) {
+      dayIndex = Math.floor(sortedPositions[0].timestamp / 86400)
     }
 
     const dayTimestamps = []
@@ -94,7 +94,7 @@ export default class AccountDataController implements IAccountDataController {
 
       // cycle through relevant positions and update ownership for any that we need to
       const relevantPositions = history.filter(snapshot => {
-        return snapshot.timestamp < timestampCeiling || snapshot.timestamp > dayTimestamp
+        return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
       })
 
       for (const index in relevantPositions) {

@@ -155,7 +155,7 @@ export function useUserLiquidityChart(account: string) {
         break
     }
     const startTime = utcStartTime.unix() - 1
-    if ((startDateTimestamp && activeWindow && startTime < startDateTimestamp) || !startDateTimestamp) {
+    if ((activeWindow && startTime < startDateTimestamp!) || !startDateTimestamp) {
       setStartDateTimestamp(startTime)
     }
   }, [activeWindow, startDateTimestamp])
