@@ -229,7 +229,7 @@ export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots:
     const positionT1 = parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[parseInt(index) + 1]
 
     const results = getMetricsForPositionWindow(positionT0, positionT1)
-    fees = results.fees
+    fees += results.fees
   }
 
   return fees
