@@ -8,6 +8,10 @@ export const priceOverrides = [
 ]
 
 interface ReturnMetrics {
+  hodleReturn: number // difference in asset values t0 -> t1 with t0 deposit amounts
+  netReturn: number // net return from t0 -> t1
+  uniswapReturn: number // netReturn - hodlReturn
+  impLoss: number
   fees: number
 }
 
@@ -69,6 +73,9 @@ export function getMetricsForPositionWindow(posT0: LiquiditySnapshot, posT1: Liq
     positionT1.pair.tokenTwo.priceUSD && priceRatioT1 ? sqrK_t0 * Math.sqrt(priceRatioT1) : 0
   const token1_amount_no_fees =
     positionT1.pair.tokenTwo.priceUSD && priceRatioT1 ? sqrK_t0 / Math.sqrt(priceRatioT1) : 0
+  const no_fees_usd =
+    token0_amount_no_fees * positionT1.pair.tokenOne.priceUSD +
+    token1_amount_no_fees * positionT1.pair.tokenTwo.priceUSD
 
   const difference_fees_token0 = token0_amount_t1 - token0_amount_no_fees
   const difference_fees_token1 = token1_amount_t1 - token1_amount_no_fees
@@ -76,7 +83,24 @@ export function getMetricsForPositionWindow(posT0: LiquiditySnapshot, posT1: Liq
     difference_fees_token0 * positionT1.pair.tokenOne.priceUSD +
     difference_fees_token1 * positionT1.pair.tokenTwo.priceUSD
 
+  // calculate USD value at t0 and t1 using initial token deposit amounts for asset return
+  const assetValueT0 =
+    token0_amount_t0 * positionT0.pair.tokenOne.priceUSD + token1_amount_t0 * positionT0.pair.tokenTwo.priceUSD
+  const assetValueT1 =
+    token0_amount_t0 * positionT1.pair.tokenOne.priceUSD + token1_amount_t0 * positionT1.pair.tokenTwo.priceUSD
+
+  const imp_loss_usd = no_fees_usd - assetValueT1
+  const uniswap_return = difference_fees_usd + imp_loss_usd
+
+  // get net value change for combined data
+  const netValueT0 = t0Ownership * positionT0.pair.reserveUSD
+  const netValueT1 = t1Ownership * positionT1.pair.reserveUSD
+
   return {
+    hodleReturn: assetValueT1 - assetValueT0,
+    netReturn: netValueT1 - netValueT0,
+    uniswapReturn: uniswap_return,
+    impLoss: imp_loss_usd,
     fees: difference_fees_usd
   }
 }
