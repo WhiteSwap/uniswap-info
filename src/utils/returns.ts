@@ -30,7 +30,7 @@ interface ReturnMetrics {
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086
 
 export function formatPricesForEarlyTimestamps(position: LiquiditySnapshot): LiquiditySnapshot {
-  const updatedPosition = position
+  const updatedPosition = { ...position }
   if (position.timestamp < PRICE_DISCOVERY_START_TIMESTAMP) {
     if (priceOverrides.includes(position?.pair?.tokenOne.id)) {
       updatedPosition.pair.tokenTwo.priceUSD = 1
