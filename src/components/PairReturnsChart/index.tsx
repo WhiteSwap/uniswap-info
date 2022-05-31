@@ -1,45 +1,34 @@
 import { useState } from 'react'
-import styled from 'styled-components/macro'
 import { XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid } from 'recharts'
-import { AutoRow, RowBetween } from '../Row'
-
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from '../../utils'
-import { OptionButton } from '../ButtonStyled'
+import { AutoRow, RowBetween } from 'components/Row'
+import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { OptionButton } from 'components/ButtonStyled'
 import { useMedia } from 'react-use'
-import { timeframeOptions } from '../../constants'
-import DropdownSelect from '../DropdownSelect'
+import { timeframeOptions } from 'constants/index'
+import DropdownSelect from 'components/DropdownSelect'
 import { useUserPositionChart } from 'state/features/account/hooks'
-import LocalLoader from '../LocalLoader'
-import { useColor } from '../../hooks'
+import LocalLoader from 'components/LocalLoader'
+import { useColor } from 'hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { useTranslation } from 'react-i18next'
-
-const ChartWrapper = styled.div`
-  max-height: 420px;
-
-  @media screen and (max-width: 600px) {
-    min-height: 200px;
-  }
-`
-
-const OptionsRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 40px;
-`
+import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
   VALUE: 'Value',
   FEES: 'Fees'
 }
 
-const PairReturnsChart = ({ account, position }) => {
+type Props = {
+  account: string
+  position: Position
+}
+
+const PairReturnsChart = ({ account, position }: Props) => {
   const { t } = useTranslation()
-  let data = useUserPositionChart(position, account)
+  const data = useUserPositionChart(position, account)
   const below600 = useMedia('(max-width: 600px)')
   const aspect = below600 ? 60 / 42 : 60 / 16
-  const color = useColor(position?.pair.token0.id)
+  const color = useColor(position.pair.tokenOne.id)
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
 
@@ -47,10 +36,10 @@ const PairReturnsChart = ({ account, position }) => {
   const [chartTimeFrame, setChartTimeFrame] = useState(timeframeOptions.ALL_TIME)
 
   // based on window, get starttime
-  let utcStartTime = getTimeframe(chartTimeFrame)
+  const utcStartTime = getTimeframe(chartTimeFrame)
   const filteredData = data?.filter(entry => entry.date >= utcStartTime)
 
-  const changeTimeFrame = timeFrame => {
+  const changeTimeFrame = (timeFrame: string) => {
     return () => {
       setChartTimeFrame(timeFrame)
     }
@@ -61,7 +50,12 @@ const PairReturnsChart = ({ account, position }) => {
       {below600 ? (
         <RowBetween mb={40}>
           <div />
-          <DropdownSelect options={timeframeOptions} active={chartTimeFrame} setActive={setChartTimeFrame} />
+          <DropdownSelect
+            options={timeframeOptions}
+            active={chartTimeFrame}
+            setActive={setChartTimeFrame}
+            color={color}
+          />
         </RowBetween>
       ) : (
         <OptionsRow>
@@ -129,7 +123,7 @@ const PairReturnsChart = ({ account, position }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={val => formattedNum(val, true)}
+              formatter={(val: string | number | undefined) => formattedNum(val, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

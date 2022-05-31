@@ -1,9 +1,9 @@
-import userReducer from './user/slice'
-import applicationReducer from './application/slice'
-import globalReducer from './global/slice'
-import pairsReducer from './pairs/slice'
-import accountReducer from './account/slice'
-import tokenReducer from './token/slice'
+import userReducer from 'state/features/user/slice'
+import applicationReducer from 'state/features/application/slice'
+import globalReducer from 'state/features/global/slice'
+import pairsReducer from 'state/features/pairs/slice'
+import accountReducer from 'state/features/account/slice'
+import tokenReducer from 'state/features/token/slice'
 import { combineReducers } from '@reduxjs/toolkit'
 
 const rootReducer = combineReducers({

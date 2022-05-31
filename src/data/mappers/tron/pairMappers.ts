@@ -5,6 +5,14 @@ import { calculateApy, calculateDayFees } from 'utils/pair'
 export function pairMapper(payload?: TronPair | null): Pair {
   return {
     id: payload?.id || '',
+    totalLiquidityUSD: payload?.totalLiquidityUSD ? +payload.totalLiquidityUSD : 0,
+    liquidityChangeUSD: payload?.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0,
+    dayVolumeUSD: payload?.dayVolumeUSD ? +payload.dayVolumeUSD : 0,
+    volumeChangeUSD: payload?.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
+    weekVolumeUSD: payload?.weekVolumeUSD ? +payload.weekVolumeUSD : 0,
+    dayFees: calculateDayFees(payload?.dayVolumeUSD),
+    apy: calculateApy(payload?.dayVolumeUSD, payload?.totalLiquidityUSD),
+    totalSupply: 0,
     tokenOne: {
       id: payload?.tokenOne?.id || '',
       symbol: parseTokenInfo('symbol', payload?.tokenOne?.id, payload?.tokenOne?.symbol),
@@ -21,17 +29,11 @@ export function pairMapper(payload?: TronPair | null): Pair {
       price: payload?.tokenOne.derivedPrice ? +payload.tokenOne.derivedPrice : 0,
       priceUSD: payload?.tokenTwo.price ? +payload.tokenTwo.price : 0
     },
-    dayFees: calculateDayFees(payload?.dayVolumeUSD),
-    apy: calculateApy(payload?.dayVolumeUSD, payload?.totalLiquidityUSD),
-    totalSupply: 0,
-    totalLiquidityUSD: payload?.totalLiquidityUSD ? +payload.totalLiquidityUSD : 0,
-    dayVolumeUSD: payload?.dayVolumeUSD ? +payload.dayVolumeUSD : 0,
-    weekVolumeUSD: payload?.weekVolumeUSD ? +payload.weekVolumeUSD : 0,
-    volumeChangeUSD: payload?.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
-    liquidityChangeUSD: payload?.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0,
-    untrackedVolumeUSD: '',
     oneDayVolumeUntracked: 0,
-    volumeChangeUntracked: 0
+    untrackedVolumeUSD: 0,
+    volumeChangeUntracked: 0,
+    trackedReserveUSD: 0,
+    reserveUSD: 0
   }
 }
 

@@ -1,9 +1,10 @@
-import { Button as RebassButton } from 'rebass/styled-components'
+import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import styled from 'styled-components/macro'
 import { Plus, ChevronDown, ChevronUp } from 'react-feather'
 import { darken, transparentize } from 'polished'
 import { RowBetween } from '../Row'
 import { StyledIcon } from '..'
+import { PropsWithChildren } from 'react'
 
 const Base = styled(RebassButton)`
   padding: 0.875rem 1.25rem;
@@ -47,7 +48,7 @@ const Dull = styled(Base)`
   }
 `
 
-export default function ButtonStyled({ children, ...rest }) {
+export default function ButtonStyled({ children, ...rest }: PropsWithChildren<ButtonProps>) {
   return <Base {...rest}>{children}</Base>
 }
 
@@ -58,7 +59,7 @@ const ContentWrapper = styled.div`
   justify-content: space-between;
 `
 
-export const ButtonLight = styled(Base)`
+export const ButtonLight = styled(Base)<{ color?: string }>`
   background-color: ${({ color, theme }) =>
     color ? transparentize(0.99, color) : transparentize(0.99, theme.primary1)};
   color: ${({ color, theme }) => (color ? darken(0.1, color) : theme.primary1)};
@@ -78,7 +79,7 @@ export const ButtonLight = styled(Base)`
   }
 `
 
-export function ButtonDropdown({ disabled = false, children, open, ...rest }) {
+export function ButtonDropdown({ disabled = false, children, open, ...rest }: PropsWithChildren<ButtonProps>) {
   return (
     <ButtonFaded {...rest} disabled={disabled} ope={open}>
       <RowBetween>
@@ -97,7 +98,7 @@ export function ButtonDropdown({ disabled = false, children, open, ...rest }) {
   )
 }
 
-export const ButtonDark = styled(Base)`
+export const ButtonDark = styled(Base)<{ color?: string }>`
   background-color: ${({ color, theme }) => (color ? color : theme.primary1)};
   color: white;
   width: fit-content;
@@ -119,7 +120,7 @@ export const ButtonFaded = styled(Base)`
   }
 `
 
-export function ButtonPlusDull({ children, ...rest }) {
+export function ButtonPlusDull({ children, ...rest }: PropsWithChildren<ButtonProps>) {
   return (
     <Dull disabled={false} {...rest}>
       <ContentWrapper>
@@ -130,7 +131,12 @@ export function ButtonPlusDull({ children, ...rest }) {
   )
 }
 
-export function ButtonCustom({ children, bgColor, color, ...rest }) {
+export function ButtonCustom({
+  children,
+  bgColor,
+  color,
+  ...rest
+}: PropsWithChildren<{ bgColor?: string } & ButtonProps>) {
   return (
     <BaseCustom bg={bgColor} color={color} {...rest}>
       {children}
@@ -138,7 +144,7 @@ export function ButtonCustom({ children, bgColor, color, ...rest }) {
   )
 }
 
-export const OptionButton = styled.div`
+export const OptionButton = styled.div<{ active?: boolean; disabled?: boolean }>`
   font-weight: 600;
   font-size: 0.75rem;
   width: fit-content;
