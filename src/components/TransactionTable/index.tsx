@@ -151,7 +151,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         <DataText>{formatTime(item.timestamp)}</DataText>
       </DashGrid>
     ),
-    []
+    [activeNetworkId]
   )
 
   useEffect(() => {
