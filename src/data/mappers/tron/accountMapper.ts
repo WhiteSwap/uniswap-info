@@ -31,6 +31,8 @@ export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot 
         priceUSD: payload.pair.tokenTwo?.priceUSD || 0
       }
     },
+    reserveOne: 0,
+    reserveTwo: 0,
     reserveUSD: payload.reserveUSD || '',
     timestamp: payload.timestamp || new Date().getTime()
   }

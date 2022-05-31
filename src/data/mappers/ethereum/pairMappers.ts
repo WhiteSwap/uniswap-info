@@ -33,6 +33,7 @@ export function pairMapper(payload: EthereumPair, ethPrice?: number): Pair {
     volumeChangeUntracked: payload.volumeChangeUntracked ? +payload.volumeChangeUntracked : 0,
     trackedReserveUSD: payload.trackedReserveUSD ? +payload.trackedReserveUSD : 0,
     liquidityChangeUSD: payload.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0,
+    createdAtTimestamp: payload.createdAtTimestamp ? +payload.createdAtTimestamp : 0,
     reserveUSD: payload.reserveUSD ? +payload.reserveUSD : 0
   }
 }

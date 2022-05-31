@@ -29,33 +29,14 @@ interface ReturnMetrics {
 
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086
 
-export function formatPricesForEarlyTimestamps(position: any): Position {
-  let updatedPosition = position
+export function formatPricesForEarlyTimestamps(position: LiquiditySnapshot): LiquiditySnapshot {
+  const updatedPosition = { ...position }
   if (position.timestamp < PRICE_DISCOVERY_START_TIMESTAMP) {
-    if (priceOverrides.includes(position?.pair?.token0.id)) {
-      updatedPosition = {
-        ...updatedPosition,
-        tokenOne: { ...updatedPosition.tokenOne, priceUSD: 1 }
-      }
+    if (priceOverrides.includes(position?.pair?.tokenOne.id)) {
+      updatedPosition.pair.tokenTwo.priceUSD = 1
     }
-    if (priceOverrides.includes(position?.pair?.token1.id)) {
-      updatedPosition = {
-        ...updatedPosition,
-        tokenTwo: { ...updatedPosition.tokenTwo, priceUSD: 1 }
-      }
-    }
-    // WETH price
-    if (position.pair?.token0.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      updatedPosition = {
-        ...updatedPosition,
-        tokenOne: { ...updatedPosition.tokenOne, priceUSD: 203 }
-      }
-    }
-    if (position.pair?.token1.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-      updatedPosition = {
-        ...updatedPosition,
-        tokenTwo: { ...updatedPosition.tokenTwo, priceUSD: 203 }
-      }
+    if (priceOverrides.includes(position?.pair?.tokenTwo.id)) {
+      updatedPosition.pair.tokenOne.priceUSD = 1
     }
   }
   return updatedPosition
@@ -66,24 +47,21 @@ export function formatPricesForEarlyTimestamps(position: any): Position {
  * @param positionT0 // users liquidity info and token rates at beginning of window
  * @param positionT1 // '' at the end of the window
  */
-export function getMetricsForPositionWindow(
-  positionT0: Omit<Position, 'feeEarned'>,
-  positionT1: Omit<Position, 'feeEarned'>
-): ReturnMetrics {
-  positionT0 = formatPricesForEarlyTimestamps(positionT0)
-  positionT1 = formatPricesForEarlyTimestamps(positionT1)
+export function getMetricsForPositionWindow(posT0: LiquiditySnapshot, posT1: LiquiditySnapshot): ReturnMetrics {
+  const positionT0 = formatPricesForEarlyTimestamps(posT0)
+  const positionT1 = formatPricesForEarlyTimestamps(posT1)
 
   // calculate ownership at ends of window, for end of window we need original LP token balance / new total supply
-  const t0Ownership = positionT0.liquidityTokenBalance / positionT0.pair.totalSupply
-  const t1Ownership = positionT0.liquidityTokenBalance / positionT1.pair.totalSupply
+  const t0Ownership = positionT0.liquidityTokenBalance / positionT0.liquidityTokenTotalSupply
+  const t1Ownership = positionT0.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply
 
   // get starting amounts of token0 and token1 deposited by LP
-  const token0_amount_t0 = t0Ownership * positionT0.pair.tokenOne.reserve
-  const token1_amount_t0 = t0Ownership * positionT0.pair.tokenTwo.reserve
+  const token0_amount_t0 = t0Ownership * positionT0.reserveOne
+  const token1_amount_t0 = t0Ownership * positionT0.reserveTwo
 
   // get current token values
-  const token0_amount_t1 = t1Ownership * positionT1.pair.tokenOne.reserve
-  const token1_amount_t1 = t1Ownership * positionT1.pair.tokenTwo.reserve
+  const token0_amount_t1 = t1Ownership * positionT1.reserveOne
+  const token1_amount_t1 = t1Ownership * positionT1.reserveTwo
 
   // calculate squares to find imp loss and fee differences
   const sqrK_t0 = Math.sqrt(token0_amount_t0 * token1_amount_t0)
@@ -136,9 +114,8 @@ export function getMetricsForPositionWindow(
  */
 export async function getHistoricalPairReturns(
   startDateTimestamp: number,
-  currentPairData: any,
-  pairSnapshots: any,
-  currentETHPrice: number
+  currentPairData: Pair,
+  pairSnapshots: LiquiditySnapshot[]
 ) {
   // catch case where data not puplated yet
   if (!currentPairData.createdAtTimestamp) {
@@ -156,7 +133,7 @@ export async function getHistoricalPairReturns(
   const dayTimestamps = []
   while (dayIndex < currentDayIndex) {
     // only account for days where this pair existed
-    if (dayIndex * 86400 >= parseInt(currentPairData.createdAtTimestamp)) {
+    if (dayIndex * 86400 >= currentPairData?.createdAtTimestamp) {
       dayTimestamps.push(dayIndex * 86400)
     }
     dayIndex = dayIndex + 1
@@ -185,28 +162,30 @@ export async function getHistoricalPairReturns(
       return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
     })
     for (let i = 0; i < dailyChanges.length; i++) {
-      const positionT1 = dailyChanges[i]
+      const positionT1: LiquiditySnapshot = dailyChanges[i]
       const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
       netFees = netFees + localReturns.fees
       positionT0 = positionT1
     }
 
     // now treat the end of the day as a hypothetical position
-    let positionT1 = shareValuesFormatted[dayTimestamp + 86400]
+    let positionT1: LiquiditySnapshot = shareValuesFormatted[dayTimestamp + 86400]
     if (!positionT1) {
       positionT1 = {
-        pair: pairMapper(currentPairData, currentETHPrice),
+        timestamp: 0,
+        pair: currentPairData,
         liquidityTokenBalance: positionT0.liquidityTokenBalance,
-        feeEarned: 0
+        reserveOne: currentPairData.tokenOne.reserve,
+        reserveTwo: currentPairData.tokenTwo.reserve,
+        reserveUSD: currentPairData.reserveUSD,
+        liquidityTokenTotalSupply: currentPairData.totalSupply
       }
     }
 
     if (positionT1) {
-      positionT1.liquidityTokenTotalSupply = positionT1.totalSupply
       positionT1.liquidityTokenBalance = positionT0.liquidityTokenBalance
       const currentLiquidityValue =
-        (parseFloat(positionT1.liquidityTokenBalance) / parseFloat(positionT1.liquidityTokenTotalSupply)) *
-        parseFloat(positionT1.reserveUSD)
+        (positionT1.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply) * positionT1.reserveUSD
       const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
       const localFees = netFees + localReturns.fees
 
@@ -234,24 +213,23 @@ export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots:
     return entry.pair.id === pair.id
   })
 
-  const currentPosition: Omit<Position, 'feeEarned'> = {
+  const currentPosition: LiquiditySnapshot = {
     pair: pairMapper(pair, ethPrice),
-    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance
+    liquidityTokenBalance: snapshots[snapshots.length - 1]?.liquidityTokenBalance,
+    reserveOne: pair.reserve0,
+    reserveTwo: pair.reserve1,
+    reserveUSD: pair.reserveUSD,
+    liquidityTokenTotalSupply: pair.totalSupply,
+    timestamp: 0
   }
 
   for (const index in snapshots) {
     // get positions at both bounds of the window
-    const positionT0 = {
-      pair: {
-        ...snapshots[index].pair,
-        totalSupply: snapshots[index]?.liquidityTokenTotalSupply
-      },
-      liquidityTokenBalance: snapshots[index]?.liquidityTokenBalance
-    }
+    const positionT0 = snapshots[index]
     const positionT1 = parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[parseInt(index) + 1]
 
     const results = getMetricsForPositionWindow(positionT0, positionT1)
-    fees = results.fees
+    fees += results.fees
   }
 
   return fees
