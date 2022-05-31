@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
-import { useUserTransactions, useUserPositions } from 'state/features/account/hooks'
+import { useState, useMemo, useRef } from 'react'
+import { useAccountData } from 'state/features/account/hooks'
 import { useParams, Navigate } from 'react-router-dom'
 import Panel from 'components/Panel'
 import { ellipsisAddress, formattedNum, getBlockChainScanLink, isValidAddress } from 'utils'
@@ -15,12 +15,11 @@ import { PageWrapper, StyledIcon, StarIcon, ExternalLinkIcon, ContentWrapperLarg
 import DoubleTokenLogo from 'components/DoubleLogo'
 import { Activity } from 'react-feather'
 import Link from 'components/Link'
-import { FEE_WARNING_TOKENS } from 'constants/index'
 import { BasicLink } from 'components/Link'
 import { useMedia } from 'react-use'
 import Search from 'components/Search'
 import { useTranslation } from 'react-i18next'
-import { DropdownWrapper, Flyout, Header, MenuRow, Warning, ActionsContainer } from './styled'
+import { DropdownWrapper, Flyout, Header, MenuRow, ActionsContainer } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TransactionTable } from 'components/TransactionTable'
 import LocalLoader from 'components/LocalLoader'
@@ -33,50 +32,21 @@ function AccountPage() {
   const activeNetworkId = useActiveNetworkId()
 
   const { accountAddress } = useParams()
-  if (!isValidAddress(accountAddress, activeNetworkId)) {
+  if (!accountAddress || !isValidAddress(accountAddress, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
-
-  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
 
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
 
-  // get data for this account
-  const transactions = useUserTransactions(accountAddress)
-  const positions = useUserPositions(accountAddress)
+  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
 
-  // get data for user stats
-  const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
-
-  // get derived totals
-  const totalSwappedUSD = useMemo(() => {
-    return transactions?.swaps
-      ? transactions?.swaps.reduce((total, swap) => {
-          return total + parseFloat(swap.amountUSD)
-        }, 0)
-      : 0
-  }, [transactions])
-
-  // if any position has token from fee warning list, show warning
-  const [showWarning, setShowWarning] = useState(false)
-  useEffect(() => {
-    if (positions) {
-      for (let i = 0; i < positions.length; i++) {
-        if (
-          FEE_WARNING_TOKENS.includes(positions[i].pair.token0.id) ||
-          FEE_WARNING_TOKENS.includes(positions[i].pair.token1.id)
-        ) {
-          setShowWarning(true)
-        }
-      }
-    }
-  }, [positions])
+  const { transactions, positions, transactionCount, totalSwappedUSD } = useAccountData(accountAddress)
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0
   const [showDropdown, setShowDropdown] = useState(false)
-  const [activePosition, setActivePosition] = useState()
+  const [activePosition, setActivePosition] = useState<Position | undefined>()
 
   const dynamicPositions = activePosition ? [activePosition] : positions
 
@@ -87,11 +57,11 @@ function AccountPage() {
   const positionValue = useMemo(() => {
     return dynamicPositions
       ? dynamicPositions.reduce((total, position) => {
-          return (
-            total +
-            (parseFloat(position?.liquidityTokenBalance) / parseFloat(position?.pair?.totalSupply)) *
-              position?.pair?.reserveUSD
-          )
+          const calcPos =
+            position?.pair && position.pair.reserveUSD
+              ? (position.liquidityTokenBalance / position.pair.totalSupply) * position.pair.reserveUSD
+              : 0
+          return total + calcPos
         }, 0)
       : null
   }, [dynamicPositions])
@@ -109,7 +79,7 @@ function AccountPage() {
               {ellipsisAddress(accountAddress)}
             </Link>
           </TYPE.body>
-          {!below600 && <Search small={true} />}
+          {!below600 && <Search />}
         </RowBetween>
         <Header>
           <RowBetween>
@@ -126,7 +96,6 @@ function AccountPage() {
             </ActionsContainer>
           </RowBetween>
         </Header>
-        {showWarning && <Warning>{t('feesCantBeCalc')}</Warning>}
         {!hideLPContent && (
           <DropdownWrapper ref={node}>
             <ButtonDropdown width="100%" onClick={() => setShowDropdown(!showDropdown)} open={showDropdown}>
@@ -140,9 +109,13 @@ function AccountPage() {
               )}
               {activePosition && (
                 <RowFixed>
-                  <DoubleTokenLogo a0={activePosition.pair.token0.id} a1={activePosition.pair.token1.id} size={16} />
+                  <DoubleTokenLogo
+                    a0={activePosition.pair.tokenOne?.id}
+                    a1={activePosition.pair.tokenTwo?.id}
+                    size={16}
+                  />
                   <TYPE.body ml={'16px'}>
-                    {activePosition.pair.token0.symbol}-{activePosition.pair.token1.symbol} {t('position')}
+                    {activePosition.pair.tokenOne?.symbol}-{activePosition.pair.tokenTwo?.symbol} {t('position')}
                   </TYPE.body>
                 </RowFixed>
               )}
@@ -151,13 +124,13 @@ function AccountPage() {
               <Flyout>
                 <AutoColumn gap="0px">
                   {positions?.map((p, i) => {
-                    let token0Symbol = p.pair.token0.symbol
-                    let token1Symbol = p.pair.token1.symbol
-                    if (token0Symbol === 'WETH') {
-                      token0Symbol = 'ETH'
+                    let tokenOneSymbol = p.pair.tokenOne?.symbol
+                    let tokenTwoSymbol = p.pair.tokenTwo?.symbol
+                    if (tokenOneSymbol === 'WETH') {
+                      tokenOneSymbol = 'ETH'
                     }
-                    if (token1Symbol === 'WETH') {
-                      token1Symbol = 'ETH'
+                    if (tokenTwoSymbol === 'WETH') {
+                      tokenTwoSymbol = 'ETH'
                     }
                     return (
                       p.pair.id !== activePosition?.pair.id && (
@@ -168,9 +141,9 @@ function AccountPage() {
                           }}
                           key={i}
                         >
-                          <DoubleTokenLogo a0={p.pair.token0.id} a1={p.pair.token1.id} size={16} />
+                          <DoubleTokenLogo a0={p.pair.tokenOne?.id} a1={p.pair.tokenTwo?.id} size={16} />
                           <TYPE.body ml={'16px'}>
-                            {token0Symbol}-{token1Symbol} {t('position')}
+                            {tokenOneSymbol}-{tokenTwoSymbol} {t('position')}
                           </TYPE.body>
                         </MenuRow>
                       )
@@ -268,11 +241,10 @@ function AccountPage() {
                   <TYPE.light fontSize={below440 ? 12 : 14} fontWeight={500}>
                     {t('feesEarnedCumulative')}
                   </TYPE.light>
-                  <div />
                 </RowBetween>
                 <RowFixed align="flex-end">
                   <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={aggregateFees && 'green'}>
-                    {aggregateFees ? formattedNum(aggregateFees, true, true) : '-'}
+                    {aggregateFees ? formattedNum(aggregateFees, true) : '-'}
                   </TYPE.header>
                 </RowFixed>
               </AutoColumn>

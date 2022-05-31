@@ -113,9 +113,7 @@ function Navigation() {
       <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem' }}>
         {socialLinks.map(el => (
           <HeaderText key={el.name}>
-            <Link href={el.url} target="_blank">
-              {el.name}
-            </Link>
+            <Link href={el.url}>{el.name}</Link>
           </HeaderText>
         ))}
         <Toggle isActive={isDark} toggle={toggleDarkMode} />

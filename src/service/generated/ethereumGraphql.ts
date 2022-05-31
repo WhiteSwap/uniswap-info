@@ -59,8 +59,8 @@ export type Pair = {
   createdAtBlockNumber: Scalars['Int']
   liquidityProviderCount: Scalars['Int']
   pairHourData: Array<PairHourData>
-  liquidityPositions: Array<LiquidityPosition>
-  liquidityPositionSnapshots: Array<LiquidityPositionSnapshot>
+  LiquidityPositions: Array<LiquidityPosition>
+  LiquidityPositionSnapshots: Array<LiquidityPositionSnapshot>
   mints: Array<Mint>
   burns: Array<Burn>
   swaps: Array<Swap>
@@ -69,7 +69,7 @@ export type Pair = {
 export type User = {
   __typename?: 'User'
   id: Scalars['ID']
-  liquidityPositions?: Maybe<Array<LiquidityPosition>>
+  LiquidityPositions?: Maybe<Array<LiquidityPosition>>
   usdSwapped: Scalars['Float']
 }
 
@@ -84,7 +84,7 @@ export type LiquidityPosition = {
 export type LiquidityPositionSnapshot = {
   __typename?: 'LiquidityPositionSnapshot'
   id: Scalars['ID']
-  liquidityPosition: LiquidityPosition
+  LiquidityPosition: LiquidityPosition
   timestamp: Scalars['Int']
   block: Scalars['Int']
   user: User

@@ -34,16 +34,6 @@ export const MenuRow = styled(Row)`
   }
 `
 
-export const Warning = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text1};
-  padding: 1rem;
-  font-weight: 600;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  width: calc(100% - 2rem);
-`
-
 export const ActionsContainer = styled.div`
   display: grid;
   gap: 0.75rem;

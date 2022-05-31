@@ -14,8 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { Arrow, CustomText, DashGrid, DataText, List, ListWrapper, PageButtons } from './styled'
 
 type Props = {
-  // TODO change lps type
-  lps: any
+  lps: LiquidityPosition[]
   maxItems: number
 }
 
@@ -46,19 +45,19 @@ function LPList({ lps, maxItems = 10 }: Props) {
     }
   }, [ITEMS_PER_PAGE, lps])
 
-  const ListItem = ({ lp, index }: { lp: any; index: number }) => {
+  const ListItem = ({ lp, index }: { lp: LiquidityPosition; index: number }) => {
     return (
       <DashGrid>
         {!below600 && <DataText>{index}</DataText>}
         <DataText justifyContent="flex-start">
-          <CustomLink style={{ whiteSpace: 'nowrap' }} to={formatPath(`/accounts/${lp.user.id}`)}>
-            {below800 ? ellipsisAddress(lp.user.id) : lp.user.id}
+          <CustomLink to={formatPath(`/accounts/${lp.userId}`)}>
+            {below800 ? ellipsisAddress(lp.userId) : lp.userId}
           </CustomLink>
         </DataText>
         <DataText>
           <CustomLink to={formatPath(`/pairs/${lp.pairAddress}`)}>
             <RowFixed style={{ textAlign: 'right' }}>
-              {!below600 && <DoubleTokenLogo a0={lp.token0} a1={lp.token1} size={16} margin={true} />}
+              {!below600 && <DoubleTokenLogo a0={lp.tokenOne} a1={lp.tokenTwo} size={16} margin={true} />}
               {lp.pairName}
             </RowFixed>
           </CustomLink>
@@ -70,7 +69,7 @@ function LPList({ lps, maxItems = 10 }: Props) {
 
   const lpList =
     lps &&
-    lps.slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE).map((lp: any, index: number) => {
+    lps.slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE).map((lp: LiquidityPosition, index: number) => {
       return (
         <div key={index}>
           <ListItem key={index} index={(page - 1) * 10 + index + 1} lp={lp} />

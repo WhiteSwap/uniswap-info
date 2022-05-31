@@ -8,7 +8,7 @@ import { useAppSelector } from 'state/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useLocation } from 'react-router-dom'
 
-export function useColor(tokenAddress: string, token: string) {
+export function useColor(tokenAddress: string, token?: string) {
   const [color, setColor] = useState('#2172E5')
   const activeNetwork = useActiveNetworkId()
   if (tokenAddress) {
@@ -22,7 +22,7 @@ export function useColor(tokenAddress: string, token: string) {
             detectedHex = shade(0.005, detectedHex)
             AAscore = hex(detectedHex, '#FFF')
           }
-          if (token === 'DAI') {
+          if (token && token === 'DAI') {
             setColor('#FAAB14')
           } else {
             setColor(detectedHex)

@@ -73,14 +73,17 @@ export const SHARE_VALUE = (pairAddress: string, blocks: BlockHeight[]) => {
   queryString += blocks.map(
     block => `
       t${block.timestamp}:pair(id:"${pairAddress}", block: { number: ${block.number} }) {
+        id
         reserve0
         reserve1
         reserveUSD
         totalSupply
         token0{
+          id
           derivedETH
         }
         token1{
+          id
           derivedETH
         }
       }
