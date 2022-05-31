@@ -15,18 +15,6 @@ interface ReturnMetrics {
   fees: number
 }
 
-// used to calculate returns within a given window bounded by two positions
-// interface Position {
-//   pair: any
-//   liquidityTokenBalance: number
-//   liquidityTokenTotalSupply: number
-//   reserve0: number
-//   reserve1: number
-//   reserveUSD: number
-//   token0PriceUSD: number
-//   token1PriceUSD: number
-// }
-
 const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086
 
 export function formatPricesForEarlyTimestamps(position: LiquiditySnapshot): LiquiditySnapshot {
