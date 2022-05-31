@@ -98,7 +98,7 @@ export function getWhiteSwapAppLink(network: SupportedNetwork, linkVariable: str
   return `${baseWhiteSwapUrl}/${network.toUpperCase()}/${linkVariable}`
 }
 
-export function localNumber(val: string) {
+export function localNumber(val: string | number) {
   return Numeral(val).format('0,0')
 }
 
@@ -537,4 +537,9 @@ export function getChartData(data: ChartDailyItem[], field: keyof ChartDailyItem
 
 export function parseTokenInfo(field: 'name' | 'symbol', address?: string, defaultValue?: string) {
   return TOKEN_OVERRIDES[address || '']?.[field] || defaultValue || ''
+}
+
+export function ellipsisAddress(address: string): string {
+  const length = address.length
+  return address.slice(0, 6) + '...' + address.slice(length - 4, length)
 }

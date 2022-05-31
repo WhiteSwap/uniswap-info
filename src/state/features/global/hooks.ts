@@ -4,33 +4,21 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTimeframe } from 'utils'
 import { useActiveNetworkId } from '../application/selectors'
 import { useTimeFrame } from '../application/selectors'
-import {
-  useActiveTokenOneDayPrice,
-  useActiveTokenPrice,
-  useGlobalChartDataSelector,
-  useGlobalTransactionsSelector
-} from './selectors'
-import { setChart, setGlobalData, setPrice, setTransactions } from './slice'
+import { useGlobalChartDataSelector, useGlobalTransactionsSelector } from './selectors'
+import { setChart, setTransactionCount, setPrice, setTransactions } from './slice'
 
-/**
- * Hook that fetches overview data, plus all tokens and pairs for search
- */
-export function useGlobalData() {
+export function useDayTransactionCount() {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const data = useAppSelector(state => state.global[activeNetwork]?.globalData)
-  const price = useActiveTokenPrice()
-  const oneDayPrice = useActiveTokenOneDayPrice()
+  const data = useAppSelector(state => state.global[activeNetwork]?.dayTransactionCount)
 
   useEffect(() => {
     async function fetchData() {
-      const globalData = await DataService.global.getGlobalData(price, oneDayPrice)
-      dispatch(setGlobalData({ data: globalData, networkId: activeNetwork }))
+      const dayTransactionCount = await DataService.transactions.getDayTransactionCount()
+      dispatch(setTransactionCount({ dayTransactionCount, networkId: activeNetwork }))
     }
-    if (price && oneDayPrice) {
-      fetchData()
-    }
-  }, [price, oneDayPrice, activeNetwork])
+    fetchData()
+  }, [activeNetwork])
 
   return data
 }
@@ -95,8 +83,8 @@ export function useFetchActiveTokenPrice() {
 
   useEffect(() => {
     async function checkForPrice() {
-      const [newPrice, newOneDayPrice, priceChange] = await DataService.global.getPrice()
-      dispatch(setPrice({ price: newPrice, oneDayPrice: newOneDayPrice, priceChange, networkId: activeNetwork }))
+      const currentPrice = await DataService.global.getPrice()
+      dispatch(setPrice({ price: currentPrice, networkId: activeNetwork }))
     }
     checkForPrice()
   }, [activeNetwork])

@@ -53,3 +53,11 @@ export const USER_TRANSACTIONS = gql`
     }
   }
 `
+
+export const TRANSACTION_COUNT = gql`
+  query TransactionCount($block: Block_height, $factoryAddress: String!) {
+    whiteSwapFactories(block: $block, where: { id: $factoryAddress }) {
+      txCount
+    }
+  }
+`

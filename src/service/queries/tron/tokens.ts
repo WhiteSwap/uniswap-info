@@ -35,3 +35,9 @@ export const TOKEN = gql`
     }
   }
 `
+
+export const TOKEN_PAIRS = gql`
+  query TokenPairs($tokenAddress: String!) {
+    tokenPairs(id: $tokenAddress)
+  }
+`

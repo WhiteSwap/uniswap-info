@@ -14,11 +14,15 @@ export type Scalars = {
 
 export type RootQuery = {
   __typename?: 'RootQuery'
+  countTransactions: Scalars['Int']
+  lastBlock: Scalars['Int']
   pair?: Maybe<Pair>
   pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
+  tokenPairs?: Maybe<Array<Scalars['String']>>
   tokens?: Maybe<Array<Maybe<Token>>>
-  tokens_collection?: Maybe<TokenCollection>
+  transactions?: Maybe<TransactionsCollection>
+  trxPrice: Scalars['Float']
   whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
 }
 
@@ -27,6 +31,10 @@ export type RootQueryPairArgs = {
 }
 
 export type RootQueryTokenArgs = {
+  id: Scalars['String']
+}
+
+export type RootQueryTokenPairsArgs = {
   id: Scalars['String']
 }
 
@@ -99,11 +107,64 @@ export type Token = {
   volumeChangeUSD: Scalars['Float']
 }
 
-/** Tokens list */
-export type TokenCollection = {
-  __typename?: 'TokenCollection'
-  /** tokens list */
-  tokens?: Maybe<Array<Maybe<Token>>>
+/** Transactions list */
+export type TransactionsCollection = {
+  __typename?: 'TransactionsCollection'
+  /** Burns Transactions */
+  burns?: Maybe<Array<Maybe<Transaction>>>
+  /** Mints Transactions */
+  mints?: Maybe<Array<Maybe<Transaction>>>
+  /** Swaps Transactions */
+  swaps?: Maybe<Array<Maybe<Transaction>>>
+}
+
+/** Transactions list */
+export type TransactionsCollectionBurnsArgs = {
+  limit: Scalars['Int']
+  pairAddress?: InputMaybe<Scalars['String']>
+  tokenAddress?: InputMaybe<Scalars['String']>
+}
+
+/** Transactions list */
+export type TransactionsCollectionMintsArgs = {
+  limit: Scalars['Int']
+  pairAddress?: InputMaybe<Scalars['String']>
+  tokenAddress?: InputMaybe<Scalars['String']>
+}
+
+/** Transactions list */
+export type TransactionsCollectionSwapsArgs = {
+  limit: Scalars['Int']
+  pairAddress?: InputMaybe<Scalars['String']>
+  tokenAddress?: InputMaybe<Scalars['String']>
+}
+
+/** Transaction */
+export type Transaction = {
+  __typename?: 'Transaction'
+  /** Transaction account address */
+  account: Scalars['String']
+  /** Transaction hash */
+  hash: Scalars['String']
+  /** Transaction timestamp */
+  timestamp: Scalars['Int']
+  /** Token one */
+  tokenOne: TokenTransaction
+  /** Token two */
+  tokenTwo: TokenTransaction
+  /** Total Usd */
+  totalUSD: Scalars['Float']
+}
+
+/** Crypto token */
+export type TokenTransaction = {
+  __typename?: 'TokenTransaction'
+  /** Token amount */
+  amount: Scalars['Float']
+  /** Token address */
+  id: Scalars['String']
+  /** Token symbol */
+  symbol: Scalars['String']
 }
 
 /** WhiteSwapDayData for Graph */
@@ -130,6 +191,14 @@ export type GlobalChartQuery = {
     totalLiquidityUSD: number
   }> | null
 }
+
+export type CurrentTrxPriceQueryVariables = Exact<{ [key: string]: never }>
+
+export type CurrentTrxPriceQuery = { __typename?: 'RootQuery'; trxPrice: number }
+
+export type LastBlockQueryVariables = Exact<{ [key: string]: never }>
+
+export type LastBlockQuery = { __typename?: 'RootQuery'; lastBlock: number }
 
 export type PairDataFragment = {
   __typename?: 'Pair'
@@ -268,3 +337,135 @@ export type TokenQuery = {
     txnChange: number
   } | null
 }
+
+export type TokenPairsQueryVariables = Exact<{
+  tokenAddress: Scalars['String']
+}>
+
+export type TokenPairsQuery = { __typename?: 'RootQuery'; tokenPairs?: Array<string> | null }
+
+export type TransactionDetailsFragment = {
+  __typename?: 'Transaction'
+  hash: string
+  timestamp: number
+  totalUSD: number
+  account: string
+  tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+  tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+}
+
+export type GlobalTransactionsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GlobalTransactionsQuery = {
+  __typename?: 'RootQuery'
+  transactions?: {
+    __typename?: 'TransactionsCollection'
+    mints?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    swaps?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    burns?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+  } | null
+}
+
+export type TokenTransactionsQueryVariables = Exact<{
+  tokenAddress: Scalars['String']
+}>
+
+export type TokenTransactionsQuery = {
+  __typename?: 'RootQuery'
+  transactions?: {
+    __typename?: 'TransactionsCollection'
+    mints?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    swaps?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    burns?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+  } | null
+}
+
+export type PairTransactionsQueryVariables = Exact<{
+  pairAddress: Scalars['String']
+}>
+
+export type PairTransactionsQuery = {
+  __typename?: 'RootQuery'
+  transactions?: {
+    __typename?: 'TransactionsCollection'
+    mints?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    swaps?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    burns?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+  } | null
+}
+
+export type TransactionCountQueryVariables = Exact<{ [key: string]: never }>
+
+export type TransactionCountQuery = { __typename?: 'RootQuery'; countTransactions: number }

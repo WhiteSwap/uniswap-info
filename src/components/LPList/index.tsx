@@ -5,7 +5,7 @@ import { Flex } from 'rebass'
 import { useFormatPath } from 'hooks'
 import { CustomLink } from 'components/Link'
 import { Divider } from 'components'
-import { formattedNum } from 'utils'
+import { ellipsisAddress, formattedNum } from 'utils'
 import { TYPE } from 'Theme'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import { RowFixed } from 'components/Row'
@@ -51,9 +51,7 @@ function LPList({ lps, maxItems = 10 }: Props) {
         {!below600 && <DataText>{index}</DataText>}
         <DataText justifyContent="flex-start">
           <CustomLink to={formatPath(`/accounts/${lp.userId}`)}>
-            {below800
-              ? lp.userId.slice(0, 4) + '...' + (below440 ? lp.userId.slice(39, 42) : lp.userId.slice(38, 42))
-              : lp.userId}
+            {below800 ? ellipsisAddress(lp.userId) : lp.userId}
           </CustomLink>
         </DataText>
         <DataText>

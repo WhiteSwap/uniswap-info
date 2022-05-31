@@ -1,4 +1,6 @@
 import { EthereumPair } from 'data/controllers/types/ethTypes'
+import { PairChartItem } from 'service/generated/ethereumGraphql'
+import { PairDayData } from 'state/features/pairs/types'
 import { parseTokenInfo } from 'utils'
 import { calculateApy, calculateDayFees, calculateTokenPrice } from 'utils/pair'
 
@@ -36,6 +38,14 @@ export function pairMapper(payload: EthereumPair, ethPrice?: number): Pair {
     createdAtTimestamp: payload.createdAtTimestamp ? +payload.createdAtTimestamp : 0,
     reserveUSD: payload.reserveUSD ? +payload.reserveUSD : 0
   }
+}
+
+export function pairChartMapper(payload: PairChartItem[]): PairDayData[] {
+  return payload.map(el => ({
+    dailyVolumeUSD: +el.dailyVolumeUSD || 0,
+    date: +el.date || 0,
+    reserveUSD: +el.reserveUSD || 0
+  }))
 }
 
 export function pairListMapper(payload: EthereumPair[], ethPrice: number): Pair[] {
