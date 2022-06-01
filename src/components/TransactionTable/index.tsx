@@ -125,8 +125,8 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             style={{ fontWeight: 700 }}
           >
             {t(getTransactionType(item.type), {
-              tokenOneSymbol: item.tokenTwo.symbol,
-              tokenTwoSymbol: item.tokenOne.symbol
+              tokenOneSymbol: item.tokenOne.symbol,
+              tokenTwoSymbol: item.tokenTwo.symbol
             })}
           </CustomLink>
         </DataText>
