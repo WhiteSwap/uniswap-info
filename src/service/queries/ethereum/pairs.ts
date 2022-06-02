@@ -66,7 +66,7 @@ export const PAIRS_CURRENT = gql`
     }
   }
 `
-// ! need mapped
+
 export const PAIR_DATA = gql`
   ${PAIR_FIELDS}
   query PairData($pairAddress: String!, $block: Block_height) {
@@ -75,7 +75,7 @@ export const PAIR_DATA = gql`
     }
   }
 `
-// ! need mapped
+
 export const PAIRS_BULK = gql`
   ${PAIR_FIELDS}
   query PairsBulk($allPairs: [Bytes]!) {
@@ -85,7 +85,6 @@ export const PAIRS_BULK = gql`
   }
 `
 
-// ! need mapped
 export const PAIRS_HISTORICAL_BULK = gql`
   query PairsHistoricalBulk($pairs: [String]!, $block: Block_height) {
     pairs(first: 200, where: { id_in: $pairs }, block: $block, orderBy: trackedReserveETH, orderDirection: desc) {

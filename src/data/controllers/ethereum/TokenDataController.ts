@@ -209,7 +209,7 @@ export default class TokenDataController implements ITokenDataController {
     // once you have all the timestamps, get the blocks for each timestamp in a bulk query
     let blocks
     try {
-      blocks = await getBlocksFromTimestamps(timestamps, 100)
+      blocks = await getBlocksFromTimestamps(timestamps, 5000)
 
       // catch failing case
       if (!blocks || blocks.length === 0) {

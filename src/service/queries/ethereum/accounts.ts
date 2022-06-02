@@ -26,7 +26,7 @@ export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
     }
   }
 `
-// ! need mapped
+
 export const USER_LIQUIDITY_POSITIONS = gql`
   query LiquidityPositions($user: Bytes!) {
     liquidityPositions(where: { user: $user }) {
