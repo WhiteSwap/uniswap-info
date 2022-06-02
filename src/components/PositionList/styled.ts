@@ -32,7 +32,7 @@ export const List = styled(Box)`
 export const DashGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 5px 0.5fr 1fr 1fr;
+  grid-template-columns: 5px 1.4fr 1fr 1fr;
   grid-template-areas: 'number name uniswap return';
   align-items: flex-start;
   padding: 1rem 2rem;
@@ -109,7 +109,7 @@ export const DataText = styled(Flex)`
 `
 
 export const ButtonsContainer = styled(RowFixed)`
-  @media screen and (max-width: 440px) {
+  @media screen and (max-width: 540px) {
     flex-wrap: wrap;
 
     > a {
