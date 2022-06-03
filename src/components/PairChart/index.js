@@ -1,37 +1,20 @@
 import { useState, useRef, useEffect } from 'react'
-import styled from 'styled-components/macro'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
-import { RowBetween, AutoRow } from '../Row'
-
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from '../../utils'
-import { OptionButton } from '../ButtonStyled'
+import { RowBetween, AutoRow } from 'components/Row'
+import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { OptionButton } from 'components/ButtonStyled'
 import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
-import { timeframeOptions } from '../../constants'
+import { timeframeOptions } from 'constants/index'
 import { useMedia } from 'react-use'
-import { EmptyCard } from '..'
-import DropdownSelect from '../DropdownSelect'
-import CandleStickChart from '../CandleChart'
-import LocalLoader from '../LocalLoader'
+import { EmptyCard } from 'components'
+import DropdownSelect from 'components/DropdownSelect'
+import CandleStickChart from 'components/CandleChart'
+import LocalLoader from 'components/LocalLoader'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-
-const ChartWrapper = styled.div`
-  height: 100%;
-  max-height: 340px;
-
-  @media screen and (max-width: 600px) {
-    min-height: 200px;
-  }
-`
-
-const OptionsRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 40px;
-`
+import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
   VOLUME: 'Volume',
@@ -84,7 +67,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const below1080 = useMedia('(max-width: 1080px)')
   const below700 = useMedia('(max-width: 700px)')
 
-  let utcStartTime = getTimeframe(timeWindow)
+  const utcStartTime = getTimeframe(timeWindow)
   chartData = chartData?.filter(entry => entry.date >= utcStartTime)
 
   if (chartData && chartData.length === 0) {
@@ -126,25 +109,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
         </RowBetween>
       ) : (
         <OptionsRow>
-          <AutoRow gap="6px" style={{ flexWrap: 'nowrap' }}>
-            <OptionButton
-              active={chartFilter === CHART_VIEW.LIQUIDITY}
-              onClick={() => {
-                setTimeWindow(timeframeOptions.ALL_TIME)
-                setChartFilter(CHART_VIEW.LIQUIDITY)
-              }}
-            >
-              {t('liquidity')}
-            </OptionButton>
-            <OptionButton
-              active={chartFilter === CHART_VIEW.VOLUME}
-              onClick={() => {
-                setTimeWindow(timeframeOptions.ALL_TIME)
-                setChartFilter(CHART_VIEW.VOLUME)
-              }}
-            >
-              {t('volume')}
-            </OptionButton>
+          <AutoRow>
             <OptionButton
               active={chartFilter === CHART_VIEW.RATE0}
               onClick={() => {
@@ -164,7 +129,28 @@ const PairChart = ({ address, color, base0, base1 }) => {
               {pairData?.tokenOne ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
             </OptionButton>
           </AutoRow>
-          <AutoRow justify="flex-end" gap="6px" style={{ width: 'auto' }}>
+          <AutoRow justify="flex-end">
+            <OptionButton
+              active={chartFilter === CHART_VIEW.LIQUIDITY}
+              onClick={() => {
+                setTimeWindow(timeframeOptions.ALL_TIME)
+                setChartFilter(CHART_VIEW.LIQUIDITY)
+              }}
+            >
+              {t('liquidity')}
+            </OptionButton>
+            <OptionButton
+              active={chartFilter === CHART_VIEW.VOLUME}
+              onClick={() => {
+                setTimeWindow(timeframeOptions.ALL_TIME)
+                setChartFilter(CHART_VIEW.VOLUME)
+              }}
+            >
+              {t('volume')}
+            </OptionButton>
+          </AutoRow>
+          <AutoRow />
+          <AutoRow justify="flex-end">
             <OptionButton
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
