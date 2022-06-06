@@ -1,37 +1,20 @@
-import { useState, useRef, useEffect } from 'react'
-import styled from 'styled-components/macro'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
-import { RowBetween, AutoRow } from '../Row'
-
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from '../../utils'
-import { OptionButton } from '../ButtonStyled'
+import { RowBetween, AutoRow } from 'components/Row'
+import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { OptionButton } from 'components/ButtonStyled'
 import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
-import { timeframeOptions } from '../../constants'
+import { timeframeOptions } from 'constants/index'
 import { useMedia } from 'react-use'
-import { EmptyCard } from '..'
-import DropdownSelect from '../DropdownSelect'
-import CandleStickChart from '../CandleChart'
-import LocalLoader from '../LocalLoader'
+import { EmptyCard } from 'components'
+import DropdownSelect from 'components/DropdownSelect'
+import CandleStickChart from 'components/CandleChart'
+import LocalLoader from 'components/LocalLoader'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-
-const ChartWrapper = styled.div`
-  height: 100%;
-  max-height: 340px;
-
-  @media screen and (max-width: 600px) {
-    min-height: 200px;
-  }
-`
-
-const OptionsRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 40px;
-`
+import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
   VOLUME: 'Volume',
@@ -54,6 +37,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const isClient = typeof window === 'object'
   const [width, setWidth] = useState(ref?.current?.container?.clientWidth)
   const [height, setHeight] = useState(ref?.current?.container?.clientHeight)
+
   useEffect(() => {
     if (!isClient) {
       return false
@@ -64,7 +48,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [height, isClient, width]) // Empty array ensures that effect is only run on mount and unmount
+  }, [height, isClient, width])
 
   // get data for pair, and rates
   const activeNetworkId = useActiveNetworkId()
@@ -84,8 +68,19 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const below1080 = useMedia('(max-width: 1080px)')
   const below700 = useMedia('(max-width: 700px)')
 
-  let utcStartTime = getTimeframe(timeWindow)
+  const utcStartTime = getTimeframe(timeWindow)
   chartData = chartData?.filter(entry => entry.date >= utcStartTime)
+
+  const rate0 = pairData?.tokenOne ? `${formattedSymbol1}/${formattedSymbol0}` : undefined
+  const rate1 = pairData?.tokenOne ? `${formattedSymbol0}/${formattedSymbol1}` : undefined
+
+  const chartView = useMemo(() => {
+    return {
+      ...CHART_VIEW,
+      RATE0: rate0 || 'Rate 0',
+      RATE1: rate1 || 'Rate 1'
+    }
+  }, [pairData?.tokenOne])
 
   if (chartData && chartData.length === 0) {
     return (
@@ -101,13 +96,13 @@ const PairChart = ({ address, color, base0, base1 }) => {
    * @param {*} val
    */
   function valueFormatter(val) {
-    if (chartFilter === CHART_VIEW.RATE0) {
+    if (chartFilter === chartView.RATE0) {
       return (
         formattedNum(val) +
         `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol1}/${formattedSymbol0}<span>`
       )
     }
-    if (chartFilter === CHART_VIEW.RATE1) {
+    if (chartFilter === chartView.RATE1) {
       return (
         formattedNum(val) +
         `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol0}/${formattedSymbol1}<span>`
@@ -121,50 +116,53 @@ const PairChart = ({ address, color, base0, base1 }) => {
     <ChartWrapper>
       {below700 ? (
         <RowBetween mb={40}>
-          <DropdownSelect options={CHART_VIEW} active={chartFilter} setActive={setChartFilter} color={color} />
+          <DropdownSelect options={chartView} active={chartFilter} setActive={setChartFilter} color={color} />
           <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} color={color} />
         </RowBetween>
       ) : (
         <OptionsRow>
-          <AutoRow gap="6px" style={{ flexWrap: 'nowrap' }}>
+          <AutoRow>
             <OptionButton
-              active={chartFilter === CHART_VIEW.LIQUIDITY}
+              active={chartFilter === chartView.RATE0}
+              onClick={() => {
+                setTimeWindow(timeframeOptions.WEEK)
+                setChartFilter(chartView.RATE0)
+              }}
+            >
+              {rate0 || '-'}
+            </OptionButton>
+            <OptionButton
+              active={chartFilter === chartView.RATE1}
+              onClick={() => {
+                setTimeWindow(timeframeOptions.WEEK)
+                setChartFilter(chartView.RATE1)
+              }}
+            >
+              {rate1 || '-'}
+            </OptionButton>
+          </AutoRow>
+          <AutoRow justify="flex-end">
+            <OptionButton
+              active={chartFilter === chartView.LIQUIDITY}
               onClick={() => {
                 setTimeWindow(timeframeOptions.ALL_TIME)
-                setChartFilter(CHART_VIEW.LIQUIDITY)
+                setChartFilter(chartView.LIQUIDITY)
               }}
             >
               {t('liquidity')}
             </OptionButton>
             <OptionButton
-              active={chartFilter === CHART_VIEW.VOLUME}
+              active={chartFilter === chartView.VOLUME}
               onClick={() => {
                 setTimeWindow(timeframeOptions.ALL_TIME)
-                setChartFilter(CHART_VIEW.VOLUME)
+                setChartFilter(chartView.VOLUME)
               }}
             >
               {t('volume')}
             </OptionButton>
-            <OptionButton
-              active={chartFilter === CHART_VIEW.RATE0}
-              onClick={() => {
-                setTimeWindow(timeframeOptions.WEEK)
-                setChartFilter(CHART_VIEW.RATE0)
-              }}
-            >
-              {pairData?.tokenOne ? formattedSymbol1 + '/' + formattedSymbol0 : '-'}
-            </OptionButton>
-            <OptionButton
-              active={chartFilter === CHART_VIEW.RATE1}
-              onClick={() => {
-                setTimeWindow(timeframeOptions.WEEK)
-                setChartFilter(CHART_VIEW.RATE1)
-              }}
-            >
-              {pairData?.tokenOne ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
-            </OptionButton>
           </AutoRow>
-          <AutoRow justify="flex-end" gap="6px" style={{ width: 'auto' }}>
+          <AutoRow />
+          <AutoRow justify="flex-end">
             <OptionButton
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
@@ -188,7 +186,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
       )}
       {base0 && base1 ? (
         <>
-          {chartFilter === CHART_VIEW.LIQUIDITY && (
+          {chartFilter === chartView.LIQUIDITY && (
             <ResponsiveContainer aspect={aspect}>
               <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
                 <defs>
@@ -206,7 +204,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                   tickFormatter={tick => toNiceDate(tick)}
                   dataKey="date"
                   tick={{ fill: '#9D9FA2' }}
-                  type={'number'}
+                  type="number"
                   domain={['dataMin', 'dataMax']}
                 />
                 <YAxis
@@ -241,7 +239,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                   dot={false}
                   type="monotone"
                   name={' (USD)'}
-                  dataKey={'reserveUSD'}
+                  dataKey="reserveUSD"
                   yAxisId={0}
                   stroke={color}
                   fill="url(#colorUv)"
@@ -249,7 +247,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
               </AreaChart>
             </ResponsiveContainer>
           )}
-          {chartFilter === CHART_VIEW.RATE1 &&
+          {chartFilter === chartView.RATE1 &&
             (hourlyRate1 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
                 <CandleStickChart
@@ -263,7 +261,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
             ) : (
               <LocalLoader />
             ))}
-          {chartFilter === CHART_VIEW.RATE0 &&
+          {chartFilter === chartView.RATE0 &&
             (hourlyRate0 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
                 <CandleStickChart
@@ -277,7 +275,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
             ) : (
               <LocalLoader />
             ))}
-          {chartFilter === CHART_VIEW.VOLUME && (
+          {chartFilter === chartView.VOLUME && (
             <ResponsiveContainer aspect={aspect}>
               <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={chartData}>
                 <XAxis
@@ -289,7 +287,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                   tickFormatter={tick => toNiceDate(tick)}
                   dataKey="date"
                   tick={{ fill: textColor }}
-                  type={'number'}
+                  type="number"
                   domain={['dataMin', 'dataMax']}
                 />
                 <YAxis
@@ -320,7 +318,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 <Bar
                   type="monotone"
                   name={t('volume')}
-                  dataKey={'dailyVolumeUSD'}
+                  dataKey="dailyVolumeUSD"
                   fill={color}
                   yAxisId={0}
                   stroke={color}
