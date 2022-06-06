@@ -71,11 +71,14 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const utcStartTime = getTimeframe(timeWindow)
   chartData = chartData?.filter(entry => entry.date >= utcStartTime)
 
+  const rate0 = pairData?.tokenOne ? `${formattedSymbol1}/${formattedSymbol0}` : undefined
+  const rate1 = pairData?.tokenOne ? `${formattedSymbol0}/${formattedSymbol1}` : undefined
+
   const chartView = useMemo(() => {
     return {
       ...CHART_VIEW,
-      RATE0: pairData?.tokenOne ? formattedSymbol1 + '/' + formattedSymbol0 : 'Rate 0',
-      RATE1: pairData?.tokenOne ? formattedSymbol0 + '/' + formattedSymbol1 : 'Rate 1'
+      RATE0: rate0 || 'Rate 0',
+      RATE1: rate1 || 'Rate 1'
     }
   }, [pairData?.tokenOne])
 
@@ -126,7 +129,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 setChartFilter(chartView.RATE0)
               }}
             >
-              {pairData?.tokenOne ? formattedSymbol1 + '/' + formattedSymbol0 : '-'}
+              {rate0 || '-'}
             </OptionButton>
             <OptionButton
               active={chartFilter === chartView.RATE1}
@@ -135,7 +138,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 setChartFilter(chartView.RATE1)
               }}
             >
-              {pairData?.tokenOne ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
+              {rate1 || '-'}
             </OptionButton>
           </AutoRow>
           <AutoRow justify="flex-end">
