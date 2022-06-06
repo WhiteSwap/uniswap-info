@@ -206,7 +206,7 @@ const TokenChart = ({ address, color, base }) => {
               tickFormatter={tick => toNiceDate(tick)}
               dataKey="date"
               tick={{ fill: textColor }}
-              type={'number'}
+              type="number"
               domain={['dataMin', 'dataMax']}
             />
             <YAxis
@@ -230,14 +230,13 @@ const TokenChart = ({ address, color, base }) => {
               contentStyle={{
                 padding: '10px 14px',
                 borderRadius: 10,
-                borderColor: color,
-                color: 'black'
+                borderColor: color
               }}
               wrapperStyle={{ top: '-70px', left: '-10px' }}
             />
             <Area
-              key={'other'}
-              dataKey={'totalLiquidityUSD'}
+              key="other"
+              dataKey="totalLiquidityUSD"
               stackId="2"
               strokeWidth={1}
               dot={false}
@@ -268,8 +267,8 @@ const TokenChart = ({ address, color, base }) => {
                 minTickGap={120}
                 tickFormatter={tick => toNiceDate(tick)}
                 dataKey="date"
-                tick={{ fill: 'textColor' }}
-                type={'number'}
+                tick={{ fill: textColor }}
+                type="number"
                 domain={domain}
               />
               <YAxis
