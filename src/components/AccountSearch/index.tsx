@@ -39,7 +39,7 @@ function AccountSearch({ small }: Props) {
   }
 
   return (
-    <AutoColumn gap={'1rem'}>
+    <AutoColumn gap="1rem">
       {!small && (
         <AutoRow style={below440 ? { flexDirection: 'column' } : {}}>
           <Wrapper>
@@ -57,7 +57,7 @@ function AccountSearch({ small }: Props) {
         </AutoRow>
       )}
 
-      <AutoColumn gap={'12px'}>
+      <AutoColumn gap="12px">
         {!small && (
           <Panel>
             <DashGrid>
