@@ -19,7 +19,8 @@ export default class PairDataController implements IPairDataController {
   }
 
   async getPairList() {
-    const response = await client.query<PairListQuery>({ query: PAIR_LIST })
+    // TODO: change token id to token address. temporary set no-cache fetch-policy because apollo cache crashes with multiple id's
+    const response = await client.query<PairListQuery>({ query: PAIR_LIST, fetchPolicy: 'no-cache' })
     return pairListMapper(response.data)
   }
 
