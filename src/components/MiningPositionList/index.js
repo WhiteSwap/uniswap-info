@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useMedia } from 'react-use'
-import dayjs from 'dayjs'
-import LocalLoader from '../LocalLoader'
-import utc from 'dayjs/plugin/utc'
+import LocalLoader from 'components/LocalLoader'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components/macro'
-import Link, { CustomLink } from '../Link'
-import { Divider } from '..'
-import DoubleTokenLogo from '../DoubleLogo'
-import { withRouter } from 'react-router-dom'
-import { formattedNum, getUniswapAppLink } from '../../utils'
-import { AutoColumn } from '../Column'
-import { RowFixed } from '../Row'
-import { ButtonLight } from '../ButtonStyled'
-import { TYPE } from '../../Theme'
-import FormattedName from '../FormattedName'
-import Panel from '../Panel'
+import { useFormatPath } from 'hooks'
+import Link, { CustomLink } from 'components/Link'
+import { Divider } from 'components'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import { formattedNum, getWhiteSwapAppLink } from '../../utils'
+import { AutoColumn } from 'components/Column'
+import { RowFixed } from 'components/Row'
+import { ButtonLight } from 'components/ButtonStyled'
+import { TYPE } from 'Theme'
+import FormattedName from 'components/FormattedName'
+import Panel from 'components/Panel'
 import { transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
-
-dayjs.extend(utc)
+import { useActiveNetworkId } from 'state/features/application/selectors'
 
 const PageButtons = styled.div`
   width: 100%;
@@ -28,13 +25,13 @@ const PageButtons = styled.div`
   margin-top: 2em;
 
   @media screen and (max-width: 440px) {
-    margin-top: .75rem;
+    margin-top: 0.75rem;
   }
 `
 
 const Arrow = styled.div`
   color: ${({ theme }) => theme.primary1};
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
+  opacity: ${props => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
   :hover {
@@ -82,7 +79,7 @@ const DashGrid = styled.div`
   }
 
   @media screen and (max-width: 440px) {
-    padding: .75rem;
+    padding: 0.75rem;
   }
 `
 
@@ -121,11 +118,13 @@ const DataText = styled(Flex)`
 
 const SORT_FIELD = {
   VALUE: 'VALUE',
-  UNISWAP_RETURN: 'UNISWAP_RETURN',
+  UNISWAP_RETURN: 'UNISWAP_RETURN'
 }
 
 function MiningPositionList({ miningPositions }) {
   const { t } = useTranslation()
+  const formatPath = useFormatPath()
+  const activeNetworkId = useActiveNetworkId()
 
   // const below500 = useMedia('(max-width: 500px)')
   const below440 = useMedia('(max-width: 440px)')
@@ -174,17 +173,21 @@ function MiningPositionList({ miningPositions }) {
             <DoubleTokenLogo size={16} a0={firstPairAddress} a1={secondPairAddress} margin={!below740} />
           </AutoColumn>
           <AutoColumn gap="8px" justify="flex-start" style={{ marginLeft: '20px' }}>
-            <CustomLink to={'/pair/' + pairAddress}>
-              <TYPE.main style={{ whiteSpace: 'nowrap' }} to={'/pair/'}>
+            <CustomLink to={formatPath(`/pairs/${pairAddress}`)}>
+              <TYPE.main style={{ whiteSpace: 'nowrap' }} to={formatPath(`/pairs/`)}>
                 <FormattedName text={firstPairName + '-' + secondPairName} maxCharacters={below740 ? 10 : 18} />
               </TYPE.main>
             </CustomLink>
             <RowFixed gap="8px" justify="flex-start">
-              <Link external href={getUniswapAppLink(firstPairAddress)} style={{ marginRight: '.5rem' }}>
+              <Link
+                external
+                href={getWhiteSwapAppLink(activeNetworkId, firstPairAddress)}
+                style={{ marginRight: '.5rem' }}
+              >
                 <ButtonLight style={{ padding: '4px 6px', borderRadius: '4px' }}>Stake More</ButtonLight>
               </Link>
               {pairPercentage > 0 && (
-                <Link external href={getUniswapAppLink(firstPairAddress)}>
+                <Link external href={getWhiteSwapAppLink(activeNetworkId, firstPairAddress)}>
                   <ButtonLight style={{ padding: '4px 6px', borderRadius: '4px' }}>Withdraw</ButtonLight>
                 </Link>
               )}
@@ -246,11 +249,14 @@ function MiningPositionList({ miningPositions }) {
     <ListWrapper>
       <Panel
         style={{
-          marginTop: below440 ? '.75rem' : '1.5rem', 
+          marginTop: below440 ? '.75rem' : '1.5rem',
           padding: 0
         }}
       >
-        <DashGrid center={true} style={{ height: 'fit-content', padding: below440 ? '.75rem' : '1rem 2rem', border: 'unset' }}>
+        <DashGrid
+          center={true}
+          style={{ height: 'fit-content', padding: below440 ? '.75rem' : '1rem 2rem', border: 'unset' }}
+        >
           {!below740 && (
             <Flex alignItems="flex-start" justifyContent="flexStart">
               <ClickableText area="number">#</ClickableText>
@@ -262,12 +268,13 @@ function MiningPositionList({ miningPositions }) {
           <Flex alignItems="center" justifyContent="flexEnd">
             <ClickableText
               area="uniswap"
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.VALUE)
                 setSortDirection(sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection)
               }}
             >
-              {below740 ? t('value') : t('liquidity')} {sortedColumn === SORT_FIELD.VALUE ? (!sortDirection ? '↑' : '↓') : ''}
+              {below740 ? t('value') : t('liquidity')}{' '}
+              {sortedColumn === SORT_FIELD.VALUE ? (!sortDirection ? '↑' : '↓') : ''}
             </ClickableText>
           </Flex>
         </DashGrid>
@@ -287,4 +294,4 @@ function MiningPositionList({ miningPositions }) {
   )
 }
 
-export default withRouter(MiningPositionList)
+export default MiningPositionList

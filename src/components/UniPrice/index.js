@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import Panel from '../Panel'
 import { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
 import { TYPE } from '../../Theme'
-import { usePairData } from '../../contexts/PairData'
+import { usePairData } from 'state/features/pairs/hooks'
 import { formattedNum } from '../../utils'
 
 const PriceCard = styled(Panel)`
@@ -24,9 +24,9 @@ function formatPercent(rawPercent) {
 }
 
 export default function UniPrice() {
-  const daiPair = usePairData('0xa478c2975ab1ea89e8196811f51a7b7ade33eb11')
-  const usdcPair = usePairData('0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc')
-  const usdtPair = usePairData('0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852')
+  const daiPair = usePairData('0xfbc24cd5dea5570f1d65022009f7ad9f7d3f8ade')
+  const usdcPair = usePairData('0xac3b98cb04a320c71a9929dffefe558daf217a79')
+  const usdtPair = usePairData('0xa029a744b4e44e22f68a1bb9a848caafbf6bb233')
 
   const totalLiquidity = useMemo(() => {
     return daiPair && usdcPair && usdtPair
@@ -34,27 +34,27 @@ export default function UniPrice() {
       : 0
   }, [daiPair, usdcPair, usdtPair])
 
-  const daiPerEth = daiPair ? parseFloat(daiPair.token0Price).toFixed(2) : '-'
-  const usdcPerEth = usdcPair ? parseFloat(usdcPair.token0Price).toFixed(2) : '-'
-  const usdtPerEth = usdtPair ? parseFloat(usdtPair.token1Price).toFixed(2) : '-'
+  const daiPerEth = daiPair?.tokenTwo ? formattedNum(daiPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
+  const usdcPerEth = usdcPair?.tokenTwo ? formattedNum(usdcPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
+  const usdtPerEth = usdtPair?.tokenOne ? formattedNum(usdtPair.tokenOne.priceUSD.toFixed(2), true) : '-'
 
   return (
     <PriceCard>
       <AutoColumn gap="10px">
         <RowFixed>
-          <TYPE.main>DAI/ETH: {formattedNum(daiPerEth, true)}</TYPE.main>
+          <TYPE.main>DAI/ETH: {daiPerEth}</TYPE.main>
           <TYPE.light style={{ marginLeft: '10px' }}>
             {daiPair && totalLiquidity ? formatPercent(daiPair.trackedReserveUSD / totalLiquidity) : '-'}
           </TYPE.light>
         </RowFixed>
         <RowFixed>
-          <TYPE.main>USDC/ETH: {formattedNum(usdcPerEth, true)}</TYPE.main>
+          <TYPE.main>USDC/ETH: {usdcPerEth}</TYPE.main>
           <TYPE.light style={{ marginLeft: '10px' }}>
             {usdcPair && totalLiquidity ? formatPercent(usdcPair.trackedReserveUSD / totalLiquidity) : '-'}
           </TYPE.light>
         </RowFixed>
         <RowFixed>
-          <TYPE.main>USDT/ETH: {formattedNum(usdtPerEth, true)}</TYPE.main>
+          <TYPE.main>USDT/ETH: {usdtPerEth}</TYPE.main>
           <TYPE.light style={{ marginLeft: '10px' }}>
             {usdtPair && totalLiquidity ? formatPercent(usdtPair.trackedReserveUSD / totalLiquidity) : '-'}
           </TYPE.light>

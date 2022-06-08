@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
 
-import { formatTime, formattedNum, urls } from '../../utils'
+import PropTypes from 'prop-types'
+import { formatTime, formattedNum, getBlockChainScanLink, ellipsisAddress } from '../../utils'
 import { useMedia } from 'react-use'
-import { useCurrentCurrency } from '../../contexts/Application'
 import { RowFixed, RowBetween } from '../Row'
 
 import LocalLoader from '../LocalLoader'
@@ -18,8 +16,7 @@ import { TYPE } from '../../Theme'
 import { transparentize } from 'polished'
 import Panel from '../Panel'
 import { useTranslation } from 'react-i18next'
-
-dayjs.extend(utc)
+import { useActiveNetworkId } from 'state/features/application/selectors'
 
 const PageButtons = styled.div`
   width: 100%;
@@ -28,13 +25,13 @@ const PageButtons = styled.div`
   margin-top: 2em;
 
   @media screen and (max-width: 440px) {
-    margin-top: .75rem;
+    margin-top: 0.75rem;
   }
 `
 
 const Arrow = styled.div`
-  color: #6681A7;
-  opacity: ${(props) => (props.faded ? 0.3 : 1)};
+  color: #6681a7;
+  opacity: ${props => (props.faded ? 0.3 : 1)};
   padding: 0 20px;
   user-select: none;
   :hover {
@@ -92,7 +89,7 @@ const DashGrid = styled.div`
   }
 
   @media screen and (max-width: 440px) {
-    padding: .75rem;
+    padding: 0.75rem;
   }
 `
 
@@ -142,7 +139,7 @@ const DataText = styled(Flex)`
 
 const SortText = styled.button`
   cursor: pointer;
-  font-weight: ${({ active, theme }) => (active ? 500 : 400)};
+  font-weight: ${({ active }) => (active ? 500 : 400)};
   margin-right: 0.75rem !important;
   border: none;
   background-color: transparent;
@@ -164,14 +161,14 @@ const SORT_FIELD = {
   VALUE: 'amountUSD',
   AMOUNT0: 'token0Amount',
   AMOUNT1: 'token1Amount',
-  TIMESTAMP: 'timestamp',
+  TIMESTAMP: 'timestamp'
 }
 
 const TXN_TYPE = {
   ALL: 'All',
   SWAP: 'Swaps',
   ADD: 'Adds',
-  REMOVE: 'Removes',
+  REMOVE: 'Removes'
 }
 
 const ITEMS_PER_PAGE = 10
@@ -190,9 +187,8 @@ function getTransactionType(event, symbol0, symbol1) {
       return ''
   }
 }
-
 // @TODO rework into virtualized list
-function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
+function TxnList({ transactions, color }) {
   const { t } = useTranslation()
 
   // page state
@@ -204,8 +200,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.TIMESTAMP)
   const [filteredItems, setFilteredItems] = useState()
   const [txFilter, setTxFilter] = useState(TXN_TYPE.ALL)
-
-  const [currency] = useCurrentCurrency()
+  const activeNetworkId = useActiveNetworkId()
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
@@ -217,7 +212,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
     if (transactions && transactions.mints && transactions.burns && transactions.swaps) {
       let newTxns = []
       if (transactions.mints.length > 0) {
-        transactions.mints.map((mint) => {
+        transactions.mints.map(mint => {
           let newTxn = {}
           newTxn.hash = mint.transaction.id
           newTxn.timestamp = mint.transaction.timestamp
@@ -232,7 +227,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         })
       }
       if (transactions.burns.length > 0) {
-        transactions.burns.map((burn) => {
+        transactions.burns.map(burn => {
           let newTxn = {}
           newTxn.hash = burn.transaction.id
           newTxn.timestamp = burn.transaction.timestamp
@@ -247,7 +242,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         })
       }
       if (transactions.swaps.length > 0) {
-        transactions.swaps.map((swap) => {
+        transactions.swaps.map(swap => {
           const netToken0 = swap.amount0In - swap.amount0Out
           const netToken1 = swap.amount1In - swap.amount1Out
 
@@ -275,7 +270,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         })
       }
 
-      const filtered = newTxns.filter((item) => {
+      const filtered = newTxns.filter(item => {
         if (txFilter !== TXN_TYPE.ALL) {
           return item.type === txFilter
         }
@@ -324,13 +319,15 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
     return (
       <DashGrid>
         <DataText area="txn" fontWeight="500">
-          <CustomLink external href={urls.showTransaction(item.hash)} style={{ fontWeight: 700 }}>
+          <CustomLink
+            external
+            href={getBlockChainScanLink(activeNetworkId, item.hash, 'transaction')}
+            style={{ fontWeight: 700 }}
+          >
             {getTransactionType(item.type, item.token1Symbol, item.token0Symbol)}
           </CustomLink>
         </DataText>
-        <DataText area="value">
-          {currency === 'ETH' ? 'Ξ ' + formattedNum(item.valueETH) : formattedNum(item.amountUSD, true)}
-        </DataText>
+        <DataText area="value">{formattedNum(item.amountUSD, true)}</DataText>
         {!below780 && (
           <>
             <DataText area="amountOther">
@@ -345,8 +342,8 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         )}
         {!below1080 && (
           <DataText area="account">
-            <CustomLink external href={'https://etherscan.io/address/' + item.account}>
-              {item.account && item.account.slice(0, 6) + '...' + item.account.slice(38, 42)}
+            <CustomLink external href={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
+              {item.account && ellipsisAddress(item.account)}
             </CustomLink>
           </DataText>
         )}
@@ -359,7 +356,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
     <>
       <Panel
         style={{
-          marginTop: below440 ? '.75rem' : '1.5rem', 
+          marginTop: below440 ? '.75rem' : '1.5rem',
           padding: 0
         }}
       >
@@ -409,7 +406,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
             <ClickableText
               color="textDim"
               area="value"
-              onClick={(e) => {
+              onClick={() => {
                 setSortedColumn(SORT_FIELD.VALUE)
                 setSortDirection(sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection)
               }}
@@ -427,8 +424,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
                   setSortDirection(sortedColumn !== SORT_FIELD.AMOUNT0 ? true : !sortDirection)
                 }}
               >
-                {symbol0Override ? symbol0Override + ` ${t('amount')}` : t('tokenAmount')}{' '}
-                {sortedColumn === SORT_FIELD.AMOUNT0 ? (sortDirection ? '↑' : '↓') : ''}
+                {t('tokenAmount')} {sortedColumn === SORT_FIELD.AMOUNT0 ? (sortDirection ? '↑' : '↓') : ''}
               </ClickableText>
             </Flex>
           )}
@@ -443,8 +439,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
                     setSortDirection(sortedColumn !== SORT_FIELD.AMOUNT1 ? true : !sortDirection)
                   }}
                 >
-                  {symbol1Override ? symbol1Override + ` ${t('amount')}` : t('tokenAmount')}{' '}
-                  {sortedColumn === SORT_FIELD.AMOUNT1 ? (sortDirection ? '↑' : '↓') : ''}
+                  {t('tokenAmount')} {sortedColumn === SORT_FIELD.AMOUNT1 ? (sortDirection ? '↑' : '↓') : ''}
                 </ClickableText>
               </Flex>
             )}
@@ -487,7 +482,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
       </Panel>
       <PageButtons>
         <div
-          onClick={(e) => {
+          onClick={() => {
             setPage(page === 1 ? page : page - 1)
           }}
         >
@@ -495,7 +490,7 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
         </div>
         <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
         <div
-          onClick={(e) => {
+          onClick={() => {
             setPage(page === maxPage ? page : page + 1)
           }}
         >
@@ -504,6 +499,11 @@ function TxnList({ transactions, symbol0Override, symbol1Override, color }) {
       </PageButtons>
     </>
   )
+}
+
+TxnList.propTypes = {
+  transactions: PropTypes.any,
+  color: PropTypes.string
 }
 
 export default TxnList
