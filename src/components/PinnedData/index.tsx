@@ -1,57 +1,29 @@
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import { RowBetween, RowFixed } from '../Row'
-import { AutoColumn } from '../Column'
-import { TYPE } from '../../Theme'
+import { RowBetween, RowFixed } from 'components/Row'
+import { AutoColumn } from 'components/Column'
+import { TYPE } from 'Theme'
 import { useSavedTokens, useSavedPairs } from 'state/features/user/hooks'
 import { useFormatPath } from 'hooks'
-import { Hover } from '..'
-import TokenLogo from '../TokenLogo'
-import AccountSearch from '../AccountSearch'
+import { Hover } from 'components'
+import TokenLogo from 'components/TokenLogo'
+import AccountSearch from 'components/AccountSearch'
 import { Bookmark, ChevronRight, X } from 'react-feather'
-import { ButtonFaded } from '../ButtonStyled'
-import FormattedName from '../FormattedName'
+import { ButtonFaded } from 'components/ButtonStyled'
+import FormattedName from 'components/FormattedName'
 import { useTranslation } from 'react-i18next'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { SupportedNetwork } from 'constants/networks'
+import { RightColumn, SavedButton, ScrollableDiv, StyledIcon } from './styled'
 
-const RightColumn = styled.div`
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
-  width: ${({ open }) => (open ? '12.5rem' : '4rem')};
-  padding: 1.25rem;
-  border-left: ${({ theme }) => '1px solid' + theme.bg3};
-  background-color: ${({ theme }) => theme.bg1};
-  z-index: 9999;
-  overflow: auto;
+type Props = {
+  open: boolean
+  setSavedOpen: (value: boolean) => void
+}
 
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const SavedButton = styled(RowBetween)`
-  padding-bottom: ${({ open }) => open && '20px'};
-  border-bottom: ${({ theme, open }) => open && '1px solid' + theme.bg3};
-  margin-bottom: ${({ open }) => open && '1.25rem'};
-
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const ScrollableDiv = styled(AutoColumn)`
-  overflow: auto;
-  padding-bottom: 60px;
-`
-
-const StyledIcon = styled.div`
-  color: ${({ theme }) => theme.text2};
-`
-
-function PinnedData({ open, setSavedOpen }) {
+const PinnedData = ({ open, setSavedOpen }: Props) => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
+  const activeNetwork = useActiveNetworkId()
 
   const [savedPairs, , removePair] = useSavedPairs()
   const [savedTokens, , removeToken] = useSavedTokens()
@@ -65,21 +37,21 @@ function PinnedData({ open, setSavedOpen }) {
       </SavedButton>
     </RightColumn>
   ) : (
-    <RightColumn gap="1rem" open={open}>
+    <RightColumn open={open}>
       <SavedButton onClick={() => setSavedOpen(false)} open={open}>
         <RowFixed>
           <StyledIcon>
             <Bookmark size={16} />
           </StyledIcon>
-          <TYPE.main ml={'4px'}>{t('saved')}</TYPE.main>
+          <TYPE.main ml="4px">{t('saved')}</TYPE.main>
         </RowFixed>
         <StyledIcon>
           <ChevronRight />
         </StyledIcon>
       </SavedButton>
-      <AccountSearch small={true} />
+      {activeNetwork !== SupportedNetwork.TRON ? <AccountSearch small={true} /> : null}
       <AutoColumn gap="40px" style={{ marginTop: '2rem' }}>
-        <AutoColumn gap={'12px'}>
+        <AutoColumn gap="12px">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
           {Object.keys(savedPairs).filter(key => {
             return !!savedPairs[key]
@@ -115,7 +87,7 @@ function PinnedData({ open, setSavedOpen }) {
             <TYPE.light>{t('pinnedPairsHere')}</TYPE.light>
           )}
         </AutoColumn>
-        <ScrollableDiv gap={'12px'}>
+        <ScrollableDiv gap="12px">
           <TYPE.main>{t('pinnedTokens')}</TYPE.main>
           {Object.keys(savedTokens).filter(key => {
             return !!savedTokens[key]
@@ -130,9 +102,9 @@ function PinnedData({ open, setSavedOpen }) {
                   <RowBetween key={address}>
                     <ButtonFaded as={Link} to={formatPath(`/tokens/${address}`)}>
                       <RowFixed>
-                        <TokenLogo address={address} size={'14px'} />
-                        <TYPE.header ml={'6px'}>
-                          <FormattedName text={token.symbol} maxCharacters={12} fontSize={'12px'} />
+                        <TokenLogo address={address} size="14px" />
+                        <TYPE.header ml="6px">
+                          <FormattedName text={token.symbol} maxCharacters={12} fontSize="12px" />
                         </TYPE.header>
                       </RowFixed>
                     </ButtonFaded>
