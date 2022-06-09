@@ -4,6 +4,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import GlobalPage from 'pages/GlobalPage'
 import TokenPage from 'pages/TokenPage'
 import PairPage from 'pages/PairPage'
+import * as Sentry from '@sentry/react'
 import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
 import { useFetchPairs } from 'state/features/pairs/hooks'
 import { useFetchTokens } from 'state/features/token/hooks'
@@ -82,6 +83,8 @@ const WarningBanner = styled.div`
 
 const BLOCK_DIFFERENCE_THRESHOLD = 30
 
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes)
+
 function App() {
   const [savedOpen, setSavedOpen] = useState(false)
 
@@ -112,7 +115,7 @@ function App() {
           <ContentWrapper open={savedOpen}>
             <Navigation />
             <Main id="center">
-              <Routes>
+              <SentryRoutes>
                 <Route path="/:networkID" element={<GlobalPage />} />
                 <Route path="/:networkID/tokens" element={<AllTokensPage />} />
                 <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
@@ -125,7 +128,7 @@ function App() {
                   </>
                 ) : undefined}
                 <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
-              </Routes>
+              </SentryRoutes>
             </Main>
             <Right open={savedOpen}>
               <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
@@ -139,4 +142,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.withProfiler(App)
