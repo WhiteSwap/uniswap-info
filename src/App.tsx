@@ -20,7 +20,7 @@ import { useLatestBlocks } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
-import ErrorBoundary from 'components/ErrorBoundary'
+import FallbackError from 'components/FallbackError'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -103,7 +103,7 @@ function App() {
 
   return (
     <AppWrapper>
-      <ErrorBoundary>
+      <Sentry.ErrorBoundary fallback={FallbackError}>
         {showWarning && (
           <WarningWrapper>
             <WarningBanner>
@@ -137,7 +137,7 @@ function App() {
         ) : (
           <LocalLoader fullscreen />
         )}
-      </ErrorBoundary>
+      </Sentry.ErrorBoundary>
     </AppWrapper>
   )
 }
