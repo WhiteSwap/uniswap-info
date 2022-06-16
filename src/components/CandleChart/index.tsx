@@ -132,7 +132,7 @@ const CandleStickChart = ({
     <ChartWrapper>
       <div ref={chartContainerRef}>
         <TooltipPrice>
-          {tooltipData?.price ? tooltipData.price : valueFormatter(base)}
+          ${tooltipData?.price ? tooltipData.price : valueFormatter(base)}
           {tooltipData?.time ? <TimeSpan>{tooltipData.time}</TimeSpan> : null}
         </TooltipPrice>
       </div>
