@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
@@ -68,22 +68,6 @@ const TokenChart = ({ address, color, base }: Props) => {
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22
 
   const filteredChartData = chartData?.filter(entry => entry.date >= utcStartTime)
-
-  // update the width on a window resize
-  const ref = useRef<HTMLDivElement>(null)
-  const isClient = typeof window === 'object'
-  const [width, setWidth] = useState(ref?.current?.offsetWidth)
-
-  useEffect(() => {
-    if (!isClient) {
-      return
-    }
-    function handleResize() {
-      setWidth(ref?.current?.offsetWidth ?? width)
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [isClient, width])
 
   return (
     <ChartWrapper>
@@ -276,11 +260,7 @@ const TokenChart = ({ address, color, base }: Props) => {
             </AreaChart>
           </ResponsiveContainer>
         ) : priceData ? (
-          <>
-            <ResponsiveContainer aspect={aspect} ref={ref}>
-              <CandleStickChart data={priceData} base={base} />
-            </ResponsiveContainer>
-          </>
+          <CandleStickChart data={priceData} base={base} />
         ) : (
           <LocalLoader />
         ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, memo } from 'react'
 import { createChart, CrosshairMode, CandlestickData, IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import dayjs from 'dayjs'
 import { formattedNum } from 'utils'
@@ -11,19 +11,12 @@ type Props = {
   width?: number
   height?: number
   base: number
-  margin?: boolean
   valueFormatter?: (val?: string | number) => string | number
 }
 
 type TooltipDataType = { price: string; time: string }
 
-const CandleStickChart = ({
-  data,
-  height = 300,
-  base,
-  // margin = true,
-  valueFormatter = val => formattedNum(val)
-}: Props) => {
+const CandleStickChart = ({ data, height = 300, base, valueFormatter = val => formattedNum(val) }: Props) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi>()
   const candlestickRef = useRef<ISeriesApi<'Candlestick'>>()
@@ -42,11 +35,13 @@ const CandleStickChart = ({
       }
     })
     if (mappedData && mappedData.length > 0) {
+      const { close } = mappedData[mappedData.length - 1]
+
       mappedData.push({
         time: dayjs().unix() as UTCTimestamp,
-        open: mappedData[mappedData.length - 1].close,
-        high: Math.max(base, mappedData[mappedData.length - 1].close),
-        low: Math.min(base, mappedData[mappedData.length - 1].close),
+        open: close,
+        high: Math.max(base, close),
+        low: Math.min(base, close),
         close: base
       })
     }
@@ -116,15 +111,15 @@ const CandleStickChart = ({
     chartRef.current.timeScale().fitContent()
 
     return () => {
+      window.removeEventListener('resize', handleResize)
       chartRef.current?.unsubscribeCrosshairMove(handleCrosshairMove)
-      window.addEventListener('resize', handleResize)
       chartRef.current?.remove()
     }
   }, [])
 
   useEffect(() => {
+    chartRef.current?.timeScale().scrollToPosition(0, false)
     candlestickRef.current?.setData(formattedData)
-    chartRef.current?.timeScale().scrollToPosition(0, true)
     chartRef.current?.timeScale().fitContent()
   }, [formattedData.length])
 
@@ -147,4 +142,4 @@ const CandleStickChart = ({
   )
 }
 
-export default CandleStickChart
+export default memo(CandleStickChart)
