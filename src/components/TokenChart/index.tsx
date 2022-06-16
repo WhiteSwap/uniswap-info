@@ -27,92 +27,63 @@ const DATA_FREQUENCY = {
   LINE: 'LINE'
 }
 
-const TokenChart = ({ address, color, base }) => {
+type Props = {
+  address: string
+  color: string
+  base: number
+}
+
+const TokenChart = ({ address, color, base }: Props) => {
   const { t } = useTranslation()
-  // settings for the window and candle width
-  const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE)
-  const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR)
 
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
+  const below1080 = useMedia('(max-width: 1080px)')
+  const below600 = useMedia('(max-width: 600px)')
 
-  // reset view on new address
+  const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE)
+  const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR)
+
   const addressPrev = usePrevious(address)
+
   useEffect(() => {
     if (address !== addressPrev && addressPrev) {
       setChartFilter(CHART_VIEW.LIQUIDITY)
     }
   }, [address, addressPrev])
 
-  let chartData = useTokenChartData(address)
+  const chartData = useTokenChartData(address)
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK)
-  const prevWindow = usePrevious(timeWindow)
 
-  // hourly and daily price data based on the current time window
-  const hourlyWeek = useTokenPriceData(address, timeframeOptions.WEEK, 3600)
-  const hourlyMonth = useTokenPriceData(address, timeframeOptions.MONTH, 3600)
-  const hourlyAll = useTokenPriceData(address, timeframeOptions.ALL_TIME, 3600)
-  const dailyWeek = useTokenPriceData(address, timeframeOptions.WEEK, 86400)
-  const dailyMonth = useTokenPriceData(address, timeframeOptions.MONTH, 86400)
-  const dailyAll = useTokenPriceData(address, timeframeOptions.ALL_TIME, 86400)
+  const interval = frequency === DATA_FREQUENCY.DAY ? 86400 : 3600
+  const priceData = useTokenPriceData(address, timeWindow, interval)
 
-  const priceData =
-    timeWindow === timeframeOptions.MONTH
-      ? // monthly selected
-        frequency === DATA_FREQUENCY.DAY
-        ? dailyMonth
-        : hourlyMonth
-      : // weekly selected
-      timeWindow === timeframeOptions.WEEK
-      ? frequency === DATA_FREQUENCY.DAY
-        ? dailyWeek
-        : hourlyWeek
-      : // all time selected
-      frequency === DATA_FREQUENCY.DAY
-      ? dailyAll
-      : hourlyAll
+  const utcStartTime = getTimeframe(timeWindow)
 
-  // switch to hourly data when switched to week window
-  useEffect(() => {
-    if (timeWindow === timeframeOptions.WEEK && prevWindow && prevWindow !== timeframeOptions.WEEK) {
-      setFrequency(DATA_FREQUENCY.HOUR)
-    }
-  }, [prevWindow, timeWindow])
-
-  // switch to daily data if switche to month or all time view
-  useEffect(() => {
-    if (timeWindow === timeframeOptions.MONTH && prevWindow && prevWindow !== timeframeOptions.MONTH) {
-      setFrequency(DATA_FREQUENCY.DAY)
-    }
-    if (timeWindow === timeframeOptions.ALL_TIME && prevWindow && prevWindow !== timeframeOptions.ALL_TIME) {
-      setFrequency(DATA_FREQUENCY.DAY)
-    }
-  }, [prevWindow, timeWindow])
-
-  const below1080 = useMedia('(max-width: 1080px)')
-  const below600 = useMedia('(max-width: 600px)')
-
-  let utcStartTime = getTimeframe(timeWindow)
-  const domain = [dataMin => (dataMin > utcStartTime ? dataMin : utcStartTime), 'dataMax']
+  const domain = ([dataMin, dataMax]: [number, number], allowDataOverflow: boolean): [number, number] => [
+    +dataMin > utcStartTime && allowDataOverflow ? dataMin : utcStartTime,
+    dataMax
+  ]
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22
 
-  chartData = chartData?.filter(entry => entry.date >= utcStartTime)
+  const filteredChartData = chartData?.filter(entry => entry.date >= utcStartTime)
 
   // update the width on a window resize
-  const ref = useRef()
+  const ref = useRef<HTMLDivElement>(null)
   const isClient = typeof window === 'object'
-  const [width, setWidth] = useState(ref?.current?.container?.clientWidth)
+  const [width, setWidth] = useState(ref?.current?.offsetWidth)
+
   useEffect(() => {
     if (!isClient) {
-      return false
+      return
     }
     function handleResize() {
-      setWidth(ref?.current?.container?.clientWidth ?? width)
+      setWidth(ref?.current?.offsetWidth ?? width)
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [isClient, width]) // Empty array ensures that effect is only run on mount and unmount
+  }, [isClient, width])
 
   return (
     <ChartWrapper>
@@ -164,18 +135,12 @@ const TokenChart = ({ address, color, base }) => {
               active={timeWindow === timeframeOptions.ALL_TIME}
               onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
             >
-              {t('all')}
+              1Y
             </OptionButton>
           </AutoRow>
           {chartFilter === CHART_VIEW.PRICE && (
             <AutoRow gap="4px">
-              <PriceOption
-                active={frequency === DATA_FREQUENCY.DAY}
-                onClick={() => {
-                  setTimeWindow(timeframeOptions.MONTH)
-                  setFrequency(DATA_FREQUENCY.DAY)
-                }}
-              >
+              <PriceOption active={frequency === DATA_FREQUENCY.DAY} onClick={() => setFrequency(DATA_FREQUENCY.DAY)}>
                 D
               </PriceOption>
               <PriceOption active={frequency === DATA_FREQUENCY.HOUR} onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}>
@@ -188,13 +153,13 @@ const TokenChart = ({ address, color, base }) => {
           )}
         </ChartButtonsGrid>
       )}
-      {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
+      {chartFilter === CHART_VIEW.LIQUIDITY && filteredChartData && (
         <ResponsiveContainer aspect={aspect}>
-          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
+          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap="1" data={filteredChartData}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color} stopOpacity={0.35} />
-                <stop offset="95%" stopColor={color} stopOpacity={0} />
+                <stop offset="5%" stopColor={color} stopOpacity="0.35" />
+                <stop offset="95%" stopColor={color} stopOpacity="0" />
               </linearGradient>
             </defs>
             <XAxis
@@ -222,7 +187,7 @@ const TokenChart = ({ address, color, base }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={val => formattedNum(val, true)}
+              formatter={(val: string | number) => formattedNum(val, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{
                 paddingTop: 4
@@ -252,7 +217,7 @@ const TokenChart = ({ address, color, base }) => {
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
           <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
-            <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
+            <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={filteredChartData}>
               <defs>
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={color} stopOpacity={0.35} />
@@ -269,6 +234,7 @@ const TokenChart = ({ address, color, base }) => {
                 dataKey="date"
                 tick={{ fill: textColor }}
                 type="number"
+                allowDataOverflow={true}
                 domain={domain}
               />
               <YAxis
@@ -284,7 +250,7 @@ const TokenChart = ({ address, color, base }) => {
               />
               <Tooltip
                 cursor={true}
-                formatter={val => formattedNum(val, true)}
+                formatter={(val: string | number) => formattedNum(val, true)}
                 labelFormatter={label => toNiceDateYear(label)}
                 labelStyle={{ paddingTop: 4 }}
                 contentStyle={{
@@ -296,8 +262,8 @@ const TokenChart = ({ address, color, base }) => {
                 wrapperStyle={{ top: '-70px', left: '-10px' }}
               />
               <Area
-                key={'other'}
-                dataKey={'priceUSD'}
+                key="other"
+                dataKey="priceUSD"
                 stackId="2"
                 strokeWidth={2}
                 dot={false}
@@ -310,16 +276,18 @@ const TokenChart = ({ address, color, base }) => {
             </AreaChart>
           </ResponsiveContainer>
         ) : priceData ? (
-          <ResponsiveContainer aspect={aspect} ref={ref}>
-            <CandleStickChart data={priceData} width={width} base={base} />
-          </ResponsiveContainer>
+          <>
+            <ResponsiveContainer aspect={aspect} ref={ref}>
+              <CandleStickChart data={priceData} base={base} />
+            </ResponsiveContainer>
+          </>
         ) : (
           <LocalLoader />
         ))}
 
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
-          <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={chartData}>
+          <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={filteredChartData}>
             <XAxis
               tickLine={false}
               axisLine={false}
@@ -329,7 +297,7 @@ const TokenChart = ({ address, color, base }) => {
               tickFormatter={tick => toNiceDate(tick)}
               dataKey="date"
               tick={{ fill: textColor }}
-              type={'number'}
+              type="number"
               domain={['dataMin', 'dataMax']}
             />
             <YAxis
@@ -346,7 +314,7 @@ const TokenChart = ({ address, color, base }) => {
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}
-              formatter={val => formattedNum(val, true)}
+              formatter={(val: string | number) => formattedNum(val, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
@@ -357,14 +325,7 @@ const TokenChart = ({ address, color, base }) => {
               }}
               wrapperStyle={{ top: -70, left: -10 }}
             />
-            <Bar
-              type="monotone"
-              name={t('volume')}
-              dataKey={'dailyVolumeUSD'}
-              fill={color}
-              yAxisId={0}
-              stroke={color}
-            />
+            <Bar type="monotone" name={t('volume')} dataKey="dailyVolumeUSD" fill={color} yAxisId={0} stroke={color} />
           </BarChart>
         </ResponsiveContainer>
       )}

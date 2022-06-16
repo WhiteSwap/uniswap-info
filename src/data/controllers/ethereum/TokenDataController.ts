@@ -190,13 +190,13 @@ export default class TokenDataController implements ITokenDataController {
     return result.data?.['pairs0'].concat(result.data?.['pairs1']).map((p: { id: string }) => p.id)
   }
   async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number, latestBlock: number) {
-    const utcEndTime = dayjs.utc()
+    const utcEndTime = dayjs.utc().unix()
     let time = startTime
 
     // create an array of hour start times until we reach current hour
     // buffer by half hour to catch case where graph isnt synced to latest block
     const timestamps = []
-    while (time < utcEndTime.unix()) {
+    while (time < utcEndTime) {
       timestamps.push(time)
       time += interval
     }
@@ -209,7 +209,7 @@ export default class TokenDataController implements ITokenDataController {
     // once you have all the timestamps, get the blocks for each timestamp in a bulk query
     let blocks
     try {
-      blocks = await getBlocksFromTimestamps(timestamps, 5000)
+      blocks = await getBlocksFromTimestamps(timestamps, 100)
 
       // catch failing case
       if (!blocks || blocks.length === 0) {

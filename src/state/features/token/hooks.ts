@@ -1,13 +1,14 @@
-import { timeframeOptions } from '../../../constants'
+import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useActiveNetworkId, useLatestBlock } from '../application/selectors'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setTokenPairs, setChartData, setPriceData, setToken, setTopTokens, setTransactions } from './slice'
-import { useActiveTokenPrice } from '../global/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
 import DataService from 'data/DataService'
 import { isValidAddress } from 'utils'
 import { SupportedNetwork } from 'constants/networks'
+// import { usePrevious } from 'react-use'
 
 export function useFetchTokens() {
   const dispatch = useAppDispatch()
@@ -89,15 +90,17 @@ export function useTokenChartData(tokenAddress: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const chartData = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress]?.chartData)
+
   useEffect(() => {
-    async function checkForChartData() {
-      if (!chartData) {
-        const data = await DataService.tokens.getTokenChartData(tokenAddress)
-        dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: tokenAddress }))
-      }
+    async function fetchData() {
+      const data = await DataService.tokens.getTokenChartData(tokenAddress)
+      dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: tokenAddress }))
     }
-    checkForChartData()
-  }, [chartData, tokenAddress, chartData])
+    if (!chartData && tokenAddress) {
+      fetchData()
+    }
+  }, [chartData, tokenAddress])
+
   return chartData
 }
 
@@ -121,13 +124,12 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
     const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
     const startTime =
       timeWindow === timeframeOptions.ALL_TIME ? 1589760000 : currentTime.subtract(1, windowSize).startOf('hour').unix()
-
-    async function fetch() {
+    async function fetchData() {
       const data = await DataService.tokens.getIntervalTokenData(tokenAddress, startTime, interval, latestBlock)
       dispatch(setPriceData({ networkId: activeNetwork, timeWindow, interval, data, address: tokenAddress }))
     }
-    if (!chartData && latestBlock) {
-      fetch()
+    if (!chartData) {
+      fetchData()
     }
   }, [chartData, interval, timeWindow, tokenAddress, latestBlock, activeNetwork])
 

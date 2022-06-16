@@ -250,13 +250,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
           {chartFilter === chartView.RATE1 &&
             (hourlyRate1 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart
-                  data={hourlyRate1}
-                  base={base0}
-                  margin={false}
-                  width={width}
-                  valueFormatter={valueFormatter}
-                />
+                <CandleStickChart data={hourlyRate1} base={base0} margin={false} valueFormatter={valueFormatter} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
@@ -264,13 +258,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
           {chartFilter === chartView.RATE0 &&
             (hourlyRate0 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart
-                  data={hourlyRate0}
-                  base={base1}
-                  margin={false}
-                  width={width}
-                  valueFormatter={valueFormatter}
-                />
+                <CandleStickChart data={hourlyRate0} base={base1} margin={false} valueFormatter={valueFormatter} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
