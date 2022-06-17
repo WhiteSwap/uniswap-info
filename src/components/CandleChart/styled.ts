@@ -4,18 +4,6 @@ export const ChartWrapper = styled.div`
   position: relative;
 `
 
-export const TooltipPrice = styled.div`
-  font-size: 22px;
-  margin: 4px 0px;
-  color: ${({ theme }) => theme.text1};
-`
-
-export const TimeSpan = styled.span`
-  font-size: 12px;
-  margin: 4px 6px;
-  color: ${({ theme }) => theme.text1};
-`
-
 export const IconWrapper = styled.div`
   position: absolute;
   right: 10px;

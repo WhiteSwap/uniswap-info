@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, useMemo, memo } from 'react'
+import { useEffect, useRef, useMemo, memo } from 'react'
 import { createChart, CrosshairMode, CandlestickData, IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import dayjs from 'dayjs'
 import { formattedNum } from 'utils'
 import { Play } from 'react-feather'
-import { ChartWrapper, TooltipPrice, TimeSpan, IconWrapper } from './styled'
+import { ChartWrapper, IconWrapper } from './styled'
 import { useTheme } from 'styled-components'
 
 type Props = {
@@ -11,17 +11,13 @@ type Props = {
   width?: number
   height?: number
   base: number
-  valueFormatter?: (val?: string | number) => string | number
 }
 
-type TooltipDataType = { price: string; time: string }
-
-const CandleStickChart = ({ data, height = 300, base, valueFormatter = val => formattedNum(val) }: Props) => {
+const CandleStickChart = ({ data, height = 300, base }: Props) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi>()
   const candlestickRef = useRef<ISeriesApi<'Candlestick'>>()
 
-  const [tooltipData, setTooltipData] = useState<TooltipDataType | undefined>()
   const theme = useTheme()
 
   const formattedData: CandlestickData[] = useMemo(() => {
@@ -88,31 +84,17 @@ const CandleStickChart = ({ data, height = 300, base, valueFormatter = val => fo
       wickDownColor: 'red',
       wickUpColor: 'green'
     })
-    candlestickRef.current.setData(formattedData)
-
-    // FIXME: replace any to MouseEventParams and try to get close value
-    const handleCrosshairMove = (param: any) => {
-      if (param.time && param.point?.x > 0 && param.point?.x < width && param.point?.y > 0 && param.point?.y < height) {
-        const price = valueFormatter(param.seriesPrices.get(candlestickRef.current!)?.close).toString()
-        const time = dayjs.utc(new Date(param.time * 1000).toUTCString()).format('MM/DD/YYYY HH:mm UTC')
-        setTooltipData({ price, time })
-      } else {
-        setTooltipData(undefined)
-      }
-    }
 
     const handleResize = () => {
       chartRef.current?.timeScale().fitContent()
       chartRef.current?.applyOptions({ width: chartContainerRef.current?.clientWidth })
     }
 
-    chartRef.current.subscribeCrosshairMove(handleCrosshairMove)
     window.addEventListener('resize', handleResize)
     chartRef.current.timeScale().fitContent()
 
     return () => {
       window.removeEventListener('resize', handleResize)
-      chartRef.current?.unsubscribeCrosshairMove(handleCrosshairMove)
       chartRef.current?.remove()
     }
   }, [])
@@ -125,12 +107,7 @@ const CandleStickChart = ({ data, height = 300, base, valueFormatter = val => fo
 
   return (
     <ChartWrapper>
-      <div ref={chartContainerRef}>
-        <TooltipPrice>
-          ${tooltipData?.price ? tooltipData.price : valueFormatter(base)}
-          {tooltipData?.time ? <TimeSpan>{tooltipData.time}</TimeSpan> : null}
-        </TooltipPrice>
-      </div>
+      <div ref={chartContainerRef} />
       <IconWrapper>
         <Play
           onClick={() => {

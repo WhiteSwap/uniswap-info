@@ -54,11 +54,11 @@ const PinnedData = ({ open, setSavedOpen }: Props) => {
         <AutoColumn gap="12px">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
           {Object.keys(savedPairs).filter(key => {
-            return !!savedPairs[key]
+            return Boolean(savedPairs[key])
           }).length > 0 ? (
             Object.keys(savedPairs)
               .filter(address => {
-                return !!savedPairs[address]
+                return Boolean(savedPairs[address])
               })
               .map(address => {
                 const pair = savedPairs[address]
@@ -90,11 +90,11 @@ const PinnedData = ({ open, setSavedOpen }: Props) => {
         <ScrollableDiv gap="12px">
           <TYPE.main>{t('pinnedTokens')}</TYPE.main>
           {Object.keys(savedTokens).filter(key => {
-            return !!savedTokens[key]
+            return Boolean(savedTokens[key])
           }).length > 0 ? (
             Object.keys(savedTokens)
               .filter(address => {
-                return !!savedTokens[address]
+                return Boolean(savedTokens[address])
               })
               .map(address => {
                 const token = savedTokens[address]
