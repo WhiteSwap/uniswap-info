@@ -11,8 +11,6 @@ import { Bookmark, ChevronRight, X } from 'react-feather'
 import { ButtonFaded } from 'components/ButtonStyled'
 import FormattedName from 'components/FormattedName'
 import { useTranslation } from 'react-i18next'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
 import { RightColumn, SavedButton, ScrollableDiv, StyledIcon } from './styled'
 
 type Props = {
@@ -23,7 +21,6 @@ type Props = {
 const PinnedData = ({ open, setSavedOpen }: Props) => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
 
   const [savedPairs, , removePair] = useSavedPairs()
   const [savedTokens, , removeToken] = useSavedTokens()
@@ -49,7 +46,7 @@ const PinnedData = ({ open, setSavedOpen }: Props) => {
           <ChevronRight />
         </StyledIcon>
       </SavedButton>
-      {activeNetwork !== SupportedNetwork.TRON ? <AccountSearch small={true} /> : null}
+      <AccountSearch small={true} />
       <AutoColumn gap="40px" style={{ marginTop: '2rem' }}>
         <AutoColumn gap="12px">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
