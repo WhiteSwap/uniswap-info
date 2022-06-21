@@ -20,53 +20,6 @@ export const Aside = styled.aside`
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
 `
 
-export const NavigationLink = styled(NavLink)<{ disabled?: boolean }>`
-  font-weight: 500;
-  font-size: 1rem;
-  opacity: 0.6;
-  color: ${({ theme }) => theme.text1};
-  display: flex;
-  padding: 0.5rem 0 0.5rem 1.5rem;
-  position: relative;
-  align-items: center;
-  width: 100%;
-
-  :hover {
-    opacity: 1;
-  }
-
-  &.active {
-    opacity: 1;
-    color: ${({ theme }) => theme.blueGrey};
-    background: rgba(102, 129, 167, 0.1);
-    font-weight: 700;
-
-    div {
-      background: ${({ theme }) => theme.blueGrey};
-
-      svg {
-        stroke: ${({ theme }) => theme.lightText1};
-      }
-    }
-    :before {
-      content: '';
-      position: absolute;
-      width: 0.25rem;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: ${({ theme }) => theme.blueGrey};
-    }
-  }
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      pointer-events: none;
-      opacity: 1;
-      color: ${({ theme }) => theme.text4};
-    `}
-`
-
 export const Badge = styled.span`
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
@@ -74,20 +27,6 @@ export const Badge = styled.span`
   background-color: rgba(102, 129, 167, 0.1);
   margin-left: 0.5rem;
   color: ${({ theme }) => theme.blueGrey};
-`
-
-export const StyledNavButton = styled.div`
-  display: flex;
-  border-radius: 100%;
-  padding: 8px;
-  margin-right: 1rem;
-`
-
-export const SideBar = styled.aside`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
 `
 
 export const Header = styled.header`
@@ -106,18 +45,27 @@ export const Header = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
 `
 
-export const HeaderText = styled.div`
-  margin-right: 0.75rem;
+export const SocialLinksList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 0.5rem;
+`
+
+export const SocialLinkItem = styled.li`
   font-size: 0.825rem;
-  font-weight: 500;
-  display: inline-box;
-  display: -webkit-inline-box;
   opacity: 0.8;
-  :hover {
-    opacity: 1;
-  }
+  display: flex;
+  justify-self: flex-start;
+
   a {
     color: ${({ theme }) => theme.text1};
+  }
+
+  :hover {
+    opacity: 1;
   }
 `
 
@@ -163,31 +111,49 @@ export const MenuButton = styled(Menu)`
 `
 
 export const MenuList = styled.ul`
-  position: absolute;
-  transition: 0.2s ease;
-  transform: translate(calc(2.5rem - 100%), 16px);
-  border: 1px solid ${({ theme }) => theme.mercuryGray};
-  animation: 0.3s ease-in-out;
-  background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   list-style: none;
-  border-radius: 0 0 0.5rem 0.5rem;
-  width: 200px;
   margin: 0;
   padding: 0;
+
+  @media screen and (max-width: 1080px) {
+    position: absolute;
+    width: 200px;
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 0.5rem;
+    padding: 0.5rem;
+    transition: 0.2s ease;
+    transform: translate(calc(2.5rem - 100%), 16px);
+    border: 1px solid ${({ theme }) => theme.mercuryGray};
+    animation: 0.3s ease-in-out;
+    background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
 `
 
-export const MenuItemLink = styled(NavLink)<{ disabled: boolean }>`
+export const IconContainer = styled.div`
+  display: flex;
+  margin-right: 0.5rem;
+
+  @media screen and (min-width: 1080px) {
+    margin-right: 1rem;
+    padding: 8px;
+    border-radius: 100%;
+  }
+`
+
+export const MenuItemLink = styled(NavLink)<{ disabled?: boolean }>`
+  width: 100%;
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  margin: 0.5rem;
-  border-radius: 0.5rem;
-  color: ${({ theme }) => theme.text2};
-  opacity: 0.9;
-  cursor: pointer;
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  color: ${({ theme }) => theme.text1};
+  opacity: 0.6;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
 
   :hover {
-    background-color: ${({ theme }) => theme.bg1};
     opacity: 1;
   }
 
@@ -197,14 +163,27 @@ export const MenuItemLink = styled(NavLink)<{ disabled: boolean }>`
     background: rgba(102, 129, 167, 0.1);
     font-weight: 700;
 
-    div {
-      background: ${({ theme }) => theme.blueGrey};
+    @media screen and (min-width: 1080px) {
+      ${IconContainer} {
+        background: ${({ theme }) => theme.blueGrey};
+      }
 
       svg {
         stroke: ${({ theme }) => theme.lightText1};
       }
+
+      :before {
+        content: '';
+        position: absolute;
+        width: 0.25rem;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: ${({ theme }) => theme.blueGrey};
+      }
     }
   }
+
   ${({ disabled }) =>
     disabled &&
     css`
@@ -212,8 +191,21 @@ export const MenuItemLink = styled(NavLink)<{ disabled: boolean }>`
       opacity: 1;
       color: ${({ theme }) => theme.text4};
     `}
+
+  @media screen and (max-width: 1080px) {
+    opacity: 0.9;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+
+    :hover {
+      background-color: ${({ theme }) => theme.bg1};
+      opacity: 1;
+    }
+  }
 `
 
-export const MenuItemName = styled.span`
-  margin-left: 0.5rem;
+export const MenuItem = styled.li`
+  width: 100%;
+  display: flex;
 `
