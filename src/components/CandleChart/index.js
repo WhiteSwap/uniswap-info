@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { createChart, CrosshairMode } from 'lightweight-charts'
 import dayjs from 'dayjs'
-import { formattedNum } from '../../utils'
+import { formattedNumber } from '../../utils'
 import { usePrevious } from 'react-use'
 import styled from 'styled-components/macro'
 import { Play } from 'react-feather'
@@ -32,34 +32,34 @@ const CandleStickChart = ({
   height = 300,
   base,
   margin = true,
-  valueFormatter = val => formattedNum(val, true)
+  valueFormatter = value => formattedNumber(value, true)
 }) => {
   // reference for DOM element to create with chart
   const ref = useRef()
 
   const formattedData = data?.map(entry => {
     return {
-      time: parseFloat(entry.timestamp),
-      open: parseFloat(entry.open),
-      low: parseFloat(entry.open),
-      close: parseFloat(entry.close),
-      high: parseFloat(entry.close)
+      time: Number.parseFloat(entry.timestamp),
+      open: Number.parseFloat(entry.open),
+      low: Number.parseFloat(entry.open),
+      close: Number.parseFloat(entry.close),
+      high: Number.parseFloat(entry.close)
     }
   })
 
   if (formattedData && formattedData.length > 0) {
     formattedData.push({
       time: dayjs().unix(),
-      open: parseFloat(formattedData[formattedData.length - 1].close),
-      close: parseFloat(base),
-      low: Math.min(parseFloat(base), parseFloat(formattedData[formattedData.length - 1].close)),
-      high: Math.max(parseFloat(base), parseFloat(formattedData[formattedData.length - 1].close))
+      open: Number.parseFloat(formattedData[formattedData.length - 1].close),
+      close: Number.parseFloat(base),
+      low: Math.min(Number.parseFloat(base), Number.parseFloat(formattedData[formattedData.length - 1].close)),
+      high: Math.max(Number.parseFloat(base), Number.parseFloat(formattedData[formattedData.length - 1].close))
     })
   }
 
   // pointer to the chart object
   const [chartCreated, setChartCreated] = useState(false)
-  const dataPrev = usePrevious(data)
+  const dataPrevious = usePrevious(data)
 
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
@@ -71,23 +71,21 @@ const CandleStickChart = ({
       // remove the tooltip element
       // eslint-disable-next-line sonarjs/no-duplicate-string
       let tooltip = document.getElementById('tooltip-id')
-      let node = document.getElementById('test-id')
-      node.removeChild(tooltip)
+      tooltip.remove()
       chartCreated.resize(0, 0)
       setChartCreated()
     }
   }, [chartCreated, darkMode, previousTheme])
 
   useEffect(() => {
-    if (data !== dataPrev && chartCreated) {
+    if (data !== dataPrevious && chartCreated) {
       // remove the tooltip element
       let tooltip = document.getElementById('tooltip-id')
-      let node = document.getElementById('test-id')
-      node.removeChild(tooltip)
+      tooltip.remove()
       chartCreated.resize(0, 0)
       setChartCreated()
     }
-  }, [chartCreated, data, dataPrev])
+  }, [chartCreated, data, dataPrevious])
 
   // if no chart created yet, create one with options and add to DOM manually
   useEffect(() => {
@@ -118,7 +116,7 @@ const CandleStickChart = ({
           borderColor: 'rgba(197, 203, 206, 0.8)'
         },
         localization: {
-          priceFormatter: val => formattedNum(val)
+          priceFormatter: value => formattedNumber(value)
         }
       })
 
@@ -136,7 +134,7 @@ const CandleStickChart = ({
       var toolTip = document.createElement('div')
       toolTip.setAttribute('id', 'tooltip-id')
       toolTip.className = 'three-line-legend'
-      ref.current.appendChild(toolTip)
+      ref.current.append(toolTip)
       toolTip.style.display = 'block'
       toolTip.style.left = (margin ? 174 : 10) + 'px'
       toolTip.style.top = 64 + 'px'
@@ -152,19 +150,19 @@ const CandleStickChart = ({
       setLastBarText()
 
       // update the title when hovering on the chart
-      chart.subscribeCrosshairMove(function (param) {
+      chart.subscribeCrosshairMove(function (parameter) {
         if (
-          param === undefined ||
-          param.time === undefined ||
-          param.point.x < 0 ||
-          param.point.x > width ||
-          param.point.y < 0 ||
-          param.point.y > height
+          parameter === undefined ||
+          parameter.time === undefined ||
+          parameter.point.x < 0 ||
+          parameter.point.x > width ||
+          parameter.point.y < 0 ||
+          parameter.point.y > height
         ) {
           setLastBarText()
         } else {
-          var price = param.seriesPrices.get(candleSeries).close
-          const time = dayjs.unix(param.time).format('MM/DD h:mm A')
+          var price = parameter.seriesPrices.get(candleSeries).close
+          const time = dayjs.unix(parameter.time).format('MM/DD h:mm A')
           toolTip.innerHTML =
             `<div style="font-size: 22px; margin: 4px 0px; color: ${textColor}">` +
             valueFormatter(price) +

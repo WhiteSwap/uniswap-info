@@ -9,7 +9,7 @@ import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TYPE } from 'Theme'
-import { ellipsisAddress, formattedNum, formatTime, getBlockChainScanLink } from 'utils'
+import { ellipsisAddress, formattedNumber, formatTime, getBlockChainScanLink } from 'utils'
 import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, Arrow } from './styled'
 
 interface ITransactionTable {
@@ -130,14 +130,14 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             })}
           </CustomLink>
         </DataText>
-        <DataText>{formattedNum(item.amountUSD, true)}</DataText>
+        <DataText>{formattedNumber(item.amountUSD, true)}</DataText>
         {!below780 && (
           <>
             <DataText>
-              {formattedNum(item.tokenTwo.amount) + ' '} {item.tokenTwo.symbol}
+              {formattedNumber(item.tokenTwo.amount) + ' '} {item.tokenTwo.symbol}
             </DataText>
             <DataText>
-              {formattedNum(item.tokenOne.amount) + ' '} {item.tokenOne.symbol}
+              {formattedNumber(item.tokenOne.amount) + ' '} {item.tokenOne.symbol}
             </DataText>
           </>
         )}
@@ -263,7 +263,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             {transactionList.length > 0 ? (
               transactionList
                 .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-                .map((item, i) => <ListItem key={`${item.hash}-${i}`} item={item} />)
+                .map((item, index) => <ListItem key={`${item.hash}-${index}`} item={item} />)
             ) : (
               <EmptyCard>{t('noRecentTransactions')}</EmptyCard>
             )}

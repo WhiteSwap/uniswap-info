@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid } from 'recharts'
 import { AutoRow, RowBetween } from 'components/Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
 import { OptionButton } from 'components/ButtonStyled'
 import { useMedia } from 'react-use'
 import { timeframeOptions } from 'constants/index'
@@ -18,12 +18,12 @@ const CHART_VIEW = {
   FEES: 'Fees'
 }
 
-type Props = {
+interface IPairReturnsChart {
   account: string
   position: Position
 }
 
-const PairReturnsChart = ({ account, position }: Props) => {
+const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const { t } = useTranslation()
   const data = useUserPositionChart(position, account)
   const below600 = useMedia('(max-width: 600px)')
@@ -123,7 +123,7 @@ const PairReturnsChart = ({ account, position }: Props) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val: string | number | undefined) => formattedNum(val, true)}
+              formatter={(value: string | number | undefined) => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

@@ -7,33 +7,33 @@ export interface TokenDetails extends Token {
 
 export type TokenState = Record<SupportedNetwork, Record<string, TokenDetails>>
 
-export type UpdateTokenPayload = ParamsWithNetwork<{
+export type UpdateTokenPayload = ParametersWithNetwork<{
   tokenAddress: string
   data: Token
 }>
 
-export type UpdateTopTokensPayload = ParamsWithNetwork<{
+export type UpdateTopTokensPayload = ParametersWithNetwork<{
   topTokens: Token[]
 }>
 
-export type UpdateTransactionsPayload = ParamsWithNetwork<{
+export type UpdateTransactionsPayload = ParametersWithNetwork<{
   address: string
   transactions: Transactions
 }>
 
-export type UpdateChartDataPayload = ParamsWithNetwork<{
+export type UpdateChartDataPayload = ParametersWithNetwork<{
   address: string
   chartData: TokenDayData[]
 }>
 
-export type UpdatePriceDataPayload = ParamsWithNetwork<{
+export type UpdatePriceDataPayload = ParametersWithNetwork<{
   address: string
   data: TimeWindowItem[]
   timeWindow: string
   interval: number
 }>
 
-export type UpdateAllPairsPayload = ParamsWithNetwork<{
+export type UpdateAllPairsPayload = ParametersWithNetwork<{
   address: string
   allPairs?: string[] | null
 }>

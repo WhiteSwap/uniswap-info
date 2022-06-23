@@ -16,11 +16,11 @@ import { useTranslation } from 'react-i18next'
 import { AccountLink, DashGrid, Input, Wrapper } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 
-type Props = {
+type IAccountSearch = {
   small?: boolean
 }
 
-function AccountSearch({ small }: Props) {
+function AccountSearch({ small }: IAccountSearch) {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
@@ -46,8 +46,8 @@ function AccountSearch({ small }: Props) {
             <Input
               style={below440 ? { marginRight: '0px' } : {}}
               placeholder="0x..."
-              onChange={(e: any) => {
-                setAccountValue(e.target.value)
+              onChange={event => {
+                setAccountValue(event.target.value)
               }}
             />
           </Wrapper>

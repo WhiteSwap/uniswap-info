@@ -12,7 +12,7 @@ import TokenChart from 'components/TokenChart'
 import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
 import {
-  formattedNum,
+  formattedNumber,
   getPoolLink,
   getSwapLink,
   getBlockChainScanLink,
@@ -83,12 +83,12 @@ const TokenPage = () => {
   const transactions = useTokenTransactions(tokenAddress)
 
   // price
-  const price = priceUSD ? formattedNum(priceUSD, true) : ''
+  const price = priceUSD ? formattedNumber(priceUSD, true) : ''
 
   // volume
   const volume =
     dayVolumeUSD || dayVolumeUSD === 0
-      ? formattedNum(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
+      ? formattedNumber(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
       : dayVolumeUSD === 0
       ? '$0'
       : '-'
@@ -99,7 +99,7 @@ const TokenPage = () => {
   const volumeChange = (!usingUtVolume ? volumeChangeUSD : volumeChangeUT) || 0
 
   // liquidity
-  const liquidity = totalLiquidityUSD ? formattedNum(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
+  const liquidity = totalLiquidityUSD ? formattedNumber(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
 
   // format for long symbol
   const LENGTH = below1080 ? 10 : 16

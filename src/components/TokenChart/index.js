@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
 import { OptionButton } from 'components/ButtonStyled'
 import { useMedia, usePrevious } from 'react-use'
 import { timeframeOptions } from 'constants/index'
@@ -37,25 +37,25 @@ const TokenChart = ({ address, color, base }) => {
   const textColor = darkMode ? 'white' : 'black'
 
   // reset view on new address
-  const addressPrev = usePrevious(address)
+  const addressPrevious = usePrevious(address)
   useEffect(() => {
-    if (address !== addressPrev && addressPrev) {
+    if (address !== addressPrevious && addressPrevious) {
       setChartFilter(CHART_VIEW.LIQUIDITY)
     }
-  }, [address, addressPrev])
+  }, [address, addressPrevious])
 
   let chartData = useTokenChartData(address)
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK)
-  const prevWindow = usePrevious(timeWindow)
+  const previousWindow = usePrevious(timeWindow)
 
   // hourly and daily price data based on the current time window
   const hourlyWeek = useTokenPriceData(address, timeframeOptions.WEEK, 3600)
   const hourlyMonth = useTokenPriceData(address, timeframeOptions.MONTH, 3600)
   const hourlyAll = useTokenPriceData(address, timeframeOptions.ALL_TIME, 3600)
-  const dailyWeek = useTokenPriceData(address, timeframeOptions.WEEK, 86400)
-  const dailyMonth = useTokenPriceData(address, timeframeOptions.MONTH, 86400)
-  const dailyAll = useTokenPriceData(address, timeframeOptions.ALL_TIME, 86400)
+  const dailyWeek = useTokenPriceData(address, timeframeOptions.WEEK, 86_400)
+  const dailyMonth = useTokenPriceData(address, timeframeOptions.MONTH, 86_400)
+  const dailyAll = useTokenPriceData(address, timeframeOptions.ALL_TIME, 86_400)
 
   const priceData =
     timeWindow === timeframeOptions.MONTH
@@ -75,20 +75,20 @@ const TokenChart = ({ address, color, base }) => {
 
   // switch to hourly data when switched to week window
   useEffect(() => {
-    if (timeWindow === timeframeOptions.WEEK && prevWindow && prevWindow !== timeframeOptions.WEEK) {
+    if (timeWindow === timeframeOptions.WEEK && previousWindow && previousWindow !== timeframeOptions.WEEK) {
       setFrequency(DATA_FREQUENCY.HOUR)
     }
-  }, [prevWindow, timeWindow])
+  }, [previousWindow, timeWindow])
 
   // switch to daily data if switche to month or all time view
   useEffect(() => {
-    if (timeWindow === timeframeOptions.MONTH && prevWindow && prevWindow !== timeframeOptions.MONTH) {
+    if (timeWindow === timeframeOptions.MONTH && previousWindow && previousWindow !== timeframeOptions.MONTH) {
       setFrequency(DATA_FREQUENCY.DAY)
     }
-    if (timeWindow === timeframeOptions.ALL_TIME && prevWindow && prevWindow !== timeframeOptions.ALL_TIME) {
+    if (timeWindow === timeframeOptions.ALL_TIME && previousWindow && previousWindow !== timeframeOptions.ALL_TIME) {
       setFrequency(DATA_FREQUENCY.DAY)
     }
-  }, [prevWindow, timeWindow])
+  }, [previousWindow, timeWindow])
 
   const below1080 = useMedia('(max-width: 1080px)')
   const below600 = useMedia('(max-width: 600px)')
@@ -222,7 +222,7 @@ const TokenChart = ({ address, color, base }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={val => formattedNum(val, true)}
+              formatter={value => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{
                 paddingTop: 4
@@ -284,7 +284,7 @@ const TokenChart = ({ address, color, base }) => {
               />
               <Tooltip
                 cursor={true}
-                formatter={val => formattedNum(val, true)}
+                formatter={value => formattedNumber(value, true)}
                 labelFormatter={label => toNiceDateYear(label)}
                 labelStyle={{ paddingTop: 4 }}
                 contentStyle={{
@@ -346,7 +346,7 @@ const TokenChart = ({ address, color, base }) => {
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}
-              formatter={val => formattedNum(val, true)}
+              formatter={value => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

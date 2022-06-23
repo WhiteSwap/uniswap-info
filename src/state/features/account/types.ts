@@ -21,27 +21,27 @@ export type LiquidityChart = {
 
 export type AccountState = Record<SupportedNetwork, AccountNetworkState>
 
-export type UpdateTransactionsPayload = ParamsWithNetwork<{
+export type UpdateTransactionsPayload = ParametersWithNetwork<{
   account: string
   transactions: Transactions
 }>
 
-export type UpdatePositionsPayload = ParamsWithNetwork<{
+export type UpdatePositionsPayload = ParametersWithNetwork<{
   account: string
   positions: Position[]
 }>
 
-export type UpdatePositionHistoryPayload = ParamsWithNetwork<{
+export type UpdatePositionHistoryPayload = ParametersWithNetwork<{
   account: string
   historyData: LiquiditySnapshot[]
 }>
 
-export type UpdatePairReturnsPayload = ParamsWithNetwork<{
+export type UpdatePairReturnsPayload = ParametersWithNetwork<{
   account: string
   pairAddress: string
   data: PairReturn[]
 }>
 
-export type UpdateTopLiquidityPositionsPayload = ParamsWithNetwork<{
+export type UpdateTopLiquidityPositionsPayload = ParametersWithNetwork<{
   liquidityPositions: Array<LiquidityPosition>
 }>
