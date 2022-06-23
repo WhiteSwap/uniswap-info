@@ -126,7 +126,7 @@ export default class TokenDataController implements ITokenDataController {
         {}
       )
 
-      const bulkResults = await Promise.all(
+      return Promise.all(
         current &&
           oneDayData &&
           twoDayData &&
@@ -148,8 +148,6 @@ export default class TokenDataController implements ITokenDataController {
             return parseToken(data, price, oneDayEthPrice, oneDayHistory, twoDayHistory)
           })
       )
-
-      return bulkResults
     } catch (e) {
       return []
     }
@@ -182,7 +180,7 @@ export default class TokenDataController implements ITokenDataController {
 
       return parseToken(data, price, oneDayEthPrice, oneDayData, twoDayData)
     }
-    return
+    return undefined
   }
   async getTokenPairs(tokenAddress: string) {
     // fetch all current and historical data

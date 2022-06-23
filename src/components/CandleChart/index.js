@@ -69,6 +69,7 @@ const CandleStickChart = ({
   useEffect(() => {
     if (chartCreated && previousTheme !== darkMode) {
       // remove the tooltip element
+      // eslint-disable-next-line sonarjs/no-duplicate-string
       let tooltip = document.getElementById('tooltip-id')
       let node = document.getElementById('test-id')
       node.removeChild(tooltip)

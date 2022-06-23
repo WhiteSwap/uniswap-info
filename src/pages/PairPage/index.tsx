@@ -32,7 +32,7 @@ const PairPage = () => {
   const pairAddress = params.pairAddress!
   const activeNetworkId = useActiveNetworkId()
 
-  if (PAIR_BLACKLIST.includes(pairAddress!.toLowerCase()) || !isValidAddress(pairAddress!, activeNetworkId)) {
+  if (PAIR_BLACKLIST.includes(pairAddress.toLowerCase()) || !isValidAddress(pairAddress, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
 
@@ -47,9 +47,9 @@ const PairPage = () => {
     oneDayVolumeUntracked,
     volumeChangeUntracked,
     liquidityChangeUSD
-  } = usePairData(pairAddress!)
+  } = usePairData(pairAddress)
 
-  const transactions = usePairTransactions(pairAddress!)
+  const transactions = usePairTransactions(pairAddress)
 
   const liquidity = trackedReserveUSD
     ? formattedNum(trackedReserveUSD, true)

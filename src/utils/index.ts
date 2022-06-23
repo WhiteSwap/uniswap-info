@@ -103,8 +103,7 @@ export function localNumber(val: string | number) {
 }
 
 export const toNiceDate = (date: number) => {
-  const x = dayjs.utc(dayjs.unix(date)).format('MMM DD')
-  return x
+  return dayjs.utc(dayjs.unix(date)).format('MMM DD')
 }
 
 export function getTimestampsForChanges() {
@@ -510,8 +509,7 @@ export const getPercentChange = (valueNow: any, value24HoursAgo: any) => {
 }
 
 export function networkPrefix(activeNetwork: NetworkInfo) {
-  const prefix = '/' + activeNetwork.route.toLocaleLowerCase()
-  return prefix
+  return '/' + activeNetwork.route.toLocaleLowerCase()
 }
 
 export function getCurrentNetwork() {

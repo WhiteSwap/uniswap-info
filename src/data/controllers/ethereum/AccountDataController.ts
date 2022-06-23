@@ -216,7 +216,6 @@ export default class AccountDataController implements IAccountDataController {
       })
 
     const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1))
-    const shorter = sorted.splice(0, 100)
-    return shorter
+    return sorted.splice(0, 100)
   }
 }

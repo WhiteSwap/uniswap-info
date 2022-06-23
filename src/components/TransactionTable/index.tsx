@@ -243,7 +243,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             )}
             {!below1080 && (
               <Flex alignItems="center">
-                <TYPE.body area="account">{t('account')}</TYPE.body>
+                <TYPE.body>{t('account')}</TYPE.body>
               </Flex>
             )}
             <Flex alignItems="center">

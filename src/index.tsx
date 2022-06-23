@@ -1,10 +1,9 @@
 import ReactDOM from 'react-dom'
-import { StrictMode, Suspense } from 'react'
+import { StrictMode, Suspense, useEffect } from 'react'
 import { BrowserRouter, createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { isMobile } from 'react-device-detect'
 import { ApolloClient, ApolloProvider } from '@apollo/react-hooks'
-import ThemeProvider, { GlobalStyle } from 'Theme'
 import { PersistGate } from 'redux-persist/integration/react'
 import dayjs from 'dayjs'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -16,7 +15,6 @@ import { BrowserTracing } from '@sentry/tracing'
 import App from 'App'
 import 'i18n'
 import { client } from 'service/client'
-import React from 'react'
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -25,7 +23,7 @@ Sentry.init({
   integrations: [
     new BrowserTracing({
       routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-        React.useEffect,
+        useEffect,
         useLocation,
         useNavigationType,
         createRoutesFromChildren,
@@ -57,16 +55,13 @@ ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider>
-          <ApolloProvider client={client as unknown as ApolloClient<any>}>
-            <GlobalStyle />
-            <BrowserRouter>
-              <Suspense fallback={null}>
-                <App />
-              </Suspense>
-            </BrowserRouter>
-          </ApolloProvider>
-        </ThemeProvider>
+        <ApolloProvider client={client as unknown as ApolloClient<any>}>
+          <BrowserRouter>
+            <Suspense fallback={null}>
+              <App />
+            </Suspense>
+          </BrowserRouter>
+        </ApolloProvider>
       </PersistGate>
     </Provider>
   </StrictMode>,

@@ -52,7 +52,7 @@ export function useCopyClipboard(timeout = 500) {
         clearTimeout(hide)
       }
     }
-    return
+    return undefined
   }, [isCopied, setIsCopied, timeout])
 
   return [isCopied, staticCopy]
@@ -60,7 +60,7 @@ export function useCopyClipboard(timeout = 500) {
 
 export const useOutsideClick = (ref: RefObject<any>, ref2: RefObject<any>, callback: (value: boolean) => void) => {
   const handleClick = (e: MouseEvent) => {
-    if (ref.current && ref.current && !ref2.current) {
+    if (ref.current && !ref2.current) {
       callback(true)
     } else if (ref.current && !ref.current.contains(e.target) && ref2.current && !ref2.current.contains(e.target)) {
       callback(true)
@@ -96,7 +96,7 @@ export default function useInterval(callback: () => void, delay: null | number) 
       const id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
-    return
+    return undefined
   }, [delay])
 }
 

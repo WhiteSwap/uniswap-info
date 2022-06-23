@@ -20,12 +20,11 @@ export default class GlobalDataController implements IGlobalDataController {
       variables: { startTime: oldestDateToFetch }
     })
 
-    const formattedChart = data.whiteSwapDayDatas!.map(el => ({
+    return data.whiteSwapDayDatas!.map(el => ({
       date: el!.date!,
       dailyVolumeUSD: +el!.dailyVolumeUSD!,
       totalLiquidityUSD: +el!.totalLiquidityUSD!
     }))
-    return formattedChart
   }
 
   async getPrice() {

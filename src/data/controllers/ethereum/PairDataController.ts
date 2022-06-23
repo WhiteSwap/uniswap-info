@@ -44,16 +44,15 @@ async function fetchHistoricalPairData(pairList: string[], price: number) {
   })
 
   const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
-    [b1, b2, bWeek].map(async block => {
-      const result = await client.query({
+    [b1, b2, bWeek].map(async block =>
+      client.query({
         query: PAIRS_HISTORICAL_BULK,
         variables: {
           pairs: pairList,
           block: block ? { number: block } : null
         }
       })
-      return result
-    })
+    )
   )
 
   const oneDayData = oneDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {

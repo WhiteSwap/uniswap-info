@@ -61,7 +61,7 @@ function AccountSearch({ small }: Props) {
         {!small && (
           <Panel>
             <DashGrid>
-              <TYPE.main area="account">{t('savedAccounts')}</TYPE.main>
+              <TYPE.main>{t('savedAccounts')}</TYPE.main>
             </DashGrid>
             <Divider />
             {savedAccounts?.length > 0 ? (

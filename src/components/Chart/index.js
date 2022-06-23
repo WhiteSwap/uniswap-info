@@ -12,6 +12,11 @@ const ChartWrapper = styled.div`
     margin-left: -1em;
   }
 `
+const tooltipContainerStyle = {
+  padding: '10px 14px',
+  borderRadius: 10,
+  borderColor: 'var(--c-zircon)'
+}
 
 const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
   const { t } = useTranslation()
@@ -92,11 +97,7 @@ const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
               formatter={val => toK(val, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
-              contentStyle={{
-                padding: '10px 14px',
-                borderRadius: 10,
-                borderColor: 'var(--c-zircon)'
-              }}
+              contentStyle={tooltipContainerStyle}
               wrapperStyle={{ top: -70, left: -10 }}
             />
           </AreaChart>
@@ -148,11 +149,7 @@ const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
               formatter={val => toK(val, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
-              contentStyle={{
-                padding: '10px 14px',
-                borderRadius: 10,
-                borderColor: 'var(--c-zircon)'
-              }}
+              contentStyle={tooltipContainerStyle}
               wrapperStyle={{ top: -70, left: -10 }}
             />
             <Area
@@ -219,11 +216,7 @@ const Chart = ({ data, chartOption, currencyUnit, symbol }) => {
               formatter={val => toK(val, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
-              contentStyle={{
-                padding: '10px 14px',
-                borderRadius: 10,
-                borderColor: 'var(--c-zircon)'
-              }}
+              contentStyle={tooltipContainerStyle}
               wrapperStyle={{ top: -70, left: -10 }}
             />
             <Bar
