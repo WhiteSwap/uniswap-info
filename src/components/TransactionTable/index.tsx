@@ -4,13 +4,14 @@ import LocalLoader from 'components/LocalLoader'
 import Panel from 'components/Panel'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TYPE } from 'Theme'
 import { ellipsisAddress, formattedNumber, formatTime, getBlockChainScanLink } from 'utils'
-import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, Arrow } from './styled'
+import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, PaginationButton } from './styled'
 
 interface ITransactionTable {
   transactions?: Transactions
@@ -55,7 +56,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
   const below440 = useMedia('(max-width: 440px)')
 
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(0)
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(TransactionSortField.Timestamp)
   const [transactionType, setTransactionType] = useState<TransactionSelect>(TransactionSelect.All)
@@ -113,6 +114,19 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
       setSortedColumn(direction)
       setSortDirection(sortedColumn !== direction ? true : !sortDirection)
     }
+  }
+
+  const sortDirectionArrow = (column: TransactionSortField) => {
+    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    return sortedColumn === column ? sortedSymbol : ''
+  }
+
+  const incrementPage = () => {
+    setPage(page === 1 ? page : page - 1)
+  }
+
+  const decrementPage = () => {
+    setPage(page === maxPage ? page : page + 1)
   }
 
   const ListItem = useCallback(
@@ -220,15 +234,13 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
 
           <Flex alignItems="center" justifyContent="flexStart">
             <ClickableText color="textDim" onClick={changeSortDirection(TransactionSortField.AmountUSD)}>
-              {t('totalValue')}{' '}
-              {sortedColumn === TransactionSortField.AmountUSD ? (!sortDirection ? '↑' : '↓') : undefined}
+              {t('totalValue')} {sortDirectionArrow(TransactionSortField.AmountUSD)}
             </ClickableText>
           </Flex>
           {!below780 && (
             <Flex alignItems="center">
               <ClickableText color="textDim" onClick={changeSortDirection(TransactionSortField.TokenOneAmount)}>
-                {t('tokenAmount')}{' '}
-                {sortedColumn === TransactionSortField.TokenOneAmount ? (sortDirection ? '↑' : '↓') : ''}
+                {t('tokenAmount')} {sortDirectionArrow(TransactionSortField.TokenOneAmount)}
               </ClickableText>
             </Flex>
           )}
@@ -236,8 +248,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             {!below780 && (
               <Flex alignItems="center">
                 <ClickableText color="textDim" onClick={changeSortDirection(TransactionSortField.TokenTwoAmount)}>
-                  {t('tokenAmount')}{' '}
-                  {sortedColumn === TransactionSortField.TokenTwoAmount ? (sortDirection ? '↑' : '↓') : ''}
+                  {t('tokenAmount')} {sortDirectionArrow(TransactionSortField.TokenTwoAmount)}
                 </ClickableText>
               </Flex>
             )}
@@ -248,7 +259,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             )}
             <Flex alignItems="center">
               <ClickableText color="textDim" onClick={changeSortDirection(TransactionSortField.Timestamp)}>
-                {t('time')} {sortedColumn === TransactionSortField.Timestamp ? (!sortDirection ? '↑' : '↓') : ''}
+                {t('time')} {sortDirectionArrow(TransactionSortField.Timestamp)}
               </ClickableText>
             </Flex>
           </>
@@ -270,23 +281,17 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           </List>
         )}
       </Panel>
-      <PageButtons>
-        <div
-          onClick={() => {
-            setPage(page === 1 ? page : page - 1)
-          }}
-        >
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
-        <div
-          onClick={() => {
-            setPage(page === maxPage ? page : page + 1)
-          }}
-        >
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage ? (
+        <PageButtons>
+          <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>
+            <ArrowLeft width="1rem" height="1rem" />
+          </PaginationButton>
+          <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
+          <PaginationButton type="button" disabled={page === maxPage} onClick={decrementPage}>
+            <ArrowRight width="1rem" height="1rem" />
+          </PaginationButton>
+        </PageButtons>
+      ) : undefined}
     </>
   )
 }
