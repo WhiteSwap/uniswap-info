@@ -52,8 +52,8 @@ module.exports = {
     'unicorn/prevent-abbreviations': [
       'error',
       {
-        checkFilenames: false,
         allowList: {
+          env: true,
           props: true,
           ref: true,
           Args: true
