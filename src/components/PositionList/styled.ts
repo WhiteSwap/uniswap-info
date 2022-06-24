@@ -8,6 +8,7 @@ export const PageButtons = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 2em;
 
   @media screen and (max-width: 440px) {
@@ -120,5 +121,28 @@ export const ButtonsContainer = styled(RowFixed)`
         margin-top: 0;
       }
     }
+  }
+`
+
+export const PaginationButton = styled.button`
+  padding: 0.5rem;
+  background: transparent;
+  color: ${({ theme }) => theme.blueGrey};
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease-in-out;
+  margin: 0 0.5rem;
+
+  &:not([disabled]):hover {
+    background: ${({ theme }) => theme.bg2};
+  }
+
+  &:disabled {
+    color: ${({ theme }) => theme.text4};
+    cursor: not-allowed;
   }
 `
