@@ -8,7 +8,6 @@ import { useTheme } from 'styled-components'
 
 type Props = {
   data: TimeWindowItem[]
-  width?: number
   height?: number
   base: number
 }
@@ -72,7 +71,7 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
         borderColor: 'rgba(197, 203, 206, 0.8)'
       },
       localization: {
-        priceFormatter: (val?: string | number) => formattedNum(val)
+        priceFormatter: (value?: string | number) => formattedNum(value)
       }
     })
 
@@ -87,7 +86,9 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
 
     const handleResize = () => {
       chartRef.current?.timeScale().fitContent()
-      chartRef.current?.applyOptions({ width: chartContainerRef.current?.clientWidth })
+      chartRef.current?.applyOptions({
+        width: chartContainerRef.current?.clientWidth
+      })
     }
 
     window.addEventListener('resize', handleResize)
@@ -103,6 +104,7 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
     chartRef.current?.timeScale().scrollToPosition(0, false)
     candlestickRef.current?.setData(formattedData)
     chartRef.current?.timeScale().fitContent()
+    chartRef.current?.timeScale().applyOptions({ timeVisible: true })
   }, [formattedData.length])
 
   return (
