@@ -4,6 +4,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import GlobalPage from 'pages/GlobalPage'
 import TokenPage from 'pages/TokenPage'
 import PairPage from 'pages/PairPage'
+import * as Sentry from '@sentry/react'
 import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
 import { useFetchPairs } from 'state/features/pairs/hooks'
 import { useFetchTokens } from 'state/features/token/hooks'
@@ -19,7 +20,7 @@ import { useLatestBlocks } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
-import ErrorBoundary from 'components/ErrorBoundary'
+import FallbackError from 'components/FallbackError'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -82,6 +83,8 @@ const WarningBanner = styled.div`
 
 const BLOCK_DIFFERENCE_THRESHOLD = 30
 
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes)
+
 function App() {
   const [savedOpen, setSavedOpen] = useState(false)
 
@@ -100,7 +103,7 @@ function App() {
 
   return (
     <AppWrapper>
-      <ErrorBoundary>
+      <Sentry.ErrorBoundary fallback={FallbackError}>
         {showWarning && (
           <WarningWrapper>
             <WarningBanner>
@@ -112,7 +115,7 @@ function App() {
           <ContentWrapper open={savedOpen}>
             <Navigation />
             <Main id="center">
-              <Routes>
+              <SentryRoutes>
                 <Route path="/:networkID" element={<GlobalPage />} />
                 <Route path="/:networkID/tokens" element={<AllTokensPage />} />
                 <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
@@ -125,7 +128,7 @@ function App() {
                   </>
                 ) : undefined}
                 <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
-              </Routes>
+              </SentryRoutes>
             </Main>
             <Right open={savedOpen}>
               <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
@@ -134,9 +137,9 @@ function App() {
         ) : (
           <LocalLoader fullscreen />
         )}
-      </ErrorBoundary>
+      </Sentry.ErrorBoundary>
     </AppWrapper>
   )
 }
 
-export default App
+export default Sentry.withProfiler(App)
