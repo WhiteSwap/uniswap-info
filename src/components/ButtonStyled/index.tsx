@@ -3,8 +3,8 @@ import { darken, transparentize } from 'polished'
 import { Plus, ChevronDown, ChevronUp } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import styled from 'styled-components/macro'
+import { StyledIcon } from 'components'
 import { RowBetween } from 'components/Row'
-import { StyledIcon } from '..'
 
 const Base = styled(RebassButton)`
   padding: 0.875rem 1.25rem;

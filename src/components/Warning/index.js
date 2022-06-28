@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+import { Hover } from 'components'
 import { ButtonDark } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
 import Link from 'components/Link'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
-import { Hover } from '..'
 
 const WarningWrapper = styled.div`
   border-radius: 20px;
