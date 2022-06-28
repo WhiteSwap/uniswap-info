@@ -42,7 +42,7 @@ export default class TokenDataController implements ITokenDataController {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getIntervalTokenData(_tokenAddress: string, _startTime: number, _interval: number, _latestBlock: number) {
-    return Promise.resolve(IntervalTokenDataMock)
+    return IntervalTokenDataMock
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTokenChartData(_tokenAddress: string) {

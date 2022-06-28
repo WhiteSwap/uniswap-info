@@ -23,8 +23,8 @@ export function transactionMapper(type: TransactionType, payload?: TronTransacti
 
 export function transactionsMapper(payload: GlobalTransactionsQuery): Transactions {
   return {
-    mints: payload?.transactions?.mints?.map(el => transactionMapper('mint', el)) || [],
-    burns: payload.transactions?.burns?.map(el => transactionMapper('burn', el)) || [],
-    swaps: payload.transactions?.swaps?.map(el => transactionMapper('swap', el)) || []
+    mints: payload?.transactions?.mints?.map(element => transactionMapper('mint', element)) || [],
+    burns: payload.transactions?.burns?.map(element => transactionMapper('burn', element)) || [],
+    swaps: payload.transactions?.swaps?.map(element => transactionMapper('swap', element)) || []
   }
 }

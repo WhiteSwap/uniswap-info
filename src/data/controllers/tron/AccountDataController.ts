@@ -4,22 +4,22 @@ import { TopLpsMock, UserHistoryMock, UserLiquidityChartMock, UserPositionsMock 
 export default class AccountDataController implements IAccountDataController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getUserHistory(_account: string) {
-    return Promise.resolve(UserHistoryMock)
+    return UserHistoryMock
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getUserLiquidityChart(_startDateTimestamp: number, _history: LiquiditySnapshot[]) {
-    return Promise.resolve(UserLiquidityChartMock)
+    return UserLiquidityChartMock
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getUserPositions(_account: string, _price: number, _snapshots: LiquiditySnapshot[]) {
     // @ts-ignore
-    return Promise.resolve(UserPositionsMock)
+    return UserPositionsMock
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTopLps(_allPairs: any) {
-    return Promise.resolve(TopLpsMock)
+    return TopLpsMock
   }
 }
