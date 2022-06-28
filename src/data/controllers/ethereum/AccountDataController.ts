@@ -38,7 +38,7 @@ export default class AccountDataController implements IAccountDataController {
           },
           fetchPolicy: 'no-cache'
         })
-        allResults = allResults.concat(result.data.liquidityPositionSnapshots)
+        allResults = [...allResults, ...result.data.liquidityPositionSnapshots]
         if (result.data.liquidityPositionSnapshots.length < 1000) {
           found = true
         } else {
@@ -46,14 +46,14 @@ export default class AccountDataController implements IAccountDataController {
         }
       }
       return liquiditySnapshotListMapper(allResults)
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
       return []
     }
   }
   async getUserLiquidityChart(startDateTimestamp: number, history: LiquiditySnapshot[]) {
-    let dayIndex = Math.floor(startDateTimestamp / 86400) // get unique day bucket unix
-    const currentDayIndex = Math.floor(dayjs.utc().unix() / 86400)
+    let dayIndex = Math.floor(startDateTimestamp / 86_400) // get unique day bucket unix
+    const currentDayIndex = Math.floor(dayjs.utc().unix() / 86_400)
 
     // sort snapshots in order
     const sortedPositions = history.sort((a, b) => {
@@ -61,13 +61,13 @@ export default class AccountDataController implements IAccountDataController {
     })
     // if UI start time is > first position time - bump start index to this time
     if (sortedPositions[0].timestamp > currentDayIndex) {
-      dayIndex = Math.floor(sortedPositions[0].timestamp / 86400)
+      dayIndex = Math.floor(sortedPositions[0].timestamp / 86_400)
     }
 
     const dayTimestamps = []
     // get date timestamps for all days in view
     while (dayIndex < currentDayIndex) {
-      dayTimestamps.push(dayIndex * 86400)
+      dayTimestamps.push(dayIndex * 86_400)
       dayIndex = dayIndex + 1
     }
 
@@ -90,7 +90,7 @@ export default class AccountDataController implements IAccountDataController {
     const ownershipPerPair: Record<string, OwnershipPair> = {}
     for (const index in dayTimestamps) {
       const dayTimestamp = dayTimestamps[index]
-      const timestampCeiling = dayTimestamp + 86400
+      const timestampCeiling = dayTimestamp + 86_400
 
       // cycle through relevant positions and update ownership for any that we need to
       const relevantPositions = history.filter(snapshot => {
@@ -136,8 +136,8 @@ export default class AccountDataController implements IAccountDataController {
         return (totalUSD =
           totalUSD +
           (ownershipPerPair[dayData.pairAddress]
-            ? (ownershipPerPair[dayData.pairAddress].lpTokenBalance / parseFloat(dayData.totalSupply)) *
-              parseFloat(dayData.reserveUSD)
+            ? (ownershipPerPair[dayData.pairAddress].lpTokenBalance / Number.parseFloat(dayData.totalSupply)) *
+              Number.parseFloat(dayData.reserveUSD)
             : 0))
       }, 0)
 
@@ -170,8 +170,8 @@ export default class AccountDataController implements IAccountDataController {
         )
         return userPositionListMapper(price, formattedPositions)
       }
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
     }
     return []
   }
@@ -200,7 +200,7 @@ export default class AccountDataController implements IAccountDataController {
     // get the top lps from the results formatted
     const topLps: LiquidityPosition[] = []
     topLpLists
-      .filter(i => !!i) // check for ones not fetched correctly
+      .filter(index => !!index) // check for ones not fetched correctly
       .map(list => {
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]
@@ -209,14 +209,13 @@ export default class AccountDataController implements IAccountDataController {
             pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
             tokenOne: pairData.tokenOne.id,
             tokenTwo: pairData.tokenTwo.id,
-            usd: (parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD,
+            usd: (Number.parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD,
             userId: entry.user?.id
           })
         })
       })
 
     const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1))
-    const shorter = sorted.splice(0, 100)
-    return shorter
+    return sorted.splice(0, 100)
   }
 }

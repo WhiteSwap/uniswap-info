@@ -14,14 +14,14 @@ async function fetchPrice(block?: number) {
 
 export default class GlobalDataController implements IGlobalDataController {
   async getHealthStatus() {
-    const res = await client.query({
+    const status = await client.query({
       query: SUBGRAPH_HEALTH,
       context: {
         client: 'health'
       }
     })
-    const syncedBlock = +res.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number
-    const headBlock = +res.data.indexingStatusForCurrentVersion.chains[0].chainHeadBlock.number
+    const syncedBlock = +status.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number
+    const headBlock = +status.data.indexingStatusForCurrentVersion.chains[0].chainHeadBlock.number
     return { syncedBlock, headBlock }
   }
   async getChartData(oldestDateToFetch: number): Promise<ChartDailyItem[]> {
@@ -40,10 +40,10 @@ export default class GlobalDataController implements IGlobalDataController {
           }
         })
         skip += 1000
-        data = result.data.whiteSwapDayDatas.map((el: any) => ({
-          ...el,
-          totalLiquidityUSD: +el.totalLiquidityUSD,
-          dailyVolumeUSD: +el.dailyVolumeUSD
+        data = result.data.whiteSwapDayDatas.map((element: any) => ({
+          ...element,
+          totalLiquidityUSD: +element.totalLiquidityUSD,
+          dailyVolumeUSD: +element.dailyVolumeUSD
         }))
         if (result.data.whiteSwapDayDatas.length < 1000) {
           allFound = true
@@ -55,10 +55,10 @@ export default class GlobalDataController implements IGlobalDataController {
         const dayIndexArray: any[] = []
         const oneDay = 24 * 60 * 60
         // for each day, parse the daily volume and format for chart array
-        data.forEach((_dayData, i) => {
+        data.forEach((_dayData, index_) => {
           // add the day index to the set of days
-          dayIndexSet.add((data[i].date / oneDay).toFixed(0))
-          dayIndexArray.push(data[i])
+          dayIndexSet.add((data[index_].date / oneDay).toFixed(0))
+          dayIndexArray.push(data[index_])
         })
 
         // fill in empty days ( there will be no day datas if no trades made that day )
@@ -84,8 +84,8 @@ export default class GlobalDataController implements IGlobalDataController {
 
       // format weekly data for weekly sized chunks
       data = data.sort((a, b) => (a.date > b.date ? 1 : -1))
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
     }
     return data
   }
@@ -96,8 +96,8 @@ export default class GlobalDataController implements IGlobalDataController {
       const result = await fetchPrice()
       const currentPrice = +result?.data?.bundles[0]?.ethPrice
       price = currentPrice
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
     }
 
     return price

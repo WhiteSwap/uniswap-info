@@ -1,7 +1,7 @@
+/* eslint-disable sonarjs/no-identical-functions */
 import { darken } from 'polished'
 import { Menu } from 'react-feather'
-import { NavLink } from 'react-router-dom'
-import { Link as RouterLink } from 'react-router-dom'
+import { NavLink, Link as RouterLink } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
 export const Aside = styled.aside`

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { ThemeProvider } from 'styled-components/macro'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import GlobalPage from 'pages/GlobalPage'
 import TokenPage from 'pages/TokenPage'
@@ -19,6 +19,8 @@ import LocalLoader from 'components/LocalLoader'
 import { useLatestBlocks } from 'state/features/application/hooks'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import FallbackError from 'components/FallbackError'
+import { useAppSelector } from 'state/hooks'
+import { GlobalStyle, globalTheme } from 'Theme'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -85,6 +87,7 @@ const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes)
 
 function App() {
   const [savedOpen, setSavedOpen] = useState(false)
+  const isDarkMode = useAppSelector(state => state.user.darkMode)
 
   const globalChartData = useGlobalChartData()
   const [latestBlock, headBlock] = useLatestBlocks()
@@ -98,39 +101,42 @@ function App() {
   useFetchTokens()
 
   return (
-    <AppWrapper>
-      <Sentry.ErrorBoundary fallback={FallbackError}>
-        {showWarning && (
-          <WarningWrapper>
-            <WarningBanner>
-              {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
-            </WarningBanner>
-          </WarningWrapper>
-        )}
-        {latestBlock && headBlock && price && Object.keys(globalChartData).length > 0 ? (
-          <ContentWrapper open={savedOpen}>
-            <Navigation />
-            <Main id="center">
-              <SentryRoutes>
-                <Route path="/:networkID" element={<GlobalPage />} />
-                <Route path="/:networkID/tokens" element={<AllTokensPage />} />
-                <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
-                <Route path="/:networkID/pairs" element={<AllPairsPage />} />
-                <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
-                <Route path="/:networkID/accounts" element={<AccountLookup />} />
-                <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
-                <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
-              </SentryRoutes>
-            </Main>
-            <Right open={savedOpen}>
-              <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
-            </Right>
-          </ContentWrapper>
-        ) : (
-          <LocalLoader fullscreen />
-        )}
-      </Sentry.ErrorBoundary>
-    </AppWrapper>
+    <ThemeProvider theme={globalTheme(isDarkMode)}>
+      <GlobalStyle />
+      <AppWrapper>
+        <Sentry.ErrorBoundary fallback={FallbackError}>
+          {showWarning && (
+            <WarningWrapper>
+              <WarningBanner>
+                {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
+              </WarningBanner>
+            </WarningWrapper>
+          )}
+          {latestBlock && headBlock && price && Object.keys(globalChartData).length > 0 ? (
+            <ContentWrapper open={savedOpen}>
+              <Navigation />
+              <Main id="center">
+                <SentryRoutes>
+                  <Route path="/:networkID" element={<GlobalPage />} />
+                  <Route path="/:networkID/tokens" element={<AllTokensPage />} />
+                  <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
+                  <Route path="/:networkID/pairs" element={<AllPairsPage />} />
+                  <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
+                  <Route path="/:networkID/accounts" element={<AccountLookup />} />
+                  <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
+                  <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
+                </SentryRoutes>
+              </Main>
+              <Right open={savedOpen}>
+                <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
+              </Right>
+            </ContentWrapper>
+          ) : (
+            <LocalLoader fullscreen />
+          )}
+        </Sentry.ErrorBoundary>
+      </AppWrapper>
+    </ThemeProvider>
   )
 }
 

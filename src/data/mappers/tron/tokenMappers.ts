@@ -24,7 +24,7 @@ export function topTokensMapper(payload?: TokensQuery): Token[] {
 export function tokenDayDataMapper(payload: any): TokenDayData {
   return {
     id: payload.id ? payload.id.toString() : '',
-    date: payload.date ?? new Date().getTime(),
+    date: payload.date ?? Date.now(),
     priceUSD: payload.priceUSD ? payload.priceUSD.toString() : '',
     totalLiquidityUSD: payload.totalLiquidityUSD ? payload.totalLiquidityUSD.toString() : '',
     dailyVolumeUSD: payload.dailyVolumeUSD ? +payload.dailyVolumeUSD : 0

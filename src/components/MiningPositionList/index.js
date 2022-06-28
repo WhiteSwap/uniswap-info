@@ -7,7 +7,7 @@ import { useFormatPath } from 'hooks'
 import Link, { CustomLink } from 'components/Link'
 import { Divider } from 'components'
 import DoubleTokenLogo from 'components/DoubleLogo'
-import { formattedNum, getWhiteSwapAppLink } from '../../utils'
+import { formattedNumber, getWhiteSwapAppLink } from '../../utils'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import { ButtonLight } from 'components/ButtonStyled'
@@ -196,10 +196,12 @@ function MiningPositionList({ miningPositions }) {
         </DataText>
         <DataText area="uniswap">
           <AutoColumn gap="12px" justify="flex-end">
-            <TYPE.main>{formattedNum(pairPercentage * valueUSD, true, true)}</TYPE.main>
+            <TYPE.main>{formattedNumber(pairPercentage * valueUSD, true, true)}</TYPE.main>
             <AutoColumn gap="4px" justify="flex-end">
               <RowFixed>
-                <TYPE.small fontWeight={400}>{formattedNum(pairPercentage * parseFloat(valueFirstPair))} </TYPE.small>
+                <TYPE.small fontWeight={400}>
+                  {formattedNumber(pairPercentage * Number.parseFloat(valueFirstPair))}{' '}
+                </TYPE.small>
                 <FormattedName
                   text={firstPairName}
                   maxCharacters={below740 ? 10 : 18}
@@ -208,7 +210,9 @@ function MiningPositionList({ miningPositions }) {
                 />
               </RowFixed>
               <RowFixed>
-                <TYPE.small fontWeight={400}>{formattedNum(pairPercentage * parseFloat(valueSecondPair))} </TYPE.small>
+                <TYPE.small fontWeight={400}>
+                  {formattedNumber(pairPercentage * Number.parseFloat(valueSecondPair))}{' '}
+                </TYPE.small>
                 <FormattedName
                   text={secondPairName}
                   maxCharacters={below740 ? 10 : 18}

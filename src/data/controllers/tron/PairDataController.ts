@@ -34,11 +34,11 @@ export default class PairDataController implements IPairDataController {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPairChartData(_pairAddress: string): Promise<PairDayData[]> {
-    return Promise.resolve(PairChartDataMock)
+    return PairChartDataMock
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getHourlyRateData(_pairAddress: string, _startTime: number, _latestBlock: number) {
-    return Promise.resolve(HourlyRateDataMock)
+    return HourlyRateDataMock
   }
 }

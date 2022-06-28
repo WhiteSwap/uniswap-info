@@ -5,7 +5,7 @@ import { CustomLink } from '../Link'
 import Row from '../Row'
 import { Divider } from '..'
 
-import { formattedNum } from '../../utils'
+import { formattedNumber } from '../../utils'
 import { useFormatPath } from 'hooks'
 import { useMedia } from 'react-use'
 import { OVERVIEW_TOKEN_BLACKLIST } from '../../constants'
@@ -130,11 +130,11 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
             {<FormattedName text={item.symbol} maxCharacters={5} />}
           </DataText>
         )}
-        <DataText>{formattedNum(item.totalLiquidityUSD, true)}</DataText>
-        <DataText>{formattedNum(item.dayVolumeUSD, true)}</DataText>
+        <DataText>{formattedNumber(item.totalLiquidityUSD, true)}</DataText>
+        <DataText>{formattedNumber(item.dayVolumeUSD, true)}</DataText>
         {!below1080 && (
           <DataText color="text" fontWeight="500">
-            {formattedNum(item.priceUSD, true)}
+            {formattedNumber(item.priceUSD, true)}
           </DataText>
         )}
         {!below1080 && (

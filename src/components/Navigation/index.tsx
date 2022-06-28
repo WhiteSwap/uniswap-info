@@ -116,10 +116,10 @@ function Navigation() {
       </AutoColumn>
       <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem' }}>
         <SocialLinksList>
-          {socialLinks.map(el => (
-            <SocialLinkItem key={el.name}>
-              <a target="_blank" rel="noopener noreferrer nofollow" href={el.url}>
-                {el.name}
+          {socialLinks.map(link => (
+            <SocialLinkItem key={link.name}>
+              <a target="_blank" rel="noopener noreferrer nofollow" href={link.url}>
+                {link.name}
               </a>
             </SocialLinkItem>
           ))}

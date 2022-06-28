@@ -9,18 +9,18 @@ export interface GlobalNetworkState {
 
 export type GlobalState = Record<SupportedNetwork, GlobalNetworkState>
 
-export type UpdateTransactionCountPayload = ParamsWithNetwork<{
+export type UpdateTransactionCountPayload = ParametersWithNetwork<{
   dayTransactionCount: number
 }>
 
-export type UpdateTransactionsPayload = ParamsWithNetwork<{
+export type UpdateTransactionsPayload = ParametersWithNetwork<{
   transactions: Transactions
 }>
 
-export type UpdateChartPayload = ParamsWithNetwork<{
+export type UpdateChartPayload = ParametersWithNetwork<{
   data: ChartDailyItem[]
 }>
 
-export type UpdatePricePayload = ParamsWithNetwork<{
+export type UpdatePricePayload = ParametersWithNetwork<{
   price: number
 }>

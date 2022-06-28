@@ -6,7 +6,7 @@ import Link from 'components/Link'
 import { useFormatPath } from 'hooks'
 import { Divider } from 'components'
 import DoubleTokenLogo from 'components/DoubleLogo'
-import { formattedNum, getPoolLink } from 'utils'
+import { formattedNumber, getPoolLink } from 'utils'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import { ButtonLight } from 'components/ButtonStyled'
@@ -32,11 +32,11 @@ const SORT_FIELD = {
   FEE: 'FEE'
 }
 
-type Props = {
+interface IPositionList {
   positions: Position[]
 }
 
-const PositionList = ({ positions }: Props) => {
+const PositionList = ({ positions }: IPositionList) => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
@@ -111,11 +111,11 @@ const PositionList = ({ positions }: Props) => {
         </DataText>
         <DataText>
           <AutoColumn gap="12px" justify="flex-end">
-            <DataText>{formattedNum(valueUSD, true)}</DataText>
+            <DataText>{formattedNumber(valueUSD, true)}</DataText>
             <AutoColumn gap="4px" justify="flex-end">
               <RowFixed>
                 <DataText fontWeight={400} fontSize={11}>
-                  {formattedNum(poolOwnership * position.pair.tokenOne?.reserve)}
+                  {formattedNumber(poolOwnership * position.pair.tokenOne?.reserve)}
                 </DataText>
                 <FormattedName
                   text={position.pair.tokenOne?.symbol}
@@ -126,7 +126,7 @@ const PositionList = ({ positions }: Props) => {
               </RowFixed>
               <RowFixed>
                 <DataText fontWeight={400} fontSize={11}>
-                  {formattedNum(poolOwnership * position.pair.tokenTwo?.reserve)}
+                  {formattedNumber(poolOwnership * position.pair.tokenTwo?.reserve)}
                 </DataText>
                 <FormattedName
                   text={position.pair.tokenTwo?.symbol}
@@ -142,13 +142,13 @@ const PositionList = ({ positions }: Props) => {
           <DataText>
             <AutoColumn gap="12px" justify="flex-end">
               <TYPE.main color={'green'}>
-                <RowFixed>{formattedNum(position?.feeEarned, true)}</RowFixed>
+                <RowFixed>{formattedNumber(position?.feeEarned, true)}</RowFixed>
               </TYPE.main>
               <AutoColumn gap="4px" justify="flex-end">
                 <RowFixed>
                   <DataText fontWeight={400} fontSize={11}>
                     {position.pair.tokenOne?.price > 0
-                      ? formattedNum(position?.feeEarned / position.pair.tokenOne?.priceUSD / 2, false)
+                      ? formattedNumber(position?.feeEarned / position.pair.tokenOne?.priceUSD / 2, false)
                       : 0}
                   </DataText>
                   <FormattedName
@@ -161,7 +161,7 @@ const PositionList = ({ positions }: Props) => {
                 <RowFixed>
                   <DataText fontWeight={400} fontSize={11}>
                     {position.pair.tokenTwo?.price > 0
-                      ? formattedNum(position?.feeEarned / position.pair.tokenTwo?.priceUSD / 2, false)
+                      ? formattedNumber(position?.feeEarned / position.pair.tokenTwo?.priceUSD / 2, false)
                       : 0}
                   </DataText>
                   <FormattedName
