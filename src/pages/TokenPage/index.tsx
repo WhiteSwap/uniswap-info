@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import Link from 'components/Link'
+import Link, { BasicLink } from 'components/Link'
 import Panel from 'components/Panel'
 import TokenLogo from 'components/TokenLogo'
 import PairList from 'components/PairList'
@@ -9,7 +9,6 @@ import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import TokenChart from 'components/TokenChart'
-import { BasicLink } from 'components/Link'
 import Search from 'components/Search'
 import {
   formattedNumber,

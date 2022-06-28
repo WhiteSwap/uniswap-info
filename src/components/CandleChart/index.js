@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { createChart, CrosshairMode } from 'lightweight-charts'
-import dayjs from 'dayjs'
-import { formattedNumber } from '../../utils'
+import dayjs, { unix } from 'dayjs'
+import { formattedNumber } from 'utils'
 import { usePrevious } from 'react-use'
 import styled from 'styled-components/macro'
 import { Play } from 'react-feather'
@@ -162,7 +162,7 @@ const CandleStickChart = ({
           setLastBarText()
         } else {
           var price = parameter.seriesPrices.get(candleSeries).close
-          const time = dayjs.unix(parameter.time).format('MM/DD h:mm A')
+          const time = unix(parameter.time).format('MM/DD h:mm A')
           toolTip.innerHTML =
             `<div style="font-size: 22px; margin: 4px 0px; color: ${textColor}">` +
             valueFormatter(price) +

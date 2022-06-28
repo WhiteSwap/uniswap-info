@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost'
-import { BUNDLE_ID } from '../../../constants'
+import { BUNDLE_ID } from 'constants/index'
 
 const ethPriceByBlocks = (blocks: BlockHeight[]) => {
   return blocks.map(

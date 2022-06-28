@@ -3,7 +3,7 @@ import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
-import useInterval from '../../hooks'
+import useInterval from 'hooks'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
