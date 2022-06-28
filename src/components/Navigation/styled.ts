@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-identical-functions */
 import { darken } from 'polished'
 import { Menu } from 'react-feather'
 import { NavLink, Link as RouterLink } from 'react-router-dom'
