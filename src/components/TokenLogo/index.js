@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
-import { getTokenLogoUrl } from '../../utils'
+import { getTokenLogoUrl } from 'utils'
 import { HelpCircle } from 'react-feather'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 

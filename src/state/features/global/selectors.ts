@@ -1,7 +1,7 @@
 import { useAppSelector } from 'state/hooks'
 import { getPercentChange } from 'utils'
 import { calculateDayFees } from 'utils/pair'
-import { useActiveNetworkId } from '../application/selectors'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 
 export function useGlobalChartDataSelector() {
   const activeNetwork = useActiveNetworkId()

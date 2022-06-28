@@ -1,6 +1,5 @@
 import { Flex } from 'rebass'
-
-import Link from '../Link'
+import Link from 'components/Link'
 
 const links = [
   { url: 'https://ws.exchange/about-us', text: 'About' },

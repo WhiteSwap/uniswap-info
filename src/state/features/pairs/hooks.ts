@@ -1,10 +1,10 @@
-import { timeframeOptions } from '../../../constants'
+import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useActiveNetworkId, useLatestBlock } from '../application/selectors'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
-import { useActiveTokenPrice } from '../global/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
 import DataService from 'data/DataService'
 import { isValidAddress } from 'utils'
 

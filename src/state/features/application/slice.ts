@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { timeframeOptions } from '../../../constants'
+import { timeframeOptions } from 'constants/index'
 import { NetworkInfo } from 'constants/networks'
 import { ApplicationState } from './types'
 import { getCurrentNetwork } from 'utils'

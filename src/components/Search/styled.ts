@@ -78,16 +78,16 @@ export const Menu = styled.div<{ hide?: boolean }>`
   flex-direction: column;
   z-index: 9999;
   width: 100%;
-  top: 50px;
-  max-height: 540px;
+  top: 3.125rem;
+  max-height: 33.75rem;
   overflow: auto;
   left: 0;
   padding-bottom: 1.25rem;
   background: ${({ theme }) => theme.bg6};
   border-bottom-right-radius: 0.75rem;
   border-bottom-left-radius: 0.75rem;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0.25rem 0.5rem rgba(0, 0, 0, 0.04), 01rem 1.5rem rgba(0, 0, 0, 0.04),
-    0 1.5rem 32px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0.25rem 0.5rem rgba(0, 0, 0, 0.04), 0 1rem 1.5rem rgba(0, 0, 0, 0.04),
+    0 1.5rem 2rem rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
 `
 
@@ -95,12 +95,13 @@ export const MenuItem = styled(Row)`
   padding: 1rem;
   font-size: 0.85rem;
   color: ${({ theme }) => theme.text1};
+  cursor: pointer;
 
   & > * {
     margin-right: 6px;
   }
+
   :hover {
-    cursor: pointer;
     background-color: ${({ theme }) => theme.bg2};
   }
 `

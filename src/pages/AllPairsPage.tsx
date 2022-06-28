@@ -1,11 +1,11 @@
-import { TYPE } from '../Theme'
+import { TYPE } from 'Theme'
 import { usePairs } from 'state/features/pairs/selectors'
-import PairList from '../components/PairList'
-import { PageWrapper, FullWrapper } from '../components'
-import { RowBetween } from '../components/Row'
-import Search from '../components/Search'
+import PairList from 'components/PairList'
+import { PageWrapper, FullWrapper } from 'components'
+import { RowBetween } from 'components/Row'
+import Search from 'components/Search'
 import { useMedia } from 'react-use'
-import { DashboardWrapper } from '../Theme'
+import { DashboardWrapper } from 'Theme'
 import { useTranslation } from 'react-i18next'
 
 function AllPairsPage() {

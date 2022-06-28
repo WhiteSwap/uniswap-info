@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { RowFixed, RowBetween } from '../Row'
+import { RowFixed, RowBetween } from 'components/Row'
 import { useMedia } from 'react-use'
 import { useActiveTokenPrice, useDayFeesUsd } from 'state/features/global/selectors'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SupportedNetwork } from 'constants/networks'
-import { formattedNumber, localNumber } from '../../utils'
-
-import UniPrice from '../UniPrice'
-import { TYPE } from '../../Theme'
+import { formattedNumber, localNumber } from 'utils'
+import UniPrice from 'components/UniPrice'
+import { TYPE } from 'Theme'
 import { useTranslation } from 'react-i18next'
 import { usePairCount } from 'state/features/pairs/selectors'
 import { useDayTransactionCount } from 'state/features/global/hooks'
@@ -46,7 +45,7 @@ export default function GlobalStats() {
                 <TYPE.light
                   fontSize={14}
                   fontWeight={700}
-                  mr={'1rem'}
+                  mr="1rem"
                   onMouseEnter={() => {
                     setShowPriceCard(true)
                   }}
@@ -59,23 +58,23 @@ export default function GlobalStats() {
                   {showPriceCard && <UniPrice />}
                 </TYPE.light>
               ) : (
-                <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+                <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                   {activeNetworkId.toUpperCase()} {t('price')}: {formattedPrice}
                 </TYPE.light>
               ))}
 
             {!below1180 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('transactions')} (24H): {localNumber(dayTransactionCount)}
               </TYPE.light>
             )}
             {!below1024 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('pairs')}: {localNumber(pairCount)}
               </TYPE.light>
             )}
             {!below1295 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('fees24hrs')}: {formattedNumber(dayFees, true)}&nbsp;
               </TYPE.light>
             )}

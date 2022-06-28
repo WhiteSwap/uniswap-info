@@ -257,7 +257,7 @@ function AccountPage() {
         )}
         {!hideLPContent && (
           <DashboardWrapper style={{ display: 'grid' }}>
-            <Panel style={{ width: '100%' }}>
+            <Panel>
               {activePosition ? (
                 <PairReturnsChart account={accountAddress} position={activePosition} />
               ) : (

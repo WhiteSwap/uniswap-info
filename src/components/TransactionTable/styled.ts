@@ -1,5 +1,5 @@
 import { transparentize } from 'polished'
-import Link from '../Link'
+import Link from 'components/Link'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 

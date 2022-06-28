@@ -1,12 +1,10 @@
 import styled from 'styled-components/macro'
-
-import { AutoRow, RowBetween } from '../components/Row'
-import { AutoColumn } from '../components/Column'
-import PairList from '../components/PairList'
-import TopTokenList from '../components/TokenList'
-import Search from '../components/Search'
-import GlobalStats from '../components/GlobalStats'
-
+import { AutoRow, RowBetween } from 'components/Row'
+import { AutoColumn } from 'components/Column'
+import PairList from 'components/PairList'
+import TopTokenList from 'components/TokenList'
+import Search from 'components/Search'
+import GlobalStats from 'components/GlobalStats'
 import { useGlobalTransactions } from 'state/features/global/hooks'
 import {
   useDayVolumeUsd,
@@ -18,12 +16,11 @@ import {
 import { useFormatPath } from 'hooks'
 import { usePairs } from 'state/features/pairs/selectors'
 import { useMedia } from 'react-use'
-import Panel from '../components/Panel'
-import { formattedNumber, getChartData } from '../utils'
-import { DashboardWrapper, TYPE } from '../Theme'
-import { CustomLink } from '../components/Link'
-
-import { PageWrapper, ContentWrapper } from '../components'
+import Panel from 'components/Panel'
+import { formattedNumber, getChartData } from 'utils'
+import { DashboardWrapper, TYPE } from 'Theme'
+import { CustomLink } from 'components/Link'
+import { PageWrapper, ContentWrapper } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useTokens } from 'state/features/token/selectors'
 import Percent from 'components/Percent'

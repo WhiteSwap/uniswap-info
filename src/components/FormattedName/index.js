@@ -1,7 +1,7 @@
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { Tooltip } from '../QuestionHelper'
+import { Tooltip } from 'components/QuestionHelper'
 import PropTypes from 'prop-types'
 
 const TextWrapper = styled.div`

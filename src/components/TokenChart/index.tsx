@@ -218,7 +218,7 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
                 dataKey="date"
                 tick={{ fill: textColor }}
                 type="number"
-                allowDataOverflow={true}
+                allowDataOverflow
                 domain={domain}
               />
               <YAxis

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { timeframeOptions } from '../../../constants'
+import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setHeadBlock, setLatestBlock } from './slice'

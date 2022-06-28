@@ -2,8 +2,8 @@ import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import styled from 'styled-components/macro'
 import { Plus, ChevronDown, ChevronUp } from 'react-feather'
 import { darken, transparentize } from 'polished'
-import { RowBetween } from '../Row'
-import { StyledIcon } from '..'
+import { RowBetween } from 'components/Row'
+import { StyledIcon } from 'components'
 import { PropsWithChildren } from 'react'
 
 const Base = styled(RebassButton)`
