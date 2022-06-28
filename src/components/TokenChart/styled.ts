@@ -1,5 +1,5 @@
-import { OptionButton } from 'components/ButtonStyled'
 import styled from 'styled-components'
+import { OptionButton } from 'components/ButtonStyled'
 
 export const ChartButtonsGrid = styled.div`
   display: grid;

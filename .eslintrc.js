@@ -74,7 +74,25 @@ module.exports = {
       }
     ],
     'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src' }],
-    'import/no-named-as-default-member': 0
+    'import/no-named-as-default-member': 0,
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'object', 'type', 'internal', 'parent', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'builtin',
+            position: 'before'
+          }
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true
+        }
+      }
+    ]
   },
   settings: {
     'react': {

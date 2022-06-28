@@ -1,11 +1,11 @@
-import { TYPE, DashboardWrapper } from 'Theme'
-import { usePairs } from 'state/features/pairs/selectors'
-import PairList from 'components/PairList'
+import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
 import { PageWrapper, FullWrapper } from 'components'
+import PairList from 'components/PairList'
 import { RowBetween } from 'components/Row'
 import Search from 'components/Search'
-import { useMedia } from 'react-use'
-import { useTranslation } from 'react-i18next'
+import { usePairs } from 'state/features/pairs/selectors'
+import { TYPE, DashboardWrapper } from 'Theme'
 
 function AllPairsPage() {
   const { t } = useTranslation()

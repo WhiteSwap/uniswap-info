@@ -1,15 +1,15 @@
-import styled from 'styled-components/macro'
-import { Text } from 'rebass'
 import { AlertTriangle } from 'react-feather'
-import { RowBetween, RowFixed } from 'components/Row'
+import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { Text } from 'rebass'
+import styled from 'styled-components/macro'
 import { ButtonDark } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
-import { Hover } from '..'
 import Link from 'components/Link'
-import { useMedia } from 'react-use'
-import { useTranslation } from 'react-i18next'
-import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
+import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
+import { Hover } from '..'
 
 const WarningWrapper = styled.div`
   border-radius: 20px;

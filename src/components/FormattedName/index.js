@@ -1,8 +1,8 @@
-import { transparentize } from 'polished'
 import { useState } from 'react'
+import { transparentize } from 'polished'
+import PropTypes from 'prop-types'
 import styled from 'styled-components/macro'
 import { Tooltip } from 'components/QuestionHelper'
-import PropTypes from 'prop-types'
 
 const TextWrapper = styled.div`
   position: relative;

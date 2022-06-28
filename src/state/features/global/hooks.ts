@@ -1,8 +1,8 @@
-import DataService from 'data/DataService'
 import { useState, useEffect } from 'react'
+import DataService from 'data/DataService'
+import { useActiveNetworkId, useTimeFrame } from 'state/features/application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTimeframe } from 'utils'
-import { useActiveNetworkId, useTimeFrame } from 'state/features/application/selectors'
 import { useGlobalChartDataSelector, useGlobalTransactionsSelector } from './selectors'
 import { setChart, setTransactionCount, setPrice, setTransactions } from './slice'
 

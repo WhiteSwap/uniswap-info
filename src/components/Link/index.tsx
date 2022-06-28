@@ -1,8 +1,8 @@
-import { Link as RebassLink, LinkProps } from 'rebass'
-import { Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import { lighten, darken } from 'polished'
 import { PropsWithChildren } from 'react'
+import { lighten, darken } from 'polished'
+import { Link as RouterLink } from 'react-router-dom'
+import { Link as RebassLink, LinkProps } from 'rebass'
+import styled from 'styled-components/macro'
 
 type WrappedLinkProperties = PropsWithChildren<{ external?: boolean; color?: string } & LinkProps>
 

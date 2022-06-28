@@ -1,4 +1,4 @@
-import { getCurrentNetwork } from 'utils'
+import { SupportedNetwork } from 'constants/networks'
 import EthAccountDataController from 'data/controllers/ethereum/AccountDataController'
 import EthGlobalDataController from 'data/controllers/ethereum/GlobalDataController'
 import EthPairDataController from 'data/controllers/ethereum/PairDataController'
@@ -11,12 +11,12 @@ import TrxPairDataController from 'data/controllers/tron/PairDataController'
 import TrxTokenDataController from 'data/controllers/tron/TokenDataController'
 import TrxTransactionDataController from 'data/controllers/tron/TransactionDataController'
 
-import { SupportedNetwork } from 'constants/networks'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
+import { getCurrentNetwork } from 'utils'
 
 class DataService {
   public tokens!: ITokenDataController

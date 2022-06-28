@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import LocalLoader from 'components/LocalLoader'
-import { Flex } from 'rebass'
-import Link from 'components/Link'
-import { useFormatPath } from 'hooks'
-import { Divider } from 'components'
-import DoubleTokenLogo from 'components/DoubleLogo'
-import { formattedNumber, getPoolLink } from 'utils'
-import { AutoColumn } from 'components/Column'
-import { RowFixed } from 'components/Row'
-import { ButtonLight } from 'components/ButtonStyled'
-import { TYPE } from 'Theme'
-import FormattedName from 'components/FormattedName'
-import Panel from 'components/Panel'
+import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
+import { Divider } from 'components'
+import { ButtonLight } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import FormattedName from 'components/FormattedName'
+import Link from 'components/Link'
+import LocalLoader from 'components/LocalLoader'
+import Panel from 'components/Panel'
+import { RowFixed } from 'components/Row'
+import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { TYPE } from 'Theme'
+import { formattedNumber, getPoolLink } from 'utils'
 import {
   PageButtons,
   List,
@@ -26,7 +27,6 @@ import {
   ButtonsContainer,
   PaginationButton
 } from './styled'
-import { ArrowLeft, ArrowRight } from 'react-feather'
 
 enum PositionSortField {
   value = 'value',

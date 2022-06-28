@@ -1,7 +1,7 @@
 import { transparentize } from 'polished'
-import Link from 'components/Link'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
+import Link from 'components/Link'
 
 export const PageButtons = styled.div`
   width: 100%;

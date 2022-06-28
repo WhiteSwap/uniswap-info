@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setHeadBlock, setLatestBlock } from './slice'
-import { useActiveNetworkId, useTimeFrame } from './selectors'
+import { timeframeOptions } from 'constants/index'
 import DataService from 'data/DataService'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useActiveNetworkId, useTimeFrame } from './selectors'
+import { setHeadBlock, setLatestBlock } from './slice'
 
 export function useLatestBlocks() {
   const dispatch = useAppDispatch()

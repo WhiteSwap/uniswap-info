@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
-import Panel from 'components/Panel'
 import { AutoColumn } from 'components/Column'
+import Panel from 'components/Panel'
 import { RowFixed } from 'components/Row'
-import { TYPE } from 'Theme'
 import { usePairData } from 'state/features/pairs/hooks'
+import { TYPE } from 'Theme'
 import { formattedNumber } from 'utils'
 
 const PriceCard = styled(Panel)`

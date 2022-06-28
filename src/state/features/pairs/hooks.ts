@@ -1,12 +1,12 @@
-import { timeframeOptions } from 'constants/index'
-import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
+import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import DataService from 'data/DataService'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isValidAddress } from 'utils'
+import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
 
 export function useHourlyRateData(pairAddress: string, timeWindow: string) {
   const dispatch = useAppDispatch()

@@ -1,6 +1,6 @@
-import styled from 'styled-components/macro'
 import { transparentize } from 'polished'
 import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components/macro'
 
 export const PageButtons = styled.div`
   width: 100%;

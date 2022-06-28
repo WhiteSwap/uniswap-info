@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { timeframeOptions } from 'constants/index'
 import { NetworkInfo } from 'constants/networks'
-import { ApplicationState } from './types'
 import { getCurrentNetwork } from 'utils'
+import { ApplicationState } from './types'
 
 const initialState: ApplicationState = {
   timeKey: timeframeOptions.ALL_TIME,

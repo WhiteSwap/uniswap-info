@@ -1,12 +1,23 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
 import styled from 'styled-components/macro'
 
-import { AutoRow, RowBetween } from 'components/Row'
+import { PageWrapper, ContentWrapper } from 'components'
 import { AutoColumn } from 'components/Column'
-import PairList from 'components/PairList'
-import TopTokenList from 'components/TokenList'
-import Search from 'components/Search'
+import DropdownSelect from 'components/DropdownSelect'
 import GlobalStats from 'components/GlobalStats'
+import { CustomLink } from 'components/Link'
+import PairList from 'components/PairList'
+import Panel from 'components/Panel'
+import Percent from 'components/Percent'
+import { AutoRow, RowBetween } from 'components/Row'
+import Search from 'components/Search'
+import { SeriesChart } from 'components/SeriesChart'
+import TopTokenList from 'components/TokenList'
 
+import { TransactionTable } from 'components/TransactionTable'
+import { useFormatPath } from 'hooks'
 import { useGlobalTransactions } from 'state/features/global/hooks'
 import {
   useDayVolumeUsd,
@@ -15,22 +26,10 @@ import {
   useTotalLiquidityUsd,
   useVolumeChangeUsd
 } from 'state/features/global/selectors'
-import { useFormatPath } from 'hooks'
 import { usePairs } from 'state/features/pairs/selectors'
-import { useMedia } from 'react-use'
-import Panel from 'components/Panel'
-import { formattedNumber, getChartData } from 'utils'
-import { DashboardWrapper, TYPE } from 'Theme'
-import { CustomLink } from 'components/Link'
-
-import { PageWrapper, ContentWrapper } from 'components'
-import { useTranslation } from 'react-i18next'
 import { useTokens } from 'state/features/token/selectors'
-import Percent from 'components/Percent'
-import DropdownSelect from 'components/DropdownSelect'
-import { SeriesChart } from 'components/SeriesChart'
-import { useState } from 'react'
-import { TransactionTable } from 'components/TransactionTable'
+import { DashboardWrapper, TYPE } from 'Theme'
+import { formattedNumber, getChartData } from 'utils'
 
 const ListOptions = styled(AutoRow)`
   height: 40px;

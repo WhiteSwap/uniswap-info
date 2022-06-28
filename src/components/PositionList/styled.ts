@@ -1,6 +1,6 @@
+import { transparentize } from 'polished'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { CustomLink as RouterLink } from 'components/Link'
 import { RowFixed } from 'components/Row'
 

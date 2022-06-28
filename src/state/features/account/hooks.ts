@@ -1,16 +1,14 @@
-import { timeframeOptions } from 'constants/index'
-import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
-import { useAppDispatch } from 'state/hooks'
-import { getHistoricalPairReturns } from 'utils/returns'
+import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
+import DataService from 'data/DataService'
 import { useStartTimestamp } from 'state/features/application/hooks'
 import { useActiveNetworkId, useTimeFrame } from 'state/features/application/selectors'
-import { usePairData } from 'state/features/pairs/hooks'
-import { setPairReturns, setPositionHistory, setPositions, setTopLiquidityPositions, setTransactions } from './slice'
-import { LiquidityChart } from './types'
-import { usePairs } from 'state/features/pairs/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
-import DataService from 'data/DataService'
+import { usePairData } from 'state/features/pairs/hooks'
+import { usePairs } from 'state/features/pairs/selectors'
+import { useAppDispatch } from 'state/hooks'
+import { getHistoricalPairReturns } from 'utils/returns'
 import {
   useAccountLiquiditySnapshots,
   useAccountPairReturns,
@@ -18,6 +16,8 @@ import {
   useAccountTransactions,
   useTopLiquidityPositionList
 } from './selectors'
+import { setPairReturns, setPositionHistory, setPositions, setTopLiquidityPositions, setTransactions } from './slice'
+import { LiquidityChart } from './types'
 
 export function useUserTransactions(account: string) {
   const dispatch = useAppDispatch()
