@@ -6,7 +6,7 @@ import { Play } from 'react-feather'
 import { ChartWrapper, IconWrapper } from './styled'
 import { useTheme } from 'styled-components'
 
-type CandleStickChartProperties = {
+interface CandleStickChartProperties {
   data: TimeWindowItem[]
   height?: number
   base: number

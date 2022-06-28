@@ -1,12 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-
-import { RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
-import { BasicLink } from '../Link'
-
+import { RowFixed } from 'components/Row'
+import TokenLogo from 'components/TokenLogo'
+import { BasicLink } from 'components/Link'
 import { useFormatPath } from 'hooks'
-import DoubleTokenLogo from '../DoubleLogo'
-import { TYPE } from '../../Theme'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import { TYPE } from 'Theme'
 import { escapeRegExp, isValidAddress } from 'utils'
 import { useTranslation } from 'react-i18next'
 import { useTokens } from 'state/features/token/selectors'

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { AccountLink, DashGrid, Input, Wrapper } from './styled'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 
-type IAccountSearch = {
+interface IAccountSearch {
   small?: boolean
 }
 

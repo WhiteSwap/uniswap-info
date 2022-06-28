@@ -27,7 +27,7 @@ const DATA_FREQUENCY = {
   LINE: 'LINE'
 }
 
-type TokenChartProperties = {
+interface TokenChartProperties {
   address: string
   color: string
   base: number
