@@ -158,7 +158,7 @@ export const Search = () => {
         }}
       >
         <Input
-          type={'text'}
+          type="text"
           placeholder={t('searchPairsAndTokens')}
           value={value}
           onChange={event => {

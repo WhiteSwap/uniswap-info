@@ -20,7 +20,7 @@ export const Wrapper = styled.div<{ open?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 0.75rem1rem;
+  padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   background: ${({ theme }) => transparentize(0.4, theme.bg6)};
   border-bottom-right-radius: ${({ open }) => (open ? '0px' : '12px')};
