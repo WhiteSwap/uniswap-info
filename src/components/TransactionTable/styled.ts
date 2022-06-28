@@ -17,7 +17,7 @@ export const PageButtons = styled.div`
 export const Arrow = styled.div<{ faded: boolean }>`
   color: #6681a7;
   opacity: ${({ faded }) => (faded ? 0.3 : 1)};
-  padding: 0 20px;
+  padding: 0 1.25rem;
   user-select: none;
   :hover {
     cursor: pointer;
@@ -129,7 +129,7 @@ export const SortText = styled.button<{ active: boolean }>`
   border: none;
   background-color: transparent;
   font-size: 1rem;
-  padding: 0px;
+  padding: 0;
   color: ${({ active, theme }) => (active ? theme.text1 : theme.text3)};
   outline: none;
 

@@ -18,7 +18,7 @@ export const PageButtons = styled.div`
 export const Arrow = styled.div<{ faded?: boolean }>`
   color: ${({ theme }) => theme.primary1};
   opacity: ${faded => (faded ? 0.3 : 1)};
-  padding: 0 20px;
+  padding: 0 1.25rem;
   user-select: none;
   :hover {
     cursor: pointer;
@@ -45,7 +45,7 @@ export const DashGrid = styled.div`
     :first-child {
       justify-content: flex-start;
       text-align: left;
-      width: 20px;
+      width: 1.25rem;
     }
   }
 

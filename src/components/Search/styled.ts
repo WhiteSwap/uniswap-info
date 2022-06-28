@@ -20,8 +20,8 @@ export const Wrapper = styled.div<{ open?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 0.75rem1rem;
+  border-radius: 0.75rem;
   background: ${({ theme }) => transparentize(0.4, theme.bg6)};
   border-bottom-right-radius: ${({ open }) => (open ? '0px' : '12px')};
   border-bottom-left-radius: ${({ open }) => (open ? '0px' : '12px')};
@@ -49,7 +49,7 @@ export const Input = styled.input`
 
   ::placeholder {
     color: ${({ theme }) => theme.text3};
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   @media screen and (max-width: 640px) {
@@ -82,12 +82,12 @@ export const Menu = styled.div<{ hide?: boolean }>`
   max-height: 540px;
   overflow: auto;
   left: 0;
-  padding-bottom: 20px;
+  padding-bottom: 1.25rem;
   background: ${({ theme }) => theme.bg6};
-  border-bottom-right-radius: 12px;
-  border-bottom-left-radius: 12px;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.04);
+  border-bottom-right-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0.25rem 0.5rem rgba(0, 0, 0, 0.04), 01rem 1.5rem rgba(0, 0, 0, 0.04),
+    0 1.5rem 32px rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
 `
 

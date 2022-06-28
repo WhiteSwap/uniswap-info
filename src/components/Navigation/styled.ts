@@ -9,7 +9,7 @@ export const Aside = styled.aside`
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   color: ${({ theme }) => theme.text1};
   position: sticky;
-  top: 0px;
+  top: 0;
   z-index: 9999;
   box-sizing: border-box;
   display: flex;
@@ -79,7 +79,7 @@ export const Badge = styled.span`
 export const StyledNavButton = styled.div`
   display: flex;
   border-radius: 100%;
-  padding: 8px;
+  padding: 0.5rem;
   margin-right: 1rem;
 `
 
@@ -94,7 +94,7 @@ export const Header = styled.header`
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   width: 100%;
   padding: 0 1rem;
-  top: 0px;
+  top: 0;
   z-index: 9999;
   display: grid;
   justify-content: space-between;
@@ -126,18 +126,18 @@ export const LatestBlockContainer = styled(RouterLink)`
   display: grid;
   width: fit-content;
   grid-auto-flow: column;
-  gap: 4px;
+  gap: 0.25rem;
   text-decoration: none;
-  border-radius: 4px;
-  padding: 4px;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
   font-weight: 500;
   font-size: 11px;
   transition: opacity 0.25s ease 0s;
 `
 
 export const LatestBlockDot = styled.div`
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.green1};
 `
@@ -165,7 +165,7 @@ export const MenuButton = styled(Menu)`
 export const MenuList = styled.ul`
   position: absolute;
   transition: 0.2s ease;
-  transform: translate(calc(2.5rem - 100%), 16px);
+  transform: translate(calc(2.5rem - 100%), 1rem);
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   animation: 0.3s ease-in-out;
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};

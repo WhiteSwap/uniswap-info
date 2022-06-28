@@ -3,11 +3,9 @@ const Attribution = () => (
     <a href="https://github.com/WhiteSwap/whiteswap-info" rel="noopener noreferrer" target="_blank">
       Github
     </a>{' '}
-    |{' '}
     <a href="https://app.ws.exchange" rel="noopener noreferrer" target="_blank">
       WhiteSwap
     </a>{' '}
-    |{' '}
     <a href="https://gifer.com/en/1Atv" rel="noopener noreferrer" target="_blank">
       GIF
     </a>

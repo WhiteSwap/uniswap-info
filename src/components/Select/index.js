@@ -22,14 +22,14 @@ const LogoBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-right: 8px;
+  margin-right: 0.5rem;
 `
 
 const CustomMenu = styled.div`
   background-color: white;
   position: absolute;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon);
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 0.5rem 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon);
   overflow: hidden;
   padding: 0;
   width: 180px;
@@ -40,16 +40,16 @@ const CustomMenu = styled.div`
 
 const FixedToggle = styled.div`
   position: absolute;
-  height: 24px;
+  height: 1.5rem;
   z-index: 10;
   background-color: white;
   width: 100%;
-  top: 8px;
+  top: 0.5rem;
   display: flex;
   align-items: center;
-  padding-left: 12px;
+  padding-left: 0.75rem;
   & > input {
-    margin-right: 8px;
+    margin-right: 0.5rem;
   }
 `
 

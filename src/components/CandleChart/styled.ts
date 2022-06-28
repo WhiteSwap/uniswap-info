@@ -6,13 +6,13 @@ export const ChartWrapper = styled.div`
 
 export const IconWrapper = styled.div`
   position: absolute;
-  right: 10px;
+  right: 0.625rem;
   color: ${({ theme }) => theme.text1};
   border-radius: 3px;
-  height: 16px;
-  width: 16px;
-  padding: 0px;
-  bottom: 10px;
+  height: 1rem;
+  width: 1rem;
+  padding: 0;
+  bottom: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;

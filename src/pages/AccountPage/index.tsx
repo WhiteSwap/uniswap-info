@@ -197,7 +197,7 @@ function AccountPage() {
               </AutoColumn>
             )}
             {!below440 && (
-              <AutoRow gap="20px">
+              <AutoRow gap="1.25rem">
                 <AutoColumn gap="8px">
                   <TYPE.header fontSize={24}>{totalSwappedUSD ? formattedNum(totalSwappedUSD, true) : '-'}</TYPE.header>
                   <TYPE.main>{t('totalValueSwapped')}</TYPE.main>

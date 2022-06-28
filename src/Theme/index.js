@@ -183,8 +183,8 @@ export const GlobalStyle = createGlobalStyle`
 	width: 100%;
 	height: 70px;
 	position: absolute;
-	padding: 8px;
-	font-size: 12px;
+	padding: 0.5rem;
+	font-size: 0.75rem;
 	color: #20262E;
 	background-color: rgba(255, 255, 255, 0.23);
 	text-align: left;
@@ -196,8 +196,8 @@ export const GlobalStyle = createGlobalStyle`
 	width: 100%;
 	height: 70px;
 	position: absolute;
-	padding: 8px;
-	font-size: 12px;
+	padding: 0.5rem;
+	font-size: 0.75rem;
 	color: white;
 	background-color: rgba(255, 255, 255, 0.23);
 	text-align: left;

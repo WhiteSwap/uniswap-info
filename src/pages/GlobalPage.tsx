@@ -33,7 +33,7 @@ import { useState } from 'react'
 import { TransactionTable } from 'components/TransactionTable'
 
 const ListOptions = styled(AutoRow)`
-  height: 40px;
+  height: 2.5rem;
   width: 100%;
   font-size: 1.25rem;
   font-weight: 600;

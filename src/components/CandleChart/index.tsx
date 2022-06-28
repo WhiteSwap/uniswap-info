@@ -68,7 +68,8 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
         visible: true
       },
       timeScale: {
-        borderColor: 'rgba(197, 203, 206, 0.8)'
+        borderColor: 'rgba(197, 203, 206, 0.8)',
+        timeVisible: true
       },
       localization: {
         priceFormatter: (value?: string | number) => formattedNum(value)
@@ -104,7 +105,6 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
     chartRef.current?.timeScale().scrollToPosition(0, false)
     candlestickRef.current?.setData(formattedData)
     chartRef.current?.timeScale().fitContent()
-    chartRef.current?.timeScale().applyOptions({ timeVisible: true })
   }, [formattedData.length])
 
   return (

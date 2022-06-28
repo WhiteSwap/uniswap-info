@@ -52,8 +52,8 @@ export const customStyles = {
   }),
   option: (styles, state) => ({
     ...styles,
-    'margin': '0px 0px',
-    'padding': 'calc(12px - 1px) calc(12px - 1px)',
+    'margin': '0',
+    'padding': 'calc(0.75rem - 1px) calc(0.75rem - 1px)',
     'width': '',
     'lineHeight': 1,
     'color': state.isSelected ? '#000' : '',
@@ -68,7 +68,7 @@ export const customStyles = {
   menu: styles => ({
     ...styles,
     borderRadius: 16,
-    boxShadow: '0 4px 8px 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon)',
+    boxShadow: '0 0.25rem 0.5rem 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon)',
     overflow: 'hidden',
     padding: 0
   }),
@@ -123,7 +123,7 @@ export const customStylesMobile = {
   }),
   option: (styles, state) => ({
     ...styles,
-    'margin': '20px 4px',
+    'margin': '20px 0.25rem',
     'padding': 'calc(16px - 1px) 16x',
     'width': '',
     'lineHeight': 1,
@@ -139,7 +139,7 @@ export const customStylesMobile = {
   menu: styles => ({
     ...styles,
     borderRadius: 20,
-    boxShadow: '0 4px 8px 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon)',
+    boxShadow: '0 0.25rem 0.5rem 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon)',
     overflow: 'hidden',
     paddingBottom: '12px'
   }),
@@ -199,8 +199,8 @@ export const customStylesTime = {
   }),
   option: (styles, state) => ({
     ...styles,
-    'margin': '0px 0px',
-    'padding': 'calc(12px - 1px) calc(24px - 1px)',
+    'margin': '0',
+    'padding': 'calc(0.75rem - 1px) calc(1.5rem - 1px)',
     'width': '',
     'lineHeight': 1,
     'color': state.isSelected ? '#000' : '',
@@ -215,7 +215,7 @@ export const customStylesTime = {
   menu: styles => ({
     ...styles,
     borderRadius: 16,
-    boxShadow: '0 4px 8px 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon)',
+    boxShadow: '0 0.25rem 0.5rem 0 rgba(47, 128, 237, 0.1), 0 0 0 0.5px var(--c-zircon)',
     overflow: 'hidden',
     padding: 0
   }),

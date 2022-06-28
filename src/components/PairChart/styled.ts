@@ -13,5 +13,5 @@ export const OptionsRow = styled.div`
   display: grid;
   grid-template-columns: auto auto;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 2.5rem;
 `

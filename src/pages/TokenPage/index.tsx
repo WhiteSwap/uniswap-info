@@ -161,7 +161,7 @@ const TokenPage = () => {
                   </TYPE.main>
                   {!below1080 && (
                     <>
-                      <TYPE.main fontSize={'1.5rem'} fontWeight={500} style={{ marginRight: '1rem' }}>
+                      <TYPE.main fontSize="1.5rem" fontWeight={500} style={{ marginRight: '1rem' }}>
                         {price}
                       </TYPE.main>
                       {priceChangeUSD ? <Percent percent={priceChangeUSD} /> : ''}
@@ -190,14 +190,14 @@ const TokenPage = () => {
             <PanelWrapper>
               {below1080 && price && (
                 <Panel>
-                  <AutoColumn gap="20px">
+                  <AutoColumn gap="1.25rem">
                     <RowBetween>
                       <TYPE.main>{t('price')}</TYPE.main>
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
                       {' '}
-                      <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                      <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {price}
                       </TYPE.main>
                       <TYPE.main>{priceChangeUSD ? <Percent percent={priceChangeUSD} /> : ''}</TYPE.main>
@@ -206,7 +206,7 @@ const TokenPage = () => {
                 </Panel>
               )}
               <Panel>
-                <AutoColumn gap="20px">
+                <AutoColumn gap="1.25rem">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
                       {t('totalLiquidity')}
@@ -214,7 +214,7 @@ const TokenPage = () => {
                     <div />
                   </RowBetween>
                   <RowBetween align="flex-end">
-                    <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                    <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                       {liquidity}
                     </TYPE.main>
                     <TYPE.main>
@@ -224,7 +224,7 @@ const TokenPage = () => {
                 </AutoColumn>
               </Panel>
               <Panel>
-                <AutoColumn gap="20px">
+                <AutoColumn gap="1.25rem">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
                       {t('volume24hrs')}
@@ -232,7 +232,7 @@ const TokenPage = () => {
                     <div />
                   </RowBetween>
                   <RowBetween align="flex-end">
-                    <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                    <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                       {volume}
                     </TYPE.main>
                     <TYPE.main>
@@ -242,7 +242,7 @@ const TokenPage = () => {
                 </AutoColumn>
               </Panel>
               <Panel>
-                <AutoColumn gap="20px">
+                <AutoColumn gap="1.25rem">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
                       {t('transactions')} (24hrs)
@@ -250,7 +250,7 @@ const TokenPage = () => {
                     <div />
                   </RowBetween>
                   <RowBetween align="flex-end">
-                    <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                    <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                       {oneDayTxns ? localNumber(oneDayTxns) : 0}
                     </TYPE.main>
                     <TYPE.main>

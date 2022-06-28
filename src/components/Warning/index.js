@@ -12,7 +12,7 @@ import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 
 const WarningWrapper = styled.div`
-  border-radius: 20px;
+  border-radius: 1.25rem;
   border: 1px solid #f82d3a;
   background: rgba(248, 45, 58, 0.05);
   padding: 1rem;
@@ -28,8 +28,8 @@ const WarningWrapper = styled.div`
 `
 
 const StyledWarningIcon = styled(AlertTriangle)`
-  min-height: 20px;
-  min-width: 20px;
+  min-height: 1.25rem;
+  min-width: 1.25rem;
   stroke: red;
 `
 

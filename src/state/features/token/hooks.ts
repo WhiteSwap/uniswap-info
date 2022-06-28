@@ -8,7 +8,6 @@ import { useActiveTokenPrice } from 'state/features/global/selectors'
 import DataService from 'data/DataService'
 import { isValidAddress } from 'utils'
 import { SupportedNetwork } from 'constants/networks'
-// import { usePrevious } from 'react-use'
 
 export function useFetchTokens() {
   const dispatch = useAppDispatch()
