@@ -32,12 +32,12 @@ const Span = styled.span`
   color: ${({ theme }) => theme.text1};
 `
 
-export interface ToggleProps {
+export interface ToggleProperties {
   isActive: boolean
   toggle: () => void
 }
 
-export default function Toggle({ isActive, toggle }: ToggleProps) {
+export default function Toggle({ isActive, toggle }: ToggleProperties) {
   return (
     <StyledToggle onClick={toggle}>
       <span>

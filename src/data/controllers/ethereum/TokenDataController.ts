@@ -112,25 +112,25 @@ export default class TokenDataController implements ITokenDataController {
     const oneDayEthPrice = +oneDayEthPriceResult?.data?.bundles[0]?.ethPrice
 
     try {
-      const current = await fetchTokens()
+      const currentResult = await fetchTokens()
       const oneDayResult = await fetchTokens(oneDayBlock)
       const twoDayResult = await fetchTokens(twoDayBlock)
 
       const oneDayData = oneDayResult?.data?.tokens.reduce<Record<string, ETHToken>>(
-        (obj, cur) => ({ ...obj, [cur.id]: cur }),
+        (object, current) => ({ ...object, [current.id]: current }),
         {}
       )
 
       const twoDayData = twoDayResult?.data?.tokens.reduce<Record<string, ETHToken>>(
-        (obj, cur) => ({ ...obj, [cur.id]: cur }),
+        (object, current) => ({ ...object, [current.id]: current }),
         {}
       )
 
-      const bulkResults = await Promise.all(
-        current &&
+      return Promise.all(
+        currentResult &&
           oneDayData &&
           twoDayData &&
-          current?.data?.tokens.map(async token => {
+          currentResult?.data?.tokens.map(async token => {
             const data = { ...token }
 
             let oneDayHistory = oneDayData?.[token.id]
@@ -148,9 +148,7 @@ export default class TokenDataController implements ITokenDataController {
             return parseToken(data, price, oneDayEthPrice, oneDayHistory, twoDayHistory)
           })
       )
-
-      return bulkResults
-    } catch (e) {
+    } catch {
       return []
     }
   }
@@ -182,12 +180,12 @@ export default class TokenDataController implements ITokenDataController {
 
       return parseToken(data, price, oneDayEthPrice, oneDayData, twoDayData)
     }
-    return
+    return undefined
   }
   async getTokenPairs(tokenAddress: string) {
     // fetch all current and historical data
     const result = await fetchTokenData(tokenAddress)
-    return result.data?.['pairs0'].concat(result.data?.['pairs1']).map((p: { id: string }) => p.id)
+    return [...result.data?.['pairs0'], ...result.data?.['pairs1']].map((p: { id: string }) => p.id)
   }
   async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number, latestBlock: number) {
     const utcEndTime = dayjs.utc().unix()
@@ -222,9 +220,9 @@ export default class TokenDataController implements ITokenDataController {
 
       // FIXME: refactor splitQuery
       const result: any = await splitQuery(
-        (params: BlockHeight[]) =>
+        (parameters: BlockHeight[]) =>
           client.query({
-            query: PRICES_BY_BLOCK(tokenAddress, params)
+            query: PRICES_BY_BLOCK(tokenAddress, parameters)
           }),
         blocks,
         50
@@ -233,7 +231,7 @@ export default class TokenDataController implements ITokenDataController {
       const values: { timestamp: string; derivedETH: number; priceUSD?: number }[] = []
       for (const row in result) {
         const timestamp = row.split('t')[1]
-        const derivedETH = parseFloat(result[row]?.derivedETH)
+        const derivedETH = Number.parseFloat(result[row]?.derivedETH)
         if (timestamp) {
           values.push({
             timestamp,
@@ -257,17 +255,17 @@ export default class TokenDataController implements ITokenDataController {
       const formattedHistory: TimeWindowItem[] = []
 
       // for each hour, construct the open and close price
-      for (let i = 0; i < values.length - 1; i++) {
+      for (let index_ = 0; index_ < values.length - 1; index_++) {
         formattedHistory.push({
-          timestamp: values[i].timestamp,
-          open: values[i].priceUSD!,
-          close: values[i + 1].priceUSD!
+          timestamp: values[index_].timestamp,
+          open: values[index_].priceUSD!,
+          close: values[index_ + 1].priceUSD!
         })
       }
 
       return formattedHistory
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
       console.log('error fetching blocks')
       return []
     }
@@ -293,16 +291,16 @@ export default class TokenDataController implements ITokenDataController {
           allFound = true
         }
         skip += 1000
-        data = data.concat(result.data.tokenDayDatas)
+        data = [...data, ...result.data.tokenDayDatas]
       }
 
       const dayIndexSet = new Set()
       const dayIndexArray: TokenDayData[] = []
       const oneDay = 24 * 60 * 60
-      data.forEach((dayData, i) => {
+      data.forEach((dayData, index) => {
         // add the day index to the set of days
-        dayIndexSet.add((data[i].date / oneDay).toFixed(0))
-        dayIndexArray.push(data[i])
+        dayIndexSet.add((data[index].date / oneDay).toFixed(0))
+        dayIndexArray.push(data[index])
         dayData.dailyVolumeUSD = +dayData.dailyVolumeUSD
       })
 
@@ -310,7 +308,7 @@ export default class TokenDataController implements ITokenDataController {
       let timestamp = data[0] && data[0].date ? data[0].date : startTime
       let latestLiquidityUSD = data[0] && data[0].totalLiquidityUSD
       let latestPriceUSD = data[0] && data[0].priceUSD
-      let index = 1
+      let dayIndex = 1
       while (timestamp < utcEndTime.startOf('minute').unix() - oneDay) {
         const nextDay = timestamp + oneDay
         const currentDayIndex = (nextDay / oneDay).toFixed(0)
@@ -322,15 +320,15 @@ export default class TokenDataController implements ITokenDataController {
             totalLiquidityUSD: latestLiquidityUSD
           })
         } else {
-          latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
-          latestPriceUSD = dayIndexArray[index].priceUSD
-          index = index + 1
+          latestLiquidityUSD = dayIndexArray[dayIndex].totalLiquidityUSD
+          latestPriceUSD = dayIndexArray[dayIndex].priceUSD
+          dayIndex += 1
         }
         timestamp = nextDay
       }
       data = data.sort((a, b) => (a.date > b.date ? 1 : -1))
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      console.error(error)
     }
 
     return tokenChartDataMapper(data)

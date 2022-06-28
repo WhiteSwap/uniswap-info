@@ -1,28 +1,28 @@
 import { useEffect, useRef, useMemo, memo } from 'react'
 import { createChart, CrosshairMode, CandlestickData, IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import dayjs from 'dayjs'
-import { formattedNum } from 'utils'
+import { formattedNumber } from 'utils'
 import { Play } from 'react-feather'
 import { ChartWrapper, IconWrapper } from './styled'
 import { useTheme } from 'styled-components'
 
-type Props = {
+type CandleStickChartProperties = {
   data: TimeWindowItem[]
   height?: number
   base: number
 }
 
-const CandleStickChart = ({ data, height = 300, base }: Props) => {
-  const chartContainerRef = useRef<HTMLDivElement>(null)
-  const chartRef = useRef<IChartApi>()
-  const candlestickRef = useRef<ISeriesApi<'Candlestick'>>()
+const CandleStickChart = ({ data, height = 300, base }: CandleStickChartProperties) => {
+  const chartContainerReference = useRef<HTMLDivElement>(null)
+  const chartReference = useRef<IChartApi>()
+  const candlestickReference = useRef<ISeriesApi<'Candlestick'>>()
 
   const theme = useTheme()
 
   const formattedData: CandlestickData[] = useMemo(() => {
     const mappedData = data.map(entry => {
       return {
-        time: parseFloat(entry.timestamp) as UTCTimestamp,
+        time: Number.parseFloat(entry.timestamp) as UTCTimestamp,
         open: entry.open,
         high: entry.close,
         low: entry.open,
@@ -44,8 +44,8 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
   }, [data.length])
 
   useEffect(() => {
-    const width = chartContainerRef.current?.clientWidth || 300
-    chartRef.current = createChart(chartContainerRef.current!, {
+    const width = chartContainerReference.current?.clientWidth || 300
+    chartReference.current = createChart(chartContainerReference.current!, {
       width: width,
       height: height,
       layout: {
@@ -72,11 +72,11 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
         timeVisible: true
       },
       localization: {
-        priceFormatter: (value?: string | number) => formattedNum(value)
+        priceFormatter: (value?: string | number) => formattedNumber(value)
       }
     })
 
-    candlestickRef.current = chartRef.current.addCandlestickSeries({
+    candlestickReference.current = chartReference.current.addCandlestickSeries({
       upColor: 'green',
       downColor: 'red',
       borderDownColor: 'red',
@@ -86,34 +86,34 @@ const CandleStickChart = ({ data, height = 300, base }: Props) => {
     })
 
     const handleResize = () => {
-      chartRef.current?.timeScale().fitContent()
-      chartRef.current?.applyOptions({
-        width: chartContainerRef.current?.clientWidth
+      chartReference.current?.timeScale().fitContent()
+      chartReference.current?.applyOptions({
+        width: chartContainerReference.current?.clientWidth
       })
     }
 
     window.addEventListener('resize', handleResize)
-    chartRef.current.timeScale().fitContent()
+    chartReference.current.timeScale().fitContent()
 
     return () => {
       window.removeEventListener('resize', handleResize)
-      chartRef.current?.remove()
+      chartReference.current?.remove()
     }
   }, [])
 
   useEffect(() => {
-    chartRef.current?.timeScale().scrollToPosition(0, false)
-    candlestickRef.current?.setData(formattedData)
-    chartRef.current?.timeScale().fitContent()
+    chartReference.current?.timeScale().scrollToPosition(0, false)
+    candlestickReference.current?.setData(formattedData)
+    chartReference.current?.timeScale().fitContent()
   }, [formattedData.length])
 
   return (
     <ChartWrapper>
-      <div ref={chartContainerRef} />
+      <div ref={chartContainerReference} />
       <IconWrapper>
         <Play
           onClick={() => {
-            chartRef.current?.timeScale().fitContent()
+            chartReference.current?.timeScale().fitContent()
           }}
         />
       </IconWrapper>

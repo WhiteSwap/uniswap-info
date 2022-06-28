@@ -5,7 +5,7 @@ import { Flex } from 'rebass'
 import { useFormatPath } from 'hooks'
 import { CustomLink } from 'components/Link'
 import { Divider } from 'components'
-import { ellipsisAddress, formattedNum } from 'utils'
+import { ellipsisAddress, formattedNumber } from 'utils'
 import { TYPE } from 'Theme'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import { RowFixed } from 'components/Row'
@@ -13,12 +13,12 @@ import Panel from 'components/Panel'
 import { useTranslation } from 'react-i18next'
 import { Arrow, CustomText, DashGrid, DataText, List, ListWrapper, PageButtons } from './styled'
 
-type Props = {
+interface ILPList {
   lps: LiquidityPosition[]
   maxItems: number
 }
 
-function LPList({ lps, maxItems = 10 }: Props) {
+function LPList({ lps, maxItems = 10 }: ILPList) {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const below440 = useMedia('(max-width: 440px)')
@@ -62,7 +62,7 @@ function LPList({ lps, maxItems = 10 }: Props) {
             </RowFixed>
           </CustomLink>
         </DataText>
-        <DataText>{formattedNum(lp.usd, true)}</DataText>
+        <DataText>{formattedNumber(lp.usd, true)}</DataText>
       </DashGrid>
     )
   }

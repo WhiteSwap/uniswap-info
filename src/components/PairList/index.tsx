@@ -4,7 +4,7 @@ import LocalLoader from '../LocalLoader'
 import { Flex } from 'rebass'
 import { useFormatPath } from 'hooks'
 import { Divider } from '..'
-import { formattedNum } from '../../utils'
+import { formattedNumber } from '../../utils'
 import DoubleTokenLogo from '../DoubleLogo'
 import FormattedName from '../FormattedName'
 import QuestionHelper from '../QuestionHelper'
@@ -61,8 +61,8 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
   }, [ITEMS_PER_PAGE, pairs])
 
   const ListItem = ({ pairData, index }: { pairData: Pair; index: number }) => {
-    const liquidity = formattedNum(pairData.totalLiquidityUSD, true)
-    const volume = formattedNum(pairData.dayVolumeUSD, true)
+    const liquidity = formattedNumber(pairData.totalLiquidityUSD, true)
+    const volume = formattedNumber(pairData.dayVolumeUSD, true)
 
     return (
       <DashGrid style={{ padding: below440 ? '.75rem' : '.875rem 2rem' }}>
@@ -86,8 +86,8 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
         </DataText>
         <DataText>{liquidity}</DataText>
         <DataText>{volume}</DataText>
-        {!below1080 && <DataText>{formattedNum(pairData.weekVolumeUSD, true)}</DataText>}
-        {!below1080 && <DataText>{formattedNum(pairData.dayFees, true)}</DataText>}
+        {!below1080 && <DataText>{formattedNumber(pairData.weekVolumeUSD, true)}</DataText>}
+        {!below1080 && <DataText>{formattedNumber(pairData.dayFees, true)}</DataText>}
         {!below1080 && (
           <DataText>
             <Percent percent={pairData.apy} />

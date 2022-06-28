@@ -82,8 +82,8 @@ export function burnTransactionMapper(payload: BurnTransaction): Transaction {
 
 export function transactionsMapper(payload: RawTransactions): Transactions {
   return {
-    mints: payload?.mints.map(mintTransactionMapper),
-    burns: payload?.burns.map(burnTransactionMapper),
-    swaps: payload?.swaps.map(swapTransactionMapper)
+    mints: payload?.mints.map(mint => mintTransactionMapper(mint)),
+    burns: payload?.burns.map(burn => burnTransactionMapper(burn)),
+    swaps: payload?.swaps.map(swap => swapTransactionMapper(swap))
   }
 }

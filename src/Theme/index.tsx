@@ -1,71 +1,49 @@
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components/macro'
-import { useDarkModeManager } from 'state/features/user/hooks'
-import styled from 'styled-components/macro'
-import { Text } from 'rebass'
+import styled, { createGlobalStyle, DefaultTheme } from 'styled-components/macro'
+import { Text, TextProps } from 'rebass'
 
-export default function ThemeProvider({ children }) {
-  const [darkMode] = useDarkModeManager()
-
-  return <StyledComponentsThemeProvider theme={theme(darkMode)}>{children}</StyledComponentsThemeProvider>
-}
-
-const theme = (darkMode, color) => ({
-  customColor: color,
-  textColor: darkMode ? color : 'black',
-
-  panelColor: darkMode ? 'rgba(255, 255, 255, 0)' : 'rgba(255, 255, 255, 0)',
-  backgroundColor: darkMode ? '#212429' : '#F7F8FA',
-
-  uniswapPink: darkMode ? '#C9A02F' : 'black',
-
-  concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
-  inputBackground: darkMode ? '#1F1F1F' : '#FAFAFA',
-  shadowColor: darkMode ? '#000' : '#2F80ED',
-  mercuryGray: darkMode ? '#333333' : '#E1E1E1',
-
-  text1: darkMode ? '#FAFAFA' : '#202327',
-  text2: darkMode ? '#C3C5CB' : '#565A69',
-  text3: darkMode ? '#6C7284' : '#888D9B',
-  text4: darkMode ? '#565A69' : '#C3C5CB',
-  text5: darkMode ? '#2C2F36' : '#EDEEF2',
-  text6: darkMode ? 'rgb(165, 172, 183)' : '#45484D',
-
+const lightTheme = {
+  panelColor: 'rgba(255, 255, 255, 0)',
+  backgroundColor: '#F7F8FA',
+  uniswapPink: 'black',
+  concreteGray: '#FAFAFA',
+  inputBackground: '#FAFAFA',
+  shadowColor: '#2F80ED',
+  mercuryGray: '#E1E1E1',
+  text1: '#202327',
+  text2: '#565A69',
+  text3: '#888D9B',
+  text4: '#C3C5CB',
+  text5: '#EDEEF2',
+  text6: '#45484D',
   // special case text types
   white: '#FFFFFF',
-
   // backgrounds / greys
-  bg1: darkMode ? '#212429' : '#FAFAFA',
-  bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-  bg3: darkMode ? '#40444F' : '#EDEEF2',
-  bg4: darkMode ? '#565A69' : '#CED0D9',
-  bg5: darkMode ? '#565A69' : '#888D9B',
-  bg6: darkMode ? '#000' : '#FFFFFF',
-  bg7: darkMode ? '#1f1f25' : '#F2F3F5',
-  bg8: darkMode ? '#1C1C22' : '#FFFFFF',
-
+  bg1: '#FAFAFA',
+  bg2: '#F7F8FA',
+  bg3: '#EDEEF2',
+  bg4: '#CED0D9',
+  bg5: '#888D9B',
+  bg6: '#FFFFFF',
+  bg7: '#F2F3F5',
+  bg8: '#FFFFFF',
   //specialty colors
-  modalBG: darkMode ? 'rgba(0,0,0,0.425)' : 'rgba(0,0,0,0.3)',
-  advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.4)',
-  onlyLight: darkMode ? '#22242a' : 'transparent',
-  divider: darkMode ? 'rgba(43, 43, 43, 0.435)' : 'rgba(43, 43, 43, 0.035)',
-
+  modalBG: 'rgba(0,0,0,0.3)',
+  advancedBG: 'rgba(255,255,255,0.4)',
+  onlyLight: 'transparent',
+  divider: 'rgba(43, 43, 43, 0.035)',
   //primary colors
-  primary1: darkMode ? '#C9A02F' : '#C9A02F',
-  primary2: darkMode ? '#3680E7' : '#e0b856',
-  primary3: darkMode ? '#4D8FEA' : '#e2c277',
-  primary4: darkMode ? '#376bad70' : '#eed385',
-  primary5: darkMode ? '#153d6f70' : '#f3e2af',
-
+  primary1: '#C9A02F',
+  primary2: '#e0b856',
+  primary3: '#e2c277',
+  primary4: '#eed385',
+  primary5: '#f3e2af',
   // color text
-  primaryText1: darkMode ? '#6da8ff' : '#C9A02F',
-
+  primaryText1: '#C9A02F',
   // secondary colors
-  secondary1: darkMode ? '#2172E5' : '#C9A02F',
-  secondary2: darkMode ? '#17000b26' : '#f5d786',
-  secondary3: darkMode ? '#17000b26' : '#f8e5b1',
-
-  shadow1: darkMode ? '#000' : '#2F80ED',
-
+  secondary1: '#C9A02F',
+  secondary2: '#f5d786',
+  secondary3: '#f8e5b1',
+  shadow1: '#2F80ED',
   // other
   red1: '#C73846',
   green1: '#54B45D',
@@ -74,43 +52,99 @@ const theme = (darkMode, color) => ({
   link: '#2172E5',
   blueGrey: '#6681A7',
   blue: '#2E69BB',
-
   lightText1: '#FAFAFA',
+  background: `radial-gradient(50% 50% at 50% 50%, #C9A02F30 0%, #fff 0%)`
+}
 
-  background: darkMode ? 'black' : `radial-gradient(50% 50% at 50% 50%, #C9A02F30 0%, #fff 0%)`
-})
+const darkTheme = {
+  panelColor: 'rgba(255, 255, 255, 0)',
+  backgroundColor: '#212429',
+  uniswapPink: '#C9A02F',
+  concreteGray: '#292C2F',
+  inputBackground: '#1F1F1F',
+  shadowColor: '#000',
+  mercuryGray: '#333333',
+  text1: '#FAFAFA',
+  text2: '#C3C5CB',
+  text3: '#6C7284',
+  text4: '#565A69',
+  text5: '#2C2F36',
+  text6: 'rgb(165, 172, 183)',
+  // special case text types
+  white: '#FFFFFF',
+  // backgrounds / greys
+  bg1: '#212429',
+  bg2: '#2C2F36',
+  bg3: '#40444F',
+  bg4: '#565A69',
+  bg5: '#565A69',
+  bg6: '#000',
+  bg7: '#1f1f25',
+  bg8: '#1C1C22',
+  //specialty colors
+  modalBG: 'rgba(0,0,0,0.425)',
+  advancedBG: 'rgba(0,0,0,0.1)',
+  onlyLight: '#22242a',
+  divider: 'rgba(43, 43, 43, 0.435)',
+  //primary colors
+  primary1: '#C9A02F',
+  primary2: '#3680E7',
+  primary3: '#4D8FEA',
+  primary4: '#376bad70',
+  primary5: '#153d6f70',
+  // color text
+  primaryText1: '#6da8ff',
+  // secondary colors
+  secondary1: '#2172E5',
+  secondary2: '#17000b26',
+  secondary3: '#17000b26',
+  shadow1: '#000',
+  // other
+  red1: '#C73846',
+  green1: '#54B45D',
+  yellow1: '#FFE270',
+  yellow2: '#F3841E',
+  link: '#2172E5',
+  blueGrey: '#6681A7',
+  blue: '#2E69BB',
+  lightText1: '#FAFAFA',
+  background: 'black'
+}
+
+export const globalTheme = (darkMode: boolean): DefaultTheme => {
+  if (darkMode) {
+    return darkTheme
+  }
+  return lightTheme
+}
 
 const TextWrapper = styled(Text)`
-  color: ${({ color, theme }) => theme[color]};
+  color: ${({ color, theme }) => theme[color as keyof DefaultTheme]};
 `
 
 export const TYPE = {
-  main(props) {
+  main(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color={'text1'} {...props} />
   },
 
-  body(props) {
+  body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...props} />
   },
 
-  small(props) {
+  small(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} color={'text1'} {...props} />
   },
 
-  header(props) {
+  header(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
   },
 
-  largeHeader(props) {
+  largeHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text1'} fontSize={28} {...props} />
   },
 
-  light(props) {
+  light(props: TextProps) {
     return <TextWrapper fontWeight={400} color={'text3'} fontSize={14} {...props} />
-  },
-
-  pink(props) {
-    return <TextWrapper fontWeight={props.faded ? 400 : 600} color={props.faded ? 'text1' : 'text1'} {...props} />
   }
 }
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
 import { OptionButton } from 'components/ButtonStyled'
 import { useMedia, usePrevious } from 'react-use'
 import { timeframeOptions } from 'constants/index'
@@ -27,13 +27,13 @@ const DATA_FREQUENCY = {
   LINE: 'LINE'
 }
 
-type Props = {
+type TokenChartProperties = {
   address: string
   color: string
   base: number
 }
 
-const TokenChart = ({ address, color, base }: Props) => {
+const TokenChart = ({ address, color, base }: TokenChartProperties) => {
   const { t } = useTranslation()
 
   const [darkMode] = useDarkModeManager()
@@ -44,19 +44,19 @@ const TokenChart = ({ address, color, base }: Props) => {
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE)
   const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR)
 
-  const addressPrev = usePrevious(address)
+  const addressPrevious = usePrevious(address)
 
   useEffect(() => {
-    if (address !== addressPrev && addressPrev) {
+    if (address !== addressPrevious && addressPrevious) {
       setChartFilter(CHART_VIEW.LIQUIDITY)
     }
-  }, [address, addressPrev])
+  }, [address, addressPrevious])
 
   const chartData = useTokenChartData(address)
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK)
 
-  const interval = frequency === DATA_FREQUENCY.DAY ? 86400 : 3600
+  const interval = frequency === DATA_FREQUENCY.DAY ? 86_400 : 3600
   const priceData = useTokenPriceData(address, timeWindow, interval)
 
   const utcStartTime = getTimeframe(timeWindow)
@@ -171,7 +171,7 @@ const TokenChart = ({ address, color, base }: Props) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val: string | number) => formattedNum(val, true)}
+              formatter={(value: string | number) => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{
                 paddingTop: 4
@@ -234,7 +234,7 @@ const TokenChart = ({ address, color, base }: Props) => {
               />
               <Tooltip
                 cursor={true}
-                formatter={(val: string | number) => formattedNum(val, true)}
+                formatter={(value: string | number) => formattedNumber(value, true)}
                 labelFormatter={label => toNiceDateYear(label)}
                 labelStyle={{ paddingTop: 4 }}
                 contentStyle={{
@@ -294,7 +294,7 @@ const TokenChart = ({ address, color, base }: Props) => {
             />
             <Tooltip
               cursor={{ fill: color, opacity: 0.1 }}
-              formatter={(val: string | number) => formattedNum(val, true)}
+              formatter={(value: string | number) => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

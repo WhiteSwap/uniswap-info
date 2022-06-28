@@ -12,26 +12,26 @@ export interface PairDayData {
   reserveUSD: number
 }
 
-export type UpdatePairPayload = ParamsWithNetwork<{
+export type UpdatePairPayload = ParametersWithNetwork<{
   pairAddress: string
   data: Pair
 }>
 
-export type UpdateTopPairsPayload = ParamsWithNetwork<{
+export type UpdateTopPairsPayload = ParametersWithNetwork<{
   topPairs: Pair[]
 }>
 
-export type UpdatePairTransactionsPayload = ParamsWithNetwork<{
+export type UpdatePairTransactionsPayload = ParametersWithNetwork<{
   address: string
   transactions: Transactions
 }>
 
-export type UpdateChartDataPayload = ParamsWithNetwork<{
+export type UpdateChartDataPayload = ParametersWithNetwork<{
   address: string
   chartData: PairDayData[]
 }>
 
-export type UpdateHourlyDataPayload = ParamsWithNetwork<{
+export type UpdateHourlyDataPayload = ParametersWithNetwork<{
   address: string
   hourlyData: TimeWindowItem[][]
   timeWindow: string

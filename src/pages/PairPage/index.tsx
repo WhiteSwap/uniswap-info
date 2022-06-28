@@ -22,17 +22,17 @@ import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
 import { useToggleSavedPair } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
-import { isValidAddress, formattedNum, getPoolLink, getSwapLink, getBlockChainScanLink } from 'utils'
+import { isValidAddress, formattedNumber, getPoolLink, getSwapLink, getBlockChainScanLink } from 'utils'
 import { WarningGrouping, TokenSymbolLink, FixedPanel, PanelWrapper, TokenLink, ActionsContainer } from './styled'
 
 const PairPage = () => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
-  const params = useParams()
-  const pairAddress = params.pairAddress!
+  const parameters = useParams()
+  const pairAddress = parameters.pairAddress!
   const activeNetworkId = useActiveNetworkId()
 
-  if (PAIR_BLACKLIST.includes(pairAddress!.toLowerCase()) || !isValidAddress(pairAddress!, activeNetworkId)) {
+  if (PAIR_BLACKLIST.includes(pairAddress.toLowerCase()) || !isValidAddress(pairAddress, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
 
@@ -47,19 +47,19 @@ const PairPage = () => {
     oneDayVolumeUntracked,
     volumeChangeUntracked,
     liquidityChangeUSD
-  } = usePairData(pairAddress!)
+  } = usePairData(pairAddress)
 
-  const transactions = usePairTransactions(pairAddress!)
+  const transactions = usePairTransactions(pairAddress)
 
   const liquidity = trackedReserveUSD
-    ? formattedNum(trackedReserveUSD, true)
+    ? formattedNumber(trackedReserveUSD, true)
     : totalLiquidityUSD
-    ? formattedNum(totalLiquidityUSD, true)
+    ? formattedNumber(totalLiquidityUSD, true)
     : '$0'
 
   const volume =
     dayVolumeUSD || dayVolumeUSD === 0
-      ? formattedNum(dayVolumeUSD === 0 ? oneDayVolumeUntracked : dayVolumeUSD, true)
+      ? formattedNumber(dayVolumeUSD === 0 ? oneDayVolumeUntracked : dayVolumeUSD, true)
       : dayVolumeUSD === 0
       ? '$0'
       : '-'
@@ -171,8 +171,8 @@ const PairPage = () => {
                   <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size={'1rem'} />
                   <TYPE.light fontSize=".875rem" lineHeight="1rem" fontWeight={700} ml=".25rem" mr="3.75rem">
                     {tokenOne && tokenTwo
-                      ? `1 ${formattedSymbol0} = ${formattedNum(tokenOne.price) || '-'} ${formattedSymbol1} ${
-                          tokenOne.priceUSD ? '(' + formattedNum(tokenOne.priceUSD, true) + ')' : undefined
+                      ? `1 ${formattedSymbol0} = ${formattedNumber(tokenOne.price) || '-'} ${formattedSymbol1} ${
+                          tokenOne.priceUSD ? '(' + formattedNumber(tokenOne.priceUSD, true) + ')' : undefined
                         }`
                       : '-'}
                   </TYPE.light>
@@ -184,8 +184,8 @@ const PairPage = () => {
                   <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} size={'16px'} />
                   <TYPE.light fontSize={'.875rem'} lineHeight={'1rem'} fontWeight={700} ml={'.25rem'}>
                     {tokenOne && tokenTwo
-                      ? `1 ${formattedSymbol1} = ${formattedNum(tokenTwo.price) || '-'} ${formattedSymbol0}  ${
-                          tokenTwo?.priceUSD ? '(' + formattedNum(tokenTwo.priceUSD, true) + ')' : ''
+                      ? `1 ${formattedSymbol1} = ${formattedNumber(tokenTwo.price) || '-'} ${formattedSymbol0}  ${
+                          tokenTwo?.priceUSD ? '(' + formattedNumber(tokenTwo.priceUSD, true) + ')' : ''
                         }`
                       : '-'}
                   </TYPE.light>
@@ -241,7 +241,7 @@ const PairPage = () => {
                     </RowBetween>
                     <RowBetween align="flex-end">
                       <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
-                        {formattedNum(dayFees, true)}
+                        {formattedNumber(dayFees, true)}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
                         <Percent percent={volumeChange || 0} />
@@ -263,7 +263,7 @@ const PairPage = () => {
                         <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {tokenOne?.reserve ? formattedNum(tokenOne.reserve) : ''} {tokenOne?.symbol ?? ''}
+                            {tokenOne?.reserve ? formattedNumber(tokenOne.reserve) : ''} {tokenOne?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>
@@ -273,7 +273,7 @@ const PairPage = () => {
                         <TokenLogo alt={tokenTwo?.symbol} address={tokenTwo?.id} />
                         <TYPE.main fontSize={20} lineHeight={1} fontWeight={500}>
                           <RowFixed>
-                            {tokenTwo?.reserve ? formattedNum(tokenTwo.reserve) : ''} {tokenTwo?.symbol ?? ''}
+                            {tokenTwo?.reserve ? formattedNumber(tokenTwo.reserve) : ''} {tokenTwo?.symbol ?? ''}
                           </RowFixed>
                         </TYPE.main>
                       </AutoRow>

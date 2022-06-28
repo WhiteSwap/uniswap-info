@@ -122,7 +122,10 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
     const currentTime = dayjs.utc()
     const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
     const startTime =
-      timeWindow === timeframeOptions.ALL_TIME ? 1589760000 : currentTime.subtract(1, windowSize).startOf('hour').unix()
+      timeWindow === timeframeOptions.ALL_TIME
+        ? 1_589_760_000
+        : currentTime.subtract(1, windowSize).startOf('hour').unix()
+
     async function fetchData() {
       const data = await DataService.tokens.getIntervalTokenData(tokenAddress, startTime, interval, latestBlock)
       dispatch(setPriceData({ networkId: activeNetwork, timeWindow, interval, data, address: tokenAddress }))

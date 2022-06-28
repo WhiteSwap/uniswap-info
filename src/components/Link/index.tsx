@@ -4,9 +4,9 @@ import styled from 'styled-components/macro'
 import { lighten, darken } from 'polished'
 import { PropsWithChildren } from 'react'
 
-type WrappedLinkProps = PropsWithChildren<{ external?: boolean; color?: string } & LinkProps>
+type WrappedLinkProperties = PropsWithChildren<{ external?: boolean; color?: string } & LinkProps>
 
-const WrappedLink = ({ external, target, children, ...rest }: WrappedLinkProps) => (
+const WrappedLink = ({ external, target, children, ...rest }: WrappedLinkProperties) => (
   <RebassLink
     target={external || !target ? '_blank' : target}
     rel={external ? 'noopener noreferrer' : undefined}

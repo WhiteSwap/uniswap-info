@@ -18,7 +18,9 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string) {
     const currentTime = dayjs.utc()
     const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
     const startTime =
-      timeWindow === timeframeOptions.ALL_TIME ? 1589760000 : currentTime.subtract(1, windowSize).startOf('hour').unix()
+      timeWindow === timeframeOptions.ALL_TIME
+        ? 1_589_760_000
+        : currentTime.subtract(1, windowSize).startOf('hour').unix()
 
     async function fetch() {
       const data = await DataService.pairs.getHourlyRateData(pairAddress, startTime, latestBlock)

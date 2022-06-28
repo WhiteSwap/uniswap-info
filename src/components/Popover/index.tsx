@@ -74,14 +74,14 @@ const Arrow = styled.div`
   }
 `
 
-export interface PopoverProps {
+export interface IPopover {
   content: React.ReactNode
   show: boolean
   children: React.ReactNode
   placement?: Placement
 }
 
-export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto' }: IPopover) {
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const [arrowElement, setArrowElement] = useState(null)

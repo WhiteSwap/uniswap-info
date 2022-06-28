@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
 import { RowBetween, AutoRow } from 'components/Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
 import { OptionButton } from 'components/ButtonStyled'
 import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
 import { timeframeOptions } from 'constants/index'
@@ -201,7 +201,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 />
                 <Tooltip
                   cursor={true}
-                  formatter={val => formattedNum(val, true)}
+                  formatter={value => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{
@@ -272,7 +272,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 />
                 <Tooltip
                   cursor={{ fill: color, opacity: 0.1 }}
-                  formatter={val => formattedNum(val, true)}
+                  formatter={value => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{

@@ -44,28 +44,27 @@ async function fetchHistoricalPairData(pairList: string[], price: number) {
   })
 
   const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
-    [b1, b2, bWeek].map(async block => {
-      const result = await client.query({
+    [b1, b2, bWeek].map(async block =>
+      client.query({
         query: PAIRS_HISTORICAL_BULK,
         variables: {
           pairs: pairList,
           block: block ? { number: block } : null
         }
       })
-      return result
-    })
+    )
   )
 
-  const oneDayData = oneDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
-    return { ...obj, [cur.id]: cur }
+  const oneDayData = oneDayResult?.data?.pairs.reduce((object: any, current: { id: string }) => {
+    return { ...object, [current.id]: current }
   }, {})
 
-  const twoDayData = twoDayResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
-    return { ...obj, [cur.id]: cur }
+  const twoDayData = twoDayResult?.data?.pairs.reduce((object: any, current: { id: string }) => {
+    return { ...object, [current.id]: current }
   }, {})
 
-  const oneWeekData = oneWeekResult?.data?.pairs.reduce((obj: any, cur: { id: string }) => {
-    return { ...obj, [cur.id]: cur }
+  const oneWeekData = oneWeekResult?.data?.pairs.reduce((object: any, current: { id: string }) => {
+    return { ...object, [current.id]: current }
   }, {})
 
   const pairData: EthereumPair[] = await Promise.all(
@@ -101,10 +100,10 @@ function parseData(data: any, oneDayData: any, twoDayData: any, oneWeekData: any
   )
   const [oneDayVolumeUntracked, volumeChangeUntracked] = get2DayPercentChange(
     data?.untrackedVolumeUSD,
-    oneDayData?.untrackedVolumeUSD ? parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
+    oneDayData?.untrackedVolumeUSD ? Number.parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
     twoDayData?.untrackedVolumeUSD ? twoDayData?.untrackedVolumeUSD : 0
   )
-  const oneWeekVolumeUSD = parseFloat(oneWeekData ? data?.volumeUSD - oneWeekData?.volumeUSD : data.volumeUSD)
+  const oneWeekVolumeUSD = Number.parseFloat(oneWeekData ? data?.volumeUSD - oneWeekData?.volumeUSD : data.volumeUSD)
   const parsedData = { ...data }
   // set volume properties
   parsedData.oneDayVolumeUSD = oneDayVolumeUSD
@@ -129,13 +128,13 @@ function parseData(data: any, oneDayData: any, twoDayData: any, oneWeekData: any
 
   // format if pair hasnt existed for a day or a week
   if (!oneDayData && data && data.createdAtBlockNumber > oneDayBlock) {
-    parsedData.oneDayVolumeUSD = parseFloat(data.volumeUSD)
+    parsedData.oneDayVolumeUSD = Number.parseFloat(data.volumeUSD)
   }
   if (!oneDayData && data) {
-    parsedData.oneDayVolumeUSD = parseFloat(data.volumeUSD)
+    parsedData.oneDayVolumeUSD = Number.parseFloat(data.volumeUSD)
   }
   if (!oneWeekData && data) {
-    parsedData.oneWeekVolumeUSD = parseFloat(data.volumeUSD)
+    parsedData.oneWeekVolumeUSD = Number.parseFloat(data.volumeUSD)
   }
 
   return parsedData
@@ -190,7 +189,7 @@ export default class PairDataController implements IPairDataController {
           }
         })
         skip += 1000
-        data = data.concat(result.data.pairDayDatas)
+        data = [...data, ...result.data.pairDayDatas]
         if (result.data.pairDayDatas.length < 1000) {
           allFound = true
         }
@@ -199,10 +198,10 @@ export default class PairDataController implements IPairDataController {
       const dayIndexSet = new Set()
       const dayIndexArray: any = []
       const oneDay = 24 * 60 * 60
-      data.forEach((_: any, i: number) => {
+      data.forEach((_: any, index: number) => {
         // add the day index to the set of days
-        dayIndexSet.add((data[i].date / oneDay).toFixed(0))
-        dayIndexArray.push(data[i])
+        dayIndexSet.add((data[index].date / oneDay).toFixed(0))
+        dayIndexArray.push(data[index])
       })
 
       if (data[0]) {
@@ -227,9 +226,9 @@ export default class PairDataController implements IPairDataController {
         }
       }
 
-      data = data.sort((a: any, b: any) => (parseInt(a.date) > parseInt(b.date) ? 1 : -1))
-    } catch (e) {
-      console.log(e)
+      data = data.sort((a: any, b: any) => (Number.parseInt(a.date) > Number.parseInt(b.date) ? 1 : -1))
+    } catch (error) {
+      console.log(error)
     }
 
     return pairChartMapper(data)
@@ -270,9 +269,9 @@ export default class PairDataController implements IPairDataController {
 
       // TODO: refactor
       const result: any = await splitQuery(
-        (params: BlockHeight[]) =>
+        (parameters: BlockHeight[]) =>
           client.query({
-            query: HOURLY_PAIR_RATES(pairAddress, params)
+            query: HOURLY_PAIR_RATES(pairAddress, parameters)
           }),
         blocks
       )
@@ -284,8 +283,8 @@ export default class PairDataController implements IPairDataController {
         if (timestamp) {
           values.push({
             timestamp,
-            rate0: parseFloat(result[row]?.token0Price),
-            rate1: parseFloat(result[row]?.token1Price)
+            rate0: Number.parseFloat(result[row]?.token0Price),
+            rate1: Number.parseFloat(result[row]?.token1Price)
           })
         }
       }
@@ -294,22 +293,22 @@ export default class PairDataController implements IPairDataController {
       const formattedHistoryRate1 = []
 
       // for each hour, construct the open and close price
-      for (let i = 0; i < values.length - 1; i++) {
+      for (let index = 0; index < values.length - 1; index++) {
         formattedHistoryRate0.push({
-          timestamp: values[i].timestamp,
-          open: values[i].rate0,
-          close: values[i + 1].rate0
+          timestamp: values[index].timestamp,
+          open: values[index].rate0,
+          close: values[index + 1].rate0
         })
         formattedHistoryRate1.push({
-          timestamp: values[i].timestamp,
-          open: values[i].rate1,
-          close: values[i + 1].rate1
+          timestamp: values[index].timestamp,
+          open: values[index].rate1,
+          close: values[index + 1].rate1
         })
       }
 
       return [formattedHistoryRate0, formattedHistoryRate1]
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
       return [[], []]
     }
   }

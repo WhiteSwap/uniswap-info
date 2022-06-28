@@ -2,7 +2,7 @@ import { useState, useMemo, useRef } from 'react'
 import { useAccountData } from 'state/features/account/hooks'
 import { useParams, Navigate } from 'react-router-dom'
 import Panel from 'components/Panel'
-import { ellipsisAddress, formattedNum, getBlockChainScanLink, isValidAddress } from 'utils'
+import { ellipsisAddress, formattedNumber, getBlockChainScanLink, isValidAddress } from 'utils'
 import { AutoRow, RowFixed, RowBetween } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import UserChart from 'components/UserChart'
@@ -123,7 +123,7 @@ function AccountPage() {
             {showDropdown && (
               <Flyout>
                 <AutoColumn gap="0px">
-                  {positions?.map((p, i) => {
+                  {positions?.map((p, index) => {
                     let tokenOneSymbol = p.pair.tokenOne?.symbol
                     let tokenTwoSymbol = p.pair.tokenTwo?.symbol
                     if (tokenOneSymbol === 'WETH') {
@@ -139,7 +139,7 @@ function AccountPage() {
                             setActivePosition(p)
                             setShowDropdown(false)
                           }}
-                          key={i}
+                          key={index}
                         >
                           <DoubleTokenLogo a0={p.pair.tokenOne?.id} a1={p.pair.tokenTwo?.id} size={16} />
                           <TYPE.body ml={'16px'}>
@@ -181,12 +181,14 @@ function AccountPage() {
             {below440 && (
               <AutoColumn gap=".75rem">
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{totalSwappedUSD ? formattedNum(totalSwappedUSD, true) : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>
+                    {totalSwappedUSD ? formattedNumber(totalSwappedUSD, true) : '-'}
+                  </TYPE.header>
                   <TYPE.main>{t('totalValueSwapped')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
                   <TYPE.header fontSize={24}>
-                    {totalSwappedUSD ? formattedNum(totalSwappedUSD * 0.003, true) : '-'}
+                    {totalSwappedUSD ? formattedNumber(totalSwappedUSD * 0.003, true) : '-'}
                   </TYPE.header>
                   <TYPE.main>Total Fees Paid</TYPE.main>
                 </AutoColumn>
@@ -199,12 +201,14 @@ function AccountPage() {
             {!below440 && (
               <AutoRow gap="1.25rem">
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{totalSwappedUSD ? formattedNum(totalSwappedUSD, true) : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>
+                    {totalSwappedUSD ? formattedNumber(totalSwappedUSD, true) : '-'}
+                  </TYPE.header>
                   <TYPE.main>{t('totalValueSwapped')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
                   <TYPE.header fontSize={24}>
-                    {totalSwappedUSD ? formattedNum(totalSwappedUSD * 0.003, true) : '-'}
+                    {totalSwappedUSD ? formattedNumber(totalSwappedUSD * 0.003, true) : '-'}
                   </TYPE.header>
                   <TYPE.main>{t('totalFeesPaid')}</TYPE.main>
                 </AutoColumn>
@@ -229,9 +233,9 @@ function AccountPage() {
                 <RowFixed>
                   <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1}>
                     {positionValue
-                      ? formattedNum(positionValue, true)
+                      ? formattedNumber(positionValue, true)
                       : positionValue === 0
-                      ? formattedNum(0, true)
+                      ? formattedNumber(0, true)
                       : '-'}
                   </TYPE.header>
                 </RowFixed>
@@ -244,7 +248,7 @@ function AccountPage() {
                 </RowBetween>
                 <RowFixed align="flex-end">
                   <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={aggregateFees && 'green'}>
-                    {aggregateFees ? formattedNum(aggregateFees, true) : '-'}
+                    {aggregateFees ? formattedNumber(aggregateFees, true) : '-'}
                   </TYPE.header>
                 </RowFixed>
               </AutoColumn>

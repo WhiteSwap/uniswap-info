@@ -48,7 +48,7 @@ const EmptyCard = styled.div<{ height?: number }>`
   height: 12.5rem;
   border-radius: 1.25rem;
   color: ${({ theme }) => theme.text1};
-  height: ${({ height }) => height && height};
+  height: ${({ height }) => height};
 `
 
 export const PageWrapper = styled.div`

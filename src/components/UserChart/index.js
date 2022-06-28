@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart } from 'recharts'
 import { AutoRow, RowBetween } from '../Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from '../../utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from '../../utils'
 import { OptionButton } from '../ButtonStyled'
 import { darken } from 'polished'
 import { useMedia } from 'react-use'
@@ -108,7 +108,7 @@ const UserChart = ({ account }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={val => formattedNum(val, true)}
+              formatter={value => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

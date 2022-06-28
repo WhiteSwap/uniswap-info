@@ -19,7 +19,7 @@ import { useFormatPath } from 'hooks'
 import { usePairs } from 'state/features/pairs/selectors'
 import { useMedia } from 'react-use'
 import Panel from '../components/Panel'
-import { formattedNum, getChartData } from '../utils'
+import { formattedNumber, getChartData } from '../utils'
 import { DashboardWrapper, TYPE } from '../Theme'
 import { CustomLink } from '../components/Link'
 
@@ -101,7 +101,7 @@ function GlobalPage() {
                   </RowBetween>
                   <RowBetween align="flex-end">
                     <TYPE.main fontSize={below440 ? '1.25rem' : '1.5rem'} lineHeight={1} fontWeight={600}>
-                      {formattedNum(dayVolumeUsd, true)}
+                      {formattedNumber(dayVolumeUsd, true)}
                     </TYPE.main>
                     {volumeChange && volumeChange !== null ? (
                       <TYPE.main fontSize={12}>
@@ -116,7 +116,7 @@ function GlobalPage() {
                   </RowBetween>
                   <RowBetween align="flex-end">
                     <TYPE.main fontSize={below440 ? '1.25rem' : '1.5rem'} lineHeight={1} fontWeight={600}>
-                      {formattedNum(totalLiquidityUsd, true)}
+                      {formattedNumber(totalLiquidityUsd, true)}
                     </TYPE.main>
                     {liquidityChange && liquidityChange !== null ? (
                       <TYPE.main fontSize={12}>
