@@ -210,7 +210,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
           <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>
             <ArrowLeft width="1rem" height="1rem" />
           </PaginationButton>
-          <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
+          <TYPE.body>{t('pagination', { currentPage: page, maxPage })}</TYPE.body>
           <PaginationButton type="button" disabled={page === maxPage} onClick={decrementPage}>
             <ArrowRight width="1rem" height="1rem" />
           </PaginationButton>
