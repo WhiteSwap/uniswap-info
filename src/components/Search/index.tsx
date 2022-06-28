@@ -37,7 +37,7 @@ export const Search = () => {
   const activeNetwork = useActiveNetworkId()
 
   // refs to detect clicks outside modal
-  const wrapperRef = useRef(null)
+  const wrapperReference = useRef(null)
 
   const allTokens = useTokens()
   const allPools = usePairs()
@@ -131,8 +131,8 @@ export const Search = () => {
         if (pools.data) {
           setPoolData([...pools.data.asAddress, ...pools.data.as0, ...pools.data.as1])
         }
-      } catch (e) {
-        console.log(e)
+      } catch (error) {
+        console.log(error)
       }
     }
     // TODO: temporary search token & pairs by API only in ETH blockchain
@@ -141,14 +141,14 @@ export const Search = () => {
     }
   }, [value, activeNetwork])
 
-  useOnClickOutside(wrapperRef, () => {
+  useOnClickOutside(wrapperReference, () => {
     setPairsShown(3)
     setTokensShown(3)
     toggleMenu(false)
   })
 
   return (
-    <Container ref={wrapperRef}>
+    <Container ref={wrapperReference}>
       <Wrapper
         open={showMenu}
         onClick={() => {
@@ -161,8 +161,8 @@ export const Search = () => {
           type={'text'}
           placeholder={t('searchPairsAndTokens')}
           value={value}
-          onChange={e => {
-            setValue(e.target.value)
+          onChange={event => {
+            setValue(event.target.value)
           }}
         />
         {!showMenu ? <SearchIconLarge /> : <CloseIcon onClick={onDismiss} />}

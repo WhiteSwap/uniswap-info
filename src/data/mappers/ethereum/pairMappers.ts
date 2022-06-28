@@ -41,10 +41,10 @@ export function pairMapper(payload: EthereumPair, ethPrice?: number): Pair {
 }
 
 export function pairChartMapper(payload: PairChartItem[]): PairDayData[] {
-  return payload.map(el => ({
-    dailyVolumeUSD: +el.dailyVolumeUSD || 0,
-    date: +el.date || 0,
-    reserveUSD: +el.reserveUSD || 0
+  return payload.map(element => ({
+    dailyVolumeUSD: +element.dailyVolumeUSD || 0,
+    date: +element.date || 0,
+    reserveUSD: +element.reserveUSD || 0
   }))
 }
 

@@ -21,4 +21,4 @@ i18next
     }
   })
 
-export default i18next
+export { default } from 'i18next'

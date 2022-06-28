@@ -1,6 +1,16 @@
 import { gql } from 'apollo-boost'
 import { BUNDLE_ID } from '../../../constants'
 
+const ethPriceByBlocks = (blocks: BlockHeight[]) => {
+  return blocks.map(
+    block => `
+      b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }) {
+        ethPrice
+      }
+    `
+  )
+}
+
 export const SUBGRAPH_HEALTH = gql`
   query Health {
     indexingStatusForCurrentVersion(subgraphName: "whiteswapfi/whiteswap") {
@@ -56,13 +66,7 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: BlockHeight[]) => 
     `
   )
   queryString += ','
-  queryString += blocks.map(
-    block => `
-      b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }) {
-        ethPrice
-      }
-    `
-  )
+  queryString += ethPriceByBlocks(blocks)
 
   queryString += '}'
   return gql(queryString)
@@ -90,13 +94,7 @@ export const SHARE_VALUE = (pairAddress: string, blocks: BlockHeight[]) => {
     `
   )
   queryString += ','
-  queryString += blocks.map(
-    block => `
-      b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }) {
-        ethPrice
-      }
-    `
-  )
+  queryString += ethPriceByBlocks(blocks)
 
   queryString += '}'
   return gql(queryString)

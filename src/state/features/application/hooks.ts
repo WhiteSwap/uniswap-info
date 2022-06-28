@@ -35,10 +35,7 @@ export function useStartTimestamp() {
     const startTime =
       dayjs
         .utc()
-        .subtract(
-          1,
-          activeWindow === timeframeOptions.WEEK ? 'week' : activeWindow === timeframeOptions.ALL_TIME ? 'year' : 'year'
-        )
+        .subtract(1, activeWindow === timeframeOptions.WEEK ? 'week' : 'year')
         .startOf('day')
         .unix() - 1
     // if we find a new start time less than the current startrtime - update oldest pooint to fetch

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Play } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import Percent from 'components/Percent'
-import { formattedNum } from 'utils'
+import { formattedNumber } from 'utils'
 import { Wrapper, ChartInfo, Title, ChartInfoPrice, ChartInfoDate } from './styled'
 import { EthereumNetworkInfo, SupportedNetwork, TronNetworkInfo } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
@@ -51,16 +51,16 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
   const theme = useTheme()
   const darkMode = useAppSelector(state => state.user.darkMode)
   const activeNetwork = useActiveNetworkId()
-  const chartContainerRef = useRef<HTMLDivElement>(null)
-  const chartRef = useRef<IChartApi>()
-  const seriesRef = useRef<ISeriesApi<'Area' | 'Histogram'>>()
+  const chartContainerReference = useRef<HTMLDivElement>(null)
+  const chartReference = useRef<IChartApi>()
+  const seriesReference = useRef<ISeriesApi<'Area' | 'Histogram'>>()
   const [currentDayData, setCurrentDayData] = useState<CurrentDayData | undefined>()
   const textColor = darkMode ? 'rgb(165, 172, 183)' : '#45484D'
 
   useEffect(() => {
-    const width = chartContainerRef.current!.clientWidth
+    const width = chartContainerReference.current!.clientWidth
     const height = 300
-    chartRef.current = createChart(chartContainerRef.current!, {
+    chartReference.current = createChart(chartContainerReference.current!, {
       width,
       height,
       layout: {
@@ -100,14 +100,14 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
         }
       },
       localization: {
-        priceFormatter: (val: number) => formattedNum(val, true)
+        priceFormatter: (value: number) => formattedNumber(value, true)
       }
     })
-    const chart = chartRef.current
+    const chart = chartReference.current
 
     switch (type) {
       case 'Area':
-        seriesRef.current = chart.addAreaSeries({
+        seriesReference.current = chart.addAreaSeries({
           topColor: chartColors[activeNetwork].area.topColor,
           bottomColor: chartColors[activeNetwork].area.bottomColor,
           lineColor: chartColors[activeNetwork].area.topColor,
@@ -117,7 +117,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
         break
       case 'Histogram':
       default:
-        seriesRef.current = chart.addHistogramSeries({
+        seriesReference.current = chart.addHistogramSeries({
           color: chartColors[activeNetwork].histogram.color,
           priceFormat: {
             type: 'volume'
@@ -131,18 +131,18 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
         })
         break
     }
-    seriesRef.current.setData(data)
+    seriesReference.current.setData(data)
 
-    const chartScrollCallback = (param: MouseEventParams) => {
-      if (param.time) {
-        const dateStr =
-          typeof param.time === 'object'
-            ? dayjs(param.time.year + '-' + param.time.month + '-' + param.time.day).format('MMMM D, YYYY')
+    const chartScrollCallback = (parameter: MouseEventParams) => {
+      if (parameter.time) {
+        const dateString =
+          typeof parameter.time === 'object'
+            ? dayjs(parameter.time.year + '-' + parameter.time.month + '-' + parameter.time.day).format('MMMM D, YYYY')
             : ''
-        const price = param.seriesPrices.get(seriesRef.current!)?.toString()
+        const price = parameter.seriesPrices.get(seriesReference.current!)?.toString()
         setCurrentDayData({
-          price: formattedNum(price, true).toString(),
-          date: dateStr
+          price: formattedNumber(price, true).toString(),
+          date: dateString
         })
       } else {
         setCurrentDayData(undefined)
@@ -150,10 +150,10 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
     }
 
     const handleResize = () => {
-      chart.applyOptions({ width: chartContainerRef.current!.clientWidth })
+      chart.applyOptions({ width: chartContainerReference.current!.clientWidth })
     }
 
-    chartRef.current?.subscribeCrosshairMove(chartScrollCallback)
+    chartReference.current?.subscribeCrosshairMove(chartScrollCallback)
     window.addEventListener('resize', handleResize)
     chart.timeScale().fitContent()
 
@@ -165,14 +165,14 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
   }, [])
 
   useEffect(() => {
-    if (seriesRef.current && chartRef.current) {
-      seriesRef.current.setData(data)
-      chartRef.current.timeScale().fitContent()
+    if (seriesReference.current && chartReference.current) {
+      seriesReference.current.setData(data)
+      chartReference.current.timeScale().fitContent()
     }
   }, [data])
 
   useEffect(() => {
-    chartRef.current?.applyOptions({
+    chartReference.current?.applyOptions({
       layout: {
         textColor
       },
@@ -184,7 +184,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
     })
     switch (type) {
       case 'Area':
-        seriesRef.current?.applyOptions({
+        seriesReference.current?.applyOptions({
           topColor: chartColors[activeNetwork].area.topColor,
           bottomColor: chartColors[activeNetwork].area.bottomColor,
           lineColor: chartColors[activeNetwork].area.topColor
@@ -192,7 +192,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
         break
       case 'Histogram':
       default:
-        seriesRef.current?.applyOptions({
+        seriesReference.current?.applyOptions({
           color: chartColors[activeNetwork].histogram.color,
           baseLineColor: chartColors[activeNetwork].histogram.color
         })
@@ -202,7 +202,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
 
   return (
     <Wrapper>
-      <div ref={chartContainerRef}>
+      <div ref={chartContainerReference}>
         <ChartInfo>
           <Title>{type === 'Histogram' ? `${title}(24h)` : title}</Title>
           {currentDayData ? (
@@ -212,7 +212,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
             </>
           ) : (
             <div>
-              <ChartInfoPrice>{formattedNum(base ?? 0, true)}</ChartInfoPrice>{' '}
+              <ChartInfoPrice>{formattedNumber(base ?? 0, true)}</ChartInfoPrice>{' '}
               {baseChange !== null ? <Percent percent={baseChange} /> : undefined}
             </div>
           )}
@@ -221,7 +221,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
       <IconWrapper>
         <Play
           onClick={() => {
-            chartRef.current?.timeScale().fitContent()
+            chartReference.current?.timeScale().fitContent()
           }}
         />
       </IconWrapper>

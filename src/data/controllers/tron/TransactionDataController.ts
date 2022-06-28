@@ -40,7 +40,7 @@ export default class TransactionDataController implements ITransactionDataContro
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getUserTransactions(_account: string) {
-    return Promise.resolve(TransactionsMock)
+    return TransactionsMock
   }
   async getAllTransactions() {
     const { data } = await client.query<GlobalTransactionsQuery>({
