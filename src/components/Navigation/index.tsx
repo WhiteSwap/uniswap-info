@@ -1,8 +1,7 @@
-import { TrendingUp, List, PieChart, Disc } from 'react-feather'
+import { TrendingUp, List, PieChart, Disc, Icon } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import { AutoColumn } from 'components/Column'
-import Link from 'components/Link'
 import NetworkSwitcher from 'components/NetworkSwitcher'
 import Title from 'components/Title'
 import Toggle from 'components/Toggle'
@@ -10,21 +9,29 @@ import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { useDarkModeManager } from 'state/features/user/hooks'
+import { MenuLink } from './MenuLink'
 import MobileMenu from './MobileMenu'
 import {
-  HeaderText,
+  SocialLinksList,
+  SocialLinkItem,
   Header,
-  StyledNavButton,
   Aside,
-  NavigationLink,
   LatestBlockContainer,
   LatestBlockText,
   LatestBlock,
   LatestBlockDot,
-  Badge
+  MenuList
 } from './styled'
 
-const navigationLinks = [
+export type NavigationLink = {
+  key: string
+  route: string
+  Icon: Icon
+  label: string
+  isSoon?: { [key in SupportedNetwork]?: boolean }
+}
+
+const navigationLinks: NavigationLink[] = [
   {
     key: 'home',
     route: '/',
@@ -86,7 +93,7 @@ function Navigation() {
     <Header>
       <Title />
       <NetworkSwitcher />
-      <MobileMenu />
+      <MobileMenu links={navigationLinks} />
     </Header>
   ) : (
     <Aside>
@@ -94,28 +101,29 @@ function Navigation() {
         <Title />
         <NetworkSwitcher />
         <AutoColumn as="nav" style={{ marginTop: '5.25rem' }}>
-          {navigationLinks.map(({ route, key, Icon, label }) => {
-            // temporary disable account link for beta version
-            const isSoon = key === 'accounts' && activeNetwork === SupportedNetwork.TRON
-
-            return (
-              <NavigationLink disabled={isSoon} key={key} to={formatPath(route)}>
-                <StyledNavButton>
-                  <Icon size={20} />
-                </StyledNavButton>
-                {t(label)}
-                {isSoon ? <Badge>{t('soon')}</Badge> : undefined}
-              </NavigationLink>
-            )
-          })}
+          <MenuList>
+            {navigationLinks.map(({ route, key, Icon, label, isSoon }) => (
+              <MenuLink
+                key={key}
+                Icon={Icon}
+                label={label}
+                route={formatPath(route)}
+                showSoonBadge={isSoon?.[activeNetwork]}
+              />
+            ))}
+          </MenuList>
         </AutoColumn>
       </AutoColumn>
       <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem' }}>
-        {socialLinks.map(link => (
-          <HeaderText key={link.name}>
-            <Link href={link.url}>{link.name}</Link>
-          </HeaderText>
-        ))}
+        <SocialLinksList>
+          {socialLinks.map(link => (
+            <SocialLinkItem key={link.name}>
+              <a target="_blank" rel="noopener noreferrer nofollow" href={link.url}>
+                {link.name}
+              </a>
+            </SocialLinkItem>
+          ))}
+        </SocialLinksList>
         <Toggle isActive={isDark} toggle={toggleDarkMode} />
         <LatestBlockContainer to="/">
           <LatestBlockText>{t('latestBlock')}</LatestBlockText>

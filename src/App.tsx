@@ -6,7 +6,6 @@ import FallbackError from 'components/FallbackError'
 import LocalLoader from 'components/LocalLoader'
 import Navigation from 'components/Navigation'
 import PinnedData from 'components/PinnedData'
-import { SupportedNetwork } from 'constants/networks'
 import AccountLookup from 'pages/AccountLookup'
 import AccountPage from 'pages/AccountPage'
 import AllPairsPage from 'pages/AllPairsPage'
@@ -15,7 +14,6 @@ import GlobalPage from 'pages/GlobalPage'
 import PairPage from 'pages/PairPage'
 import TokenPage from 'pages/TokenPage'
 import { useLatestBlocks } from 'state/features/application/hooks'
-import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { useFetchPairs } from 'state/features/pairs/hooks'
@@ -95,8 +93,6 @@ function App() {
   const [latestBlock, headBlock] = useLatestBlocks()
   const price = useActiveTokenPrice()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
-  // show warning
   const showWarning = headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
   useScrollToTop()
 
@@ -126,12 +122,8 @@ function App() {
                   <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
                   <Route path="/:networkID/pairs" element={<AllPairsPage />} />
                   <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
-                  {activeNetwork === SupportedNetwork.ETHEREUM ? (
-                    <>
-                      <Route path="/:networkID/accounts" element={<AccountLookup />} />
-                      <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
-                    </>
-                  ) : undefined}
+                  <Route path="/:networkID/accounts" element={<AccountLookup />} />
+                  <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
                   <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
                 </SentryRoutes>
               </Main>
