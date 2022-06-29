@@ -208,10 +208,10 @@ export function useTopLiquidityPositions() {
       dispatch(setTopLiquidityPositions({ liquidityPositions: response, networkId: activeNetwork }))
     }
 
-    if (!topLps && allPairs && Object.keys(allPairs).length > 0) {
+    if (allPairs && Object.keys(allPairs).length > 0) {
       fetchData()
     }
-  })
+  }, [Object.keys(allPairs).length])
 
   return topLps
 }
