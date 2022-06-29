@@ -1,18 +1,16 @@
-import { Link } from 'react-router-dom'
-import { RowBetween, RowFixed } from 'components/Row'
-import { AutoColumn } from 'components/Column'
-import { TYPE } from 'Theme'
-import { useSavedTokens, useSavedPairs } from 'state/features/user/hooks'
-import { useFormatPath } from 'hooks'
-import { Hover } from 'components'
-import TokenLogo from 'components/TokenLogo'
-import AccountSearch from 'components/AccountSearch'
 import { Bookmark, ChevronRight, X } from 'react-feather'
-import { ButtonFaded } from 'components/ButtonStyled'
-import FormattedName from 'components/FormattedName'
 import { useTranslation } from 'react-i18next'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
+import { Link } from 'react-router-dom'
+import { Hover } from 'components'
+import AccountSearch from 'components/AccountSearch'
+import { ButtonFaded } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import FormattedName from 'components/FormattedName'
+import { RowBetween, RowFixed } from 'components/Row'
+import TokenLogo from 'components/TokenLogo'
+import { useFormatPath } from 'hooks'
+import { useSavedTokens, useSavedPairs } from 'state/features/user/hooks'
+import { TYPE } from 'Theme'
 import { RightColumn, SavedButton, ScrollableDiv, StyledIcon } from './styled'
 
 interface IPinnedData {
@@ -23,7 +21,6 @@ interface IPinnedData {
 const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
 
   const [savedPairs, , removePair] = useSavedPairs()
   const [savedTokens, , removeToken] = useSavedTokens()
@@ -53,7 +50,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
           <ChevronRight />
         </StyledIcon>
       </SavedButton>
-      {activeNetwork !== SupportedNetwork.TRON ? <AccountSearch small={true} /> : null}
+      <AccountSearch small={true} />
       <AutoColumn gap="2.5rem" style={{ marginTop: '2rem' }}>
         <AutoColumn gap="0.75rem">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>

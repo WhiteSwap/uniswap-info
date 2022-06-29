@@ -1,35 +1,36 @@
 import { useState, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import LocalLoader from 'components/LocalLoader'
-import { Flex } from 'rebass'
-import Link from 'components/Link'
-import { useFormatPath } from 'hooks'
-import { Divider } from 'components'
-import DoubleTokenLogo from 'components/DoubleLogo'
-import { formattedNumber, getPoolLink } from 'utils'
-import { AutoColumn } from 'components/Column'
-import { RowFixed } from 'components/Row'
-import { ButtonLight } from 'components/ButtonStyled'
-import { TYPE } from 'Theme'
-import FormattedName from 'components/FormattedName'
-import Panel from 'components/Panel'
+import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
+import { Divider } from 'components'
+import { ButtonLight } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import FormattedName from 'components/FormattedName'
+import Link from 'components/Link'
+import LocalLoader from 'components/LocalLoader'
+import Panel from 'components/Panel'
+import { RowFixed } from 'components/Row'
+import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { TYPE } from 'Theme'
+import { formattedNumber, getPoolLink } from 'utils'
 import {
   PageButtons,
-  Arrow,
   List,
   DashGrid,
   ListWrapper,
   ClickableText,
   CustomLink,
   DataText,
-  ButtonsContainer
+  ButtonsContainer,
+  PaginationButton
 } from './styled'
 
-const SORT_FIELD = {
-  VALUE: 'VALUE',
-  FEE: 'FEE'
+enum PositionSortField {
+  value = 'value',
+  fee = 'fee'
 }
 
 interface IPositionList {
@@ -52,7 +53,7 @@ const PositionList = ({ positions }: IPositionList) => {
 
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
-  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.VALUE)
+  const [sortedColumn, setSortedColumn] = useState(PositionSortField.value)
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
@@ -179,30 +180,48 @@ const PositionList = ({ positions }: IPositionList) => {
     )
   }
 
+  const changeSortDirection = (direction: PositionSortField) => {
+    return () => {
+      setSortedColumn(direction)
+      setSortDirection(sortedColumn !== direction ? true : !sortDirection)
+    }
+  }
+
+  const sortDirectionArrow = (column: PositionSortField) => {
+    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    return sortedColumn === column ? sortedSymbol : ''
+  }
+
+  const incrementPage = () => {
+    setPage(page === 1 ? page : page - 1)
+  }
+
+  const decrementPage = () => {
+    setPage(page === maxPage ? page : page + 1)
+  }
+
   const positionsSorted =
     positions &&
     [...positions]
 
       .sort((p0, p1) => {
-        if (sortedColumn === SORT_FIELD.FEE) {
-          return p0?.feeEarned > p1?.feeEarned ? (sortDirection ? -1 : 1) : sortDirection ? 1 : -1
+        let order = false
+        const direction = sortDirection ? -1 : 1
+        switch (sortedColumn) {
+          case PositionSortField.fee:
+            order = p0?.feeEarned > p1?.feeEarned
+            break
+          case PositionSortField.value:
+          default: {
+            const bal0 = (p0.liquidityTokenBalance / p0.pair.totalSupply) * p0.pair.reserveUSD
+            const bal1 = (p1.liquidityTokenBalance / p1.pair.totalSupply) * p1.pair.reserveUSD
+            order = bal0 > bal1
+            break
+          }
         }
-        if (sortedColumn === SORT_FIELD.VALUE) {
-          const bal0 = (p0.liquidityTokenBalance / p0.pair.totalSupply) * p0.pair.reserveUSD
-          const bal1 = (p1.liquidityTokenBalance / p1.pair.totalSupply) * p1.pair.reserveUSD
-          return bal0 > bal1 ? (sortDirection ? -1 : 1) : sortDirection ? 1 : -1
-        }
-        return 1
+        return order ? direction : direction * -1
       })
       .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
-      .map((position: Position, index: number) => {
-        return (
-          <div key={index}>
-            <ListItem key={index} index={(page - 1) * 10 + index + 1} position={position} />
-            <Divider />
-          </div>
-        )
-      })
 
   return (
     <ListWrapper>
@@ -222,42 +241,43 @@ const PositionList = ({ positions }: IPositionList) => {
             <ClickableText>{t('name')}</ClickableText>
           </Flex>
           <Flex alignItems="center" justifyContent="flexEnd">
-            <ClickableText
-              onClick={() => {
-                setSortedColumn(SORT_FIELD.VALUE)
-                setSortDirection(sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection)
-              }}
-            >
-              {below740 ? t('value') : t('liquidity')}{' '}
-              {sortedColumn === SORT_FIELD.VALUE ? (!sortDirection ? '↑' : '↓') : ''}
+            <ClickableText onClick={changeSortDirection(PositionSortField.value)}>
+              {below740 ? t('value') : t('liquidity')} {sortDirectionArrow(PositionSortField.value)}
             </ClickableText>
           </Flex>
           {!below500 && (
             <Flex alignItems="center" justifyContent="flexEnd">
-              <ClickableText
-                onClick={() => {
-                  setSortedColumn(SORT_FIELD.FEE)
-                  setSortDirection(sortedColumn !== SORT_FIELD.FEE ? true : !sortDirection)
-                }}
-              >
-                {below740 ? t('fees') : t('totalFeesEarned')}{' '}
-                {sortedColumn === SORT_FIELD.FEE ? (!sortDirection ? '↑' : '↓') : ''}
+              <ClickableText onClick={changeSortDirection(PositionSortField.fee)}>
+                {below740 ? t('fees') : t('totalFeesEarned')} {sortDirectionArrow(PositionSortField.fee)}
               </ClickableText>
             </Flex>
           )}
         </DashGrid>
         <Divider />
-        <List p={0}>{!positionsSorted ? <LocalLoader /> : positionsSorted}</List>
+        <List p={0}>
+          {!positionsSorted ? (
+            <LocalLoader />
+          ) : (
+            positionsSorted.map((position, index) => (
+              <div key={index}>
+                <ListItem key={index} index={(page - 1) * 10 + index + 1} position={position} />
+                <Divider />
+              </div>
+            ))
+          )}
+        </List>
       </Panel>
-      <PageButtons>
-        <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
-        <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage ? (
+        <PageButtons>
+          <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>
+            <ArrowLeft width="1rem" height="1rem" />
+          </PaginationButton>
+          <TYPE.body>{t('pagination', { currentPage: page, maxPage })}</TYPE.body>
+          <PaginationButton type="button" disabled={page === maxPage} onClick={decrementPage}>
+            <ArrowRight width="1rem" height="1rem" />
+          </PaginationButton>
+        </PageButtons>
+      ) : undefined}
     </ListWrapper>
   )
 }

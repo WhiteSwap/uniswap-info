@@ -1,15 +1,20 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import { BasicLink } from 'components/Link'
 import { RowFixed } from 'components/Row'
 import TokenLogo from 'components/TokenLogo'
-import { BasicLink } from 'components/Link'
+import { SupportedNetwork } from 'constants/networks'
+import DataService from 'data/DataService'
 import { useFormatPath } from 'hooks'
-import DoubleTokenLogo from 'components/DoubleLogo'
+import { useOnClickOutside } from 'hooks/useOnClickOutSide'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { usePairs } from 'state/features/pairs/selectors'
+import { PairDetails } from 'state/features/pairs/types'
+import { useTokens } from 'state/features/token/selectors'
+import { TokenDetails } from 'state/features/token/types'
 import { TYPE } from 'Theme'
 import { escapeRegExp, isValidAddress } from 'utils'
-import { useTranslation } from 'react-i18next'
-import { useTokens } from 'state/features/token/selectors'
-import { usePairs } from 'state/features/pairs/selectors'
-import DataService from 'data/DataService'
 import {
   Container,
   Wrapper,
@@ -23,13 +28,8 @@ import {
   Menu,
   TokenText
 } from './styled'
-import { TokenDetails } from 'state/features/token/types'
-import { PairDetails } from 'state/features/pairs/types'
-import { useOnClickOutside } from 'hooks/useOnClickOutSide'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
 
-export const Search = () => {
+const Search = () => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetwork = useActiveNetworkId()

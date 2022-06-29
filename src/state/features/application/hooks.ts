@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { timeframeOptions } from 'constants/index'
 import dayjs from 'dayjs'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setHeadBlock, setLatestBlock } from './slice'
-import { useActiveNetworkId, useTimeFrame } from './selectors'
+import { timeframeOptions } from 'constants/index'
 import DataService from 'data/DataService'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useActiveNetworkId, useTimeFrame } from './selectors'
+import { setHeadBlock, setLatestBlock } from './slice'
 
 export function useLatestBlocks() {
   const dispatch = useAppDispatch()
@@ -30,7 +30,6 @@ export function useStartTimestamp() {
   const activeWindow = useTimeFrame()
   const [startDateTimestamp, setStartDateTimestamp] = useState<number | undefined>()
 
-  // monitor the old date fetched
   useEffect(() => {
     const startTime =
       dayjs
@@ -38,7 +37,6 @@ export function useStartTimestamp() {
         .subtract(1, activeWindow === timeframeOptions.WEEK ? 'week' : 'year')
         .startOf('day')
         .unix() - 1
-    // if we find a new start time less than the current startrtime - update oldest pooint to fetch
     setStartDateTimestamp(startTime)
   }, [activeWindow, startDateTimestamp])
 

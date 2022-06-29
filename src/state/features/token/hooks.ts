@@ -1,13 +1,13 @@
-import { timeframeOptions } from 'constants/index'
-import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setTokenPairs, setChartData, setPriceData, setToken, setTopTokens, setTransactions } from './slice'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
-import DataService from 'data/DataService'
-import { isValidAddress } from 'utils'
+import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { SupportedNetwork } from 'constants/networks'
+import DataService from 'data/DataService'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { isValidAddress } from 'utils'
+import { setTokenPairs, setChartData, setPriceData, setToken, setTopTokens, setTransactions } from './slice'
 
 export function useFetchTokens() {
   const dispatch = useAppDispatch()

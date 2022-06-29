@@ -1,7 +1,9 @@
-import { pairChartMapper, pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
-import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import dayjs from 'dayjs'
+import { EthereumPair } from 'data/controllers/types/ethTypes'
+import { IPairDataController } from 'data/controllers/types/PairController.interface'
+import { pairChartMapper, pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
 import { client } from 'service/client'
+import { PairChartQuery } from 'service/generated/ethereumGraphql'
 import {
   HOURLY_PAIR_RATES,
   PAIRS_BULK,
@@ -19,8 +21,6 @@ import {
   splitQuery,
   parseTokenInfo
 } from 'utils'
-import { EthereumPair } from 'data/controllers/types/ethTypes'
-import { PairChartQuery } from 'service/generated/ethereumGraphql'
 
 async function fetchPairData(pairAddress: string, block?: number) {
   return client.query({

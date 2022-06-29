@@ -1,5 +1,5 @@
-import styled, { createGlobalStyle, DefaultTheme } from 'styled-components/macro'
 import { Text, TextProps } from 'rebass'
+import styled, { createGlobalStyle, DefaultTheme } from 'styled-components/macro'
 
 const lightTheme = {
   panelColor: 'rgba(255, 255, 255, 0)',

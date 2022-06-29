@@ -1,5 +1,5 @@
-import { Box } from 'rebass'
 import { Star, ExternalLink } from 'react-feather'
+import { Box } from 'rebass'
 import styled from 'styled-components'
 
 const Divider = styled(Box)`

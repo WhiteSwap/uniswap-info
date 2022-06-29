@@ -1,6 +1,6 @@
+import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import Panel from 'components/Panel'
-import { Link as RouterLink } from 'react-router-dom'
 
 export const PanelWrapper = styled.div`
   grid-template-columns: repeat(3, 1fr);

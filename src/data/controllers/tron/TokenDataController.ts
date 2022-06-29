@@ -1,8 +1,7 @@
-import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
-import { client } from 'service/client'
-import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { IntervalTokenDataMock, TokenChartDatMock } from '__mocks__/tokens'
+import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import { tokenMapper, topTokensMapper, tokenChartDataMapper } from 'data/mappers/tron/tokenMappers'
+import { client } from 'service/client'
 import {
   TokenQueryVariables,
   TokenQuery,
@@ -10,6 +9,7 @@ import {
   TokenPairsQuery,
   TokenPairsQueryVariables
 } from 'service/generated/tronGraphql'
+import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { TOKENS, TOKEN, TOKEN_PAIRS } from 'service/queries/tron/tokens'
 
 export default class TokenDataController implements ITokenDataController {

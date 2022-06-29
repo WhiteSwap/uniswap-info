@@ -1,10 +1,10 @@
 import { useEffect, useRef, useMemo, memo } from 'react'
-import { createChart, CrosshairMode, CandlestickData, IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import dayjs from 'dayjs'
-import { formattedNumber } from 'utils'
+import { createChart, CrosshairMode, CandlestickData, IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { Play } from 'react-feather'
-import { ChartWrapper, IconWrapper } from './styled'
 import { useTheme } from 'styled-components'
+import { formattedNumber } from 'utils'
+import { ChartWrapper, IconWrapper } from './styled'
 
 interface CandleStickChartProperties {
   data: TimeWindowItem[]

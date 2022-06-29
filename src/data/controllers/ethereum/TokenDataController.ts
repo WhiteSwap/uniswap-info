@@ -1,9 +1,10 @@
-import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import dayjs from 'dayjs'
+import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
+import { tokenChartDataMapper } from 'data/mappers/ethereum/tokenMappers'
 import { client } from 'service/client'
+import { TokensQuery, Token as ETHToken, TokenDataQuery } from 'service/generated/ethereumGraphql'
 import { ETH_PRICE, PRICES_BY_BLOCK } from 'service/queries/ethereum/global'
 import { GET_TOKENS, TOKEN_CHART, TOKEN_DATA, TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
-import { TokensQuery, Token as ETHToken, TokenDataQuery } from 'service/generated/ethereumGraphql'
 import {
   getBlockFromTimestamp,
   get2DayPercentChange,
@@ -12,7 +13,6 @@ import {
   splitQuery,
   parseTokenInfo
 } from 'utils'
-import { tokenChartDataMapper } from 'data/mappers/ethereum/tokenMappers'
 
 async function fetchTokens(block?: number) {
   return client.query<TokensQuery>({

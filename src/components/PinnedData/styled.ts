@@ -13,10 +13,6 @@ export const RightColumn = styled.div<{ open?: boolean }>`
   background-color: ${({ theme }) => theme.bg1};
   z-index: 9999;
   overflow: auto;
-
-  :hover {
-    cursor: pointer;
-  }
 `
 
 export const SavedButton = styled(RowBetween)<{ open?: boolean }>`

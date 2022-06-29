@@ -1,26 +1,17 @@
-import { CustomLink } from 'components/Link'
 import { transparentize } from 'polished'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
+import { CustomLink } from 'components/Link'
 
 export const PageButtons = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 2em;
 
   @media screen and (max-width: 440px) {
     margin-top: 0.75rem;
-  }
-`
-
-export const Arrow = styled.div<{ faded: boolean }>`
-  color: ${({ theme }) => theme.primary1};
-  opacity: ${({ faded }) => (faded ? 0.3 : 1)};
-  padding: 0 1.25rem;
-  user-select: none;
-  :hover {
-    cursor: pointer;
   }
 `
 
@@ -106,5 +97,28 @@ export const Link = styled(CustomLink)`
 
   > div {
     color: ${({ theme }) => theme.blueGrey} !important;
+  }
+`
+
+export const PaginationButton = styled.button`
+  padding: 0.5rem;
+  background: transparent;
+  color: ${({ theme }) => theme.blueGrey};
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease-in-out;
+  margin: 0 0.5rem;
+
+  &:not([disabled]):hover {
+    background: ${({ theme }) => theme.bg2};
+  }
+
+  &:disabled {
+    color: ${({ theme }) => theme.text4};
+    cursor: not-allowed;
   }
 `

@@ -1,6 +1,6 @@
+import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import Panel from 'components/Panel'
-import styled from 'styled-components'
 
 export const Number = styled.p`
   font-size: 3.25rem;
