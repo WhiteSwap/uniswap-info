@@ -8,9 +8,7 @@ import { AutoColumn } from 'components/Column'
 import FormattedName from 'components/FormattedName'
 import { RowBetween, RowFixed } from 'components/Row'
 import TokenLogo from 'components/TokenLogo'
-import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
-import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useSavedTokens, useSavedPairs } from 'state/features/user/hooks'
 import { TYPE } from 'Theme'
 import { RightColumn, SavedButton, ScrollableDiv, StyledIcon } from './styled'
@@ -23,7 +21,6 @@ interface IPinnedData {
 const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
 
   const [savedPairs, , removePair] = useSavedPairs()
   const [savedTokens, , removeToken] = useSavedTokens()
@@ -53,7 +50,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
           <ChevronRight />
         </StyledIcon>
       </SavedButton>
-      {activeNetwork !== SupportedNetwork.TRON ? <AccountSearch small={true} /> : null}
+      <AccountSearch small={true} />
       <AutoColumn gap="40px" style={{ marginTop: '2rem' }}>
         <AutoColumn gap="12px">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
