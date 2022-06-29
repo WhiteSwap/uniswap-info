@@ -1,5 +1,5 @@
-import { NavigationLink } from 'components/Navigation'
 import { useTranslation } from 'react-i18next'
+import { NavigationLink } from 'components/Navigation'
 import { Badge, IconContainer, MenuItem, MenuItemLink } from './styled'
 
 interface IMenuLink extends NavigationLink {
