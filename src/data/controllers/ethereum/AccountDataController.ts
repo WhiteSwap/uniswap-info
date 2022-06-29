@@ -201,7 +201,7 @@ export default class AccountDataController implements IAccountDataController {
     const topLps: LiquidityPosition[] = []
     topLpLists
       .filter(index => !!index) // check for ones not fetched correctly
-      .map(list => {
+      .forEach(list => {
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]
           return topLps.push({
@@ -215,7 +215,7 @@ export default class AccountDataController implements IAccountDataController {
         })
       })
 
-    const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1))
+    const sorted = [...topLps].sort((a, b) => (a.usd > b.usd ? -1 : 1))
     return sorted.splice(0, 100)
   }
 }
