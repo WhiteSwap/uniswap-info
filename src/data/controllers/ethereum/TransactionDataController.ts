@@ -1,20 +1,20 @@
+import dayjs from 'dayjs'
+import { FACTORY_ADDRESS } from 'constants/index'
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
+import { transactionsMapper } from 'data/mappers/ethereum/transactionMapper'
 import { client } from 'service/client'
-import {
-  FILTERED_TRANSACTIONS,
-  GLOBAL_TXNS,
-  TRANSACTION_COUNT,
-  USER_TRANSACTIONS
-} from 'service/queries/ethereum/transactions'
 import {
   FilteredTransactionsQueryVariables,
   GlobalTransactionsResponse,
   TransactionQuery,
   UserTransactionQueryVariables
 } from 'service/generated/ethereumGraphql'
-import { transactionsMapper } from 'data/mappers/ethereum/transactionMapper'
-import { FACTORY_ADDRESS } from 'constants/index'
-import dayjs from 'dayjs'
+import {
+  FILTERED_TRANSACTIONS,
+  GLOBAL_TXNS,
+  TRANSACTION_COUNT,
+  USER_TRANSACTIONS
+} from 'service/queries/ethereum/transactions'
 import { getBlocksFromTimestamps } from 'utils'
 
 async function fetchTransactionCountByBlock(block?: number) {

@@ -1,21 +1,21 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Flex } from 'rebass'
-import TokenLogo from '../TokenLogo'
-import { CustomLink } from '../Link'
-import Row from '../Row'
-import { Divider } from '..'
-
-import { formattedNumber } from '../../utils'
-import { useFormatPath } from 'hooks'
-import { useMedia } from 'react-use'
-import { OVERVIEW_TOKEN_BLACKLIST } from '../../constants'
-import FormattedName from '../FormattedName'
-import { TYPE } from '../../Theme'
-import Panel from '../Panel'
+import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import Percent from 'components/Percent'
-import { DashGrid, DataText, ListWrapper, ClickableText, PageButtons, Arrow, List } from './styled'
+import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
+import { Divider } from 'components'
+import FormattedName from 'components/FormattedName'
+import { CustomLink } from 'components/Link'
 import LocalLoader from 'components/LocalLoader'
+import Panel from 'components/Panel'
+import Percent from 'components/Percent'
+import Row from 'components/Row'
+import TokenLogo from 'components/TokenLogo'
+import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
+import { useFormatPath } from 'hooks'
+import { TYPE } from 'Theme'
+import { formattedNumber } from 'utils'
+import { DashGrid, DataText, ListWrapper, ClickableText, PageButtons, List, PaginationButton } from './styled'
 
 enum TokenSortField {
   liquidity = 'liquidity',
@@ -31,12 +31,39 @@ interface ITokensTable {
   itemMax?: number
 }
 
+function compareTokenList(a: Token, b: Token, sortedColumn: TokenSortField, sortDirection: boolean) {
+  let order = false
+  const direction = sortDirection ? -1 : 1
+  switch (sortedColumn) {
+    case TokenSortField.liquidity:
+      order = a.totalLiquidityUSD > b.totalLiquidityUSD
+      break
+    case TokenSortField.change:
+      order = a.priceChangeUSD > b.priceChangeUSD
+      break
+    case TokenSortField.name:
+      order = a.name > b.name
+      break
+    case TokenSortField.price:
+      order = a.priceUSD > b.priceUSD
+      break
+    case TokenSortField.symbol:
+      order = a.symbol > b.symbol
+      break
+    case TokenSortField.volume:
+    default:
+      order = a.dayVolumeUSD > b.dayVolumeUSD
+      break
+  }
+  return order ? direction : direction * -1
+}
+
 function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   // page state
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(0)
 
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
@@ -67,37 +94,11 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
   }, [tokens, whiteListTokens, itemMax])
 
   const filteredList = useMemo(() => {
-    return (
-      whiteListTokens &&
-      whiteListTokens
-        .sort((a, b) => {
-          let order = false
-          const direction = sortDirection ? -1 : 1
-          switch (sortedColumn) {
-            case TokenSortField.liquidity:
-              order = a.totalLiquidityUSD > b.totalLiquidityUSD
-              break
-            case TokenSortField.change:
-              order = a.priceChangeUSD > b.priceChangeUSD
-              break
-            case TokenSortField.name:
-              order = a.name > b.name
-              break
-            case TokenSortField.price:
-              order = a.priceUSD > b.priceUSD
-              break
-            case TokenSortField.symbol:
-              order = a.symbol > b.symbol
-              break
-            case TokenSortField.volume:
-            default:
-              order = a.dayVolumeUSD > b.dayVolumeUSD
-              break
-          }
-          return order ? direction : direction * -1
-        })
-        .slice(itemMax * (page - 1), page * itemMax)
-    )
+    if (whiteListTokens) {
+      const sortedList = [...whiteListTokens].sort((a, b) => compareTokenList(a, b, sortedColumn, sortDirection))
+      return sortedList.slice(itemMax * (page - 1), page * itemMax)
+    }
+    return []
   }, [whiteListTokens, itemMax, page, sortDirection, sortedColumn])
 
   const changeSortDirection = (direction: TokenSortField) => {
@@ -105,6 +106,19 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
       setSortedColumn(direction)
       setSortDirection(sortedColumn !== direction ? true : !sortDirection)
     }
+  }
+
+  const sortDirectionArrow = (column: TokenSortField) => {
+    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    return sortedColumn === column ? sortedSymbol : ''
+  }
+
+  const incrementPage = () => {
+    setPage(page === 1 ? page : page - 1)
+  }
+
+  const decrementPage = () => {
+    setPage(page === maxPage ? page : page + 1)
   }
 
   const ListItem = ({ item, index }: { item: Token; index: number }) => {
@@ -157,32 +171,31 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
         <DashGrid style={{ height: 'fit-content', borderTop: 'none' }}>
           <Flex alignItems="center" justifyContent="flexStart">
             <ClickableText color="text" fontWeight="500" onClick={changeSortDirection(TokenSortField.name)}>
-              {below680 ? t('symbol') : t('name')}{' '}
-              {sortedColumn === TokenSortField.name ? (!sortDirection ? '↑' : '↓') : ''}
+              {below680 ? t('symbol') : t('name')} {sortDirectionArrow(TokenSortField.name)}
             </ClickableText>
           </Flex>
           {!below680 && (
             <Flex alignItems="center">
               <ClickableText onClick={changeSortDirection(TokenSortField.symbol)}>
-                {t('symbol')} {sortedColumn === TokenSortField.symbol ? (!sortDirection ? '↑' : '↓') : ''}
+                {t('symbol')} {sortDirectionArrow(TokenSortField.symbol)}
               </ClickableText>
             </Flex>
           )}
           <Flex alignItems="center">
             <ClickableText onClick={changeSortDirection(TokenSortField.liquidity)}>
-              {t('liquidity')} {sortedColumn === TokenSortField.liquidity ? (!sortDirection ? '↑' : '↓') : ''}
+              {t('liquidity')} {sortDirectionArrow(TokenSortField.liquidity)}
             </ClickableText>
           </Flex>
           <Flex alignItems="center">
             <ClickableText onClick={changeSortDirection(TokenSortField.volume)}>
               {t('volume24hrs')}
-              {sortedColumn === TokenSortField.volume ? (!sortDirection ? '↑' : '↓') : ''}
+              {sortDirectionArrow(TokenSortField.volume)}
             </ClickableText>
           </Flex>
           {!below1080 && (
             <Flex alignItems="center">
               <ClickableText onClick={changeSortDirection(TokenSortField.price)}>
-                {t('price')} {sortedColumn === TokenSortField.price ? (!sortDirection ? '↑' : '↓') : ''}
+                {t('price')} {sortDirectionArrow(TokenSortField.price)}
               </ClickableText>
             </Flex>
           )}
@@ -190,7 +203,7 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
             <Flex alignItems="center">
               <ClickableText onClick={changeSortDirection(TokenSortField.change)}>
                 {t('priceChange24hrs')}
-                {sortedColumn === TokenSortField.change ? (!sortDirection ? '↑' : '↓') : ''}
+                {sortDirectionArrow(TokenSortField.change)}
               </ClickableText>
             </Flex>
           )}
@@ -206,15 +219,17 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
           )}
         </List>
       </Panel>
-      <PageButtons>
-        <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
-        <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage ? (
+        <PageButtons>
+          <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>
+            <ArrowLeft width="1rem" height="1rem" />
+          </PaginationButton>
+          <TYPE.body>{t('pagination', { currentPage: page, maxPage })}</TYPE.body>
+          <PaginationButton type="button" disabled={page === maxPage} onClick={decrementPage}>
+            <ArrowRight width="1rem" height="1rem" />
+          </PaginationButton>
+        </PageButtons>
+      ) : undefined}
     </ListWrapper>
   )
 }

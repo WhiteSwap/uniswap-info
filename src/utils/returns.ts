@@ -1,5 +1,5 @@
-import { pairMapper } from 'data/mappers/ethereum/pairMappers'
 import dayjs from 'dayjs'
+import { pairMapper } from 'data/mappers/ethereum/pairMappers'
 import { getShareValueOverTime } from '.'
 
 export const priceOverrides = [

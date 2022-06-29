@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import rootReducer from 'state/features'
 import * as Sentry from '@sentry/react'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import rootReducer from 'state/features'
 
 const PERSISTED_KEYS: string[] = ['user']
 

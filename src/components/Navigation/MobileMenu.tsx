@@ -1,10 +1,10 @@
-import { useFormatPath } from 'hooks'
 import { useRef, useState } from 'react'
-import { MenuWrapper, MenuButton, MenuList } from './styled'
+import { NavigationLink } from 'components/Navigation'
+import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { MenuLink } from './MenuLink'
-import { NavigationLink } from 'components/Navigation'
+import { MenuWrapper, MenuButton, MenuList } from './styled'
 
 interface IMobileMenu {
   links: NavigationLink[]

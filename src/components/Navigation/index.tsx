@@ -1,12 +1,16 @@
-import { AutoColumn } from 'components/Column'
-import Title from 'components/Title'
-import { useMedia } from 'react-use'
-import { useFormatPath } from 'hooks'
 import { TrendingUp, List, PieChart, Disc, Icon } from 'react-feather'
-import { useDarkModeManager } from 'state/features/user/hooks'
-import Toggle from 'components/Toggle'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { AutoColumn } from 'components/Column'
 import NetworkSwitcher from 'components/NetworkSwitcher'
+import Title from 'components/Title'
+import Toggle from 'components/Toggle'
+import { SupportedNetwork } from 'constants/networks'
+import { useFormatPath } from 'hooks'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { useDarkModeManager } from 'state/features/user/hooks'
+import { MenuLink } from './MenuLink'
+import MobileMenu from './MobileMenu'
 import {
   SocialLinksList,
   SocialLinkItem,
@@ -18,10 +22,6 @@ import {
   LatestBlockDot,
   MenuList
 } from './styled'
-import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
-import { MenuLink } from './MenuLink'
-import MobileMenu from './MobileMenu'
 
 export type NavigationLink = {
   key: string

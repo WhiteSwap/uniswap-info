@@ -1,16 +1,16 @@
+import { ApolloQueryResult } from 'apollo-boost'
 import { BigNumber } from 'bignumber.js'
 import dayjs from 'dayjs'
 import { ethers } from 'ethers'
-import { timeframeOptions } from 'constants/index'
-import { NetworkInfo, SupportedNetwork, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
-import Numeral from 'numeral'
-import { TronNetworkInfo } from 'constants/networks'
-import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from 'service/queries/ethereum/global'
-import { client } from 'service/client'
 import cryptoValidator from 'multicoin-address-validator'
-import { ApolloQueryResult } from 'apollo-boost'
+// eslint-disable-next-line import/no-named-as-default
+import Numeral from 'numeral'
+import { timeframeOptions } from 'constants/index'
 import { LOGO_OVERRIDES, LOGO_SOURCE } from 'constants/logo'
+import { NetworkInfo, SupportedNetwork, SUPPORTED_NETWORK_VERSIONS, TronNetworkInfo } from 'constants/networks'
 import { TOKEN_OVERRIDES } from 'constants/tokens'
+import { client } from 'service/client'
+import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from 'service/queries/ethereum/global'
 
 BigNumber.set({ EXPONENTIAL_AT: 50 })
 

@@ -1,5 +1,5 @@
-import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import { TopLpsMock, UserHistoryMock, UserLiquidityChartMock, UserPositionsMock } from '__mocks__/account'
+import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 
 export default class AccountDataController implements IAccountDataController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
