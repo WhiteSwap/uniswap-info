@@ -103,5 +103,6 @@
   "comingSoon": "Coming soon",
   "internalServerError": "Internal Server Error",
   "somethingWentWrong": "Oops something went wrong.\nWe are working on fixing the problem.",
-  "backToHome": "Back to Home"
+  "backToHome": "Back to Home",
+  "pagination": "Page {{currentPage}} of {{maxPage}}"
 }

@@ -1,6 +1,6 @@
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { removeAccount, addAccount, setDarkMode, addPair, removePair, addToken, removeToken } from './slice'
-import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SavedPair, SavedToken } from './types'
 
 export function useDarkModeManager(): [boolean, () => void] {

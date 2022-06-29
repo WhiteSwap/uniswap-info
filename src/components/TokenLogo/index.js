@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import styled from 'styled-components/macro'
-import { getTokenLogoUrl } from '../../utils'
 import { HelpCircle } from 'react-feather'
+import styled from 'styled-components/macro'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { getTokenLogoUrl } from 'utils'
 
 const BAD_IMAGES = {}
 

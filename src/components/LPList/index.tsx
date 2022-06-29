@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import LocalLoader from 'components/LocalLoader'
-import { Flex } from 'rebass'
-import { useFormatPath } from 'hooks'
-import { CustomLink } from 'components/Link'
-import { Divider } from 'components'
-import { ellipsisAddress, formattedNumber } from 'utils'
-import { TYPE } from 'Theme'
-import DoubleTokenLogo from 'components/DoubleLogo'
-import { RowFixed } from 'components/Row'
-import Panel from 'components/Panel'
+import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Arrow, CustomText, DashGrid, DataText, List, ListWrapper, PageButtons } from './styled'
+import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
+import { Divider } from 'components'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import { CustomLink } from 'components/Link'
+import LocalLoader from 'components/LocalLoader'
+import Panel from 'components/Panel'
+import { RowFixed } from 'components/Row'
+import { useFormatPath } from 'hooks'
+import { TYPE } from 'Theme'
+import { ellipsisAddress, formattedNumber } from 'utils'
+import { CustomText, DashGrid, DataText, List, ListWrapper, PageButtons, PaginationButton } from './styled'
 
 interface ILPList {
   lps: LiquidityPosition[]
@@ -27,7 +28,7 @@ function LPList({ lps, maxItems = 10 }: ILPList) {
 
   // pagination
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(0)
   const ITEMS_PER_PAGE = maxItems
 
   useEffect(() => {
@@ -65,6 +66,14 @@ function LPList({ lps, maxItems = 10 }: ILPList) {
         <DataText>{formattedNumber(lp.usd, true)}</DataText>
       </DashGrid>
     )
+  }
+
+  const incrementPage = () => {
+    setPage(page === 1 ? page : page - 1)
+  }
+
+  const decrementPage = () => {
+    setPage(page === maxPage ? page : page + 1)
   }
 
   const lpList =
@@ -105,15 +114,17 @@ function LPList({ lps, maxItems = 10 }: ILPList) {
         <Divider />
         <List p={0}>{!lpList ? <LocalLoader /> : lpList}</List>
       </Panel>
-      <PageButtons>
-        <div onClick={() => setPage(page === 1 ? page : page - 1)}>
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
-        <div onClick={() => setPage(page === maxPage ? page : page + 1)}>
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage ? (
+        <PageButtons>
+          <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>
+            <ArrowLeft width="1rem" height="1rem" />
+          </PaginationButton>
+          <TYPE.body>{t('pagination', { currentPage: page, maxPage })}</TYPE.body>
+          <PaginationButton type="button" disabled={page === maxPage} onClick={decrementPage}>
+            <ArrowRight width="1rem" height="1rem" />
+          </PaginationButton>
+        </PageButtons>
+      ) : undefined}
     </ListWrapper>
   )
 }

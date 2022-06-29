@@ -1,13 +1,16 @@
-import { AutoColumn } from 'components/Column'
-import Title from 'components/Title'
-import { useMedia } from 'react-use'
-import { useFormatPath } from 'hooks'
 import { TrendingUp, List, PieChart, Disc } from 'react-feather'
-import Link from 'components/Link'
-import { useDarkModeManager } from 'state/features/user/hooks'
-import Toggle from 'components/Toggle'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { AutoColumn } from 'components/Column'
+import Link from 'components/Link'
 import NetworkSwitcher from 'components/NetworkSwitcher'
+import Title from 'components/Title'
+import Toggle from 'components/Toggle'
+import { SupportedNetwork } from 'constants/networks'
+import { useFormatPath } from 'hooks'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { useDarkModeManager } from 'state/features/user/hooks'
+import MobileMenu from './MobileMenu'
 import {
   HeaderText,
   Header,
@@ -20,9 +23,6 @@ import {
   LatestBlockDot,
   Badge
 } from './styled'
-import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
-import MobileMenu from './MobileMenu'
 
 const navigationLinks = [
   {

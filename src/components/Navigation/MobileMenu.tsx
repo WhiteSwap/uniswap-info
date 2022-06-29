@@ -1,11 +1,11 @@
-import { useFormatPath } from 'hooks'
 import { useRef, useState } from 'react'
-import { MenuWrapper, MenuButton, MenuList, Badge, MenuItemLink, MenuItemName } from './styled'
 import { TrendingUp, List, PieChart, Disc } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { SupportedNetwork } from 'constants/networks'
+import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
+import { MenuWrapper, MenuButton, MenuList, Badge, MenuItemLink, MenuItemName } from './styled'
 
 const MENU_LINKS = [
   {

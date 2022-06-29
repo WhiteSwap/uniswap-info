@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { HelpCircle as Question } from 'react-feather'
 import styled from 'styled-components/macro'
-import Popover, { IPopover } from '../Popover'
+import Popover, { IPopover } from 'components/Popover'
 
 const QuestionWrapper = styled.div`
   display: flex;

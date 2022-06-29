@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
+import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 import { client } from 'service/client'
 import { ETH_PRICE, GLOBAL_CHART, SUBGRAPH_HEALTH } from 'service/queries/ethereum/global'
-import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 
 async function fetchPrice(block?: number) {
   return client.query({

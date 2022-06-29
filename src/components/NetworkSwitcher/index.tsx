@@ -1,7 +1,12 @@
-import { SUPPORTED_NETWORK_VERSIONS, NetworkInfo } from 'constants/networks'
 import { useCallback, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-use'
+import { SUPPORTED_NETWORK_VERSIONS, NetworkInfo } from 'constants/networks'
+import DataService from 'data/DataService'
+import { useOnClickOutside } from 'hooks/useOnClickOutSide'
+import { changeApiClient } from 'service/client'
 import { setActiveNetwork } from 'state/features/application/slice'
+import { useAppSelector } from 'state/hooks'
 import {
   NetworkSwitcherContainer,
   CurrentNetwork,
@@ -12,11 +17,6 @@ import {
   NetworkBlurb,
   NetworkListItemLink
 } from './styled'
-import { useLocation } from 'react-use'
-import { useOnClickOutside } from 'hooks/useOnClickOutSide'
-import { useAppSelector } from 'state/hooks'
-import { changeApiClient } from 'service/client'
-import DataService from 'data/DataService'
 
 const NetworkSwitcher = () => {
   const activeNetwork = useAppSelector(state => state.application.activeNetwork)
