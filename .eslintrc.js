@@ -11,7 +11,9 @@ module.exports = {
     'plugin:prettier/recommended',
     'plugin:react/jsx-runtime',
     'plugin:sonarjs/recommended',
-    'plugin:unicorn/recommended'
+    'plugin:unicorn/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -21,7 +23,7 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: 'module'
   },
-  plugins: ['react', '@typescript-eslint', 'sonarjs', 'unicorn'],
+  plugins: ['react', '@typescript-eslint', 'sonarjs', 'unicorn', 'import', 'no-relative-import-paths'],
   rules: {
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-explicit-any': 0,
@@ -59,11 +61,54 @@ module.exports = {
           Args: true
         }
       }
+    ],
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['../*'],
+            message: 'Usage of relative parent imports is not allowed.'
+          }
+        ]
+      }
+    ],
+    'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true, rootDir: 'src' }],
+    'import/no-named-as-default-member': 0,
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'object', 'type', 'internal', 'parent', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'builtin',
+            position: 'before'
+          }
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true
+        }
+      }
     ]
   },
   settings: {
-    react: {
+    'react': {
       version: 'detect'
+    },
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx']
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true
+      },
+      node: {
+        paths: ['src'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      }
     }
   }
 }

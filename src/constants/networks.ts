@@ -1,5 +1,5 @@
-import TRON_LOGO_URL from '../assets/tron.svg'
-import ETHEREUM_LOGO_URL from '../assets/eth.png'
+import ETHEREUM_LOGO_URL from 'assets/eth.png'
+import TRON_LOGO_URL from 'assets/tron.svg'
 
 export enum SupportedNetwork {
   ETHEREUM = 'eth',

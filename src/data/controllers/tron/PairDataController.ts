@@ -1,11 +1,11 @@
-import { pairListMapper, pairMapper } from 'data/mappers/tron/pairMappers'
-import { IPairDataController } from 'data/controllers/types/PairController.interface'
-import { client } from 'service/client'
-import { PAIR_SEARCH } from 'service/queries/ethereum/pairs'
-import { PairDayData } from 'state/features/pairs/types'
 import { HourlyRateDataMock, PairChartDataMock } from '__mocks__/pairs'
-import { PAIR, PAIR_LIST } from 'service/queries/tron/pairs'
+import { IPairDataController } from 'data/controllers/types/PairController.interface'
+import { pairListMapper, pairMapper } from 'data/mappers/tron/pairMappers'
+import { client } from 'service/client'
 import { PairListQuery, PairQuery, PairQueryVariables } from 'service/generated/tronGraphql'
+import { PAIR_SEARCH } from 'service/queries/ethereum/pairs'
+import { PAIR, PAIR_LIST } from 'service/queries/tron/pairs'
+import { PairDayData } from 'state/features/pairs/types'
 
 export default class PairDataController implements IPairDataController {
   async searchPair(tokens: string[], id: string) {

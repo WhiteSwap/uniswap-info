@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect, useRef, RefObject } from 'react'
-import { shade } from 'polished'
-import Vibrant from 'node-vibrant'
-import { hex } from 'wcag-contrast'
-import { getTokenLogoUrl, networkPrefix } from '../utils'
 import copy from 'copy-to-clipboard'
-import { useAppSelector } from 'state/hooks'
-import { useActiveNetworkId } from 'state/features/application/selectors'
+import Vibrant from 'node-vibrant'
+import { shade } from 'polished'
 import { useLocation } from 'react-router-dom'
+import { hex } from 'wcag-contrast'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { useAppSelector } from 'state/hooks'
+import { getTokenLogoUrl, networkPrefix } from 'utils'
 
 export function useColor(tokenAddress: string, token?: string) {
   const [color, setColor] = useState('#2172E5')

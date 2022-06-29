@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro'
-import TokenLogo from '../TokenLogo'
+import TokenLogo from 'components/TokenLogo'
 
 const TokenWrapper = styled.div`
   position: relative;

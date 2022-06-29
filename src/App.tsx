@@ -1,28 +1,26 @@
 import { useState } from 'react'
-import styled, { ThemeProvider } from 'styled-components/macro'
-import { Route, Routes, Navigate } from 'react-router-dom'
-import GlobalPage from 'pages/GlobalPage'
-import TokenPage from 'pages/TokenPage'
-import PairPage from 'pages/PairPage'
 import * as Sentry from '@sentry/react'
+import { Route, Routes, Navigate } from 'react-router-dom'
+import styled, { ThemeProvider } from 'styled-components/macro'
+import FallbackError from 'components/FallbackError'
+import LocalLoader from 'components/LocalLoader'
+import Navigation from 'components/Navigation'
+import PinnedData from 'components/PinnedData'
+import AccountLookup from 'pages/AccountLookup'
+import AccountPage from 'pages/AccountPage'
+import AllPairsPage from 'pages/AllPairsPage'
+import AllTokensPage from 'pages/AllTokensPage'
+import GlobalPage from 'pages/GlobalPage'
+import PairPage from 'pages/PairPage'
+import TokenPage from 'pages/TokenPage'
+import { useLatestBlocks } from 'state/features/application/hooks'
 import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { useFetchPairs } from 'state/features/pairs/hooks'
 import { useFetchTokens } from 'state/features/token/hooks'
-import AccountPage from 'pages/AccountPage'
-import AllTokensPage from 'pages/AllTokensPage'
-import AllPairsPage from 'pages/AllPairsPage'
-import PinnedData from 'components/PinnedData'
-import { useFormatPath, useScrollToTop } from './hooks'
-import Navigation from 'components/Navigation'
-import AccountLookup from 'pages/AccountLookup'
-import LocalLoader from 'components/LocalLoader'
-import { useLatestBlocks } from 'state/features/application/hooks'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
-import FallbackError from 'components/FallbackError'
 import { useAppSelector } from 'state/hooks'
 import { GlobalStyle, globalTheme } from 'Theme'
+import { useFormatPath, useScrollToTop } from './hooks'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -95,8 +93,6 @@ function App() {
   const [latestBlock, headBlock] = useLatestBlocks()
   const price = useActiveTokenPrice()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
-  // show warning
   const showWarning = headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
   useScrollToTop()
 
@@ -126,12 +122,8 @@ function App() {
                   <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
                   <Route path="/:networkID/pairs" element={<AllPairsPage />} />
                   <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
-                  {activeNetwork === SupportedNetwork.ETHEREUM ? (
-                    <>
-                      <Route path="/:networkID/accounts" element={<AccountLookup />} />
-                      <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
-                    </>
-                  ) : undefined}
+                  <Route path="/:networkID/accounts" element={<AccountLookup />} />
+                  <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
                   <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
                 </SentryRoutes>
               </Main>

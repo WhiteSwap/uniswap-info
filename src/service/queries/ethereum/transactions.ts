@@ -1,5 +1,5 @@
-import { MINT_DETAILS, BURN_DETAILS, SWAP_DETAILS } from 'service/fragments'
 import { gql } from 'apollo-boost'
+import { MINT_DETAILS, BURN_DETAILS, SWAP_DETAILS } from 'service/fragments'
 
 export const FILTERED_TRANSACTIONS = gql`
   ${MINT_DETAILS}

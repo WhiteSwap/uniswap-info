@@ -1,6 +1,6 @@
+import dayjs from 'dayjs'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import { liquiditySnapshotListMapper, userPositionListMapper } from 'data/mappers/ethereum/accountMapper'
-import dayjs from 'dayjs'
 import { client } from 'service/client'
 import {
   TopLiquidityPositionQuery,

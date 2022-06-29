@@ -1,15 +1,15 @@
-import { IconWrapper } from 'components'
+import { useEffect, useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import { createChart, IChartApi, ISeriesApi, MouseEventParams, SeriesType, SingleValueData } from 'lightweight-charts'
-import { useEffect, useRef, useState } from 'react'
 import { Play } from 'react-feather'
-import { useAppSelector } from 'state/hooks'
+import { useTheme } from 'styled-components'
+import { IconWrapper } from 'components'
 import Percent from 'components/Percent'
-import { formattedNumber } from 'utils'
-import { Wrapper, ChartInfo, Title, ChartInfoPrice, ChartInfoDate } from './styled'
 import { EthereumNetworkInfo, SupportedNetwork, TronNetworkInfo } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-import { useTheme } from 'styled-components'
+import { useAppSelector } from 'state/hooks'
+import { formattedNumber } from 'utils'
+import { Wrapper, ChartInfo, Title, ChartInfoPrice, ChartInfoDate } from './styled'
 
 interface ISeriesChart {
   data: SingleValueData[]
