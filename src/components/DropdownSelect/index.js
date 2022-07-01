@@ -18,7 +18,7 @@ const DropdownSelect = ({ options, active, setActive, color }) => {
       </RowBetween>
       {showDropdown && (
         <Dropdown>
-          <AutoColumn gap="20px">
+          <AutoColumn gap="1.25rem">
             {Object.keys(options).map((key, index) => {
               let option = options[key]
               return (

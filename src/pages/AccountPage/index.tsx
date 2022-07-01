@@ -198,7 +198,7 @@ function AccountPage() {
               </AutoColumn>
             )}
             {!below440 && (
-              <AutoRow gap="20px">
+              <AutoRow gap="1.25rem">
                 <AutoColumn gap="8px">
                   <TYPE.header fontSize={24}>
                     {totalSwappedUSD ? formattedNumber(totalSwappedUSD, true) : '-'}
@@ -256,7 +256,7 @@ function AccountPage() {
         )}
         {!hideLPContent && (
           <DashboardWrapper style={{ display: 'grid' }}>
-            <Panel style={{ width: '100%' }}>
+            <Panel>
               {activePosition ? (
                 <PairReturnsChart account={accountAddress} position={activePosition} />
               ) : (

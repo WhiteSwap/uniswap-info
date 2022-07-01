@@ -89,15 +89,17 @@ export function useTokenChartData(tokenAddress: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const chartData = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress]?.chartData)
+
   useEffect(() => {
-    async function checkForChartData() {
-      if (!chartData) {
-        const data = await DataService.tokens.getTokenChartData(tokenAddress)
-        dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: tokenAddress }))
-      }
+    async function fetchData() {
+      const data = await DataService.tokens.getTokenChartData(tokenAddress)
+      dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: tokenAddress }))
     }
-    checkForChartData()
-  }, [chartData, tokenAddress, chartData])
+    if (!chartData && tokenAddress) {
+      fetchData()
+    }
+  }, [chartData, tokenAddress])
+
   return chartData
 }
 
@@ -124,12 +126,12 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
         ? 1_589_760_000
         : currentTime.subtract(1, windowSize).startOf('hour').unix()
 
-    async function fetch() {
+    async function fetchData() {
       const data = await DataService.tokens.getIntervalTokenData(tokenAddress, startTime, interval, latestBlock)
       dispatch(setPriceData({ networkId: activeNetwork, timeWindow, interval, data, address: tokenAddress }))
     }
-    if (!chartData && latestBlock) {
-      fetch()
+    if (!chartData) {
+      fetchData()
     }
   }, [chartData, interval, timeWindow, tokenAddress, latestBlock, activeNetwork])
 

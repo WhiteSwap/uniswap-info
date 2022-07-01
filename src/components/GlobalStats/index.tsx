@@ -45,7 +45,7 @@ export default function GlobalStats() {
                 <TYPE.light
                   fontSize={14}
                   fontWeight={700}
-                  mr={'1rem'}
+                  mr="1rem"
                   onMouseEnter={() => {
                     setShowPriceCard(true)
                   }}
@@ -58,23 +58,23 @@ export default function GlobalStats() {
                   {showPriceCard && <UniPrice />}
                 </TYPE.light>
               ) : (
-                <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+                <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                   {activeNetworkId.toUpperCase()} {t('price')}: {formattedPrice}
                 </TYPE.light>
               ))}
 
             {!below1180 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('transactions')} (24H): {localNumber(dayTransactionCount)}
               </TYPE.light>
             )}
             {!below1024 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('pairs')}: {localNumber(pairCount)}
               </TYPE.light>
             )}
             {!below1295 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('fees24hrs')}: {formattedNumber(dayFees, true)}&nbsp;
               </TYPE.light>
             )}

@@ -51,8 +51,8 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
         </StyledIcon>
       </SavedButton>
       <AccountSearch small={true} />
-      <AutoColumn gap="40px" style={{ marginTop: '2rem' }}>
-        <AutoColumn gap="12px">
+      <AutoColumn gap="2.5rem" style={{ marginTop: '2rem' }}>
+        <AutoColumn gap="0.75rem">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
           {Object.keys(savedPairs).length > 0 ? (
             Object.values(savedPairs).map(pair => (
@@ -63,7 +63,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
                       <FormattedName
                         text={pair.token0Symbol + '/' + pair.token1Symbol}
                         maxCharacters={12}
-                        fontSize={'12px'}
+                        fontSize="0.75rem"
                       />
                     </TYPE.header>
                   </RowFixed>
@@ -79,7 +79,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
             <TYPE.light>{t('pinnedPairsHere')}</TYPE.light>
           )}
         </AutoColumn>
-        <ScrollableDiv gap="12px">
+        <ScrollableDiv gap="0.75rem">
           <TYPE.main>{t('pinnedTokens')}</TYPE.main>
           {Object.keys(savedTokens).length > 0 ? (
             Object.keys(savedTokens).map(address => {
@@ -90,7 +90,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
                     <RowFixed>
                       <TokenLogo address={address} size="14px" />
                       <TYPE.header ml="6px">
-                        <FormattedName text={token.symbol} maxCharacters={12} fontSize="12px" />
+                        <FormattedName text={token.symbol} maxCharacters={12} fontSize="0.75rem" />
                       </TYPE.header>
                     </RowFixed>
                   </ButtonFaded>

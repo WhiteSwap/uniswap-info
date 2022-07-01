@@ -1,11 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-
 import { useTranslation } from 'react-i18next'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import { BasicLink } from 'components/Link'
 import { RowFixed } from 'components/Row'
 import TokenLogo from 'components/TokenLogo'
-
 import { SupportedNetwork } from 'constants/networks'
 import DataService from 'data/DataService'
 import { useFormatPath } from 'hooks'
@@ -158,7 +156,7 @@ const Search = () => {
         }}
       >
         <Input
-          type={'text'}
+          type="text"
           placeholder={t('searchPairsAndTokens')}
           value={value}
           onChange={event => {

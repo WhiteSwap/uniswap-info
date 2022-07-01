@@ -90,26 +90,6 @@ const PairChart = ({ address, color, base0, base1 }) => {
     )
   }
 
-  /**
-   * Used to format values on chart on scroll
-   * Needs to be raw html for chart API to parse styles
-   * @param {*} val
-   */
-  function valueFormatter(value) {
-    if (chartFilter === chartView.RATE0) {
-      return (
-        formattedNumber(value) +
-        `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol1}/${formattedSymbol0}<span>`
-      )
-    }
-    if (chartFilter === chartView.RATE1) {
-      return (
-        formattedNumber(value) +
-        `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol0}/${formattedSymbol1}<span>`
-      )
-    }
-  }
-
   const aspect = below1080 ? 60 / 20 : below1600 ? 60 / 28 : 60 / 22
 
   return (
@@ -250,13 +230,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
           {chartFilter === chartView.RATE1 &&
             (hourlyRate1 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart
-                  data={hourlyRate1}
-                  base={base0}
-                  margin={false}
-                  width={width}
-                  valueFormatter={valueFormatter}
-                />
+                <CandleStickChart data={hourlyRate1} base={base0} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
@@ -264,13 +238,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
           {chartFilter === chartView.RATE0 &&
             (hourlyRate0 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart
-                  data={hourlyRate0}
-                  base={base1}
-                  margin={false}
-                  width={width}
-                  valueFormatter={valueFormatter}
-                />
+                <CandleStickChart data={hourlyRate0} base={base1} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />

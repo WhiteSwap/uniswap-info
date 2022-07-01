@@ -120,7 +120,7 @@ export const SortText = styled.button<{ active: boolean }>`
   border: none;
   background-color: transparent;
   font-size: 1rem;
-  padding: 0px;
+  padding: 0;
   color: ${({ active, theme }) => (active ? theme.text1 : theme.text3)};
   outline: none;
 

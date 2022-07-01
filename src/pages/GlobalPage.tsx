@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import styled from 'styled-components/macro'
-
 import { PageWrapper, ContentWrapper } from 'components'
 import { AutoColumn } from 'components/Column'
 import DropdownSelect from 'components/DropdownSelect'
@@ -15,7 +14,6 @@ import { AutoRow, RowBetween } from 'components/Row'
 import Search from 'components/Search'
 import { SeriesChart } from 'components/SeriesChart'
 import TopTokenList from 'components/TokenList'
-
 import { TransactionTable } from 'components/TransactionTable'
 import { useFormatPath } from 'hooks'
 import { useGlobalTransactions } from 'state/features/global/hooks'
@@ -32,7 +30,7 @@ import { DashboardWrapper, TYPE } from 'Theme'
 import { formattedNumber, getChartData } from 'utils'
 
 const ListOptions = styled(AutoRow)`
-  height: 40px;
+  height: 2.5rem;
   width: 100%;
   font-size: 1.25rem;
   font-weight: 600;

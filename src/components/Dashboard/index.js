@@ -15,7 +15,7 @@ const Dashboard = styled(Box)`
 
   @media screen and (min-width: 64em) {
     max-width: 1320px;
-    grid-gap: 24px;
+    grid-gap: 1.5rem;
     width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:

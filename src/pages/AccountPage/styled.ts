@@ -6,7 +6,7 @@ export const Header = styled.div``
 export const DropdownWrapper = styled.div`
   position: relative;
   border: 1px solid #edeef2;
-  border-radius: 12px;
+  border-radius: 0.75rem;
 `
 
 export const Flyout = styled.div`
@@ -25,8 +25,8 @@ export const Flyout = styled.div`
 
 export const MenuRow = styled(Row)`
   width: 100%;
-  padding: 12px 0;
-  padding-left: 12px;
+  padding: 0.75rem 0;
+  padding-left: 0.75rem;
 
   :hover {
     cursor: pointer;

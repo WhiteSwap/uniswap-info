@@ -1,5 +1,4 @@
 import { Flex } from 'rebass'
-
 import Link from 'components/Link'
 
 const links = [

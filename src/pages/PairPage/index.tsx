@@ -195,8 +195,8 @@ const PairPage = () => {
             <>
               {!below1080 && <TYPE.main fontSize={'1.375rem'}>{t('pairStats')}</TYPE.main>}
               <PanelWrapper style={{ marginTop: '.875rem' }}>
-                <Panel style={{ height: '100%' }}>
-                  <AutoColumn gap="20px">
+                <Panel>
+                  <AutoColumn gap="1.25rem">
                     <RowBetween>
                       <TYPE.light fontSize={14} fontWeight={500}>
                         {t('totalLiquidity')}
@@ -204,7 +204,7 @@ const PairPage = () => {
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
-                      <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                      <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {liquidity}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
@@ -213,8 +213,8 @@ const PairPage = () => {
                     </RowBetween>
                   </AutoColumn>
                 </Panel>
-                <Panel style={{ height: '100%' }}>
-                  <AutoColumn gap="20px">
+                <Panel>
+                  <AutoColumn gap="1.25rem">
                     <RowBetween>
                       <TYPE.light fontSize={14} fontWeight={500}>
                         {t('volume24hrs')}
@@ -222,7 +222,7 @@ const PairPage = () => {
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
-                      <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                      <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {volume}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
@@ -231,8 +231,8 @@ const PairPage = () => {
                     </RowBetween>
                   </AutoColumn>
                 </Panel>
-                <Panel style={{ height: '100%' }}>
-                  <AutoColumn gap="20px">
+                <Panel>
+                  <AutoColumn gap="1.25rem">
                     <RowBetween>
                       <TYPE.light fontSize={14} fontWeight={500}>
                         {t('fees24hrs')}
@@ -240,7 +240,7 @@ const PairPage = () => {
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
-                      <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                      <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {formattedNumber(dayFees, true)}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
@@ -250,8 +250,8 @@ const PairPage = () => {
                   </AutoColumn>
                 </Panel>
 
-                <Panel style={{ height: '100%' }}>
-                  <AutoColumn gap="20px">
+                <Panel>
+                  <AutoColumn gap="1.25rem">
                     <RowBetween>
                       <TYPE.light fontSize={14} fontWeight={500}>
                         {t('pooledTokens')}

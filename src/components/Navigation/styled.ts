@@ -8,7 +8,7 @@ export const Aside = styled.aside`
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   color: ${({ theme }) => theme.text1};
   position: sticky;
-  top: 0px;
+  top: 0;
   z-index: 9999;
   box-sizing: border-box;
   display: flex;
@@ -32,7 +32,7 @@ export const Header = styled.header`
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   width: 100%;
   padding: 0 1rem;
-  top: 0px;
+  top: 0;
   z-index: 9999;
   display: grid;
   justify-content: space-between;
@@ -73,18 +73,18 @@ export const LatestBlockContainer = styled(RouterLink)`
   display: grid;
   width: fit-content;
   grid-auto-flow: column;
-  gap: 4px;
+  gap: 0.25rem;
   text-decoration: none;
-  border-radius: 4px;
-  padding: 4px;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
   font-weight: 500;
   font-size: 11px;
   transition: opacity 0.25s ease 0s;
 `
 
 export const LatestBlockDot = styled.div`
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.green1};
 `

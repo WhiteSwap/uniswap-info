@@ -55,7 +55,7 @@ export const GET_BLOCKS = (timestamps: number[]) => {
   queryString += '}'
   return gql(queryString)
 }
-// ! need mapped
+
 export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: BlockHeight[]) => {
   let queryString = 'query GetPriceByBlock {'
   queryString += blocks.map(
@@ -71,7 +71,7 @@ export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: BlockHeight[]) => 
   queryString += '}'
   return gql(queryString)
 }
-// ! need mapped
+
 export const SHARE_VALUE = (pairAddress: string, blocks: BlockHeight[]) => {
   let queryString = 'query blocks {'
   queryString += blocks.map(
@@ -99,7 +99,7 @@ export const SHARE_VALUE = (pairAddress: string, blocks: BlockHeight[]) => {
   queryString += '}'
   return gql(queryString)
 }
-// ! need mapped
+
 export const ETH_PRICE = gql`
   query EthPrice($block: Block_height) {
     bundles(block: $block, where: { id: ${BUNDLE_ID} }) {
@@ -108,7 +108,7 @@ export const ETH_PRICE = gql`
     }
   }
 `
-// ! need mapped
+
 export const GLOBAL_CHART = gql`
   query whiteSwapDayDatas($startTime: Int!, $skip: Int!) {
     whiteSwapDayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {

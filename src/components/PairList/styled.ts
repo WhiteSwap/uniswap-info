@@ -33,7 +33,7 @@ export const DashGrid = styled.div`
     &:first-child {
       justify-content: flex-start;
       text-align: left;
-      width: 20px;
+      width: 1.25rem;
     }
   }
 
@@ -80,7 +80,7 @@ export const DataText = styled(Flex)`
   }
 
   @media screen and (max-width: 440px) {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   @media screen and (max-width: 600px) {
@@ -90,9 +90,9 @@ export const DataText = styled(Flex)`
 
 export const Link = styled(CustomLink)`
   font-size: 14px;
-  line-height: 16px;
+  line-height: 1rem;
   font-weight: 700;
-  margin-left: 20px;
+  margin-left: 1.25rem;
   white-space: nowrap;
 
   > div {

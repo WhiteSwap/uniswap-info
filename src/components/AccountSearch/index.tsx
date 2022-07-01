@@ -16,7 +16,7 @@ import { TYPE } from 'Theme'
 import { ellipsisAddress, isValidAddress } from 'utils'
 import { AccountLink, DashGrid, Input, Wrapper } from './styled'
 
-type IAccountSearch = {
+interface IAccountSearch {
   small?: boolean
 }
 

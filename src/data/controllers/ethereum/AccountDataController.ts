@@ -200,7 +200,7 @@ export default class AccountDataController implements IAccountDataController {
     // get the top lps from the results formatted
     const topLps: LiquidityPosition[] = []
     topLpLists
-      .filter(index => !!index) // check for ones not fetched correctly
+      .filter(index => Boolean(index)) // check for ones not fetched correctly
       .map(list => {
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]

@@ -99,7 +99,7 @@ export const DataText = styled(Flex)`
   }
 
   @media screen and (max-width: 600px) {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   @media screen and (max-width: 440px) {
