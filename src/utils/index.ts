@@ -8,7 +8,7 @@ import Numeral from 'numeral'
 import { timeframeOptions } from 'constants/index'
 import { LOGO_OVERRIDES, LOGO_SOURCE } from 'constants/logo'
 import { NetworkInfo, SupportedNetwork, SUPPORTED_NETWORK_VERSIONS, TronNetworkInfo } from 'constants/networks'
-import { TOKEN_OVERRIDES } from 'constants/tokens'
+import { TOKEN_OVERRIDES, WETH_ADDRESS, WTRX_ADDRESS } from 'constants/tokens'
 import { client } from 'service/client'
 import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from 'service/queries/ethereum/global'
 
@@ -35,58 +35,49 @@ export function getTimeframe(timeWindow: string) {
   return utcStartTime
 }
 
-function parseAddress0ForRoute(token0Address: string) {
-  switch (token0Address) {
-    case '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2':
-      return 'ETH'
-
-    case 'TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR':
-      return 'TRX'
-
+function parseRouteAddress(address: string) {
+  switch (address) {
+    case WETH_ADDRESS:
+      return SupportedNetwork.ETHEREUM.toUpperCase()
+    case WTRX_ADDRESS:
+      return SupportedNetwork.TRON.toUpperCase()
     default:
-      return token0Address
+      return address
   }
 }
 
-function parseAddress1ForRoute(network: SupportedNetwork, token1Address: string | null) {
-  switch (token1Address) {
-    case null:
-      return network.toUpperCase()
-
-    case '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2':
-      return 'ETH'
-
-    case 'TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR':
-      return 'TRX'
-
+export function getExchangeLink({
+  network,
+  type,
+  inputCurrency,
+  outputCurrency
+}: {
+  network: SupportedNetwork
+  inputCurrency: string
+  outputCurrency?: string
+  type: 'remove' | 'add' | 'swap'
+}) {
+  let exchangePageRoute = ''
+  switch (type) {
+    case 'remove':
+      exchangePageRoute = 'pool/remove'
+      break
+    case 'add':
+      exchangePageRoute = 'pool/add'
+      break
+    case 'swap':
     default:
-      return token1Address
+      exchangePageRoute = 'swap'
+      break
   }
-}
-
-export function getPoolLink(
-  network: SupportedNetwork,
-  token0Address: string,
-  token1Address: string | null,
-  remove = false
-) {
-  const poolPage = remove ? 'remove' : 'add'
-  const updatedAddress0 = parseAddress0ForRoute(token0Address)
-  const updatedAddress1 = parseAddress1ForRoute(network, token1Address)
-  return `https://app.ws.exchange/${network}/${poolPage}/${updatedAddress0}/${updatedAddress1}`
-}
-
-export function getSwapLink(network: SupportedNetwork, token0Address: string, token1Address: string | null) {
-  const updatedAddress0 = parseAddress0ForRoute(token0Address)
-  if (!token1Address) {
-    return `https://app.ws.exchange/${network}/swap?inputCurrency=${updatedAddress0}`
+  const url = new URL(`https://app.ws.exchange/${network}/${exchangePageRoute}`)
+  const inputCurrencyAddress = parseRouteAddress(inputCurrency)
+  const searchParameters = new URLSearchParams({ inputCurrency: inputCurrencyAddress })
+  if (outputCurrency) {
+    const outputCurrencyAddress = parseRouteAddress(outputCurrency)
+    searchParameters.append('outputCurrency', outputCurrencyAddress)
   }
-  const updatedAddress1 = parseAddress1ForRoute(network, token1Address)
-  return `https://app.ws.exchange/${network}/swap?inputCurrency=${updatedAddress0}&outputCurrency=${updatedAddress1}`
-}
-
-export function getMiningPoolLink(network: SupportedNetwork, token0Address: string) {
-  return `https://app.ws.exchange/${network}/stake/${network.toUpperCase()}/${token0Address}`
+  return `${url.href}?${searchParameters.toString()}`
 }
 
 export function getWhiteSwapAppLink(network: SupportedNetwork, linkVariable: string) {

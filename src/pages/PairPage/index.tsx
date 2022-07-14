@@ -22,7 +22,7 @@ import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
 import { useToggleSavedPair } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
-import { isValidAddress, formattedNumber, getPoolLink, getSwapLink, getBlockChainScanLink } from 'utils'
+import { isValidAddress, formattedNumber, getBlockChainScanLink, getExchangeLink } from 'utils'
 import { WarningGrouping, TokenSymbolLink, FixedPanel, PanelWrapper, TokenLink, ActionsContainer } from './styled'
 
 const PairPage = () => {
@@ -141,10 +141,26 @@ const PairPage = () => {
                 </RowFixed>
                 <ActionsContainer>
                   <StarIcon $filled={isPairSaved} onClick={toggleSavedPair} />
-                  <Link external href={getPoolLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
+                  <Link
+                    external
+                    href={getExchangeLink({
+                      network: activeNetworkId,
+                      inputCurrency: tokenOne?.id,
+                      outputCurrency: tokenTwo?.id,
+                      type: 'add'
+                    })}
+                  >
                     <ButtonLight>{t('addLiquidity')}</ButtonLight>
                   </Link>
-                  <Link external href={getSwapLink(activeNetworkId, tokenOne?.id, tokenTwo?.id)}>
+                  <Link
+                    external
+                    href={getExchangeLink({
+                      network: activeNetworkId,
+                      inputCurrency: tokenOne?.id,
+                      outputCurrency: tokenTwo?.id,
+                      type: 'swap'
+                    })}
+                  >
                     <ButtonDark>{t('trade')}</ButtonDark>
                   </Link>
                   <a

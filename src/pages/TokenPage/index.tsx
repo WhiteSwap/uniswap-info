@@ -27,12 +27,11 @@ import { useToggleSavedToken } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
 import {
   formattedNumber,
-  getPoolLink,
-  getSwapLink,
   getBlockChainScanLink,
   isValidAddress,
   ellipsisAddress,
-  localNumber
+  localNumber,
+  getExchangeLink
 } from 'utils'
 import { ActionsContainer, PanelWrapper, WarningGrouping } from './styled'
 
@@ -170,10 +169,24 @@ const TokenPage = () => {
               </RowFixed>
               <ActionsContainer>
                 <StarIcon $filled={isTokenSaved} onClick={toggleSavedToken} />
-                <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
+                <Link
+                  href={getExchangeLink({
+                    network: activeNetworkId,
+                    inputCurrency: tokenAddress,
+                    type: 'add'
+                  })}
+                  target="_blank"
+                >
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>
-                <Link href={getSwapLink(activeNetworkId, tokenAddress, null)} target="_blank">
+                <Link
+                  href={getExchangeLink({
+                    network: activeNetworkId,
+                    inputCurrency: tokenAddress,
+                    type: 'swap'
+                  })}
+                  target="_blank"
+                >
                   <ButtonDark color={backgroundColor}>{t('trade')}</ButtonDark>
                 </Link>
                 <a
