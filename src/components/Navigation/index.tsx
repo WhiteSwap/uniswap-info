@@ -54,10 +54,7 @@ const navigationLinks: NavigationLink[] = [
     key: 'accounts',
     route: '/accounts',
     Icon: List,
-    label: 'sideNav.accounts',
-    isSoon: {
-      [SupportedNetwork.TRON]: true
-    }
+    label: 'sideNav.accounts'
   }
 ]
 
