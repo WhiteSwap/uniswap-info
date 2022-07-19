@@ -15,7 +15,7 @@ import { RowFixed } from 'components/Row'
 import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TYPE } from 'Theme'
-import { formattedNumber, getPoolLink } from 'utils'
+import { formattedNumber, getExchangeLink } from 'utils'
 import {
   PageButtons,
   List,
@@ -94,7 +94,12 @@ const PositionList = ({ positions }: IPositionList) => {
             <ButtonsContainer justify="flex-start">
               <Link
                 external
-                href={getPoolLink(activeNetworkId, position.pair.tokenOne?.id, position.pair.tokenTwo?.id)}
+                href={getExchangeLink({
+                  network: activeNetworkId,
+                  inputCurrency: position.pair.tokenOne?.id,
+                  outputCurrency: position.pair.tokenTwo?.id,
+                  type: 'add'
+                })}
                 style={{ marginRight: '.5rem' }}
               >
                 <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('add')}</ButtonLight>
@@ -102,7 +107,12 @@ const PositionList = ({ positions }: IPositionList) => {
               {poolOwnership > 0 && (
                 <Link
                   external
-                  href={getPoolLink(activeNetworkId, position.pair.tokenOne?.id, position.pair.tokenTwo?.id, true)}
+                  href={getExchangeLink({
+                    network: activeNetworkId,
+                    inputCurrency: position.pair.tokenOne?.id,
+                    outputCurrency: position.pair.tokenTwo?.id,
+                    type: 'remove'
+                  })}
                 >
                   <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('remove')}</ButtonLight>
                 </Link>
