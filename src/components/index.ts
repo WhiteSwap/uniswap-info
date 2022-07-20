@@ -1,5 +1,5 @@
-import { Box } from 'rebass'
 import { Star, ExternalLink } from 'react-feather'
+import { Box } from 'rebass'
 import styled from 'styled-components'
 
 const Divider = styled(Box)`
@@ -15,9 +15,9 @@ export const IconWrapper = styled.div`
   position: absolute;
   right: 0;
   border-radius: 3px;
-  height: 16px;
-  width: 16px;
-  padding: 0px;
+  height: 1rem;
+  width: 1rem;
+  padding: 0;
   bottom: 0;
   display: flex;
   align-items: center;
@@ -45,23 +45,23 @@ const EmptyCard = styled.div<{ height?: number }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  border-radius: 20px;
+  height: 12.5rem;
+  border-radius: 1.25rem;
   color: ${({ theme }) => theme.text1};
-  height: ${({ height }) => height && height};
+  height: ${({ height }) => height};
 `
 
 export const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 36px;
-  padding-bottom: 80px;
+  padding-top: 2.25rem;
+  padding-bottom: 5rem;
   background: ${({ theme }) => theme.bg7};
   min-height: 100vh;
 
   @media screen and (max-width: 600px) {
     & > * {
-      padding: 0 12px;
+      padding: 0 0.75rem;
     }
   }
 `
@@ -72,7 +72,7 @@ export const ContentWrapper = styled.div`
   align-items: start;
   grid-template-columns: 1fr;
   grid-gap: 1rem;
-  max-width: 1440px;
+  max-width: 90rem;
   width: 100%;
   margin: 0 auto;
   padding: 0 2rem;
@@ -89,11 +89,11 @@ export const ContentWrapperLarge = styled.div`
   justify-content: start;
   align-items: start;
   grid-template-columns: 1fr;
-  grid-gap: 24px;
+  grid-gap: 1.5rem;
   padding: 0 2rem;
   margin: 0 auto;
   box-sizing: border-box;
-  max-width: 1440px;
+  max-width: 90rem;
   width: 100%;
 
   @media screen and (max-width: 1282px) {
@@ -108,7 +108,7 @@ export const FullWrapper = styled.div`
   align-items: start;
   grid-template-columns: 1fr;
   grid-gap: 1rem;
-  max-width: 1440px;
+  max-width: 90rem;
   width: 100%;
   margin: 0 auto;
   padding: 0 2rem;

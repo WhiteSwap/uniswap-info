@@ -1,17 +1,16 @@
 import { useState } from 'react'
-import styled from 'styled-components/macro'
-import { RowFixed, RowBetween } from '../Row'
-import { useMedia } from 'react-use'
-import { useActiveTokenPrice, useDayFeesUsd } from 'state/features/global/selectors'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
-import { formattedNum, localNumber } from '../../utils'
-
-import UniPrice from '../UniPrice'
-import { TYPE } from '../../Theme'
 import { useTranslation } from 'react-i18next'
-import { usePairCount } from 'state/features/pairs/selectors'
+import { useMedia } from 'react-use'
+import styled from 'styled-components/macro'
+import { RowFixed, RowBetween } from 'components/Row'
+import UniPrice from 'components/UniPrice'
+import { SupportedNetwork } from 'constants/networks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useDayTransactionCount } from 'state/features/global/hooks'
+import { useActiveTokenPrice, useDayFeesUsd } from 'state/features/global/selectors'
+import { usePairCount } from 'state/features/pairs/selectors'
+import { TYPE } from 'Theme'
+import { formattedNumber, localNumber } from 'utils'
 
 const Header = styled.div`
   width: 100%;
@@ -34,7 +33,7 @@ export default function GlobalStats() {
   const pairCount = usePairCount()
   const dayFees = useDayFeesUsd()
   const activeTokenPrice = useActiveTokenPrice()
-  const formattedPrice = activeTokenPrice ? formattedNum(activeTokenPrice, true) : '-'
+  const formattedPrice = activeTokenPrice ? formattedNumber(activeTokenPrice, true) : '-'
 
   return (
     <Header>
@@ -46,7 +45,7 @@ export default function GlobalStats() {
                 <TYPE.light
                   fontSize={14}
                   fontWeight={700}
-                  mr={'1rem'}
+                  mr="1rem"
                   onMouseEnter={() => {
                     setShowPriceCard(true)
                   }}
@@ -59,24 +58,24 @@ export default function GlobalStats() {
                   {showPriceCard && <UniPrice />}
                 </TYPE.light>
               ) : (
-                <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+                <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                   {activeNetworkId.toUpperCase()} {t('price')}: {formattedPrice}
                 </TYPE.light>
               ))}
 
             {!below1180 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('transactions')} (24H): {localNumber(dayTransactionCount)}
               </TYPE.light>
             )}
             {!below1024 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
                 {t('pairs')}: {localNumber(pairCount)}
               </TYPE.light>
             )}
             {!below1295 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr={'1rem'}>
-                {t('fees24hrs')}: {formattedNum(dayFees, true)}&nbsp;
+              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
+                {t('fees24hrs')}: {formattedNumber(dayFees, true)}&nbsp;
               </TYPE.light>
             )}
           </RowFixed>

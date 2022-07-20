@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
-import Panel from '../Panel'
-import { AutoColumn } from '../Column'
-import { RowFixed } from '../Row'
-import { TYPE } from '../../Theme'
+import { AutoColumn } from 'components/Column'
+import Panel from 'components/Panel'
+import { RowFixed } from 'components/Row'
 import { usePairData } from 'state/features/pairs/hooks'
-import { formattedNum } from '../../utils'
+import { TYPE } from 'Theme'
+import { formattedNumber } from 'utils'
 
 const PriceCard = styled(Panel)`
   position: absolute;
@@ -18,9 +18,7 @@ const PriceCard = styled(Panel)`
 `
 
 function formatPercent(rawPercent) {
-  if (rawPercent < 0.01) {
-    return '<1%'
-  } else return parseFloat(rawPercent * 100).toFixed(0) + '%'
+  return rawPercent < 0.01 ? '<1%' : Number.parseFloat(rawPercent * 100).toFixed(0) + '%'
 }
 
 export default function UniPrice() {
@@ -34,9 +32,9 @@ export default function UniPrice() {
       : 0
   }, [daiPair, usdcPair, usdtPair])
 
-  const daiPerEth = daiPair?.tokenTwo ? formattedNum(daiPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
-  const usdcPerEth = usdcPair?.tokenTwo ? formattedNum(usdcPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
-  const usdtPerEth = usdtPair?.tokenOne ? formattedNum(usdtPair.tokenOne.priceUSD.toFixed(2), true) : '-'
+  const daiPerEth = daiPair?.tokenTwo ? formattedNumber(daiPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
+  const usdcPerEth = usdcPair?.tokenTwo ? formattedNumber(usdcPair.tokenTwo.priceUSD.toFixed(2), true) : '-'
+  const usdtPerEth = usdtPair?.tokenOne ? formattedNumber(usdtPair.tokenOne.priceUSD.toFixed(2), true) : '-'
 
   return (
     <PriceCard>

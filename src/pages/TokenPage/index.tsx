@@ -1,41 +1,39 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams, Navigate } from 'react-router-dom'
+import { useMedia } from 'react-use'
 import { Text } from 'rebass'
-import Link from 'components/Link'
-import Panel from 'components/Panel'
-import TokenLogo from 'components/TokenLogo'
-import PairList from 'components/PairList'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { AutoColumn } from 'components/Column'
+import { PageWrapper, ContentWrapper, StarIcon, ExternalLinkIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
-import TokenChart from 'components/TokenChart'
-import { BasicLink } from 'components/Link'
+import { AutoColumn } from 'components/Column'
+import ComingSoon from 'components/ComingSoon'
+import FormattedName from 'components/FormattedName'
+import Link, { BasicLink } from 'components/Link'
+import PairList from 'components/PairList'
+import Panel from 'components/Panel'
+import Percent from 'components/Percent'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Search from 'components/Search'
+import TokenChart from 'components/TokenChart'
+import TokenLogo from 'components/TokenLogo'
+import { TransactionTable } from 'components/TransactionTable'
+import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
+import { SupportedNetwork } from 'constants/networks'
+import { useFormatPath, useColor } from 'hooks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
+import { useTokenPairs } from 'state/features/token/selectors'
+import { useToggleSavedToken } from 'state/features/user/hooks'
+import { TYPE, DashboardWrapper } from 'Theme'
 import {
-  formattedNum,
-  getPoolLink,
-  getSwapLink,
+  formattedNumber,
   getBlockChainScanLink,
   isValidAddress,
   ellipsisAddress,
-  localNumber
+  localNumber,
+  getExchangeLink
 } from 'utils'
-import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
-import { useTokenPairs } from 'state/features/token/selectors'
-import { useFormatPath, useColor } from 'hooks'
-import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
-import { useMedia } from 'react-use'
-import { useToggleSavedToken } from 'state/features/user/hooks'
-import { PageWrapper, ContentWrapper, StarIcon, ExternalLinkIcon } from 'components'
-import FormattedName from 'components/FormattedName'
-import { TYPE, DashboardWrapper } from 'Theme'
-import { useTranslation } from 'react-i18next'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import Percent from 'components/Percent'
 import { ActionsContainer, PanelWrapper, WarningGrouping } from './styled'
-import { TransactionTable } from 'components/TransactionTable'
-import { SupportedNetwork } from 'constants/networks'
-import ComingSoon from 'components/ComingSoon'
 
 const TokenPage = () => {
   const { t } = useTranslation()
@@ -83,12 +81,12 @@ const TokenPage = () => {
   const transactions = useTokenTransactions(tokenAddress)
 
   // price
-  const price = priceUSD ? formattedNum(priceUSD, true) : ''
+  const price = priceUSD ? formattedNumber(priceUSD, true) : ''
 
   // volume
   const volume =
     dayVolumeUSD || dayVolumeUSD === 0
-      ? formattedNum(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
+      ? formattedNumber(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
       : dayVolumeUSD === 0
       ? '$0'
       : '-'
@@ -99,7 +97,7 @@ const TokenPage = () => {
   const volumeChange = (!usingUtVolume ? volumeChangeUSD : volumeChangeUT) || 0
 
   // liquidity
-  const liquidity = totalLiquidityUSD ? formattedNum(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
+  const liquidity = totalLiquidityUSD ? formattedNumber(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
 
   // format for long symbol
   const LENGTH = below1080 ? 10 : 16
@@ -161,7 +159,7 @@ const TokenPage = () => {
                   </TYPE.main>
                   {!below1080 && (
                     <>
-                      <TYPE.main fontSize={'1.5rem'} fontWeight={500} style={{ marginRight: '1rem' }}>
+                      <TYPE.main fontSize="1.5rem" fontWeight={500} style={{ marginRight: '1rem' }}>
                         {price}
                       </TYPE.main>
                       {priceChangeUSD ? <Percent percent={priceChangeUSD} /> : ''}
@@ -171,10 +169,24 @@ const TokenPage = () => {
               </RowFixed>
               <ActionsContainer>
                 <StarIcon $filled={isTokenSaved} onClick={toggleSavedToken} />
-                <Link href={getPoolLink(activeNetworkId, tokenAddress, null)} target="_blank">
+                <Link
+                  href={getExchangeLink({
+                    network: activeNetworkId,
+                    inputCurrency: tokenAddress,
+                    type: 'add'
+                  })}
+                  target="_blank"
+                >
                   <ButtonLight color={backgroundColor}>{t('addLiquidity')}</ButtonLight>
                 </Link>
-                <Link href={getSwapLink(activeNetworkId, tokenAddress, null)} target="_blank">
+                <Link
+                  href={getExchangeLink({
+                    network: activeNetworkId,
+                    inputCurrency: tokenAddress,
+                    type: 'swap'
+                  })}
+                  target="_blank"
+                >
                   <ButtonDark color={backgroundColor}>{t('trade')}</ButtonDark>
                 </Link>
                 <a
@@ -190,14 +202,14 @@ const TokenPage = () => {
             <PanelWrapper>
               {below1080 && price && (
                 <Panel>
-                  <AutoColumn gap="20px">
+                  <AutoColumn gap="1.25rem">
                     <RowBetween>
                       <TYPE.main>{t('price')}</TYPE.main>
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
                       {' '}
-                      <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                      <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {price}
                       </TYPE.main>
                       <TYPE.main>{priceChangeUSD ? <Percent percent={priceChangeUSD} /> : ''}</TYPE.main>
@@ -206,7 +218,7 @@ const TokenPage = () => {
                 </Panel>
               )}
               <Panel>
-                <AutoColumn gap="20px">
+                <AutoColumn gap="1.25rem">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
                       {t('totalLiquidity')}
@@ -214,7 +226,7 @@ const TokenPage = () => {
                     <div />
                   </RowBetween>
                   <RowBetween align="flex-end">
-                    <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                    <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                       {liquidity}
                     </TYPE.main>
                     <TYPE.main>
@@ -224,7 +236,7 @@ const TokenPage = () => {
                 </AutoColumn>
               </Panel>
               <Panel>
-                <AutoColumn gap="20px">
+                <AutoColumn gap="1.25rem">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
                       {t('volume24hrs')}
@@ -232,7 +244,7 @@ const TokenPage = () => {
                     <div />
                   </RowBetween>
                   <RowBetween align="flex-end">
-                    <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                    <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                       {volume}
                     </TYPE.main>
                     <TYPE.main>
@@ -242,7 +254,7 @@ const TokenPage = () => {
                 </AutoColumn>
               </Panel>
               <Panel>
-                <AutoColumn gap="20px">
+                <AutoColumn gap="1.25rem">
                   <RowBetween>
                     <TYPE.light fontSize={14} fontWeight={500}>
                       {t('transactions')} (24hrs)
@@ -250,7 +262,7 @@ const TokenPage = () => {
                     <div />
                   </RowBetween>
                   <RowBetween align="flex-end">
-                    <TYPE.main fontSize={'1.5rem'} lineHeight={1} fontWeight={500}>
+                    <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                       {oneDayTxns ? localNumber(oneDayTxns) : 0}
                     </TYPE.main>
                     <TYPE.main>

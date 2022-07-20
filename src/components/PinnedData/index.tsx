@@ -1,42 +1,43 @@
-import { Link } from 'react-router-dom'
-import { RowBetween, RowFixed } from 'components/Row'
-import { AutoColumn } from 'components/Column'
-import { TYPE } from 'Theme'
-import { useSavedTokens, useSavedPairs } from 'state/features/user/hooks'
-import { useFormatPath } from 'hooks'
-import { Hover } from 'components'
-import TokenLogo from 'components/TokenLogo'
-import AccountSearch from 'components/AccountSearch'
 import { Bookmark, ChevronRight, X } from 'react-feather'
-import { ButtonFaded } from 'components/ButtonStyled'
-import FormattedName from 'components/FormattedName'
 import { useTranslation } from 'react-i18next'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
+import { Link } from 'react-router-dom'
+import { Hover } from 'components'
+import AccountSearch from 'components/AccountSearch'
+import { ButtonFaded } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import FormattedName from 'components/FormattedName'
+import { RowBetween, RowFixed } from 'components/Row'
+import TokenLogo from 'components/TokenLogo'
+import { useFormatPath } from 'hooks'
+import { useSavedTokens, useSavedPairs } from 'state/features/user/hooks'
+import { TYPE } from 'Theme'
 import { RightColumn, SavedButton, ScrollableDiv, StyledIcon } from './styled'
 
-type Props = {
+interface IPinnedData {
   open: boolean
   setSavedOpen: (value: boolean) => void
 }
 
-const PinnedData = ({ open, setSavedOpen }: Props) => {
+const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
 
   const [savedPairs, , removePair] = useSavedPairs()
   const [savedTokens, , removeToken] = useSavedTokens()
 
-  return !open ? (
-    <RightColumn open={open} onClick={() => setSavedOpen(true)}>
-      <SavedButton open={open}>
-        <StyledIcon>
-          <Bookmark size={20} />
-        </StyledIcon>
-      </SavedButton>
-    </RightColumn>
-  ) : (
+  if (!open) {
+    return (
+      <RightColumn open={open} onClick={() => setSavedOpen(true)}>
+        <SavedButton open={open}>
+          <StyledIcon>
+            <Bookmark size={20} />
+          </StyledIcon>
+        </SavedButton>
+      </RightColumn>
+    )
+  }
+
+  return (
     <RightColumn open={open}>
       <SavedButton onClick={() => setSavedOpen(false)} open={open}>
         <RowFixed>
@@ -49,73 +50,58 @@ const PinnedData = ({ open, setSavedOpen }: Props) => {
           <ChevronRight />
         </StyledIcon>
       </SavedButton>
-      {activeNetwork !== SupportedNetwork.TRON ? <AccountSearch small={true} /> : null}
-      <AutoColumn gap="40px" style={{ marginTop: '2rem' }}>
-        <AutoColumn gap="12px">
+      <AccountSearch small={true} />
+      <AutoColumn gap="2.5rem" style={{ marginTop: '2rem' }}>
+        <AutoColumn gap="0.75rem">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
-          {Object.keys(savedPairs).filter(key => {
-            return !!savedPairs[key]
-          }).length > 0 ? (
-            Object.keys(savedPairs)
-              .filter(address => {
-                return !!savedPairs[address]
-              })
-              .map(address => {
-                const pair = savedPairs[address]
-                return (
-                  <RowBetween key={pair.address}>
-                    <ButtonFaded as={Link} to={formatPath(`/pairs/${address}`)}>
-                      <RowFixed>
-                        <TYPE.header>
-                          <FormattedName
-                            text={pair.token0Symbol + '/' + pair.token1Symbol}
-                            maxCharacters={12}
-                            fontSize={'12px'}
-                          />
-                        </TYPE.header>
-                      </RowFixed>
-                    </ButtonFaded>
-                    <Hover onClick={() => removePair(pair.address)}>
-                      <StyledIcon>
-                        <X size={16} />
-                      </StyledIcon>
-                    </Hover>
-                  </RowBetween>
-                )
-              })
+          {Object.keys(savedPairs).length > 0 ? (
+            Object.values(savedPairs).map(pair => (
+              <RowBetween key={pair.address}>
+                <ButtonFaded as={Link} to={formatPath(`/pairs/${pair.address}`)}>
+                  <RowFixed>
+                    <TYPE.header>
+                      <FormattedName
+                        text={pair.token0Symbol + '/' + pair.token1Symbol}
+                        maxCharacters={12}
+                        fontSize="0.75rem"
+                      />
+                    </TYPE.header>
+                  </RowFixed>
+                </ButtonFaded>
+                <Hover onClick={() => removePair(pair.address)}>
+                  <StyledIcon>
+                    <X size={16} />
+                  </StyledIcon>
+                </Hover>
+              </RowBetween>
+            ))
           ) : (
             <TYPE.light>{t('pinnedPairsHere')}</TYPE.light>
           )}
         </AutoColumn>
-        <ScrollableDiv gap="12px">
+        <ScrollableDiv gap="0.75rem">
           <TYPE.main>{t('pinnedTokens')}</TYPE.main>
-          {Object.keys(savedTokens).filter(key => {
-            return !!savedTokens[key]
-          }).length > 0 ? (
-            Object.keys(savedTokens)
-              .filter(address => {
-                return !!savedTokens[address]
-              })
-              .map(address => {
-                const token = savedTokens[address]
-                return (
-                  <RowBetween key={address}>
-                    <ButtonFaded as={Link} to={formatPath(`/tokens/${address}`)}>
-                      <RowFixed>
-                        <TokenLogo address={address} size="14px" />
-                        <TYPE.header ml="6px">
-                          <FormattedName text={token.symbol} maxCharacters={12} fontSize="12px" />
-                        </TYPE.header>
-                      </RowFixed>
-                    </ButtonFaded>
-                    <Hover onClick={() => removeToken(address)}>
-                      <StyledIcon>
-                        <X size={16} />
-                      </StyledIcon>
-                    </Hover>
-                  </RowBetween>
-                )
-              })
+          {Object.keys(savedTokens).length > 0 ? (
+            Object.keys(savedTokens).map(address => {
+              const token = savedTokens[address]
+              return (
+                <RowBetween key={address}>
+                  <ButtonFaded as={Link} to={formatPath(`/tokens/${address}`)}>
+                    <RowFixed>
+                      <TokenLogo address={address} size="14px" />
+                      <TYPE.header ml="6px">
+                        <FormattedName text={token.symbol} maxCharacters={12} fontSize="0.75rem" />
+                      </TYPE.header>
+                    </RowFixed>
+                  </ButtonFaded>
+                  <Hover onClick={() => removeToken(address)}>
+                    <StyledIcon>
+                      <X size={16} />
+                    </StyledIcon>
+                  </Hover>
+                </RowBetween>
+              )
+            })
           ) : (
             <TYPE.light>{t('pinnedTokensHere')}</TYPE.light>
           )}

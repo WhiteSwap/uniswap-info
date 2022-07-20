@@ -1,12 +1,11 @@
-import TopTokenList from '../components/TokenList'
-import { TYPE } from '../Theme'
-import { PageWrapper, FullWrapper } from '../components'
-import { RowBetween } from '../components/Row'
-import Search from '../components/Search'
-import { useMedia } from 'react-use'
-import { DashboardWrapper } from '../Theme'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { PageWrapper, FullWrapper } from 'components'
+import { RowBetween } from 'components/Row'
+import Search from 'components/Search'
+import TopTokenList from 'components/TokenList'
 import { useTokens } from 'state/features/token/selectors'
+import { TYPE, DashboardWrapper } from 'Theme'
 
 function AllTokensPage() {
   const { t } = useTranslation()

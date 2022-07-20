@@ -1,5 +1,5 @@
-import styled from 'styled-components/macro'
 import { Sun, Moon } from 'react-feather'
+import styled from 'styled-components/macro'
 
 const IconWrapper = styled.div<{ isActive?: boolean }>`
   opacity: ${({ isActive }) => (isActive ? 0.8 : 0.4)};
@@ -32,12 +32,12 @@ const Span = styled.span`
   color: ${({ theme }) => theme.text1};
 `
 
-export interface ToggleProps {
+export interface ToggleProperties {
   isActive: boolean
   toggle: () => void
 }
 
-export default function Toggle({ isActive, toggle }: ToggleProps) {
+export default function Toggle({ isActive, toggle }: ToggleProperties) {
   return (
     <StyledToggle onClick={toggle}>
       <span>

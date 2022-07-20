@@ -1,6 +1,6 @@
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { removeAccount, addAccount, setDarkMode, addPair, removePair, addToken, removeToken } from './slice'
-import { useActiveNetworkId } from 'state/features/application/selectors'
 import { SavedPair, SavedToken } from './types'
 
 export function useDarkModeManager(): [boolean, () => void] {
@@ -30,7 +30,7 @@ export function useSavedAccounts(): [string[], (account: string) => void, (accou
 
 export function useToggleSavedAccount(account?: string): [boolean, () => void] {
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
-  const isSaved = account && savedAccounts.find(acc => acc === account) ? true : false
+  const isSaved = savedAccounts.includes(account || '')
 
   const toggleSavedAccount = () => {
     if (account) {

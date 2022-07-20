@@ -1,5 +1,5 @@
-import { pairMapper } from 'data/mappers/ethereum/pairMappers'
 import dayjs from 'dayjs'
+import { pairMapper } from 'data/mappers/ethereum/pairMappers'
 import { getShareValueOverTime } from '.'
 
 export const priceOverrides = [
@@ -15,7 +15,7 @@ interface ReturnMetrics {
   fees: number
 }
 
-const PRICE_DISCOVERY_START_TIMESTAMP = 1589747086
+const PRICE_DISCOVERY_START_TIMESTAMP = 1_589_747_086
 
 export function formatPricesForEarlyTimestamps(position: LiquiditySnapshot): LiquiditySnapshot {
   const updatedPosition = { ...position }
@@ -109,20 +109,20 @@ export async function getHistoricalPairReturns(
   if (!currentPairData.createdAtTimestamp) {
     return []
   }
-  let dayIndex: number = Math.round(startDateTimestamp / 86400) // get unique day bucket unix
-  const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86400)
+  let dayIndex: number = Math.round(startDateTimestamp / 86_400) // get unique day bucket unix
+  const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86_400)
   const sortedPositions = pairSnapshots.sort((a: any, b: any) => {
-    return parseInt(a.timestamp) > parseInt(b.timestamp) ? 1 : -1
+    return Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1
   })
   if (sortedPositions[0].timestamp > startDateTimestamp) {
-    dayIndex = Math.round(sortedPositions[0].timestamp / 86400)
+    dayIndex = Math.round(sortedPositions[0].timestamp / 86_400)
   }
 
   const dayTimestamps = []
   while (dayIndex < currentDayIndex) {
     // only account for days where this pair existed
-    if (dayIndex * 86400 >= currentPairData?.createdAtTimestamp) {
-      dayTimestamps.push(dayIndex * 86400)
+    if (dayIndex * 86_400 >= currentPairData?.createdAtTimestamp) {
+      dayTimestamps.push(dayIndex * 86_400)
     }
     dayIndex = dayIndex + 1
   }
@@ -143,21 +143,20 @@ export async function getHistoricalPairReturns(
   for (const index in dayTimestamps) {
     // get the bounds on the day
     const dayTimestamp = dayTimestamps[index]
-    const timestampCeiling = dayTimestamp + 86400
+    const timestampCeiling = dayTimestamp + 86_400
 
     // for each change in position value that day, create a window and update
     const dailyChanges = pairSnapshots.filter((snapshot: any) => {
       return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
     })
-    for (let i = 0; i < dailyChanges.length; i++) {
-      const positionT1: LiquiditySnapshot = dailyChanges[i]
+    for (const positionT1 of dailyChanges) {
       const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
       netFees = netFees + localReturns.fees
       positionT0 = positionT1
     }
 
     // now treat the end of the day as a hypothetical position
-    let positionT1: LiquiditySnapshot = shareValuesFormatted[dayTimestamp + 86400]
+    let positionT1: LiquiditySnapshot = shareValuesFormatted[dayTimestamp + 86_400]
     if (!positionT1) {
       positionT1 = {
         timestamp: 0,
@@ -214,7 +213,8 @@ export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots:
   for (const index in snapshots) {
     // get positions at both bounds of the window
     const positionT0 = snapshots[index]
-    const positionT1 = parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[parseInt(index) + 1]
+    const positionT1 =
+      Number.parseInt(index) === snapshots.length - 1 ? currentPosition : snapshots[Number.parseInt(index) + 1]
 
     const results = getMetricsForPositionWindow(positionT0, positionT1)
     fees += results.fees

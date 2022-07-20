@@ -6,10 +6,10 @@ export const Wrapper = styled.div<{ open: boolean }>`
   position: relative;
   background-color: ${({ theme }) => theme.panelColor};
   border: 1px solid ${({ open, color }) => (open ? color : 'rgba(0, 0, 0, 0.15);')};
-  width: 120px;
-  padding: 4px 10px;
+  width: 7.5rem;
+  padding: 0.25rem 10px;
   padding-right: 6px;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,12 +22,12 @@ export const Wrapper = styled.div<{ open: boolean }>`
 export const Dropdown = styled.div`
   position: absolute;
   top: 34px;
-  padding-top: 40px;
-  width: calc(100% - 40px);
+  padding-top: 2.5rem;
+  width: calc(100% - 2.5rem);
   background-color: ${({ theme }) => theme.bg1};
   border: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px 10px;
-  border-radius: 8px;
+  padding: 0.625rem 0.625rem;
+  border-radius: 0.5rem;
   width: 100%;
   font-weight: 500;
   font-size: 1rem;
@@ -39,7 +39,7 @@ export const Dropdown = styled.div`
 `
 
 export const ArrowStyled = styled(Arrow)`
-  height: 20px;
-  width: 20px;
+  height: 1.25rem;
+  width: 1.25rem;
   margin-left: 6px;
 `

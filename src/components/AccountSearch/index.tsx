@@ -1,26 +1,26 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { ButtonLight, ButtonFaded } from 'components/ButtonStyled'
-import { AutoRow, RowBetween } from 'components/Row'
-import { ellipsisAddress, isValidAddress } from 'utils'
-import { useSavedAccounts } from 'state/features/user/hooks'
-import { AutoColumn } from 'components/Column'
-import { TYPE } from 'Theme'
-import { Hover, StyledIcon, Divider } from 'components'
-import Panel from 'components/Panel'
-import { useFormatPath } from 'hooks'
-import { Flex } from 'rebass'
 import { X } from 'react-feather'
-import { useMedia } from 'react-use'
 import { useTranslation } from 'react-i18next'
-import { AccountLink, DashGrid, Input, Wrapper } from './styled'
+import { useNavigate, Link } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
+import { Hover, StyledIcon, Divider } from 'components'
+import { ButtonLight, ButtonFaded } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import Panel from 'components/Panel'
+import { AutoRow, RowBetween } from 'components/Row'
+import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { useSavedAccounts } from 'state/features/user/hooks'
+import { TYPE } from 'Theme'
+import { ellipsisAddress, isValidAddress } from 'utils'
+import { AccountLink, DashGrid, Input, Wrapper } from './styled'
 
-type Props = {
+interface IAccountSearch {
   small?: boolean
 }
 
-function AccountSearch({ small }: Props) {
+function AccountSearch({ small }: IAccountSearch) {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
@@ -46,8 +46,8 @@ function AccountSearch({ small }: Props) {
             <Input
               style={below440 ? { marginRight: '0px' } : {}}
               placeholder="0x..."
-              onChange={(e: any) => {
-                setAccountValue(e.target.value)
+              onChange={event => {
+                setAccountValue(event.target.value)
               }}
             />
           </Wrapper>
@@ -61,7 +61,7 @@ function AccountSearch({ small }: Props) {
         {!small && (
           <Panel>
             <DashGrid>
-              <TYPE.main area="account">{t('savedAccounts')}</TYPE.main>
+              <TYPE.main>{t('savedAccounts')}</TYPE.main>
             </DashGrid>
             <Divider />
             {savedAccounts?.length > 0 ? (

@@ -1,3 +1,4 @@
+import { TransactionsMock } from '__mocks__/transactions'
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
 import { transactionsMapper } from 'data/mappers/tron/transactionMapper'
 import { client } from 'service/client'
@@ -15,7 +16,6 @@ import {
   TOKEN_TRANSACTIONS,
   TRANSACTION_COUNT
 } from 'service/queries/tron/transactions'
-import { TransactionsMock } from '__mocks__/transactions'
 
 export default class TransactionDataController implements ITransactionDataController {
   async getDayTransactionCount() {
@@ -40,7 +40,7 @@ export default class TransactionDataController implements ITransactionDataContro
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getUserTransactions(_account: string) {
-    return Promise.resolve(TransactionsMock)
+    return TransactionsMock
   }
   async getAllTransactions() {
     const { data } = await client.query<GlobalTransactionsQuery>({

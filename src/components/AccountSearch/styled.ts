@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 0.75rem;
 `
 
 export const Input = styled.input`
@@ -19,10 +19,10 @@ export const Input = styled.input`
   border: none;
   outline: none;
   padding: 0.875rem 1rem;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg1};
-  font-size: 16px;
+  font-size: 1rem;
   margin-right: 1rem;
   border: 1px solid ${({ theme }) => theme.bg3};
 

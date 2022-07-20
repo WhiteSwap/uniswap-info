@@ -1,8 +1,8 @@
-import FormattedName from 'components/FormattedName'
-import Row from 'components/Row'
 import { transparentize } from 'polished'
 import { Search, X } from 'react-feather'
 import styled from 'styled-components'
+import FormattedName from 'components/FormattedName'
+import Row from 'components/Row'
 
 export const Container = styled.div`
   height: 48px;
@@ -20,8 +20,8 @@ export const Wrapper = styled.div<{ open?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
   background: ${({ theme }) => transparentize(0.4, theme.bg6)};
   border-bottom-right-radius: ${({ open }) => (open ? '0px' : '12px')};
   border-bottom-left-radius: ${({ open }) => (open ? '0px' : '12px')};
@@ -49,7 +49,7 @@ export const Input = styled.input`
 
   ::placeholder {
     color: ${({ theme }) => theme.text3};
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   @media screen and (max-width: 640px) {
@@ -78,16 +78,16 @@ export const Menu = styled.div<{ hide?: boolean }>`
   flex-direction: column;
   z-index: 9999;
   width: 100%;
-  top: 50px;
-  max-height: 540px;
+  top: 3.125rem;
+  max-height: 33.75rem;
   overflow: auto;
   left: 0;
-  padding-bottom: 20px;
+  padding-bottom: 1.25rem;
   background: ${({ theme }) => theme.bg6};
-  border-bottom-right-radius: 12px;
-  border-bottom-left-radius: 12px;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.04);
+  border-bottom-right-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0.25rem 0.5rem rgba(0, 0, 0, 0.04), 0 1rem 1.5rem rgba(0, 0, 0, 0.04),
+    0 1.5rem 2rem rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
 `
 
@@ -95,12 +95,13 @@ export const MenuItem = styled(Row)`
   padding: 1rem;
   font-size: 0.85rem;
   color: ${({ theme }) => theme.text1};
+  cursor: pointer;
 
   & > * {
     margin-right: 6px;
   }
+
   :hover {
-    cursor: pointer;
     background-color: ${({ theme }) => theme.bg2};
   }
 `

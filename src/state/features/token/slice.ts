@@ -23,7 +23,7 @@ export const tokenSlice = createSlice({
       state[networkId][tokenAddress] = { ...state[networkId][tokenAddress], ...data }
     },
     setTopTokens: (state, { payload: { networkId, topTokens } }: PayloadAction<UpdateTopTokensPayload>) => {
-      const tokens = topTokens.reduce((acc, pair) => ({ ...acc, [pair.id]: pair }), {})
+      const tokens = topTokens.reduce((accumulator, pair) => ({ ...accumulator, [pair.id]: pair }), {})
       state[networkId] = { ...tokens, ...state[networkId] }
     },
     setTransactions: (

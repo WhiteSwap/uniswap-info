@@ -1,12 +1,12 @@
-import { timeframeOptions } from '../../../constants'
-import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { useActiveNetworkId, useLatestBlock } from '../application/selectors'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
-import { useActiveTokenPrice } from '../global/selectors'
+import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import DataService from 'data/DataService'
+import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { useActiveTokenPrice } from 'state/features/global/selectors'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isValidAddress } from 'utils'
+import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
 
 export function useHourlyRateData(pairAddress: string, timeWindow: string) {
   const dispatch = useAppDispatch()
@@ -18,7 +18,9 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string) {
     const currentTime = dayjs.utc()
     const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
     const startTime =
-      timeWindow === timeframeOptions.ALL_TIME ? 1589760000 : currentTime.subtract(1, windowSize).startOf('hour').unix()
+      timeWindow === timeframeOptions.ALL_TIME
+        ? 1_589_760_000
+        : currentTime.subtract(1, windowSize).startOf('hour').unix()
 
     async function fetch() {
       const data = await DataService.pairs.getHourlyRateData(pairAddress, startTime, latestBlock)

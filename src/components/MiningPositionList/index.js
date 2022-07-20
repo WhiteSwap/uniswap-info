@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import LocalLoader from 'components/LocalLoader'
-import { Box, Flex, Text } from 'rebass'
-import styled from 'styled-components/macro'
-import { useFormatPath } from 'hooks'
-import Link, { CustomLink } from 'components/Link'
-import { Divider } from 'components'
-import DoubleTokenLogo from 'components/DoubleLogo'
-import { formattedNum, getWhiteSwapAppLink } from '../../utils'
-import { AutoColumn } from 'components/Column'
-import { RowFixed } from 'components/Row'
-import { ButtonLight } from 'components/ButtonStyled'
-import { TYPE } from 'Theme'
-import FormattedName from 'components/FormattedName'
-import Panel from 'components/Panel'
 import { transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components/macro'
+import { Divider } from 'components'
+import { ButtonLight } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import FormattedName from 'components/FormattedName'
+import Link, { CustomLink } from 'components/Link'
+import LocalLoader from 'components/LocalLoader'
+import Panel from 'components/Panel'
+import { RowFixed } from 'components/Row'
+import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { TYPE } from 'Theme'
+import { formattedNumber, getWhiteSwapAppLink } from 'utils'
 
 const PageButtons = styled.div`
   width: 100%;
@@ -32,7 +32,7 @@ const PageButtons = styled.div`
 const Arrow = styled.div`
   color: ${({ theme }) => theme.primary1};
   opacity: ${props => (props.faded ? 0.3 : 1)};
-  padding: 0 20px;
+  padding: 0 1.25rem;
   user-select: none;
   :hover {
     cursor: pointer;
@@ -59,7 +59,7 @@ const DashGrid = styled.div`
     :first-child {
       justify-content: flex-start;
       text-align: left;
-      width: 20px;
+      width: 1.25rem;
     }
   }
 
@@ -196,10 +196,12 @@ function MiningPositionList({ miningPositions }) {
         </DataText>
         <DataText area="uniswap">
           <AutoColumn gap="12px" justify="flex-end">
-            <TYPE.main>{formattedNum(pairPercentage * valueUSD, true, true)}</TYPE.main>
+            <TYPE.main>{formattedNumber(pairPercentage * valueUSD, true, true)}</TYPE.main>
             <AutoColumn gap="4px" justify="flex-end">
               <RowFixed>
-                <TYPE.small fontWeight={400}>{formattedNum(pairPercentage * parseFloat(valueFirstPair))} </TYPE.small>
+                <TYPE.small fontWeight={400}>
+                  {formattedNumber(pairPercentage * Number.parseFloat(valueFirstPair))}{' '}
+                </TYPE.small>
                 <FormattedName
                   text={firstPairName}
                   maxCharacters={below740 ? 10 : 18}
@@ -208,7 +210,9 @@ function MiningPositionList({ miningPositions }) {
                 />
               </RowFixed>
               <RowFixed>
-                <TYPE.small fontWeight={400}>{formattedNum(pairPercentage * parseFloat(valueSecondPair))} </TYPE.small>
+                <TYPE.small fontWeight={400}>
+                  {formattedNumber(pairPercentage * Number.parseFloat(valueSecondPair))}{' '}
+                </TYPE.small>
                 <FormattedName
                   text={secondPairName}
                   maxCharacters={below740 ? 10 : 18}

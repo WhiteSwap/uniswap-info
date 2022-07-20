@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import { XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid } from 'recharts'
-import { AutoRow, RowBetween } from 'components/Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
-import { OptionButton } from 'components/ButtonStyled'
-import { useMedia } from 'react-use'
-import { timeframeOptions } from 'constants/index'
-import DropdownSelect from 'components/DropdownSelect'
-import { useUserPositionChart } from 'state/features/account/hooks'
-import LocalLoader from 'components/LocalLoader'
-import { useColor } from 'hooks'
-import { useDarkModeManager } from 'state/features/user/hooks'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid } from 'recharts'
+import { OptionButton } from 'components/ButtonStyled'
+import DropdownSelect from 'components/DropdownSelect'
+import LocalLoader from 'components/LocalLoader'
+import { AutoRow, RowBetween } from 'components/Row'
+import { timeframeOptions } from 'constants/index'
+import { useColor } from 'hooks'
+import { useUserPositionChart } from 'state/features/account/hooks'
+import { useDarkModeManager } from 'state/features/user/hooks'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
@@ -18,12 +18,12 @@ const CHART_VIEW = {
   FEES: 'Fees'
 }
 
-type Props = {
+interface IPairReturnsChart {
   account: string
   position: Position
 }
 
-const PairReturnsChart = ({ account, position }: Props) => {
+const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const { t } = useTranslation()
   const data = useUserPositionChart(position, account)
   const below600 = useMedia('(max-width: 600px)')
@@ -123,7 +123,7 @@ const PairReturnsChart = ({ account, position }: Props) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(val: string | number | undefined) => formattedNum(val, true)}
+              formatter={(value: string | number | undefined) => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

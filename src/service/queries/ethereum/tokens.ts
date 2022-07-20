@@ -16,7 +16,6 @@ export const TOKEN_SEARCH = gql`
   }
 `
 
-// ! need mapped
 export const TOKEN_CHART = gql`
   query TokenChart($tokenAddr: String!, $skip: Int!) {
     tokenDayDatas(first: 1000, skip: $skip, orderBy: date, orderDirection: asc, where: { token: $tokenAddr }) {

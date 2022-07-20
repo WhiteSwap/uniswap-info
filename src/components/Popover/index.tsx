@@ -3,7 +3,7 @@ import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
-import useInterval from '../../hooks'
+import useInterval from 'hooks'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
@@ -14,9 +14,9 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
+  box-shadow: 0 0.25rem 0.5rem 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
   color: ${({ theme }) => theme.text2};
-  border-radius: 8px;
+  border-radius: 0.5rem;
 `
 
 const ReferenceElement = styled.div`
@@ -24,14 +24,14 @@ const ReferenceElement = styled.div`
 `
 
 const Arrow = styled.div`
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   z-index: 9998;
 
   ::before {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 0.5rem;
+    height: 0.5rem;
     z-index: 9998;
 
     content: '';
@@ -74,14 +74,14 @@ const Arrow = styled.div`
   }
 `
 
-export interface PopoverProps {
+export interface IPopover {
   content: React.ReactNode
   show: boolean
   children: React.ReactNode
   placement?: Placement
 }
 
-export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto' }: IPopover) {
   const [referenceElement, setReferenceElement] = useState(null)
   const [popperElement, setPopperElement] = useState(null)
   const [arrowElement, setArrowElement] = useState(null)

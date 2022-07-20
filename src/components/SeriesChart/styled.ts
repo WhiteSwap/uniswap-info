@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
 `
 
 export const Title = styled.p`
-  margin: 4px 0px;
+  margin: 0.25rem 0;
   font-size: 1rem;
   color: ${({ theme }) => theme.text6};
 `

@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import LocalLoader from '../LocalLoader'
-import { Flex } from 'rebass'
-import { useFormatPath } from 'hooks'
-import { Divider } from '..'
-import { formattedNum } from '../../utils'
-import DoubleTokenLogo from '../DoubleLogo'
-import FormattedName from '../FormattedName'
-import QuestionHelper from '../QuestionHelper'
-import { TYPE } from '../../Theme'
-import Panel from '../Panel'
+import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
+import { Divider } from 'components'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import FormattedName from 'components/FormattedName'
+import LocalLoader from 'components/LocalLoader'
+import Panel from 'components/Panel'
 import Percent from 'components/Percent'
-import { DashGrid, DataText, ClickableText, PageButtons, Arrow, List, Link } from './styled'
+import QuestionHelper from 'components/QuestionHelper'
+import { useFormatPath } from 'hooks'
+import { TYPE } from 'Theme'
+import { formattedNumber } from 'utils'
+import { DashGrid, DataText, ClickableText, PageButtons, List, Link, PaginationButton } from './styled'
 
 enum PairSortField {
   Apy = 'Apy',
@@ -38,7 +39,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
 
   // pagination
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(0)
   const ITEMS_PER_PAGE = maxItems
 
   // sorting
@@ -61,8 +62,8 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
   }, [ITEMS_PER_PAGE, pairs])
 
   const ListItem = ({ pairData, index }: { pairData: Pair; index: number }) => {
-    const liquidity = formattedNum(pairData.totalLiquidityUSD, true)
-    const volume = formattedNum(pairData.dayVolumeUSD, true)
+    const liquidity = formattedNumber(pairData.totalLiquidityUSD, true)
+    const volume = formattedNumber(pairData.dayVolumeUSD, true)
 
     return (
       <DashGrid style={{ padding: below440 ? '.75rem' : '.875rem 2rem' }}>
@@ -86,13 +87,15 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
         </DataText>
         <DataText>{liquidity}</DataText>
         <DataText>{volume}</DataText>
-        {!below1080 && <DataText>{formattedNum(pairData.weekVolumeUSD, true)}</DataText>}
-        {!below1080 && <DataText>{formattedNum(pairData.dayFees, true)}</DataText>}
-        {!below1080 && (
-          <DataText>
-            <Percent percent={pairData.apy} />
-          </DataText>
-        )}
+        {!below1080 ? (
+          <>
+            <DataText>{formattedNumber(pairData.weekVolumeUSD, true)}</DataText>
+            <DataText>{formattedNumber(pairData.dayFees, true)}</DataText>
+            <DataText>
+              <Percent percent={pairData.apy} />
+            </DataText>
+          </>
+        ) : undefined}
       </DashGrid>
     )
   }
@@ -102,6 +105,19 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
       setSortedColumn(direction)
       setSortDirection(sortedColumn !== direction ? true : !sortDirection)
     }
+  }
+
+  const sortDirectionArrow = (column: PairSortField) => {
+    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    return sortedColumn === column ? sortedSymbol : ''
+  }
+
+  const incrementPage = () => {
+    setPage(page === 1 ? page : page - 1)
+  }
+
+  const decrementPage = () => {
+    setPage(page === maxPage ? page : page + 1)
   }
 
   const pairList =
@@ -147,39 +163,35 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
           </Flex>
           <Flex alignItems="center" justifyContent="flexEnd">
             <ClickableText onClick={changeSortDirection(PairSortField.Liquidity)}>
-              {t('liquidity')} {sortedColumn === PairSortField.Liquidity ? (!sortDirection ? '↑' : '↓') : ''}
+              {t('liquidity')} {sortDirectionArrow(PairSortField.Liquidity)}
             </ClickableText>
           </Flex>
           <Flex alignItems="center">
             <ClickableText onClick={changeSortDirection(PairSortField.Volume)}>
               {t('volume24hrs')}
-              {sortedColumn === PairSortField.Volume ? (!sortDirection ? '↑' : '↓') : ''}
+              {sortDirectionArrow(PairSortField.Volume)}
             </ClickableText>
           </Flex>
-          {!below1080 && (
-            <Flex alignItems="center" justifyContent="flexEnd">
-              <ClickableText onClick={changeSortDirection(PairSortField.WeekVolume)}>
-                {t('volume')} (7d) {sortedColumn === PairSortField.WeekVolume ? (!sortDirection ? '↑' : '↓') : ''}
-              </ClickableText>
-            </Flex>
-          )}
-          {!below1080 && (
-            <Flex alignItems="center" justifyContent="flexEnd">
-              <ClickableText onClick={changeSortDirection(PairSortField.Fees)}>
-                {t('fees24hrs')} {sortedColumn === PairSortField.Fees ? (!sortDirection ? '↑' : '↓') : ''}
-              </ClickableText>
-            </Flex>
-          )}
-          {!below1080 && (
-            <Flex alignItems="center" justifyContent="flexEnd">
-              <ClickableText onClick={changeSortDirection(PairSortField.Apy)}>
-                {`1y ${t('fees')} / ${t('liquidity')} ${
-                  sortedColumn === PairSortField.Apy ? (!sortDirection ? '↑' : '↓') : ''
-                }`}
-              </ClickableText>
-              <QuestionHelper text={t('basedOn24hrVolume')} />
-            </Flex>
-          )}
+          {!below1080 ? (
+            <>
+              <Flex alignItems="center" justifyContent="flexEnd">
+                <ClickableText onClick={changeSortDirection(PairSortField.WeekVolume)}>
+                  {t('volume')} (7d) {sortDirectionArrow(PairSortField.WeekVolume)}
+                </ClickableText>
+              </Flex>
+              <Flex alignItems="center" justifyContent="flexEnd">
+                <ClickableText onClick={changeSortDirection(PairSortField.Fees)}>
+                  {t('fees24hrs')} {sortDirectionArrow(PairSortField.Fees)}
+                </ClickableText>
+              </Flex>
+              <Flex alignItems="center" justifyContent="flexEnd">
+                <ClickableText onClick={changeSortDirection(PairSortField.Apy)}>
+                  {`1y ${t('fees')} / ${t('liquidity')} ${sortDirectionArrow(PairSortField.Apy)}`}
+                </ClickableText>
+                <QuestionHelper text={t('basedOn24hrVolume')} />
+              </Flex>
+            </>
+          ) : undefined}
         </DashGrid>
         <Divider />
         <List p={0}>
@@ -193,23 +205,17 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
           )}
         </List>
       </Panel>
-      <PageButtons>
-        <div
-          onClick={() => {
-            setPage(page === 1 ? page : page - 1)
-          }}
-        >
-          <Arrow faded={page === 1 ? true : false}>←</Arrow>
-        </div>
-        <TYPE.body>{`${t('page')} ${page} ${t('of')} ${maxPage}`}</TYPE.body>
-        <div
-          onClick={() => {
-            setPage(page === maxPage ? page : page + 1)
-          }}
-        >
-          <Arrow faded={page === maxPage ? true : false}>→</Arrow>
-        </div>
-      </PageButtons>
+      {maxPage ? (
+        <PageButtons>
+          <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>
+            <ArrowLeft width="1rem" height="1rem" />
+          </PaginationButton>
+          <TYPE.body>{t('pagination', { currentPage: page, maxPage })}</TYPE.body>
+          <PaginationButton type="button" disabled={page === maxPage} onClick={decrementPage}>
+            <ArrowRight width="1rem" height="1rem" />
+          </PaginationButton>
+        </PageButtons>
+      ) : undefined}
     </div>
   )
 }

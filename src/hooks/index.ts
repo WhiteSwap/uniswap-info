@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect, useRef, RefObject } from 'react'
-import { shade } from 'polished'
-import Vibrant from 'node-vibrant'
-import { hex } from 'wcag-contrast'
-import { getTokenLogoUrl, networkPrefix } from '../utils'
 import copy from 'copy-to-clipboard'
-import { useAppSelector } from 'state/hooks'
-import { useActiveNetworkId } from 'state/features/application/selectors'
+import Vibrant from 'node-vibrant'
+import { shade } from 'polished'
 import { useLocation } from 'react-router-dom'
+import { hex } from 'wcag-contrast'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { useAppSelector } from 'state/hooks'
+import { getTokenLogoUrl, networkPrefix } from 'utils'
 
 export function useColor(tokenAddress: string, token?: string) {
   const [color, setColor] = useState('#2172E5')
@@ -14,7 +14,7 @@ export function useColor(tokenAddress: string, token?: string) {
   if (tokenAddress) {
     const path = getTokenLogoUrl(activeNetwork, tokenAddress)
     if (path) {
-      Vibrant.from(path).getPalette((_err, palette) => {
+      Vibrant.from(path).getPalette((_error, palette) => {
         if (palette && palette.Vibrant) {
           let detectedHex = palette.Vibrant.hex
           let AAscore = hex(detectedHex, '#FFF')
@@ -52,17 +52,22 @@ export function useCopyClipboard(timeout = 500) {
         clearTimeout(hide)
       }
     }
-    return
+    return undefined
   }, [isCopied, setIsCopied, timeout])
 
   return [isCopied, staticCopy]
 }
 
 export const useOutsideClick = (ref: RefObject<any>, ref2: RefObject<any>, callback: (value: boolean) => void) => {
-  const handleClick = (e: MouseEvent) => {
-    if (ref.current && ref.current && !ref2.current) {
+  const handleClick = (event: MouseEvent) => {
+    if (ref.current && !ref2.current) {
       callback(true)
-    } else if (ref.current && !ref.current.contains(e.target) && ref2.current && !ref2.current.contains(e.target)) {
+    } else if (
+      ref.current &&
+      !ref.current.contains(event.target) &&
+      ref2.current &&
+      !ref2.current.contains(event.target)
+    ) {
       callback(true)
     } else {
       callback(false)
@@ -96,7 +101,7 @@ export default function useInterval(callback: () => void, delay: null | number) 
       const id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
-    return
+    return undefined
   }, [delay])
 }
 

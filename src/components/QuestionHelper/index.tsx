@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { HelpCircle as Question } from 'react-feather'
 import styled from 'styled-components/macro'
-import Popover, { PopoverProps } from '../Popover'
+import Popover, { IPopover } from 'components/Popover'
 
 const QuestionWrapper = styled.div`
   display: flex;
@@ -29,11 +29,11 @@ const TooltipContainer = styled.div`
   font-weight: 400;
 `
 
-interface TooltipProps extends Omit<PopoverProps, 'content'> {
+interface TooltipProperties extends Omit<IPopover, 'content'> {
   text: string
 }
 
-export function Tooltip({ text, ...rest }: TooltipProps) {
+export function Tooltip({ text, ...rest }: TooltipProperties) {
   return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 

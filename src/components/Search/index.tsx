@@ -1,17 +1,20 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-
-import { RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
-import { BasicLink } from '../Link'
-
-import { useFormatPath } from 'hooks'
-import DoubleTokenLogo from '../DoubleLogo'
-import { TYPE } from '../../Theme'
-import { escapeRegExp, isValidAddress } from 'utils'
 import { useTranslation } from 'react-i18next'
-import { useTokens } from 'state/features/token/selectors'
-import { usePairs } from 'state/features/pairs/selectors'
+import DoubleTokenLogo from 'components/DoubleLogo'
+import { BasicLink } from 'components/Link'
+import { RowFixed } from 'components/Row'
+import TokenLogo from 'components/TokenLogo'
+import { SupportedNetwork } from 'constants/networks'
 import DataService from 'data/DataService'
+import { useFormatPath } from 'hooks'
+import { useOnClickOutside } from 'hooks/useOnClickOutSide'
+import { useActiveNetworkId } from 'state/features/application/selectors'
+import { usePairs } from 'state/features/pairs/selectors'
+import { PairDetails } from 'state/features/pairs/types'
+import { useTokens } from 'state/features/token/selectors'
+import { TokenDetails } from 'state/features/token/types'
+import { TYPE } from 'Theme'
+import { escapeRegExp, isValidAddress } from 'utils'
 import {
   Container,
   Wrapper,
@@ -25,19 +28,14 @@ import {
   Menu,
   TokenText
 } from './styled'
-import { TokenDetails } from 'state/features/token/types'
-import { PairDetails } from 'state/features/pairs/types'
-import { useOnClickOutside } from 'hooks/useOnClickOutSide'
-import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
 
-export const Search = () => {
+const Search = () => {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetwork = useActiveNetworkId()
 
   // refs to detect clicks outside modal
-  const wrapperRef = useRef(null)
+  const wrapperReference = useRef(null)
 
   const allTokens = useTokens()
   const allPools = usePairs()
@@ -131,8 +129,8 @@ export const Search = () => {
         if (pools.data) {
           setPoolData([...pools.data.asAddress, ...pools.data.as0, ...pools.data.as1])
         }
-      } catch (e) {
-        console.log(e)
+      } catch (error) {
+        console.log(error)
       }
     }
     // TODO: temporary search token & pairs by API only in ETH blockchain
@@ -141,14 +139,14 @@ export const Search = () => {
     }
   }, [value, activeNetwork])
 
-  useOnClickOutside(wrapperRef, () => {
+  useOnClickOutside(wrapperReference, () => {
     setPairsShown(3)
     setTokensShown(3)
     toggleMenu(false)
   })
 
   return (
-    <Container ref={wrapperRef}>
+    <Container ref={wrapperReference}>
       <Wrapper
         open={showMenu}
         onClick={() => {
@@ -158,11 +156,11 @@ export const Search = () => {
         }}
       >
         <Input
-          type={'text'}
+          type="text"
           placeholder={t('searchPairsAndTokens')}
           value={value}
-          onChange={e => {
-            setValue(e.target.value)
+          onChange={event => {
+            setValue(event.target.value)
           }}
         />
         {!showMenu ? <SearchIconLarge /> : <CloseIcon onClick={onDismiss} />}

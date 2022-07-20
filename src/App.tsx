@@ -1,25 +1,28 @@
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import * as Sentry from '@sentry/react'
 import { Route, Routes, Navigate } from 'react-router-dom'
-import GlobalPage from 'pages/GlobalPage'
-import TokenPage from 'pages/TokenPage'
-import PairPage from 'pages/PairPage'
-import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
-import { useFetchPairs } from 'state/features/pairs/hooks'
-import { useFetchTokens } from 'state/features/token/hooks'
-import AccountPage from 'pages/AccountPage'
-import AllTokensPage from 'pages/AllTokensPage'
-import AllPairsPage from 'pages/AllPairsPage'
-import PinnedData from 'components/PinnedData'
-import { useFormatPath, useScrollToTop } from './hooks'
-import Navigation from 'components/Navigation'
-import AccountLookup from 'pages/AccountLookup'
+import styled, { ThemeProvider } from 'styled-components/macro'
+import FallbackError from 'components/FallbackError'
 import LocalLoader from 'components/LocalLoader'
+import Navigation from 'components/Navigation'
+import PinnedData from 'components/PinnedData'
+import { SupportedNetwork } from 'constants/networks'
+import AccountLookup from 'pages/AccountLookup'
+import AccountPage from 'pages/AccountPage'
+import AllPairsPage from 'pages/AllPairsPage'
+import AllTokensPage from 'pages/AllTokensPage'
+import GlobalPage from 'pages/GlobalPage'
+import PairPage from 'pages/PairPage'
+import TokenPage from 'pages/TokenPage'
 import { useLatestBlocks } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-import { SupportedNetwork } from 'constants/networks'
+import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
-import ErrorBoundary from 'components/ErrorBoundary'
+import { useFetchPairs } from 'state/features/pairs/hooks'
+import { useFetchTokens } from 'state/features/token/hooks'
+import { useAppSelector } from 'state/hooks'
+import { GlobalStyle, globalTheme } from 'Theme'
+import { useFormatPath, useScrollToTop } from './hooks'
 
 const AppWrapper = styled.div`
   position: relative;
@@ -82,15 +85,17 @@ const WarningBanner = styled.div`
 
 const BLOCK_DIFFERENCE_THRESHOLD = 30
 
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes)
+
 function App() {
   const [savedOpen, setSavedOpen] = useState(false)
+  const isDarkMode = useAppSelector(state => state.user.darkMode)
+  const activeNetwork = useActiveNetworkId()
 
   const globalChartData = useGlobalChartData()
   const [latestBlock, headBlock] = useLatestBlocks()
   const price = useActiveTokenPrice()
   const formatPath = useFormatPath()
-  const activeNetwork = useActiveNetworkId()
-  // show warning
   const showWarning = headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
   useScrollToTop()
 
@@ -99,44 +104,47 @@ function App() {
   useFetchTokens()
 
   return (
-    <AppWrapper>
-      <ErrorBoundary>
-        {showWarning && (
-          <WarningWrapper>
-            <WarningBanner>
-              {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
-            </WarningBanner>
-          </WarningWrapper>
-        )}
-        {latestBlock && headBlock && price && Object.keys(globalChartData).length > 0 ? (
-          <ContentWrapper open={savedOpen}>
-            <Navigation />
-            <Main id="center">
-              <Routes>
-                <Route path="/:networkID" element={<GlobalPage />} />
-                <Route path="/:networkID/tokens" element={<AllTokensPage />} />
-                <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
-                <Route path="/:networkID/pairs" element={<AllPairsPage />} />
-                <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
-                {activeNetwork === SupportedNetwork.ETHEREUM ? (
-                  <>
-                    <Route path="/:networkID/accounts" element={<AccountLookup />} />
-                    <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
-                  </>
-                ) : undefined}
-                <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
-              </Routes>
-            </Main>
-            <Right open={savedOpen}>
-              <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
-            </Right>
-          </ContentWrapper>
-        ) : (
-          <LocalLoader fullscreen />
-        )}
-      </ErrorBoundary>
-    </AppWrapper>
+    <ThemeProvider theme={globalTheme(isDarkMode)}>
+      <GlobalStyle />
+      <AppWrapper>
+        <Sentry.ErrorBoundary fallback={FallbackError}>
+          {showWarning && (
+            <WarningWrapper>
+              <WarningBanner>
+                {`Warning: The data on this site has only synced to Ethereum block ${latestBlock} (out of ${headBlock}). Please check back soon.`}
+              </WarningBanner>
+            </WarningWrapper>
+          )}
+          {latestBlock && headBlock && price && Object.keys(globalChartData).length > 0 ? (
+            <ContentWrapper open={savedOpen}>
+              <Navigation />
+              <Main id="center">
+                <SentryRoutes>
+                  <Route path="/:networkID" element={<GlobalPage />} />
+                  <Route path="/:networkID/tokens" element={<AllTokensPage />} />
+                  <Route path="/:networkID/tokens/:tokenAddress" element={<TokenPage />} />
+                  <Route path="/:networkID/pairs" element={<AllPairsPage />} />
+                  <Route path="/:networkID/pairs/:pairAddress" element={<PairPage />} />
+                  {activeNetwork === SupportedNetwork.ETHEREUM ? (
+                    <>
+                      <Route path="/:networkID/accounts" element={<AccountLookup />} />
+                      <Route path="/:networkID/accounts/:accountAddress" element={<AccountPage />} />
+                    </>
+                  ) : undefined}
+                  <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
+                </SentryRoutes>
+              </Main>
+              <Right open={savedOpen}>
+                <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
+              </Right>
+            </ContentWrapper>
+          ) : (
+            <LocalLoader fullscreen />
+          )}
+        </Sentry.ErrorBoundary>
+      </AppWrapper>
+    </ThemeProvider>
   )
 }
 
-export default App
+export default Sentry.withProfiler(App)

@@ -1,19 +1,19 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
-import { RowBetween, AutoRow } from 'components/Row'
-import { toK, toNiceDate, toNiceDateYear, formattedNum, getTimeframe } from 'utils'
-import { OptionButton } from 'components/ButtonStyled'
-import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
-import { timeframeOptions } from 'constants/index'
-import { useMedia } from 'react-use'
-import { EmptyCard } from 'components'
-import DropdownSelect from 'components/DropdownSelect'
-import CandleStickChart from 'components/CandleChart'
-import LocalLoader from 'components/LocalLoader'
-import { useDarkModeManager } from 'state/features/user/hooks'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector } from 'state/hooks'
+import { useMedia } from 'react-use'
+import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
+import { EmptyCard } from 'components'
+import { OptionButton } from 'components/ButtonStyled'
+import CandleStickChart from 'components/CandleChart'
+import DropdownSelect from 'components/DropdownSelect'
+import LocalLoader from 'components/LocalLoader'
+import { RowBetween, AutoRow } from 'components/Row'
+import { timeframeOptions } from 'constants/index'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
+import { useDarkModeManager } from 'state/features/user/hooks'
+import { useAppSelector } from 'state/hooks'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
@@ -88,26 +88,6 @@ const PairChart = ({ address, color, base0, base1 }) => {
         <EmptyCard height="300px">No historical data yet.</EmptyCard>{' '}
       </ChartWrapper>
     )
-  }
-
-  /**
-   * Used to format values on chart on scroll
-   * Needs to be raw html for chart API to parse styles
-   * @param {*} val
-   */
-  function valueFormatter(val) {
-    if (chartFilter === chartView.RATE0) {
-      return (
-        formattedNum(val) +
-        `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol1}/${formattedSymbol0}<span>`
-      )
-    }
-    if (chartFilter === chartView.RATE1) {
-      return (
-        formattedNum(val) +
-        `<span style="font-size: 12px; margin-left: 4px;">${formattedSymbol0}/${formattedSymbol1}<span>`
-      )
-    }
   }
 
   const aspect = below1080 ? 60 / 20 : below1600 ? 60 / 28 : 60 / 22
@@ -221,7 +201,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 />
                 <Tooltip
                   cursor={true}
-                  formatter={val => formattedNum(val, true)}
+                  formatter={value => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{
@@ -250,13 +230,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
           {chartFilter === chartView.RATE1 &&
             (hourlyRate1 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart
-                  data={hourlyRate1}
-                  base={base0}
-                  margin={false}
-                  width={width}
-                  valueFormatter={valueFormatter}
-                />
+                <CandleStickChart data={hourlyRate1} base={base0} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
@@ -264,13 +238,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
           {chartFilter === chartView.RATE0 &&
             (hourlyRate0 ? (
               <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart
-                  data={hourlyRate0}
-                  base={base1}
-                  margin={false}
-                  width={width}
-                  valueFormatter={valueFormatter}
-                />
+                <CandleStickChart data={hourlyRate0} base={base1} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
@@ -304,7 +272,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 />
                 <Tooltip
                   cursor={{ fill: color, opacity: 0.1 }}
-                  formatter={val => formattedNum(val, true)}
+                  formatter={value => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{

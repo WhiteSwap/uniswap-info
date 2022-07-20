@@ -1,18 +1,18 @@
-import styled from 'styled-components/macro'
-import { Text } from 'rebass'
 import { AlertTriangle } from 'react-feather'
-import { RowBetween, RowFixed } from '../Row'
-import { ButtonDark } from '../ButtonStyled'
-import { AutoColumn } from '../Column'
-import { Hover } from '..'
-import Link from '../Link'
-import { useMedia } from 'react-use'
 import { useTranslation } from 'react-i18next'
-import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
+import { useMedia } from 'react-use'
+import { Text } from 'rebass'
+import styled from 'styled-components/macro'
+import { Hover } from 'components'
+import { ButtonDark } from 'components/ButtonStyled'
+import { AutoColumn } from 'components/Column'
+import Link from 'components/Link'
+import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveNetworkId } from 'state/features/application/selectors'
+import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
 
 const WarningWrapper = styled.div`
-  border-radius: 20px;
+  border-radius: 1.25rem;
   border: 1px solid #f82d3a;
   background: rgba(248, 45, 58, 0.05);
   padding: 1rem;
@@ -28,8 +28,8 @@ const WarningWrapper = styled.div`
 `
 
 const StyledWarningIcon = styled(AlertTriangle)`
-  min-height: 20px;
-  min-width: 20px;
+  min-height: 1.25rem;
+  min-width: 1.25rem;
   stroke: red;
 `
 

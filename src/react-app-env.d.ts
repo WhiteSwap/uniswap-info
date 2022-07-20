@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />
 
 declare namespace NodeJS {
-  interface ProcessEnv {
+  interface ProcessEnvironment {
     REACT_APP_TRON_API: string
     REACT_APP_GOOGLE_ANALYTICS_ID: string
   }
@@ -19,11 +19,11 @@ type BlockHeight = {
   number: number
 }
 
-type OffsetParams<T> = T & {
+type OffsetParameters<T> = T & {
   skip: number
 }
 
-type ParamsWithNetwork<T = unknown> = T & {
+type ParametersWithNetwork<T = unknown> = T & {
   networkId: SupportedNetwork
 }
 

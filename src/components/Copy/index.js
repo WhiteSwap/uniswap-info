@@ -1,7 +1,7 @@
-import styled from 'styled-components/macro'
-import { useCopyClipboard } from '../../hooks'
 import { CheckCircle, Copy } from 'react-feather'
-import { StyledIcon } from '..'
+import styled from 'styled-components/macro'
+import { StyledIcon } from 'components'
+import { useCopyClipboard } from 'hooks'
 
 const CopyIcon = styled.div`
   color: #aeaeae;

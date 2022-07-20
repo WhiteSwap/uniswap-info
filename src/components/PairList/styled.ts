@@ -1,26 +1,17 @@
-import { CustomLink } from 'components/Link'
 import { transparentize } from 'polished'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
+import { CustomLink } from 'components/Link'
 
 export const PageButtons = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 2em;
 
   @media screen and (max-width: 440px) {
     margin-top: 0.75rem;
-  }
-`
-
-export const Arrow = styled.div<{ faded: boolean }>`
-  color: ${({ theme }) => theme.primary1};
-  opacity: ${({ faded }) => (faded ? 0.3 : 1)};
-  padding: 0 20px;
-  user-select: none;
-  :hover {
-    cursor: pointer;
   }
 `
 
@@ -42,7 +33,7 @@ export const DashGrid = styled.div`
     &:first-child {
       justify-content: flex-start;
       text-align: left;
-      width: 20px;
+      width: 1.25rem;
     }
   }
 
@@ -89,7 +80,7 @@ export const DataText = styled(Flex)`
   }
 
   @media screen and (max-width: 440px) {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 
   @media screen and (max-width: 600px) {
@@ -99,12 +90,35 @@ export const DataText = styled(Flex)`
 
 export const Link = styled(CustomLink)`
   font-size: 14px;
-  line-height: 16px;
+  line-height: 1rem;
   font-weight: 700;
-  margin-left: 20px;
+  margin-left: 1.25rem;
   white-space: nowrap;
 
   > div {
     color: ${({ theme }) => theme.blueGrey} !important;
+  }
+`
+
+export const PaginationButton = styled.button`
+  padding: 0.5rem;
+  background: transparent;
+  color: ${({ theme }) => theme.blueGrey};
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease-in-out;
+  margin: 0 0.5rem;
+
+  &:not([disabled]):hover {
+    background: ${({ theme }) => theme.bg2};
+  }
+
+  &:disabled {
+    color: ${({ theme }) => theme.text4};
+    cursor: not-allowed;
   }
 `

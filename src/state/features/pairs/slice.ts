@@ -33,8 +33,8 @@ export const pairsSlice = createSlice({
     },
     setTopPairs: (state, { payload: { networkId, topPairs } }: PayloadAction<UpdateTopPairsPayload>) => {
       const added: Record<string, Pair> = {}
-      topPairs.map(pair => {
-        return (added[pair.id] = pair)
+      topPairs.forEach(pair => {
+        added[pair.id] = pair
       })
       state[networkId] = { ...added, ...state[networkId] }
     },
@@ -42,11 +42,11 @@ export const pairsSlice = createSlice({
       state,
       { payload: { networkId, transactions, address } }: PayloadAction<UpdatePairTransactionsPayload>
     ) => {
-      state[networkId][address] = { ...(safeAccess(state[networkId], [address]) || {}), txns: transactions }
+      state[networkId][address] = { ...safeAccess(state[networkId], [address]), txns: transactions }
     },
     setChartData: (state, { payload: { networkId, chartData, address } }: PayloadAction<UpdateChartDataPayload>) => {
       state[networkId][address] = {
-        ...(safeAccess(state[networkId], [address]) || {}),
+        ...safeAccess(state[networkId], [address]),
         chartData
       }
     },

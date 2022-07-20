@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import Row, { RowBetween } from 'components/Row'
-import { AutoColumn } from 'components/Column'
-import { TYPE } from 'Theme'
 import { StyledIcon } from 'components'
+import { AutoColumn } from 'components/Column'
+import Row, { RowBetween } from 'components/Row'
+import { TYPE } from 'Theme'
 import { Wrapper, Dropdown, ArrowStyled } from './styled'
 
 const DropdownSelect = ({ options, active, setActive, color }) => {
@@ -18,7 +18,7 @@ const DropdownSelect = ({ options, active, setActive, color }) => {
       </RowBetween>
       {showDropdown && (
         <Dropdown>
-          <AutoColumn gap="20px">
+          <AutoColumn gap="1.25rem">
             {Object.keys(options).map((key, index) => {
               let option = options[key]
               return (

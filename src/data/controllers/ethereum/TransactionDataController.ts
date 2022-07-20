@@ -1,20 +1,20 @@
+import dayjs from 'dayjs'
+import { FACTORY_ADDRESS } from 'constants/index'
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
+import { transactionsMapper } from 'data/mappers/ethereum/transactionMapper'
 import { client } from 'service/client'
-import {
-  FILTERED_TRANSACTIONS,
-  GLOBAL_TXNS,
-  TRANSACTION_COUNT,
-  USER_TRANSACTIONS
-} from 'service/queries/ethereum/transactions'
 import {
   FilteredTransactionsQueryVariables,
   GlobalTransactionsResponse,
   TransactionQuery,
   UserTransactionQueryVariables
 } from 'service/generated/ethereumGraphql'
-import { transactionsMapper } from 'data/mappers/ethereum/transactionMapper'
-import { FACTORY_ADDRESS } from 'constants/index'
-import dayjs from 'dayjs'
+import {
+  FILTERED_TRANSACTIONS,
+  GLOBAL_TXNS,
+  TRANSACTION_COUNT,
+  USER_TRANSACTIONS
+} from 'service/queries/ethereum/transactions'
 import { getBlocksFromTimestamps } from 'utils'
 
 async function fetchTransactionCountByBlock(block?: number) {
@@ -46,10 +46,10 @@ export default class TransactionDataController implements ITransactionDataContro
       const previousData = oneDayResult.data.whiteSwapFactories[0]
 
       if (currentData && previousData) {
-        return parseFloat(currentData.txCount) - parseFloat(previousData?.txCount || '0')
+        return Number.parseFloat(currentData.txCount) - Number.parseFloat(previousData?.txCount || '0')
       }
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
     }
 
     return 0
@@ -88,11 +88,11 @@ export default class TransactionDataController implements ITransactionDataContro
     })
 
     const allTransactions = result.data.transactions.reduce<RawTransactions>(
-      (acc, cur) => {
+      (accumulator, current) => {
         return {
-          mints: acc.mints.concat(cur.mints),
-          swaps: acc.swaps.concat(cur.swaps),
-          burns: acc.burns.concat(cur.burns)
+          mints: [...accumulator.mints, ...current.mints],
+          swaps: [...accumulator.swaps, ...current.swaps],
+          burns: [...accumulator.burns, ...current.burns]
         }
       },
       {

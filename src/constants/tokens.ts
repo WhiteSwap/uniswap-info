@@ -12,3 +12,6 @@ export const TOKEN_OVERRIDES: { [address: string]: { name: string; symbol: strin
     symbol: 'TRX'
   }
 }
+
+export const WETH_ADDRESS = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+export const WTRX_ADDRESS = 'TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR'

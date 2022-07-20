@@ -1,11 +1,12 @@
-import styled from 'styled-components/macro'
 import { transparentize } from 'polished'
 import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components/macro'
 
 export const PageButtons = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 2em;
 
   @media screen and (max-width: 440px) {
@@ -16,7 +17,7 @@ export const PageButtons = styled.div`
 export const Arrow = styled.div<{ faded?: boolean }>`
   color: ${({ theme }) => theme.primary1};
   opacity: ${({ faded }) => (faded ? 0.3 : 1)};
-  padding: 0 20px;
+  padding: 0 1.25rem;
   user-select: none;
   :hover {
     cursor: pointer;
@@ -80,5 +81,28 @@ export const DataText = styled(Flex)`
 
   @media screen and (max-width: 440px) {
     font-size: 10px;
+  }
+`
+
+export const PaginationButton = styled.button`
+  padding: 0.5rem;
+  background: transparent;
+  color: ${({ theme }) => theme.blueGrey};
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease-in-out;
+  margin: 0 0.5rem;
+
+  &:not([disabled]):hover {
+    background: ${({ theme }) => theme.bg2};
+  }
+
+  &:disabled {
+    color: ${({ theme }) => theme.text4};
+    cursor: not-allowed;
   }
 `
