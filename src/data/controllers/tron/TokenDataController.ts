@@ -1,16 +1,25 @@
-import { IntervalTokenDataMock, TokenChartDatMock } from '__mocks__/tokens'
+import { TokenChartDatMock } from '__mocks__/tokens'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
-import { tokenMapper, topTokensMapper, tokenChartDataMapper } from 'data/mappers/tron/tokenMappers'
+import {
+  tokenMapper,
+  topTokensMapper,
+  tokenChartDataMapper,
+  tokenPriceDataMapper
+} from 'data/mappers/tron/tokenMappers'
 import { client } from 'service/client'
 import {
   TokenQueryVariables,
   TokenQuery,
   TokensQuery,
   TokenPairsQuery,
-  TokenPairsQueryVariables
+  TokenPairsQueryVariables,
+  TokenDailyPriceQuery,
+  TokenDailyPriceQueryVariables,
+  TokenHourlyPriceQuery,
+  TokenHourlyPriceQueryVariables
 } from 'service/generated/tronGraphql'
 import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
-import { TOKENS, TOKEN, TOKEN_PAIRS } from 'service/queries/tron/tokens'
+import { TOKENS, TOKEN, TOKEN_PAIRS, TOKEN_DAILY_PRICE, TOKEN_HOURLY_PRICE } from 'service/queries/tron/tokens'
 
 export default class TokenDataController implements ITokenDataController {
   async searchToken(value: string, id: string) {
@@ -41,8 +50,25 @@ export default class TokenDataController implements ITokenDataController {
     return data.tokenPairs
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getIntervalTokenData(_tokenAddress: string, _startTime: number, _interval: number, _latestBlock: number) {
-    return IntervalTokenDataMock
+  async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number) {
+    // TODO: fix interval format
+    switch (interval) {
+      case 86_400: {
+        const { data } = await client.query<TokenDailyPriceQuery, TokenDailyPriceQueryVariables>({
+          query: TOKEN_DAILY_PRICE,
+          variables: { startTime, id: tokenAddress }
+        })
+        return tokenPriceDataMapper(data?.tokenDailyPrice)
+      }
+      case 3600:
+      default: {
+        const { data } = await client.query<TokenHourlyPriceQuery, TokenHourlyPriceQueryVariables>({
+          query: TOKEN_HOURLY_PRICE,
+          variables: { startTime, id: tokenAddress }
+        })
+        return tokenPriceDataMapper(data?.tokenHourlyPrice)
+      }
+    }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getTokenChartData(_tokenAddress: string) {

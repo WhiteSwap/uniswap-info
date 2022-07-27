@@ -116,8 +116,8 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
               1M
             </OptionButton>
             <OptionButton
-              active={timeWindow === timeframeOptions.ALL_TIME}
-              onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+              active={timeWindow === timeframeOptions.YEAR}
+              onClick={() => setTimeWindow(timeframeOptions.YEAR)}
             >
               1Y
             </OptionButton>
