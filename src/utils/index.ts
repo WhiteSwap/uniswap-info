@@ -77,6 +77,10 @@ export function getExchangeLink({
     const outputCurrencyAddress = parseRouteAddress(outputCurrency)
     searchParameters.append('outputCurrency', outputCurrencyAddress)
   }
+  const chainIdFromInfo = SUPPORTED_NETWORK_VERSIONS.find(nt => nt.route.includes(network))?.chainId
+  if (chainIdFromInfo) {
+    searchParameters.append('chainId', chainIdFromInfo.toString())
+  }
   return `${url.href}?${searchParameters.toString()}`
 }
 
