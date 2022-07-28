@@ -14,6 +14,7 @@ export interface NetworkInfo {
   bgColor: string
   primaryColor: string
   secondaryColor: string
+  chainId?: number
   blurb?: string
 }
 
@@ -24,7 +25,8 @@ export const EthereumNetworkInfo: NetworkInfo = {
   imageURL: ETHEREUM_LOGO_URL,
   bgColor: '#fc077d',
   primaryColor: '#607BEE',
-  secondaryColor: '#2172E5'
+  secondaryColor: '#2172E5',
+  chainId: 1
 }
 
 export const TronNetworkInfo: NetworkInfo = {
