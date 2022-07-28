@@ -52,22 +52,18 @@ export default class TokenDataController implements ITokenDataController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number) {
     // TODO: fix interval format
-    switch (interval) {
-      case 86_400: {
-        const { data } = await client.query<TokenDailyPriceQuery, TokenDailyPriceQueryVariables>({
-          query: TOKEN_DAILY_PRICE,
-          variables: { startTime, id: tokenAddress }
-        })
-        return tokenPriceDataMapper(data?.tokenDailyPrice)
-      }
-      case 3600:
-      default: {
-        const { data } = await client.query<TokenHourlyPriceQuery, TokenHourlyPriceQueryVariables>({
-          query: TOKEN_HOURLY_PRICE,
-          variables: { startTime, id: tokenAddress }
-        })
-        return tokenPriceDataMapper(data?.tokenHourlyPrice)
-      }
+    if (interval === 86_400) {
+      const { data } = await client.query<TokenDailyPriceQuery, TokenDailyPriceQueryVariables>({
+        query: TOKEN_DAILY_PRICE,
+        variables: { startTime, id: tokenAddress }
+      })
+      return tokenPriceDataMapper(data?.tokenDailyPrice)
+    } else {
+      const { data } = await client.query<TokenHourlyPriceQuery, TokenHourlyPriceQueryVariables>({
+        query: TOKEN_HOURLY_PRICE,
+        variables: { startTime, id: tokenAddress }
+      })
+      return tokenPriceDataMapper(data?.tokenHourlyPrice)
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
