@@ -124,10 +124,10 @@ export type TokenPriceOpenClose = {
   __typename?: 'TokenPriceOpenClose'
   /** Data close price */
   close: Scalars['Float']
-  /** Data date */
-  date: Scalars['Int']
   /** Data open price */
   open: Scalars['Float']
+  /** Data timestamp */
+  timestamp: Scalars['Int']
 }
 
 /** Transactions list */
@@ -374,7 +374,12 @@ export type TokenHourlyPriceQueryVariables = Exact<{
 
 export type TokenHourlyPriceQuery = {
   __typename?: 'RootQuery'
-  tokenHourlyPrice?: Array<{ __typename?: 'TokenPriceOpenClose'; date: number; open: number; close: number }> | null
+  tokenHourlyPrice?: Array<{
+    __typename?: 'TokenPriceOpenClose'
+    timestamp: number
+    open: number
+    close: number
+  }> | null
 }
 
 export type TokenDailyPriceQueryVariables = Exact<{
@@ -384,7 +389,7 @@ export type TokenDailyPriceQueryVariables = Exact<{
 
 export type TokenDailyPriceQuery = {
   __typename?: 'RootQuery'
-  tokenDailyPrice?: Array<{ __typename?: 'TokenPriceOpenClose'; date: number; open: number; close: number }> | null
+  tokenDailyPrice?: Array<{ __typename?: 'TokenPriceOpenClose'; timestamp: number; open: number; close: number }> | null
 }
 
 export type TransactionDetailsFragment = {

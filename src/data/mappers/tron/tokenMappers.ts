@@ -38,7 +38,7 @@ export function tokenChartDataMapper(payload: any[]): TokenDayData[] {
 export function tokenPriceDataMapper(payload?: TokenPriceOpenClose[] | null): TimeWindowItem[] {
   return (
     payload?.map(chartData => ({
-      timestamp: chartData.date.toString(),
+      timestamp: chartData.timestamp.toString(),
       close: chartData.close,
       open: chartData.open
     })) || []

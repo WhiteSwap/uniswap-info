@@ -45,7 +45,7 @@ export const TOKEN_PAIRS = gql`
 export const TOKEN_HOURLY_PRICE = gql`
   query TokenHourlyPrice($startTime: Int!, $id: String!) {
     tokenHourlyPrice(startTime: $startTime, id: $id) {
-      date
+      timestamp
       open
       close
     }
@@ -55,7 +55,7 @@ export const TOKEN_HOURLY_PRICE = gql`
 export const TOKEN_DAILY_PRICE = gql`
   query TokenDailyPrice($startTime: Int!, $id: String!) {
     tokenDailyPrice(startTime: $startTime, id: $id) {
-      date
+      timestamp
       open
       close
     }
