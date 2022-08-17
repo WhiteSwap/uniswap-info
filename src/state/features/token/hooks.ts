@@ -121,10 +121,8 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
   useEffect(() => {
     const currentTime = dayjs.utc()
     const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
-    const startTime =
-      timeWindow === timeframeOptions.ALL_TIME
-        ? 1_589_760_000
-        : currentTime.subtract(1, windowSize).startOf('hour').unix()
+    const subtractUnit = timeWindow === timeframeOptions.YEAR ? 'year' : 'hour'
+    const startTime = currentTime.subtract(1, windowSize).startOf(subtractUnit).unix()
 
     async function fetchData() {
       const data = await DataService.tokens.getIntervalTokenData(tokenAddress, startTime, interval, latestBlock)

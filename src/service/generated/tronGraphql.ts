@@ -19,6 +19,8 @@ export type RootQuery = {
   pair?: Maybe<Pair>
   pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
+  tokenDailyPrice?: Maybe<Array<TokenPriceOpenClose>>
+  tokenHourlyPrice?: Maybe<Array<TokenPriceOpenClose>>
   tokenPairs?: Maybe<Array<Scalars['String']>>
   tokens?: Maybe<Array<Maybe<Token>>>
   transactions?: Maybe<TransactionsCollection>
@@ -32,6 +34,16 @@ export type RootQueryPairArgs = {
 
 export type RootQueryTokenArgs = {
   id: Scalars['String']
+}
+
+export type RootQueryTokenDailyPriceArgs = {
+  id: Scalars['String']
+  startTime: Scalars['Int']
+}
+
+export type RootQueryTokenHourlyPriceArgs = {
+  id: Scalars['String']
+  startTime: Scalars['Int']
 }
 
 export type RootQueryTokenPairsArgs = {
@@ -105,6 +117,17 @@ export type Token = {
   txnChange: Scalars['Float']
   /** Token volume Change USD */
   volumeChangeUSD: Scalars['Float']
+}
+
+/** TokenPrice for Graph */
+export type TokenPriceOpenClose = {
+  __typename?: 'TokenPriceOpenClose'
+  /** Data close price */
+  close: Scalars['Float']
+  /** Data open price */
+  open: Scalars['Float']
+  /** Data timestamp */
+  timestamp: Scalars['Int']
 }
 
 /** Transactions list */
@@ -343,6 +366,31 @@ export type TokenPairsQueryVariables = Exact<{
 }>
 
 export type TokenPairsQuery = { __typename?: 'RootQuery'; tokenPairs?: Array<string> | null }
+
+export type TokenHourlyPriceQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  id: Scalars['String']
+}>
+
+export type TokenHourlyPriceQuery = {
+  __typename?: 'RootQuery'
+  tokenHourlyPrice?: Array<{
+    __typename?: 'TokenPriceOpenClose'
+    timestamp: number
+    open: number
+    close: number
+  }> | null
+}
+
+export type TokenDailyPriceQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  id: Scalars['String']
+}>
+
+export type TokenDailyPriceQuery = {
+  __typename?: 'RootQuery'
+  tokenDailyPrice?: Array<{ __typename?: 'TokenPriceOpenClose'; timestamp: number; open: number; close: number }> | null
+}
 
 export type TransactionDetailsFragment = {
   __typename?: 'Transaction'

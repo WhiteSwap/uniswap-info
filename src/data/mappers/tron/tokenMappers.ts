@@ -1,4 +1,4 @@
-import { Token as TronToken, TokensQuery } from 'service/generated/tronGraphql'
+import { Token as TronToken, TokenPriceOpenClose, TokensQuery } from 'service/generated/tronGraphql'
 import { parseTokenInfo } from 'utils'
 
 export function tokenMapper(payload?: TronToken | null): Token {
@@ -33,4 +33,14 @@ export function tokenDayDataMapper(payload: any): TokenDayData {
 
 export function tokenChartDataMapper(payload: any[]): TokenDayData[] {
   return payload.map(token => tokenDayDataMapper(token))
+}
+
+export function tokenPriceDataMapper(payload?: TokenPriceOpenClose[] | null): TimeWindowItem[] {
+  return (
+    payload?.map(chartData => ({
+      timestamp: chartData.timestamp.toString(),
+      close: chartData.close,
+      open: chartData.open
+    })) || []
+  )
 }
