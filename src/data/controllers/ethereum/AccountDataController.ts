@@ -115,21 +115,24 @@ export default class AccountDataController implements IAccountDataController {
         }
       }
 
-      const relavantDayDatas = Object.keys(ownershipPerPair).map(pairAddress => {
+      // FIXME: temporary types doesnt exist
+      const relavantDayDatas = Object.keys(ownershipPerPair).reduce<any[]>((accumulator, current) => {
         // find last day data after timestamp update
         const dayDatasForThisPair = pairDayDatas.filter((dayData: any) => {
-          return dayData.pairAddress === pairAddress
+          return dayData.pairAddress === current
         })
-        // find the most recent reference to pair liquidity data
-        let mostRecent = dayDatasForThisPair[0]
-        for (const index in dayDatasForThisPair) {
-          const dayData = dayDatasForThisPair[index]
-          if (dayData.date < dayTimestamp && dayData.date > mostRecent.date) {
-            mostRecent = dayData
+        if (dayDatasForThisPair.length > 0) {
+          // find the most recent reference to pair liquidity data
+          let mostRecent = dayDatasForThisPair[0]
+          for (const dayData of dayDatasForThisPair) {
+            if (dayData.date < dayTimestamp && dayData.date > mostRecent.date) {
+              mostRecent = dayData
+            }
           }
+          accumulator.push(mostRecent)
         }
-        return mostRecent
-      })
+        return accumulator
+      }, [])
 
       // now cycle through pair day datas, for each one find usd value = ownership[address] * reserveUSD
       const dailyUSD = relavantDayDatas.reduce((totalUSD, dayData) => {
