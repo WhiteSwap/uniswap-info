@@ -6,6 +6,5 @@ RUN npm ci
 RUN npm run build
 
 FROM nginx 
-COPY --node /app/build /var/www/front 
-COPY --node /app/nginx/info-portal.wswap-st.com.conf /etc/nginx/conf.d/
-
+COPY --from=node /app/build /var/www/front 
+COPY --from=node /app/nginx/info-portal.wswap-st.com.conf /etc/nginx/conf.d/
