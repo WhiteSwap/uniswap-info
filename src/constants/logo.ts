@@ -20,6 +20,8 @@ export const LOGO_OVERRIDES: OverrideUrls = {
   },
   [SupportedNetwork.TRON]: {
     TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png'
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png',
+    TFptbWaARrWTX5Yvy3gNG5Lm8BmhPx82Bt:
+      'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png?1663654854'
   }
 }
