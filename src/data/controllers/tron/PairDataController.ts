@@ -1,10 +1,16 @@
-import { HourlyRateDataMock, PairChartDataMock } from '__mocks__/pairs'
+import { PairChartDataMock } from '__mocks__/pairs'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
-import { pairListMapper, pairMapper } from 'data/mappers/tron/pairMappers'
+import { pairListMapper, pairMapper, pairPriceDataMapper } from 'data/mappers/tron/pairMappers'
 import { client } from 'service/client'
-import { PairListQuery, PairQuery, PairQueryVariables } from 'service/generated/tronGraphql'
+import {
+  PairHourlyPriceQuery,
+  PairHourlyPriceQueryVariables,
+  PairListQuery,
+  PairQuery,
+  PairQueryVariables
+} from 'service/generated/tronGraphql'
 import { PAIR_SEARCH } from 'service/queries/ethereum/pairs'
-import { PAIR, PAIR_LIST } from 'service/queries/tron/pairs'
+import { PAIR, PAIR_HOURLY_PRICE, PAIR_LIST } from 'service/queries/tron/pairs'
 import { PairDayData } from 'state/features/pairs/types'
 
 export default class PairDataController implements IPairDataController {
@@ -37,8 +43,20 @@ export default class PairDataController implements IPairDataController {
     return PairChartDataMock
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getHourlyRateData(_pairAddress: string, _startTime: number, _latestBlock: number) {
-    return HourlyRateDataMock
+  async getHourlyRateData(
+    pairAddress: string,
+    startTime: number,
+    _latestBlock: number,
+    tokenOneSymbol: string,
+    tokenTwoSymbol: string,
+    isReversedPair: boolean
+  ) {
+    const name = isReversedPair ? `${tokenTwoSymbol}-${tokenOneSymbol}` : `${tokenOneSymbol}-${tokenTwoSymbol}`
+    const { data } = await client.query<PairHourlyPriceQuery, PairHourlyPriceQueryVariables>({
+      query: PAIR_HOURLY_PRICE,
+      variables: { startTime, id: pairAddress, name }
+    })
+    const hourlyData = pairPriceDataMapper(data)
+    return { [name]: hourlyData }
   }
 }

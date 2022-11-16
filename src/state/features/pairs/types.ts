@@ -2,7 +2,7 @@ export type PairsState = Record<SupportedNetwork, Record<string, PairDetails>>
 
 export interface PairDetails extends Pair {
   chartData?: PairDayData[]
-  timeWindowData?: TimeWindowData
+  timeWindowData?: Record<string, Record<string, TimeWindowItem[]>>
   txns?: Transactions
 }
 
@@ -33,6 +33,6 @@ export type UpdateChartDataPayload = ParametersWithNetwork<{
 
 export type UpdateHourlyDataPayload = ParametersWithNetwork<{
   address: string
-  hourlyData: TimeWindowItem[][]
+  hourlyData: Record<string, TimeWindowItem[]>
   timeWindow: string
 }>

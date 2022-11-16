@@ -234,7 +234,13 @@ export default class PairDataController implements IPairDataController {
     return pairChartMapper(data)
   }
 
-  async getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number) {
+  async getHourlyRateData(
+    pairAddress: string,
+    startTime: number,
+    latestBlock: number,
+    tokenOneSymbol: string,
+    tokenTwoSymbol: string
+  ): Promise<Record<string, TimeWindowItem[]>> {
     try {
       const utcEndTime = dayjs.utc()
       let time = startTime
@@ -248,7 +254,7 @@ export default class PairDataController implements IPairDataController {
 
       // backout if invalid timestamp format
       if (timestamps.length === 0) {
-        return []
+        return {}
       }
 
       // once you have all the timestamps, get the blocks for each timestamp in a bulk query
@@ -258,7 +264,7 @@ export default class PairDataController implements IPairDataController {
 
       // catch failing case
       if (!blocks || blocks?.length === 0) {
-        return []
+        return {}
       }
 
       if (latestBlock) {
@@ -306,10 +312,14 @@ export default class PairDataController implements IPairDataController {
         })
       }
 
-      return [formattedHistoryRate0, formattedHistoryRate1]
+      // FIXME: ETH subgraph load pair data for token0/token1 & token1/token0. Need to split data manually
+      return {
+        [`${tokenOneSymbol}-${tokenTwoSymbol}`]: formattedHistoryRate0,
+        [`${tokenTwoSymbol}-${tokenOneSymbol}`]: formattedHistoryRate1
+      }
     } catch (error) {
       console.log(error)
-      return [[], []]
+      return {}
     }
   }
 }

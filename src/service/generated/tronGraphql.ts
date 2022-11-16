@@ -461,6 +461,22 @@ export type PairQuery = {
   } | null
 }
 
+export type PairHourlyPriceQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  name: Scalars['String']
+  id: Scalars['String']
+}>
+
+export type PairHourlyPriceQuery = {
+  __typename?: 'RootQuery'
+  pairHourlyPrice?: Array<{
+    __typename?: 'SnapshotPriceOpenClose'
+    timestamp: number
+    open: number
+    close: number
+  }> | null
+}
+
 export type TokensQueryVariables = Exact<{ [key: string]: never }>
 
 export type TokensQuery = {

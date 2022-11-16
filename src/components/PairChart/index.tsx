@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
@@ -23,7 +23,14 @@ const CHART_VIEW = {
   RATE1: 'Rate 1'
 }
 
-const PairChart = ({ address, color, base0, base1 }) => {
+interface IPairChart {
+  address: string
+  color: string
+  base0: number
+  base1: number
+}
+
+const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
   const { t } = useTranslation()
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY)
 
@@ -32,31 +39,10 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
 
-  // update the width on a window resize
-  const ref = useRef()
-  const isClient = typeof window === 'object'
-  const [width, setWidth] = useState(ref?.current?.container?.clientWidth)
-  const [height, setHeight] = useState(ref?.current?.container?.clientHeight)
-
-  useEffect(() => {
-    if (!isClient) {
-      return false
-    }
-    function handleResize() {
-      setWidth(ref?.current?.container?.clientWidth ?? width)
-      setHeight(ref?.current?.container?.clientHeight ?? height)
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [height, isClient, width])
-
   // get data for pair, and rates
   const activeNetworkId = useActiveNetworkId()
   const pairData = useAppSelector(state => state.pairs[activeNetworkId]?.[address])
   let chartData = usePairChartData(address)
-  const hourlyData = useHourlyRateData(address, timeWindow)
-  const hourlyRate0 = hourlyData && hourlyData[0]
-  const hourlyRate1 = hourlyData && hourlyData[1]
 
   // formatted symbols for overflow
   const formattedSymbol0 =
@@ -76,11 +62,19 @@ const PairChart = ({ address, color, base0, base1 }) => {
 
   const chartView = useMemo(() => {
     return {
-      ...CHART_VIEW,
+      VOLUME: 'Volume',
+      LIQUIDITY: 'Liquidity',
       RATE0: rate0 || 'Rate 0',
       RATE1: rate1 || 'Rate 1'
     }
-  }, [pairData?.tokenOne])
+  }, [rate0, rate1])
+
+  const hourlyData = useHourlyRateData(
+    address,
+    timeWindow,
+    chartFilter === chartView.RATE0 || chartFilter === chartView.RATE1,
+    chartFilter === chartView.RATE1
+  )
 
   if (chartData && chartData.length === 0) {
     return (
@@ -156,10 +150,10 @@ const PairChart = ({ address, color, base0, base1 }) => {
               1M
             </OptionButton>
             <OptionButton
-              active={timeWindow === timeframeOptions.ALL_TIME}
-              onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+              active={timeWindow === timeframeOptions.YEAR}
+              onClick={() => setTimeWindow(timeframeOptions.YEAR)}
             >
-              {t('all')}
+              1Y
             </OptionButton>
           </AutoRow>
         </OptionsRow>
@@ -201,7 +195,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 />
                 <Tooltip
                   cursor={true}
-                  formatter={value => formattedNumber(value, true)}
+                  formatter={(value: string | number) => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{
@@ -228,21 +222,22 @@ const PairChart = ({ address, color, base0, base1 }) => {
             </ResponsiveContainer>
           )}
           {chartFilter === chartView.RATE1 &&
-            (hourlyRate1 ? (
-              <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart data={hourlyRate1} base={base0} />
+            (hourlyData ? (
+              <ResponsiveContainer aspect={aspect}>
+                <CandleStickChart data={hourlyData} base={base0} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
             ))}
           {chartFilter === chartView.RATE0 &&
-            (hourlyRate0 ? (
-              <ResponsiveContainer aspect={aspect} ref={ref}>
-                <CandleStickChart data={hourlyRate0} base={base1} />
+            (hourlyData ? (
+              <ResponsiveContainer aspect={aspect}>
+                <CandleStickChart data={hourlyData} base={base1} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
             ))}
+
           {chartFilter === chartView.VOLUME && (
             <ResponsiveContainer aspect={aspect}>
               <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={chartData}>
@@ -272,7 +267,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
                 />
                 <Tooltip
                   cursor={{ fill: color, opacity: 0.1 }}
-                  formatter={value => formattedNumber(value, true)}
+                  formatter={(value: string | number) => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{

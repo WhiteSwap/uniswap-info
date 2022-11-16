@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
-import { timeframeOptions } from 'constants/index'
+import { timeframeOptions, timestampUnitType } from 'constants/index'
 import DataService from 'data/DataService'
 import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
@@ -8,28 +8,41 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isValidAddress } from 'utils'
 import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
 
-export function useHourlyRateData(pairAddress: string, timeWindow: string) {
+export function useHourlyRateData(pairAddress: string, timeWindow: string, enabled: boolean, isReversedPair: boolean) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const latestBlock = useLatestBlock()
-  const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.timeWindowData?.[timeWindow])
+  const pairData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress])
+  const chartData = useAppSelector(state => {
+    if (pairData?.tokenOne && pairData?.tokenTwo) {
+      const pairName = isReversedPair
+        ? `${pairData.tokenTwo.symbol}-${pairData.tokenOne.symbol}`
+        : `${pairData.tokenOne.symbol}-${pairData.tokenTwo.symbol}`
+      return state.pairs[activeNetwork]?.[pairAddress]?.timeWindowData?.[timeWindow]?.[pairName]
+    }
+    return []
+  })
 
   useEffect(() => {
     const currentTime = dayjs.utc()
-    const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
-    const startTime =
-      timeWindow === timeframeOptions.ALL_TIME
-        ? 1_589_760_000
-        : currentTime.subtract(1, windowSize).startOf('hour').unix()
+    const subtractUnit = timeWindow === timeframeOptions.YEAR ? 'year' : 'hour'
+    const startTime = currentTime.subtract(1, timestampUnitType[timeWindow]).startOf(subtractUnit).unix()
 
     async function fetch() {
-      const data = await DataService.pairs.getHourlyRateData(pairAddress, startTime, latestBlock)
+      const data = await DataService.pairs.getHourlyRateData(
+        pairAddress,
+        startTime,
+        latestBlock,
+        pairData.tokenOne.symbol,
+        pairData.tokenTwo.symbol,
+        isReversedPair
+      )
       dispatch(setHourlyData({ address: pairAddress, hourlyData: data, timeWindow, networkId: activeNetwork }))
     }
-    if (!chartData && latestBlock) {
+    if (!chartData && latestBlock && pairData?.tokenOne && pairData?.tokenTwo && enabled) {
       fetch()
     }
-  }, [chartData, timeWindow, pairAddress, latestBlock, activeNetwork])
+  }, [chartData, timeWindow, pairAddress, latestBlock, activeNetwork, pairData, enabled, isReversedPair])
 
   return chartData
 }
