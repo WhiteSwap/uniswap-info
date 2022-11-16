@@ -13,7 +13,7 @@ import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { useAppSelector } from 'state/hooks'
-import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
@@ -42,7 +42,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
   // get data for pair, and rates
   const activeNetworkId = useActiveNetworkId()
   const pairData = useAppSelector(state => state.pairs[activeNetworkId]?.[address])
-  let chartData = usePairChartData(address)
+  const chartData = usePairChartData(address, timeWindow)
 
   // formatted symbols for overflow
   const formattedSymbol0 =
@@ -53,9 +53,6 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
   const below1600 = useMedia('(max-width: 1600px)')
   const below1080 = useMedia('(max-width: 1080px)')
   const below700 = useMedia('(max-width: 700px)')
-
-  const utcStartTime = getTimeframe(timeWindow)
-  chartData = chartData?.filter(entry => entry.date >= utcStartTime)
 
   const rate0 = pairData?.tokenOne ? `${formattedSymbol1}/${formattedSymbol0}` : undefined
   const rate1 = pairData?.tokenOne ? `${formattedSymbol0}/${formattedSymbol1}` : undefined
@@ -119,7 +116,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
             <OptionButton
               active={chartFilter === chartView.LIQUIDITY}
               onClick={() => {
-                setTimeWindow(timeframeOptions.ALL_TIME)
+                setTimeWindow(timeframeOptions.YEAR)
                 setChartFilter(chartView.LIQUIDITY)
               }}
             >
@@ -128,7 +125,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
             <OptionButton
               active={chartFilter === chartView.VOLUME}
               onClick={() => {
-                setTimeWindow(timeframeOptions.ALL_TIME)
+                setTimeWindow(timeframeOptions.YEAR)
                 setChartFilter(chartView.VOLUME)
               }}
             >
@@ -213,7 +210,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
                   dot={false}
                   type="monotone"
                   name={' (USD)'}
-                  dataKey="reserveUSD"
+                  dataKey="liquidityUSD"
                   yAxisId={0}
                   stroke={color}
                   fill="url(#colorUv)"
@@ -224,7 +221,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
           {chartFilter === chartView.RATE1 &&
             (hourlyData ? (
               <ResponsiveContainer aspect={aspect}>
-                <CandleStickChart data={hourlyData} base={base0} />
+                <CandleStickChart data={hourlyData} base={base1} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
@@ -232,7 +229,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
           {chartFilter === chartView.RATE0 &&
             (hourlyData ? (
               <ResponsiveContainer aspect={aspect}>
-                <CandleStickChart data={hourlyData} base={base1} />
+                <CandleStickChart data={hourlyData} base={base0} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />

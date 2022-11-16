@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { EthereumPair } from 'data/controllers/types/ethTypes'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import { pairChartMapper, pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
@@ -19,7 +20,8 @@ import {
   get2DayPercentChange,
   getPercentChange,
   splitQuery,
-  parseTokenInfo
+  parseTokenInfo,
+  getTimeframe
 } from 'utils'
 
 async function fetchPairData(pairAddress: string, block?: number) {
@@ -230,8 +232,21 @@ export default class PairDataController implements IPairDataController {
     } catch (error) {
       console.log(error)
     }
+    const chartData = pairChartMapper(data)
+    // FIXME: ETH subgraph pairData query returns data only for all time range. Need to split to timeWindow manually
+    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
 
-    return pairChartMapper(data)
+    const filteredWeekChartData = chartData?.filter(entry => entry.date >= weekStartTime)
+    const filteredMonthChartData = chartData?.filter(entry => entry.date >= monthStartTime)
+    const filteredYearChartData = chartData?.filter(entry => entry.date >= yearStartTime)
+
+    return {
+      [timeframeOptions.WEEK]: filteredWeekChartData,
+      [timeframeOptions.MONTH]: filteredMonthChartData,
+      [timeframeOptions.YEAR]: filteredYearChartData
+    }
   }
 
   async getHourlyRateData(

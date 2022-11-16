@@ -10,7 +10,7 @@ export interface IPairDataController {
    * @param  {number} startDateTimestamp - selected period of time
    */
   getPairData(pairList: string, price: number): Promise<Pair>
-  getPairChartData(pairAddress: string): Promise<PairDayData[]>
+  getPairChartData(pairAddress: string, timeWindow: string): Promise<Record<string, PairDayData[]>>
   getHourlyRateData(
     pairAddress: string,
     startTime: number,

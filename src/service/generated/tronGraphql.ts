@@ -477,6 +477,16 @@ export type PairHourlyPriceQuery = {
   }> | null
 }
 
+export type PairDailyDataQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  id: Scalars['String']
+}>
+
+export type PairDailyDataQuery = {
+  __typename?: 'RootQuery'
+  pairDailyData?: Array<{ __typename?: 'PairDailyData'; date: number; volume: number; liquidity: number }> | null
+}
+
 export type TokensQueryVariables = Exact<{ [key: string]: never }>
 
 export type TokensQuery = {

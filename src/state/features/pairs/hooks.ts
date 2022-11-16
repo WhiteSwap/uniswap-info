@@ -6,6 +6,7 @@ import { useActiveNetworkId, useLatestBlock } from 'state/features/application/s
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isValidAddress } from 'utils'
+import { getPairName } from 'utils/pair'
 import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
 
 export function useHourlyRateData(pairAddress: string, timeWindow: string, enabled: boolean, isReversedPair: boolean) {
@@ -15,9 +16,7 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string, enabl
   const pairData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress])
   const chartData = useAppSelector(state => {
     if (pairData?.tokenOne && pairData?.tokenTwo) {
-      const pairName = isReversedPair
-        ? `${pairData.tokenTwo.symbol}-${pairData.tokenOne.symbol}`
-        : `${pairData.tokenOne.symbol}-${pairData.tokenTwo.symbol}`
+      const pairName = getPairName(pairData.tokenOne.symbol, pairData.tokenTwo.symbol, isReversedPair)
       return state.pairs[activeNetwork]?.[pairAddress]?.timeWindowData?.[timeWindow]?.[pairName]
     }
     return []
@@ -86,20 +85,20 @@ export function usePairTransactions(pairAddress: string) {
   return pairTxns
 }
 
-export function usePairChartData(pairAddress: string) {
+export function usePairChartData(pairAddress: string, timeWindow: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.chartData)
+  const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.chartData?.[timeWindow])
 
   useEffect(() => {
     async function checkForChartData() {
-      if (!chartData) {
-        const data = await DataService.pairs.getPairChartData(pairAddress)
-        dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: pairAddress }))
-      }
+      const data = await DataService.pairs.getPairChartData(pairAddress, timeWindow)
+      dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: pairAddress }))
     }
-    checkForChartData()
-  }, [chartData, pairAddress, activeNetwork])
+    if (!chartData && pairAddress) {
+      checkForChartData()
+    }
+  }, [chartData, pairAddress, activeNetwork, timeWindow])
   return chartData
 }
 
