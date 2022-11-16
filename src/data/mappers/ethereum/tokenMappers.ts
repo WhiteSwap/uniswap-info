@@ -2,7 +2,6 @@ import { EthereumTokenDayData } from 'data/controllers/types/ethTypes'
 
 export function tokenDayDataMapper(payload: EthereumTokenDayData): TokenDayData {
   return {
-    id: payload.id ? payload.id.toString() : '',
     date: payload.date ?? Date.now(),
     priceUSD: payload.priceUSD ? payload.priceUSD.toString() : '',
     totalLiquidityUSD: payload.totalLiquidityUSD ? payload.totalLiquidityUSD.toString() : '',

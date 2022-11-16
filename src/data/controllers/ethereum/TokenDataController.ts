@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import { tokenChartDataMapper } from 'data/mappers/ethereum/tokenMappers'
 import { client } from 'service/client'
@@ -11,7 +12,8 @@ import {
   getPercentChange,
   getBlocksFromTimestamps,
   splitQuery,
-  parseTokenInfo
+  parseTokenInfo,
+  getTimeframe
 } from 'utils'
 
 async function fetchTokens(block?: number) {
@@ -330,7 +332,21 @@ export default class TokenDataController implements ITokenDataController {
     } catch (error) {
       console.error(error)
     }
+    // FIXME: ETH subgraph tokenData query returns data only for all time range. Need to split to timeWindow manually
+    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
 
-    return tokenChartDataMapper(data)
+    const chartData = tokenChartDataMapper(data)
+
+    const filteredWeekChartData = chartData?.filter(entry => entry.date >= weekStartTime)
+    const filteredMonthChartData = chartData?.filter(entry => entry.date >= monthStartTime)
+    const filteredYearChartData = chartData?.filter(entry => entry.date >= yearStartTime)
+
+    return {
+      [timeframeOptions.WEEK]: filteredWeekChartData,
+      [timeframeOptions.MONTH]: filteredMonthChartData,
+      [timeframeOptions.YEAR]: filteredYearChartData
+    }
   }
 }

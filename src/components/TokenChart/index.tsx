@@ -52,9 +52,9 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
     }
   }, [address, addressPrevious])
 
-  const chartData = useTokenChartData(address)
-
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK)
+
+  const chartData = useTokenChartData(address, timeWindow)
 
   const interval = frequency === DATA_FREQUENCY.DAY ? 86_400 : 3600
   const priceData = useTokenPriceData(address, timeWindow, interval)
@@ -66,8 +66,6 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
     dataMax
   ]
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22
-
-  const filteredChartData = chartData?.filter(entry => entry.date >= utcStartTime)
 
   return (
     <ChartWrapper>
@@ -137,9 +135,9 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
           )}
         </ChartButtonsGrid>
       )}
-      {chartFilter === CHART_VIEW.LIQUIDITY && filteredChartData && (
+      {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>
-          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap="1" data={filteredChartData}>
+          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap="1" data={chartData}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={color} stopOpacity="0.35" />
@@ -201,7 +199,7 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
           <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
-            <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={filteredChartData}>
+            <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
               <defs>
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={color} stopOpacity={0.35} />
@@ -267,7 +265,7 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
 
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
-          <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={filteredChartData}>
+          <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={chartData}>
             <XAxis
               tickLine={false}
               axisLine={false}

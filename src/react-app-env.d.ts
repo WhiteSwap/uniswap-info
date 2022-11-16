@@ -109,7 +109,6 @@ interface Token {
 interface TokenDayData {
   dailyVolumeUSD: number
   date: number
-  id?: string
   priceUSD: string
   totalLiquidityUSD: string
 }
@@ -189,3 +188,5 @@ interface ChartDailyItem {
   dailyVolumeUSD: number
   totalLiquidityUSD: number
 }
+
+type TimeWindow = 'hour' | 'day' | 'week' | 'month' | 'year'
