@@ -47,7 +47,7 @@ export const pairsSlice = createSlice({
     setChartData: (state, { payload: { networkId, chartData, address } }: PayloadAction<UpdateChartDataPayload>) => {
       state[networkId][address] = {
         ...safeAccess(state[networkId], [address]),
-        chartData
+        chartData: { ...state[networkId][address]?.chartData, ...chartData }
       }
     },
     setHourlyData: (

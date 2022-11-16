@@ -16,13 +16,6 @@ import { useAppSelector } from 'state/hooks'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
 
-const CHART_VIEW = {
-  VOLUME: 'Volume',
-  LIQUIDITY: 'Liquidity',
-  RATE0: 'Rate 0',
-  RATE1: 'Rate 1'
-}
-
 interface IPairChart {
   address: string
   color: string
@@ -32,7 +25,6 @@ interface IPairChart {
 
 const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
   const { t } = useTranslation()
-  const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY)
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH)
 
@@ -65,6 +57,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
       RATE1: rate1 || 'Rate 1'
     }
   }, [rate0, rate1])
+  const [chartFilter, setChartFilter] = useState(chartView.LIQUIDITY)
 
   const hourlyData = useHourlyRateData(
     address,
@@ -218,18 +211,18 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
               </AreaChart>
             </ResponsiveContainer>
           )}
-          {chartFilter === chartView.RATE1 &&
-            (hourlyData ? (
-              <ResponsiveContainer aspect={aspect}>
-                <CandleStickChart data={hourlyData} base={base1} />
-              </ResponsiveContainer>
-            ) : (
-              <LocalLoader />
-            ))}
           {chartFilter === chartView.RATE0 &&
             (hourlyData ? (
               <ResponsiveContainer aspect={aspect}>
                 <CandleStickChart data={hourlyData} base={base0} />
+              </ResponsiveContainer>
+            ) : (
+              <LocalLoader />
+            ))}
+          {chartFilter === chartView.RATE1 &&
+            (hourlyData ? (
+              <ResponsiveContainer aspect={aspect}>
+                <CandleStickChart data={hourlyData} base={base1} />
               </ResponsiveContainer>
             ) : (
               <LocalLoader />
