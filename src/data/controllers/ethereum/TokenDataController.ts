@@ -309,7 +309,6 @@ export default class TokenDataController implements ITokenDataController {
       // fill in empty days
       let timestamp = data[0] && data[0].date ? data[0].date : startTime
       let latestLiquidityUSD = data[0] && data[0].totalLiquidityUSD
-      let latestPriceUSD = data[0] && data[0].priceUSD
       let dayIndex = 1
       while (timestamp < utcEndTime.startOf('minute').unix() - oneDay) {
         const nextDay = timestamp + oneDay
@@ -318,12 +317,10 @@ export default class TokenDataController implements ITokenDataController {
           data.push({
             date: nextDay,
             dailyVolumeUSD: 0,
-            priceUSD: latestPriceUSD,
             totalLiquidityUSD: latestLiquidityUSD
           })
         } else {
           latestLiquidityUSD = dayIndexArray[dayIndex].totalLiquidityUSD
-          latestPriceUSD = dayIndexArray[dayIndex].priceUSD
           dayIndex += 1
         }
         timestamp = nextDay
@@ -332,12 +329,13 @@ export default class TokenDataController implements ITokenDataController {
     } catch (error) {
       console.error(error)
     }
+
+    const chartData = tokenChartDataMapper(data)
+
     // FIXME: ETH subgraph tokenData query returns data only for all time range. Need to split to timeWindow manually
     const weekStartTime = getTimeframe(timeframeOptions.WEEK)
     const monthStartTime = getTimeframe(timeframeOptions.MONTH)
     const yearStartTime = getTimeframe(timeframeOptions.YEAR)
-
-    const chartData = tokenChartDataMapper(data)
 
     const filteredWeekChartData = chartData?.filter(entry => entry.date >= weekStartTime)
     const filteredMonthChartData = chartData?.filter(entry => entry.date >= monthStartTime)

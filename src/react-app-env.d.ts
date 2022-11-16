@@ -109,7 +109,6 @@ interface Token {
 interface TokenDayData {
   dailyVolumeUSD: number
   date: number
-  priceUSD: string
   totalLiquidityUSD: string
 }
 

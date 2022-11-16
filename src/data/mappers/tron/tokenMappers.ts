@@ -30,7 +30,6 @@ export function topTokensMapper(payload?: TokensQuery): Token[] {
 export function tokenDayDataMapper(payload?: TokenDailyData): TokenDayData {
   return {
     date: payload?.date ?? Date.now(),
-    priceUSD: '',
     totalLiquidityUSD: payload?.liquidity ? payload?.liquidity.toString() : '',
     dailyVolumeUSD: payload?.volume ? +payload?.volume : 0
   }
