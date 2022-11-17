@@ -15,8 +15,8 @@ export interface IPairDataController {
     pairAddress: string,
     startTime: number,
     latestBlock: number,
-    tokenOneSymbol: string,
-    tokenTwoSymbol: string,
+    tokenOne: PairToken,
+    tokenTwo: PairToken,
     isReversedPair: boolean
   ): Promise<Record<string, TimeWindowItem[]>>
   searchPair(tokens: string[], id: string): any

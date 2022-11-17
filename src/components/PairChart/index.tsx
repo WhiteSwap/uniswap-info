@@ -58,7 +58,6 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
     }
   }, [rate0, rate1])
   const [chartFilter, setChartFilter] = useState(chartView.LIQUIDITY)
-
   const hourlyData = useHourlyRateData(
     address,
     timeWindow,

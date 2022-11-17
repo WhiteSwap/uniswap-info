@@ -32,8 +32,8 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string, enabl
         pairAddress,
         startTime,
         latestBlock,
-        pairData.tokenOne.symbol,
-        pairData.tokenTwo.symbol,
+        pairData.tokenOne,
+        pairData.tokenTwo,
         isReversedPair
       )
       dispatch(setHourlyData({ address: pairAddress, hourlyData: data, timeWindow, networkId: activeNetwork }))

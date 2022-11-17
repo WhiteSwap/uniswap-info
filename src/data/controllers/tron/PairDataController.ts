@@ -58,14 +58,15 @@ export default class PairDataController implements IPairDataController {
     pairAddress: string,
     startTime: number,
     _latestBlock: number,
-    tokenOneSymbol: string,
-    tokenTwoSymbol: string,
+    tokenOne: PairToken,
+    tokenTwo: PairToken,
     isReversedPair: boolean
   ) {
-    const name = getPairName(tokenOneSymbol, tokenTwoSymbol, isReversedPair)
+    const name = getPairName(tokenOne.symbol, tokenTwo.symbol, isReversedPair)
     const { data } = await client.query<PairHourlyPriceQuery, PairHourlyPriceQueryVariables>({
       query: PAIR_HOURLY_PRICE,
-      variables: { startTime, id: pairAddress, name }
+      // FIXME: need to pass WTRX instead of TRX. Implement better solution
+      variables: { startTime, id: pairAddress, name: name.replace('TRX', 'WTRX') }
     })
     const hourlyData = pairPriceDataMapper(data)
     return { [name]: hourlyData }

@@ -23,6 +23,7 @@ import {
   parseTokenInfo,
   getTimeframe
 } from 'utils'
+import { getPairName } from 'utils/pair'
 
 async function fetchPairData(pairAddress: string, block?: number) {
   return client.query({
@@ -253,8 +254,8 @@ export default class PairDataController implements IPairDataController {
     pairAddress: string,
     startTime: number,
     latestBlock: number,
-    tokenOneSymbol: string,
-    tokenTwoSymbol: string
+    tokenOne: PairToken,
+    tokenTwo: PairToken
   ): Promise<Record<string, TimeWindowItem[]>> {
     try {
       const utcEndTime = dayjs.utc()
@@ -326,11 +327,12 @@ export default class PairDataController implements IPairDataController {
           close: values[index + 1].rate1
         })
       }
-
       // FIXME: ETH subgraph load pair data for token0/token1 & token1/token0. Need to split data manually
+      const rateOne = getPairName(tokenOne.symbol, tokenTwo.symbol)
+      const rateTwo = getPairName(tokenOne.symbol, tokenTwo.symbol, true)
       return {
-        [`${tokenOneSymbol}-${tokenTwoSymbol}`]: formattedHistoryRate0,
-        [`${tokenTwoSymbol}-${tokenOneSymbol}`]: formattedHistoryRate1
+        [rateOne]: formattedHistoryRate0,
+        [rateTwo]: formattedHistoryRate1
       }
     } catch (error) {
       console.log(error)
