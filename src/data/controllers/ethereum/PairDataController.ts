@@ -331,8 +331,8 @@ export default class PairDataController implements IPairDataController {
       const rateOne = getPairName(tokenOne.symbol, tokenTwo.symbol)
       const rateTwo = getPairName(tokenOne.symbol, tokenTwo.symbol, true)
       return {
-        [rateOne]: formattedHistoryRate0,
-        [rateTwo]: formattedHistoryRate1
+        [rateOne]: formattedHistoryRate1,
+        [rateTwo]: formattedHistoryRate0
       }
     } catch (error) {
       console.log(error)

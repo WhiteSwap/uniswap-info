@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
+import { useTheme } from 'styled-components'
 import { EmptyCard } from 'components'
 import { OptionButton } from 'components/ButtonStyled'
 import CandleStickChart from 'components/CandleChart'
@@ -16,16 +18,12 @@ import { useAppSelector } from 'state/hooks'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
 
-interface IPairChart {
-  address: string
-  color: string
-  base0: number
-  base1: number
-}
-
-const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
+const PairChart = () => {
   const { t } = useTranslation()
-
+  const parameters = useParams()
+  const theme = useTheme()
+  const chartColor = theme.blue
+  const address = parameters.pairAddress!
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH)
 
   const [darkMode] = useDarkModeManager()
@@ -33,21 +31,20 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
 
   // get data for pair, and rates
   const activeNetworkId = useActiveNetworkId()
-  const pairData = useAppSelector(state => state.pairs[activeNetworkId]?.[address])
+  const tokenOne = useAppSelector(state => state.pairs[activeNetworkId]?.[address]?.tokenOne)
+  const tokenTwo = useAppSelector(state => state.pairs[activeNetworkId]?.[address]?.tokenTwo)
   const chartData = usePairChartData(address, timeWindow)
 
   // formatted symbols for overflow
-  const formattedSymbol0 =
-    pairData?.tokenOne?.symbol.length > 6 ? pairData?.tokenOne?.symbol.slice(0, 5) + '...' : pairData?.tokenOne?.symbol
-  const formattedSymbol1 =
-    pairData?.tokenTwo?.symbol.length > 6 ? pairData?.tokenTwo?.symbol.slice(0, 5) + '...' : pairData?.tokenTwo?.symbol
+  const formattedSymbol0 = tokenOne?.symbol.length > 6 ? tokenOne.symbol.slice(0, 5) + '...' : tokenOne?.symbol
+  const formattedSymbol1 = tokenTwo?.symbol.length > 6 ? tokenTwo.symbol.slice(0, 5) + '...' : tokenTwo?.symbol
 
   const below1600 = useMedia('(max-width: 1600px)')
   const below1080 = useMedia('(max-width: 1080px)')
   const below700 = useMedia('(max-width: 700px)')
 
-  const rate0 = pairData?.tokenOne ? `${formattedSymbol1}/${formattedSymbol0}` : undefined
-  const rate1 = pairData?.tokenOne ? `${formattedSymbol0}/${formattedSymbol1}` : undefined
+  const rate0 = tokenOne ? `${formattedSymbol0}/${formattedSymbol1}` : undefined
+  const rate1 = tokenOne ? `${formattedSymbol1}/${formattedSymbol0}` : undefined
 
   const chartView = useMemo(() => {
     return {
@@ -64,6 +61,8 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
     chartFilter === chartView.RATE0 || chartFilter === chartView.RATE1,
     chartFilter === chartView.RATE1
   )
+  const base0 = tokenTwo?.reserve / tokenOne?.reserve
+  const base1 = tokenOne?.reserve / tokenTwo?.reserve
 
   if (chartData && chartData.length === 0) {
     return (
@@ -79,8 +78,8 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
     <ChartWrapper>
       {below700 ? (
         <RowBetween mb={40}>
-          <DropdownSelect options={chartView} active={chartFilter} setActive={setChartFilter} color={color} />
-          <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} color={color} />
+          <DropdownSelect options={chartView} active={chartFilter} setActive={setChartFilter} color={chartColor} />
+          <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} color={chartColor} />
         </RowBetween>
       ) : (
         <OptionsRow>
@@ -154,8 +153,8 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
               <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
                 <defs>
                   <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={color} stopOpacity={0.35} />
-                    <stop offset="95%" stopColor={color} stopOpacity={0} />
+                    <stop offset="5%" stopColor={chartColor} stopOpacity={0.35} />
+                    <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
@@ -190,7 +189,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
                   contentStyle={{
                     padding: '10px 14px',
                     borderRadius: 10,
-                    borderColor: color,
+                    borderColor: chartColor,
                     color: 'black',
                     fontWeight: 500,
                     fontSize: 14
@@ -204,7 +203,7 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
                   name={' (USD)'}
                   dataKey="liquidityUSD"
                   yAxisId={0}
-                  stroke={color}
+                  stroke={chartColor}
                   fill="url(#colorUv)"
                 />
               </AreaChart>
@@ -255,14 +254,14 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
                   tick={{ fill: textColor }}
                 />
                 <Tooltip
-                  cursor={{ fill: color, opacity: 0.1 }}
+                  cursor={{ fill: chartColor, opacity: 0.1 }}
                   formatter={(value: string | number) => formattedNumber(value, true)}
                   labelFormatter={label => toNiceDateYear(label)}
                   labelStyle={{ paddingTop: 4 }}
                   contentStyle={{
                     padding: '10px 14px',
                     borderRadius: 10,
-                    borderColor: color,
+                    borderColor: chartColor,
                     color: 'black'
                   }}
                   wrapperStyle={{ top: -70, left: -10 }}
@@ -271,9 +270,9 @@ const PairChart = ({ address, color, base0, base1 }: IPairChart) => {
                   type="monotone"
                   name={t('volume')}
                   dataKey="dailyVolumeUSD"
-                  fill={color}
+                  fill={chartColor}
                   yAxisId={0}
-                  stroke={color}
+                  stroke={chartColor}
                 />
               </BarChart>
             </ResponsiveContainer>

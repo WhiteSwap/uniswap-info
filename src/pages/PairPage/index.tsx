@@ -301,12 +301,7 @@ const PairPage = () => {
                     width: '100%'
                   }}
                 >
-                  <PairChart
-                    address={pairAddress}
-                    color={'#2E69BB'}
-                    base0={tokenTwo?.reserve / tokenOne?.reserve}
-                    base1={tokenOne?.reserve / tokenTwo?.reserve}
-                  />
+                  <PairChart />
                 </Panel>
               </PanelWrapper>
             </>
