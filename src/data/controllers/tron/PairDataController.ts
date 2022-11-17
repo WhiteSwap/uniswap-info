@@ -63,10 +63,12 @@ export default class PairDataController implements IPairDataController {
     isReversedPair: boolean
   ) {
     const name = getPairName(tokenOne.symbol, tokenTwo.symbol, isReversedPair)
+    // FIXME: TRON backend return price for inverted pair. Send reverted pair name as hotfix
+    const reverseName = getPairName(tokenOne.symbol, tokenTwo.symbol, !isReversedPair)
     const { data } = await client.query<PairHourlyPriceQuery, PairHourlyPriceQueryVariables>({
       query: PAIR_HOURLY_PRICE,
       // FIXME: need to pass WTRX instead of TRX. Implement better solution
-      variables: { startTime, id: pairAddress, name: name.replace('TRX', 'WTRX') }
+      variables: { startTime, id: pairAddress, name: reverseName.replace('TRX', 'WTRX') }
     })
     const hourlyData = pairPriceDataMapper(data)
     return { [name]: hourlyData }

@@ -17,5 +17,5 @@ export function calculateTokenPrice(reserveOne?: string, reserveTwo?: string): n
 }
 
 export function getPairName(tokenOneSymbol: string, tokenTwoSymbol: string, isReversedPair = false): string {
-  return isReversedPair ? `${tokenOneSymbol}-${tokenTwoSymbol}` : `${tokenTwoSymbol}-${tokenOneSymbol}`
+  return isReversedPair ? `${tokenTwoSymbol}-${tokenOneSymbol}` : `${tokenOneSymbol}-${tokenTwoSymbol}`
 }

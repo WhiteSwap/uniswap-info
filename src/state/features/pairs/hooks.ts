@@ -38,10 +38,20 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string, enabl
       )
       dispatch(setHourlyData({ address: pairAddress, hourlyData: data, timeWindow, networkId: activeNetwork }))
     }
-    if (!chartData && latestBlock && pairData?.tokenOne && pairData?.tokenTwo && enabled) {
+    if (!chartData?.length && latestBlock && pairData?.tokenOne && pairData?.tokenTwo && enabled) {
       fetch()
     }
-  }, [chartData, timeWindow, pairAddress, latestBlock, activeNetwork, pairData, enabled, isReversedPair])
+  }, [
+    chartData,
+    timeWindow,
+    pairAddress,
+    latestBlock,
+    activeNetwork,
+    pairData?.tokenOne?.id,
+    pairData?.tokenTwo?.id,
+    isReversedPair,
+    enabled
+  ])
 
   return chartData
 }
