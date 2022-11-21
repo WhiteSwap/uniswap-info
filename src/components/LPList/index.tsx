@@ -57,7 +57,12 @@ function LPList({ data, itemMax = 10 }: ILPList) {
             <CustomLink to={formatPath(`/pairs/${item.pair.id}`)}>
               <RowFixed style={{ textAlign: 'right' }}>
                 {!below600 && (
-                  <DoubleTokenLogo a0={item.pair.tokenOne.id} a1={item.pair.tokenTwo.id} size={16} margin={true} />
+                  <DoubleTokenLogo
+                    a0={item.pair.tokenOne.id}
+                    a1={item.pair.tokenTwo.id}
+                    size={below600 ? 16 : 20}
+                    margin={true}
+                  />
                 )}
                 {item.pair.tokenOne.symbol}-{item.pair.tokenTwo.symbol}
               </RowFixed>
