@@ -14,15 +14,21 @@ export type Scalars = {
 
 export type RootQuery = {
   __typename?: 'RootQuery'
+  account?: Maybe<AccountCollection>
   countTransactions: Scalars['Int']
   lastBlock: Scalars['Int']
   pair?: Maybe<Pair>
+  pairDailyData?: Maybe<Array<PairDailyData>>
+  pairDailyPrice?: Maybe<Array<SnapshotPriceOpenClose>>
+  pairHourlyPrice?: Maybe<Array<SnapshotPriceOpenClose>>
   pairs?: Maybe<Array<Maybe<Pair>>>
   token?: Maybe<Token>
-  tokenDailyPrice?: Maybe<Array<TokenPriceOpenClose>>
-  tokenHourlyPrice?: Maybe<Array<TokenPriceOpenClose>>
+  tokenDailyData?: Maybe<Array<TokenDailyData>>
+  tokenDailyPrice?: Maybe<Array<SnapshotPriceOpenClose>>
+  tokenHourlyPrice?: Maybe<Array<SnapshotPriceOpenClose>>
   tokenPairs?: Maybe<Array<Scalars['String']>>
   tokens?: Maybe<Array<Maybe<Token>>>
+  topLiquidityPosition?: Maybe<Array<Maybe<TopLiquidityPosition>>>
   transactions?: Maybe<TransactionsCollection>
   trxPrice: Scalars['Float']
   whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
@@ -32,8 +38,30 @@ export type RootQueryPairArgs = {
   id: Scalars['String']
 }
 
+export type RootQueryPairDailyDataArgs = {
+  id: Scalars['String']
+  startTime: Scalars['Int']
+}
+
+export type RootQueryPairDailyPriceArgs = {
+  id: Scalars['String']
+  name: Scalars['String']
+  startTime: Scalars['Int']
+}
+
+export type RootQueryPairHourlyPriceArgs = {
+  id: Scalars['String']
+  name: Scalars['String']
+  startTime: Scalars['Int']
+}
+
 export type RootQueryTokenArgs = {
   id: Scalars['String']
+}
+
+export type RootQueryTokenDailyDataArgs = {
+  id: Scalars['String']
+  startTime: Scalars['Int']
 }
 
 export type RootQueryTokenDailyPriceArgs = {
@@ -52,6 +80,115 @@ export type RootQueryTokenPairsArgs = {
 
 export type RootQueryWhiteSwapDayDatasArgs = {
   startTime: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollection = {
+  __typename?: 'AccountCollection'
+  /** Burns Account Transactions */
+  burns?: Maybe<Array<Maybe<Transaction>>>
+  /** Account liquidity full data */
+  liquidityData?: Maybe<Array<Maybe<AccountLiquidityData>>>
+  /** Account liquidity pair data */
+  liquidityPairData?: Maybe<Array<Maybe<AccountLiquidityData>>>
+  /** Mints Account Transactions */
+  mints?: Maybe<Array<Maybe<Transaction>>>
+  /** Account positions */
+  positions?: Maybe<Array<Maybe<AccountPosition>>>
+  /** Swaps Account Transactions */
+  swaps?: Maybe<Array<Maybe<Transaction>>>
+}
+
+/** Account details page */
+export type AccountCollectionBurnsArgs = {
+  accountAddress: Scalars['String']
+  limit: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollectionLiquidityDataArgs = {
+  accountAddress: Scalars['String']
+  startTime: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollectionLiquidityPairDataArgs = {
+  accountAddress: Scalars['String']
+  pairAddress: Scalars['String']
+  startTime: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollectionMintsArgs = {
+  accountAddress: Scalars['String']
+  limit: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollectionPositionsArgs = {
+  accountAddress: Scalars['String']
+}
+
+/** Account details page */
+export type AccountCollectionSwapsArgs = {
+  accountAddress?: InputMaybe<Scalars['String']>
+  limit: Scalars['Int']
+}
+
+/** Transaction */
+export type Transaction = {
+  __typename?: 'Transaction'
+  /** Transaction account address */
+  account: Scalars['String']
+  /** Transaction hash */
+  hash: Scalars['String']
+  /** Transaction timestamp */
+  timestamp: Scalars['Int']
+  /** Token one */
+  tokenOne: TokenTransaction
+  /** Token two */
+  tokenTwo: TokenTransaction
+  /** Total Usd */
+  totalUSD: Scalars['Float']
+}
+
+/** Crypto token */
+export type TokenTransaction = {
+  __typename?: 'TokenTransaction'
+  /** Token amount */
+  amount: Scalars['Float']
+  /** Token address */
+  id: Scalars['String']
+  /** Token symbol */
+  symbol: Scalars['String']
+}
+
+/** WhiteSwapDayData for Graph */
+export type AccountLiquidityData = {
+  __typename?: 'AccountLiquidityData'
+  /** Data date */
+  timestamp: Scalars['Int']
+  /** Data totalLiquidityUSD */
+  totalLiquidityUSD: Scalars['Float']
+}
+
+/** Token Daily Data for Graph */
+export type AccountPosition = {
+  __typename?: 'AccountPosition'
+  /** Pair address */
+  id: Scalars['String']
+  /** Pair name */
+  pair: Scalars['String']
+  /** Token One name */
+  tokenOne: Scalars['String']
+  /** Token One amount */
+  tokenOneAmount: Scalars['Float']
+  /** Token Two name */
+  tokenTwo: Scalars['String']
+  /** Token Two amount */
+  tokenTwoAmount: Scalars['Float']
+  /** Total usd amount */
+  totalUsd: Scalars['Float']
 }
 
 /** Pair */
@@ -92,6 +229,28 @@ export type TokenPair = {
   symbol: Scalars['String']
 }
 
+/** Pair Daily Data for Graph */
+export type PairDailyData = {
+  __typename?: 'PairDailyData'
+  /** Data date */
+  date: Scalars['Int']
+  /** Data liquidity */
+  liquidity: Scalars['Float']
+  /** Data volume */
+  volume: Scalars['Float']
+}
+
+/** SnapshotPrice for Graph */
+export type SnapshotPriceOpenClose = {
+  __typename?: 'SnapshotPriceOpenClose'
+  /** Data close price */
+  close: Scalars['Float']
+  /** Data open price */
+  open: Scalars['Float']
+  /** Data timestamp */
+  timestamp: Scalars['Int']
+}
+
 /** Crypto token */
 export type Token = {
   __typename?: 'Token'
@@ -119,15 +278,26 @@ export type Token = {
   volumeChangeUSD: Scalars['Float']
 }
 
-/** TokenPrice for Graph */
-export type TokenPriceOpenClose = {
-  __typename?: 'TokenPriceOpenClose'
-  /** Data close price */
-  close: Scalars['Float']
-  /** Data open price */
-  open: Scalars['Float']
-  /** Data timestamp */
-  timestamp: Scalars['Int']
+/** Token Daily Data for Graph */
+export type TokenDailyData = {
+  __typename?: 'TokenDailyData'
+  /** Data date */
+  date: Scalars['Int']
+  /** Data liquidity */
+  liquidity: Scalars['Float']
+  /** Data volume */
+  volume: Scalars['Float']
+}
+
+/** Top Liquidity Position */
+export type TopLiquidityPosition = {
+  __typename?: 'TopLiquidityPosition'
+  /** Account address */
+  account: Scalars['String']
+  /** Token amount */
+  amount: Scalars['Float']
+  /** Pair */
+  pair: Pair
 }
 
 /** Transactions list */
@@ -162,34 +332,6 @@ export type TransactionsCollectionSwapsArgs = {
   tokenAddress?: InputMaybe<Scalars['String']>
 }
 
-/** Transaction */
-export type Transaction = {
-  __typename?: 'Transaction'
-  /** Transaction account address */
-  account: Scalars['String']
-  /** Transaction hash */
-  hash: Scalars['String']
-  /** Transaction timestamp */
-  timestamp: Scalars['Int']
-  /** Token one */
-  tokenOne: TokenTransaction
-  /** Token two */
-  tokenTwo: TokenTransaction
-  /** Total Usd */
-  totalUSD: Scalars['Float']
-}
-
-/** Crypto token */
-export type TokenTransaction = {
-  __typename?: 'TokenTransaction'
-  /** Token amount */
-  amount: Scalars['Float']
-  /** Token address */
-  id: Scalars['String']
-  /** Token symbol */
-  symbol: Scalars['String']
-}
-
 /** WhiteSwapDayData for Graph */
 export type WhiteSwapDayData = {
   __typename?: 'WhiteSwapDayData'
@@ -199,6 +341,23 @@ export type WhiteSwapDayData = {
   date: Scalars['Int']
   /** Data totalLiquidityUSD */
   totalLiquidityUSD: Scalars['Float']
+}
+
+export type TopLiquidityPositionsQueryVariables = Exact<{ [key: string]: never }>
+
+export type TopLiquidityPositionsQuery = {
+  __typename?: 'RootQuery'
+  topLiquidityPosition?: Array<{
+    __typename?: 'TopLiquidityPosition'
+    account: string
+    amount: number
+    pair: {
+      __typename?: 'Pair'
+      id: string
+      tokenOne: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
+      tokenTwo: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
+    }
+  } | null> | null
 }
 
 export type GlobalChartQueryVariables = Exact<{
@@ -375,7 +534,7 @@ export type TokenHourlyPriceQueryVariables = Exact<{
 export type TokenHourlyPriceQuery = {
   __typename?: 'RootQuery'
   tokenHourlyPrice?: Array<{
-    __typename?: 'TokenPriceOpenClose'
+    __typename?: 'SnapshotPriceOpenClose'
     timestamp: number
     open: number
     close: number
@@ -389,7 +548,12 @@ export type TokenDailyPriceQueryVariables = Exact<{
 
 export type TokenDailyPriceQuery = {
   __typename?: 'RootQuery'
-  tokenDailyPrice?: Array<{ __typename?: 'TokenPriceOpenClose'; timestamp: number; open: number; close: number }> | null
+  tokenDailyPrice?: Array<{
+    __typename?: 'SnapshotPriceOpenClose'
+    timestamp: number
+    open: number
+    close: number
+  }> | null
 }
 
 export type TransactionDetailsFragment = {

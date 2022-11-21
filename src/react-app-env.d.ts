@@ -176,12 +176,12 @@ type PairReturn = {
 }
 
 interface LiquidityPosition {
-  pairAddress: string
-  pairName: string
-  tokenOne: string
-  tokenTwo: string
-  usd: number
-  userId: string
+  account: string
+  amount: number
+  pair: Pick<Pair, 'id'> & {
+    tokenOne: Pick<Token, 'id' | 'symbol'>
+    tokenTwo: Pick<Token, 'id' | 'symbol'>
+  }
 }
 
 interface ChartDailyItem {

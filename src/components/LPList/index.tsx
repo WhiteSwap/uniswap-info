@@ -51,19 +51,21 @@ function LPList({ lps, maxItems = 10 }: ILPList) {
       <DashGrid>
         {!below600 && <DataText>{index}</DataText>}
         <DataText justifyContent="flex-start">
-          <CustomLink to={formatPath(`/accounts/${lp.userId}`)}>
-            {below800 ? ellipsisAddress(lp.userId) : lp.userId}
+          <CustomLink to={formatPath(`/accounts/${lp.account}`)}>
+            {below800 ? ellipsisAddress(lp.account) : lp.account}
           </CustomLink>
         </DataText>
         <DataText>
-          <CustomLink to={formatPath(`/pairs/${lp.pairAddress}`)}>
+          <CustomLink to={formatPath(`/pairs/${lp.pair.id}`)}>
             <RowFixed style={{ textAlign: 'right' }}>
-              {!below600 && <DoubleTokenLogo a0={lp.tokenOne} a1={lp.tokenTwo} size={16} margin={true} />}
-              {lp.pairName}
+              {!below600 && (
+                <DoubleTokenLogo a0={lp.pair.tokenOne.id} a1={lp.pair.tokenTwo.id} size={16} margin={true} />
+              )}
+              {lp.pair.tokenOne.symbol}-{lp.pair.tokenTwo.symbol}
             </RowFixed>
           </CustomLink>
         </DataText>
-        <DataText>{formattedNumber(lp.usd, true)}</DataText>
+        <DataText>{formattedNumber(lp.amount, true)}</DataText>
       </DashGrid>
     )
   }
