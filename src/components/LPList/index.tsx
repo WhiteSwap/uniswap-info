@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
@@ -18,12 +18,51 @@ interface ILPList {
   itemMax: number
 }
 
-function LPList({ data, itemMax = 10 }: ILPList) {
-  const { t } = useTranslation()
+interface ListItemProperties {
+  data: LiquidityPosition
+  index: number
+}
+
+const ListItem = ({ data, index }: ListItemProperties) => {
   const formatPath = useFormatPath()
   const below440 = useMedia('(max-width: 440px)')
   const below600 = useMedia('(max-width: 600px)')
   const below800 = useMedia('(max-width: 800px)')
+
+  return (
+    <DashGrid style={{ padding: below440 ? '.75rem' : '.75rem 2rem' }}>
+      {!below600 ? <DataText fontWeight="500">{index}</DataText> : undefined}
+      <DataText alignItems="center" justifyContent="flex-start">
+        <CustomLink to={formatPath(`/accounts/${data.account}`)}>
+          {below800 ? ellipsisAddress(data.account) : data.account}
+        </CustomLink>
+      </DataText>
+      <DataText alignItems="center" justifyContent="flex-end">
+        <CustomLink to={formatPath(`/pairs/${data.pair.id}`)}>
+          <RowFixed style={{ textAlign: 'right' }}>
+            {!below600 && (
+              <DoubleTokenLogo
+                a0={data.pair.tokenOne.id}
+                a1={data.pair.tokenTwo.id}
+                size={below600 ? 16 : 20}
+                margin={true}
+              />
+            )}
+            {data.pair.tokenOne.symbol}-{data.pair.tokenTwo.symbol}
+          </RowFixed>
+        </CustomLink>
+      </DataText>
+      <DataText alignItems="center" justifyContent="flex-end">
+        {formattedNumber(data.amount, true)}
+      </DataText>
+    </DashGrid>
+  )
+}
+
+function LPList({ data, itemMax = 10 }: ILPList) {
+  const { t } = useTranslation()
+  const below440 = useMedia('(max-width: 440px)')
+  const below600 = useMedia('(max-width: 600px)')
 
   // pagination
   const [page, setPage] = useState(1)
@@ -42,40 +81,6 @@ function LPList({ data, itemMax = 10 }: ILPList) {
       setMaxPage(Math.floor(data.length / itemMax) + extraPages)
     }
   }, [data])
-
-  const ListItem = useCallback(
-    ({ item, index }: { item: LiquidityPosition; index: number }) => {
-      return (
-        <DashGrid style={{ padding: below440 ? '.75rem' : '.75rem 2rem' }}>
-          {!below600 ? <DataText fontWeight="500">{index}</DataText> : undefined}
-          <DataText alignItems="center" justifyContent="flex-start">
-            <CustomLink to={formatPath(`/accounts/${item.account}`)}>
-              {below800 ? ellipsisAddress(item.account) : item.account}
-            </CustomLink>
-          </DataText>
-          <DataText alignItems="center" justifyContent="flex-end">
-            <CustomLink to={formatPath(`/pairs/${item.pair.id}`)}>
-              <RowFixed style={{ textAlign: 'right' }}>
-                {!below600 && (
-                  <DoubleTokenLogo
-                    a0={item.pair.tokenOne.id}
-                    a1={item.pair.tokenTwo.id}
-                    size={below600 ? 16 : 20}
-                    margin={true}
-                  />
-                )}
-                {item.pair.tokenOne.symbol}-{item.pair.tokenTwo.symbol}
-              </RowFixed>
-            </CustomLink>
-          </DataText>
-          <DataText alignItems="center" justifyContent="flex-end">
-            {formattedNumber(item.amount, true)}
-          </DataText>
-        </DashGrid>
-      )
-    },
-    [below600, below440, below800]
-  )
 
   const incrementPage = () => {
     setPage(page === 1 ? page : page - 1)
@@ -112,7 +117,7 @@ function LPList({ data, itemMax = 10 }: ILPList) {
         <Divider />
         <List p={0}>
           {paginatedList.map((item, index) => (
-            <ListItem key={`${item.account}-${item.pair.id}`} item={item} index={(page - 1) * itemMax + index + 1} />
+            <ListItem key={`${item.account}-${item.pair.id}`} data={item} index={(page - 1) * itemMax + index + 1} />
           ))}
         </List>
       </Panel>
