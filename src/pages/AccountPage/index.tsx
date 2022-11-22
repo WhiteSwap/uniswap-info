@@ -18,7 +18,7 @@ import { TransactionTable } from 'components/TransactionTable'
 import UserChart from 'components/UserChart'
 import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
-import { useAccountData } from 'state/features/account/hooks'
+import { useUserPositions, useUserTransactions } from 'state/features/account/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useToggleSavedAccount } from 'state/features/user/hooks'
 import { DashboardWrapper, TYPE } from 'Theme'
@@ -40,7 +40,16 @@ function AccountPage() {
 
   const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
 
-  const { transactions, positions, transactionCount, totalSwappedUSD } = useAccountData(accountAddress)
+  const positions = useUserPositions(accountAddress)
+  const transactions = useUserTransactions(accountAddress)
+  const totalTransactionsAmount = useMemo(() => {
+    return transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0
+  }, [transactions])
+  const totalSwappedUSD = useMemo(() => {
+    return transactions?.swaps && transactions.swaps.length > 0
+      ? transactions.swaps.reduce((total, swap) => total + swap.amountUSD, 0)
+      : 0
+  }, [totalTransactionsAmount])
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0
@@ -123,14 +132,6 @@ function AccountPage() {
               <Flyout>
                 <AutoColumn gap="0px">
                   {positions?.map((p, index) => {
-                    let tokenOneSymbol = p.pair.tokenOne?.symbol
-                    let tokenTwoSymbol = p.pair.tokenTwo?.symbol
-                    if (tokenOneSymbol === 'WETH') {
-                      tokenOneSymbol = 'ETH'
-                    }
-                    if (tokenTwoSymbol === 'WETH') {
-                      tokenTwoSymbol = 'ETH'
-                    }
                     return (
                       p.pair.id !== activePosition?.pair.id && (
                         <MenuRow
@@ -142,7 +143,7 @@ function AccountPage() {
                         >
                           <DoubleTokenLogo a0={p.pair.tokenOne?.id} a1={p.pair.tokenTwo?.id} size={16} />
                           <TYPE.body ml={'16px'}>
-                            {tokenOneSymbol}-{tokenTwoSymbol} {t('position')}
+                            {p.pair.tokenOne?.symbol}-{p.pair.tokenTwo?.symbol} {t('position')}
                           </TYPE.body>
                         </MenuRow>
                       )
@@ -192,7 +193,7 @@ function AccountPage() {
                   <TYPE.main>Total Fees Paid</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{transactionCount ? transactionCount : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>{totalTransactionsAmount ? totalTransactionsAmount : '-'}</TYPE.header>
                   <TYPE.main>{t('totalTransactions')}</TYPE.main>
                 </AutoColumn>
               </AutoColumn>
@@ -212,7 +213,7 @@ function AccountPage() {
                   <TYPE.main>{t('totalFeesPaid')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{transactionCount ? transactionCount : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>{totalTransactionsAmount ? totalTransactionsAmount : '-'}</TYPE.header>
                   <TYPE.main>{t('totalTransactions')}</TYPE.main>
                 </AutoColumn>
               </AutoRow>

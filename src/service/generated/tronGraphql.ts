@@ -678,6 +678,44 @@ export type PairTransactionsQuery = {
   } | null
 }
 
+export type AccountTransactionsQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+}>
+
+export type AccountTransactionsQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    mints?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    swaps?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    burns?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+  } | null
+}
+
 export type TransactionCountQueryVariables = Exact<{ [key: string]: never }>
 
 export type TransactionCountQuery = { __typename?: 'RootQuery'; countTransactions: number }

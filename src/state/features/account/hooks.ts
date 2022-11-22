@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { timeframeOptions } from 'constants/index'
 import DataService from 'data/DataService'
@@ -29,10 +29,8 @@ export function useUserTransactions(account: string) {
       const result = await DataService.transactions.getUserTransactions(account)
       dispatch(setTransactions({ account, transactions: result, networkId: activeNetwork }))
     }
-    if (!transactions && account) {
-      fetchData(account)
-    }
-  }, [account, transactions, activeNetwork])
+    fetchData(account)
+  }, [])
 
   return transactions
 }
@@ -214,25 +212,4 @@ export function useTopLiquidityPositions() {
   }, [Object.keys(allPairs).length])
 
   return topLps
-}
-
-export function useAccountData(accountAddress: string) {
-  const transactions = useUserTransactions(accountAddress)
-  const positions = useUserPositions(accountAddress)
-  const transactionCount = transactions?.swaps?.length + transactions?.burns?.length + transactions?.mints?.length
-
-  const totalSwappedUSD = useMemo(() => {
-    return transactions?.swaps
-      ? transactions?.swaps.reduce((total, swap) => {
-          return total + swap.amountUSD
-        }, 0)
-      : 0
-  }, [transactions])
-
-  return {
-    transactions,
-    positions,
-    transactionCount,
-    totalSwappedUSD
-  }
 }
