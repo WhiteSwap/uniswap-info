@@ -1,18 +1,3 @@
-import { EthereumPosition } from 'data/controllers/types/ethTypes'
-import { pairMapper } from 'data/mappers/ethereum/pairMappers'
-
-export function userPositionMapper(payload: EthereumPosition, price: number): Position {
-  return {
-    pair: pairMapper(payload?.pair, price),
-    liquidityTokenBalance: payload?.liquidityTokenBalance ? +payload.liquidityTokenBalance : 0,
-    feeEarned: payload?.feeEarned ? +payload.feeEarned : 0
-  }
-}
-
-export function userPositionListMapper(price: number, payload?: EthereumPosition[] | null): Position[] {
-  return payload?.map(position => userPositionMapper(position, price)) || []
-}
-
 export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot {
   return {
     liquidityTokenBalance: +payload?.liquidityTokenBalance || 0,

@@ -6,11 +6,6 @@ export function useTopLiquidityPositionList() {
   return useAppSelector(state => state.account[activeNetwork].topLiquidityPositions)
 }
 
-export function useAccountPositions(account: string) {
-  const activeNetwork = useActiveNetworkId()
-  return useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.positions)
-}
-
 export function useAccountTransactions(account: string) {
   const activeNetwork = useActiveNetworkId()
   return useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.transactions)

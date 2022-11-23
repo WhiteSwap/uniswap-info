@@ -7,12 +7,11 @@ import { useActiveNetworkId, useTimeFrame } from 'state/features/application/sel
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
-import { useAppDispatch } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getHistoricalPairReturns } from 'utils/returns'
 import {
   useAccountLiquiditySnapshots,
   useAccountPairReturns,
-  useAccountPositions,
   useAccountTransactions,
   useTopLiquidityPositionList
 } from './selectors'
@@ -68,7 +67,7 @@ export function useUserSnapshots(account: string) {
  */
 export function useUserPositionChart(position: Position, account: string) {
   const dispatch = useAppDispatch()
-  const pairAddress = position?.pair?.id
+  const pairAddress = position.pairAddress
   const activeNetwork = useActiveNetworkId()
 
   // get oldest date of data to fetch
@@ -80,7 +79,7 @@ export function useUserPositionChart(position: Position, account: string) {
     snapshots &&
     position &&
     snapshots.filter(currentSnapshot => {
-      return currentSnapshot.pair.id === position.pair.id
+      return currentSnapshot.pair.id === position.pairAddress
     })
 
   // get data needed for calculations
@@ -115,7 +114,7 @@ export function useUserPositionChart(position: Position, account: string) {
     pairAddress,
     currentPairData,
     price,
-    position.pair.id,
+    position.pairAddress,
     activeNetwork
   ])
 
@@ -174,8 +173,7 @@ export function useUserLiquidityChart(account: string) {
 export function useUserPositions(account: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const positions = useAccountPositions(account)
-
+  const positions = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.positions)
   const snapshots = useUserSnapshots(account)
   const price = useActiveTokenPrice()
 

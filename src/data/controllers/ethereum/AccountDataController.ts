@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
-import { liquiditySnapshotListMapper, userPositionListMapper } from 'data/mappers/ethereum/accountMapper'
+import { liquiditySnapshotListMapper } from 'data/mappers/ethereum/accountMapper'
 import { client } from 'service/client'
 import {
   TopLiquidityPositionQuery,
@@ -16,6 +16,8 @@ import {
 } from 'service/queries/ethereum/accounts'
 import { PAIR_DAY_DATA_BULK } from 'service/queries/ethereum/pairs'
 import { LiquidityChart } from 'state/features/account/types'
+import { parseTokenInfo } from 'utils'
+import { calculateTokenAmount } from 'utils/pair'
 import { getLPReturnsOnPair } from 'utils/returns'
 
 type OwnershipPair = {
@@ -161,17 +163,38 @@ export default class AccountDataController implements IAccountDataController {
         },
         fetchPolicy: 'no-cache'
       })
+
       if (result?.data?.liquidityPositions) {
-        const formattedPositions = await Promise.all(
-          result?.data?.liquidityPositions.map(async (positionData: any) => {
-            const feeEarned = await getLPReturnsOnPair(positionData.pair, price, snapshots)
-            return {
-              ...positionData,
-              feeEarned: feeEarned ?? 0
+        const formattedPositions: Position[] = result?.data?.liquidityPositions.map<Position>(positionData => {
+          const { pair, liquidityTokenBalance } = positionData
+          const { token0, token1, id, totalSupply, reserveUSD, reserve0, reserve1 } = pair
+          const totalFeeUsd = getLPReturnsOnPair(pair, price, snapshots)
+          const totalUsd = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserveUSD)
+          const tokenOneAmount = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserve0)
+          const tokenTwoAmount = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserve1)
+          const tokenFeeUsd = totalFeeUsd / 2
+          const tokenOneFee = tokenFeeUsd / (+token0.derivedETH * price)
+          const tokenTwoFee = tokenFeeUsd / (+token1.derivedETH * price)
+
+          return {
+            pairAddress: id,
+            totalUsd,
+            totalFeeUsd,
+            tokenOne: {
+              id: token0.id,
+              symbol: parseTokenInfo('symbol', token0.id, token0.symbol),
+              amount: tokenOneAmount,
+              fee: tokenOneFee
+            },
+            tokenTwo: {
+              id: token1.id,
+              symbol: parseTokenInfo('symbol', token1.id, token1.symbol),
+              amount: tokenTwoAmount,
+              fee: tokenTwoFee
             }
-          })
-        )
-        return userPositionListMapper(price, formattedPositions)
+          }
+        })
+        return formattedPositions
       }
     } catch (error) {
       console.log(error)

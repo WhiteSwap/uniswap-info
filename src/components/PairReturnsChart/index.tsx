@@ -28,7 +28,7 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const data = useUserPositionChart(position, account)
   const below600 = useMedia('(max-width: 600px)')
   const aspect = below600 ? 60 / 42 : 60 / 16
-  const color = useColor(position.pair.tokenOne.id)
+  const color = useColor(position.tokenOne.id)
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
 

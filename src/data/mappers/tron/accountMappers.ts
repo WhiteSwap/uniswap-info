@@ -1,4 +1,4 @@
-import { TopLiquidityPositionsQuery } from 'service/generated/tronGraphql'
+import { AccountPositionQuery, TopLiquidityPositionsQuery } from 'service/generated/tronGraphql'
 import { parseTokenInfo } from 'utils'
 
 export function liquidityPositionsMapper(payload: TopLiquidityPositionsQuery): LiquidityPosition[] {
@@ -17,6 +17,31 @@ export function liquidityPositionsMapper(payload: TopLiquidityPositionsQuery): L
           symbol: parseTokenInfo('symbol', element?.pair?.tokenTwo?.id, element?.pair?.tokenTwo?.symbol)
         }
       }
+    })) || []
+  )
+}
+
+export function positionsMapper(payload: AccountPositionQuery): Position[] {
+  return (
+    payload.account?.positions?.map(position => ({
+      pairAddress: position?.id || '',
+      tokenOne: {
+        id: position?.tokenOneAddress || '',
+        symbol: parseTokenInfo('symbol', position?.tokenOneAddress, position?.tokenOneCode),
+        amount: position?.tokenOneAmount ? +position.tokenOneAmount : 0,
+        // FIXME: add real value
+        fee: 0.3
+      },
+      tokenTwo: {
+        id: position?.tokenTwoAddress || '',
+        symbol: parseTokenInfo('symbol', position?.tokenTwoAddress, position?.tokenTwoCode),
+        amount: position?.tokenTwoAmount ? +position?.tokenTwoAmount : 0,
+        // FIXME: add real value
+        fee: 0.3
+      },
+      // FIXME: add real value
+      totalFeeUsd: 0.3,
+      totalUsd: position?.totalUsd ? +position?.totalUsd : 0
     })) || []
   )
 }

@@ -21,3 +21,21 @@ export const TOP_LIQUIDITY_POSITIONS = gql`
     }
   }
 `
+
+export const ACCOUNT_POSITIONS = gql`
+  query AccountPosition($accountAddress: String!) {
+    account {
+      positions(accountAddress: $accountAddress) {
+        id
+        pair
+        tokenOneCode
+        tokenOneAddress
+        tokenOneAmount
+        tokenTwoCode
+        tokenTwoAddress
+        tokenTwoAmount
+        totalUsd
+      }
+    }
+  }
+`

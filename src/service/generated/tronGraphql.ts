@@ -179,14 +179,18 @@ export type AccountPosition = {
   id: Scalars['String']
   /** Pair name */
   pair: Scalars['String']
-  /** Token One name */
-  tokenOne: Scalars['String']
+  /** Token One address */
+  tokenOneAddress: Scalars['String']
   /** Token One amount */
   tokenOneAmount: Scalars['Float']
-  /** Token Two name */
-  tokenTwo: Scalars['String']
+  /** Token One code */
+  tokenOneCode: Scalars['String']
+  /** Token Two address */
+  tokenTwoAddress: Scalars['String']
   /** Token Two amount */
   tokenTwoAmount: Scalars['Float']
+  /** Token Two code */
+  tokenTwoCode: Scalars['String']
   /** Total usd amount */
   totalUsd: Scalars['Float']
 }
@@ -358,6 +362,29 @@ export type TopLiquidityPositionsQuery = {
       tokenTwo: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
     }
   } | null> | null
+}
+
+export type AccountPositionQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+}>
+
+export type AccountPositionQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    positions?: Array<{
+      __typename?: 'AccountPosition'
+      id: string
+      pair: string
+      tokenOneCode: string
+      tokenOneAddress: string
+      tokenOneAmount: number
+      tokenTwoCode: string
+      tokenTwoAddress: string
+      tokenTwoAmount: number
+      totalUsd: number
+    } | null> | null
+  } | null
 }
 
 export type GlobalChartQueryVariables = Exact<{

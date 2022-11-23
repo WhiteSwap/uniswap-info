@@ -34,41 +34,6 @@ export const UserLiquidityChartMock = [
   }
 ]
 
-export const UserPositionsMock: Position[] = [
-  {
-    pair: {
-      id: 'TF93BSusoPh9fPa6fizSnRFV4zuyVgEwFY',
-      tokenOne: {
-        id: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-        name: 'Tether',
-        symbol: 'USDT',
-        price: 1032.232_453_242,
-        reserve: 9.266_108_317_354_039,
-        priceUSD: 1
-      },
-      tokenTwo: {
-        id: 'THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu',
-        name: 'WSEDAO',
-        symbol: 'WSD',
-        price: 1032.232_453_242,
-        reserve: 25_708.635_871,
-        priceUSD: 1
-      },
-      dayVolumeUSD: 231.32,
-      liquidityChangeUSD: 6712.234_562_8,
-      totalLiquidityUSD: 132.242_453_362_8,
-      volumeChangeUSD: 142.434_426_28,
-      weekVolumeUSD: 122.2428,
-      dayFees: 0,
-      apy: 0,
-      totalSupply: 0,
-      reserveUSD: 0
-    },
-    liquidityTokenBalance: 0.000_062_112_314_1,
-    feeEarned: 51.760_385_036
-  }
-]
-
 export const TopLpsMock = [
   {
     userId: 'TM1zzNDZD2DPASbKcgdVoTYhfmYgtfwx9R',

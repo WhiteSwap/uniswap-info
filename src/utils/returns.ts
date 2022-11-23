@@ -193,7 +193,7 @@ export async function getHistoricalPairReturns(
  * @param ethPrice
  * @param snapshots
  */
-export async function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots: any) {
+export function getLPReturnsOnPair(pair: any, ethPrice: number, snapshots: any) {
   let fees = 0
 
   snapshots = snapshots.filter((entry: any) => {
