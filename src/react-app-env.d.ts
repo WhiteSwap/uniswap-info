@@ -176,12 +176,6 @@ interface LiquiditySnapshot {
   timestamp: number
 }
 
-type PairReturn = {
-  date: number
-  fees: number
-  usdValue: number
-}
-
 interface LiquidityPosition {
   account: string
   amount: number
@@ -195,4 +189,10 @@ interface ChartDailyItem {
   date: number
   dailyVolumeUSD: number
   totalLiquidityUSD: number
+}
+
+type PairReturn = {
+  date: number
+  fees: number
+  totalLiquidityUsd: number
 }

@@ -50,3 +50,14 @@ export const ACCOUNT_LIQUIDITY_CHART = gql`
     }
   }
 `
+
+export const ACCOUNT_POSITION_CHART = gql`
+  query AccountPositionChart($accountAddress: String!, $pairAddress: String!, $startTime: Int!) {
+    account {
+      liquidityPairData(accountAddress: $accountAddress, pairAddress: $pairAddress, startTime: $startTime) {
+        timestamp
+        totalLiquidityUSD
+      }
+    }
+  }
+`

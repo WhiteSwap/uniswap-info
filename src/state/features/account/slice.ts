@@ -52,13 +52,16 @@ export const accountSlice = createSlice({
         liquiditySnapshots: historyData
       }
     },
-    setPairReturns: (
+    setPositionChartData: (
       state,
       { payload: { networkId, account, pairAddress, data } }: PayloadAction<UpdatePairReturnsPayload>
     ) => {
       state[networkId].byAddress[account] = {
         ...state[networkId].byAddress[account],
-        pairReturns: { ...state[networkId].byAddress[account]?.pairReturns, [pairAddress]: data }
+        positionChartData: {
+          ...state[networkId].byAddress[account]?.positionChartData,
+          [pairAddress]: { ...state[networkId].byAddress[account]?.positionChartData?.[pairAddress], ...data }
+        }
       }
     },
     setTopLiquidityPositions: (
@@ -74,7 +77,7 @@ export const {
   setTransactions,
   setPositions,
   setPositionHistory,
-  setPairReturns,
+  setPositionChartData,
   setTopLiquidityPositions,
   setLiquidityChartData
 } = accountSlice.actions

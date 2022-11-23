@@ -1,13 +1,11 @@
 import { SupportedNetwork } from 'constants/networks'
 
-type PairReturns = Record<string, PairReturn[]>
-
 export interface Account {
   positions: Position[]
   transactions: Transactions
   liquiditySnapshots: LiquiditySnapshot[]
   liquidityChartData: Record<string, LiquidityChart[]>
-  pairReturns: PairReturns
+  positionChartData: Record<string, Record<string, PairReturn[]>>
 }
 
 export type AccountNetworkState = {
@@ -45,7 +43,7 @@ export type UpdatePositionHistoryPayload = ParametersWithNetwork<{
 export type UpdatePairReturnsPayload = ParametersWithNetwork<{
   account: string
   pairAddress: string
-  data: PairReturn[]
+  data: Record<string, PairReturn[]>
 }>
 
 export type UpdateTopLiquidityPositionsPayload = ParametersWithNetwork<{

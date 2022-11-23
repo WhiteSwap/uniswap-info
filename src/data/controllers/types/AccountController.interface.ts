@@ -1,4 +1,5 @@
 import { LiquidityChart } from 'state/features/account/types'
+import { PairDetails } from 'state/features/pairs/types'
 
 export interface IAccountDataController {
   /**
@@ -27,4 +28,17 @@ export interface IAccountDataController {
    * @param  {string} pair - pair address
    */
   getTopLps(allPairs: any): Promise<LiquidityPosition[]>
+  /**
+   * formats data for historical chart for an LPs position in 1 pair over time
+   * @param accountAddress // account address to load data
+   * @param pair // current stat of the pair
+   * @param timeWindow // period of time
+   * @param pairSnapshots // history of entries and exits for lp on this pair
+   */
+  getPositionChart(
+    accountAddress: string,
+    pair: PairDetails,
+    timeWindow: string,
+    snapshots: LiquiditySnapshot[]
+  ): Promise<Record<string, PairReturn[]>>
 }

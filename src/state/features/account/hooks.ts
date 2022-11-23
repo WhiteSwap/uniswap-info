@@ -1,22 +1,15 @@
 import { useEffect } from 'react'
 import DataService from 'data/DataService'
-import { useStartTimestamp } from 'state/features/application/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { getHistoricalPairReturns } from 'utils/returns'
-import {
-  useAccountLiquiditySnapshots,
-  useAccountPairReturns,
-  useAccountTransactions,
-  useTopLiquidityPositionList
-} from './selectors'
+import { useAccountLiquiditySnapshots, useAccountTransactions, useTopLiquidityPositionList } from './selectors'
 import {
   setLiquidityChartData,
-  setPairReturns,
+  setPositionChartData,
   setPositionHistory,
   setPositions,
   setTopLiquidityPositions,
@@ -70,14 +63,10 @@ export function useUserSnapshots(account: string) {
  * @param {*} position
  * @param {*} account
  */
-export function useUserPositionChart(position: Position, account: string) {
+export function useUserPositionChart(position: Position, account: string, timeWindow: string) {
   const dispatch = useAppDispatch()
   const pairAddress = position.pairAddress
   const activeNetwork = useActiveNetworkId()
-
-  // get oldest date of data to fetch
-  const startDateTimestamp = useStartTimestamp()
-
   // get users adds and removes on this pair
   const snapshots = useUserSnapshots(account)
   const pairSnapshots =
@@ -92,16 +81,21 @@ export function useUserPositionChart(position: Position, account: string) {
   const price = useActiveTokenPrice()
 
   // formatetd array to return for chart data
-  const formattedHistory = useAccountPairReturns(account, pairAddress)
+  const formattedHistory = useAppSelector(
+    state => state.account[activeNetwork].byAddress?.[account]?.positionChartData?.[pairAddress]?.[timeWindow]
+  )
 
   useEffect(() => {
     async function fetchData() {
-      const fetchedData = await getHistoricalPairReturns(startDateTimestamp!, currentPairData, pairSnapshots)
-      dispatch(setPairReturns({ networkId: activeNetwork, account, pairAddress, data: fetchedData }))
+      const fetchedData = await DataService.accounts.getPositionChart(
+        account,
+        currentPairData,
+        timeWindow,
+        pairSnapshots
+      )
+      dispatch(setPositionChartData({ networkId: activeNetwork, account, pairAddress, data: fetchedData }))
     }
     if (
-      account &&
-      startDateTimestamp &&
       pairSnapshots &&
       !formattedHistory &&
       currentPairData &&
@@ -111,17 +105,7 @@ export function useUserPositionChart(position: Position, account: string) {
     ) {
       fetchData()
     }
-  }, [
-    account,
-    startDateTimestamp,
-    pairSnapshots,
-    formattedHistory,
-    pairAddress,
-    currentPairData,
-    price,
-    position.pairAddress,
-    activeNetwork
-  ])
+  }, [timeWindow, pairSnapshots, formattedHistory, pairAddress, currentPairData, price])
 
   return formattedHistory
 }

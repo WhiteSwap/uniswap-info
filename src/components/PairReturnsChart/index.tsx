@@ -25,7 +25,6 @@ interface IPairReturnsChart {
 
 const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const { t } = useTranslation()
-  const data = useUserPositionChart(position, account)
   const below600 = useMedia('(max-width: 600px)')
   const aspect = below600 ? 60 / 42 : 60 / 16
   const color = useColor(position.tokenOne.id)
@@ -33,7 +32,8 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const textColor = darkMode ? 'white' : 'black'
 
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE)
-  const [chartTimeFrame, setChartTimeFrame] = useState(timeframeOptions.ALL_TIME)
+  const [chartTimeFrame, setChartTimeFrame] = useState(timeframeOptions.YEAR)
+  const data = useUserPositionChart(position, account, chartTimeFrame)
 
   // based on window, get starttime
   const utcStartTime = getTimeframe(chartTimeFrame)
@@ -81,10 +81,10 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
               1M
             </OptionButton>
             <OptionButton
-              active={chartTimeFrame === timeframeOptions.ALL_TIME}
-              onClick={changeTimeFrame(timeframeOptions.ALL_TIME)}
+              active={chartTimeFrame === timeframeOptions.YEAR}
+              onClick={changeTimeFrame(timeframeOptions.YEAR)}
             >
-              All
+              1Y
             </OptionButton>
           </AutoRow>
         </OptionsRow>
@@ -137,7 +137,7 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
 
             <Line
               type="monotone"
-              dataKey={chartView === CHART_VIEW.VALUE ? 'usdValue' : 'fees'}
+              dataKey={chartView === CHART_VIEW.VALUE ? 'totalLiquidityUsd' : 'fees'}
               stroke={color}
               yAxisId={0}
               name={chartView === CHART_VIEW.VALUE ? t('liquidity') : t('feesEarnedCumulative')}

@@ -15,8 +15,3 @@ export function useAccountLiquiditySnapshots(account: string) {
   const activeNetwork = useActiveNetworkId()
   return useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.liquiditySnapshots)
 }
-
-export function useAccountPairReturns(account: string, pairAddress: string) {
-  const activeNetwork = useActiveNetworkId()
-  return useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.pairReturns?.[pairAddress])
-}
