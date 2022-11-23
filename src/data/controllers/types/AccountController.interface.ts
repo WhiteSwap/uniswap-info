@@ -8,7 +8,11 @@ export interface IAccountDataController {
    * @param  {number} skip - offset
    */
   getUserHistory(account: string): Promise<LiquiditySnapshot[]>
-  getUserLiquidityChart(startDateTimestamp: number, history: LiquiditySnapshot[]): Promise<LiquidityChart[]>
+  getUserLiquidityChart(
+    account: string,
+    timeWindow: string,
+    history: LiquiditySnapshot[]
+  ): Promise<Record<string, LiquidityChart[]>>
   /**
    * Fetch user active liquidity positions.
    * Get user liquidity pools,

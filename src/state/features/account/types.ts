@@ -6,6 +6,7 @@ export interface Account {
   positions: Position[]
   transactions: Transactions
   liquiditySnapshots: LiquiditySnapshot[]
+  liquidityChartData: Record<string, LiquidityChart[]>
   pairReturns: PairReturns
 }
 
@@ -16,7 +17,7 @@ export type AccountNetworkState = {
 
 export type LiquidityChart = {
   date: number
-  valueUSD: number
+  value: number
 }
 
 export type AccountState = Record<SupportedNetwork, AccountNetworkState>
@@ -29,6 +30,11 @@ export type UpdateTransactionsPayload = ParametersWithNetwork<{
 export type UpdatePositionsPayload = ParametersWithNetwork<{
   account: string
   positions: Position[]
+}>
+
+export type UpdateLiquidityChartDataPayload = ParametersWithNetwork<{
+  account: string
+  data: Record<string, LiquidityChart[]>
 }>
 
 export type UpdatePositionHistoryPayload = ParametersWithNetwork<{

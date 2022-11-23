@@ -387,6 +387,23 @@ export type AccountPositionQuery = {
   } | null
 }
 
+export type AccountLiquidityDataQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+  startTime: Scalars['Int']
+}>
+
+export type AccountLiquidityDataQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    liquidityData?: Array<{
+      __typename?: 'AccountLiquidityData'
+      timestamp: number
+      totalLiquidityUSD: number
+    } | null> | null
+  } | null
+}
+
 export type GlobalChartQueryVariables = Exact<{
   startTime: Scalars['Int']
 }>

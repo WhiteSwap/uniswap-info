@@ -7,7 +7,8 @@ import {
   UpdatePositionHistoryPayload,
   UpdatePairReturnsPayload,
   AccountNetworkState,
-  UpdateTopLiquidityPositionsPayload
+  UpdateTopLiquidityPositionsPayload,
+  UpdateLiquidityChartDataPayload
 } from './types'
 
 const initialNetworkAccountState: AccountNetworkState = {
@@ -32,6 +33,15 @@ export const accountSlice = createSlice({
     },
     setPositions: (state, { payload: { networkId, account, positions } }: PayloadAction<UpdatePositionsPayload>) => {
       state[networkId].byAddress[account] = { ...state[networkId].byAddress[account], positions }
+    },
+    setLiquidityChartData: (
+      state,
+      { payload: { networkId, account, data } }: PayloadAction<UpdateLiquidityChartDataPayload>
+    ) => {
+      state[networkId].byAddress[account] = {
+        ...state[networkId].byAddress[account],
+        liquidityChartData: { ...state[networkId].byAddress[account]?.liquidityChartData, ...data }
+      }
     },
     setPositionHistory: (
       state,
@@ -60,7 +70,13 @@ export const accountSlice = createSlice({
   }
 })
 
-export const { setTransactions, setPositions, setPositionHistory, setPairReturns, setTopLiquidityPositions } =
-  accountSlice.actions
+export const {
+  setTransactions,
+  setPositions,
+  setPositionHistory,
+  setPairReturns,
+  setTopLiquidityPositions,
+  setLiquidityChartData
+} = accountSlice.actions
 
 export default accountSlice.reducer

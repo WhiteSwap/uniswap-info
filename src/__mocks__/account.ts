@@ -22,33 +22,3 @@ export const UserHistoryMock = [
     }
   }
 ]
-
-export const UserLiquidityChartMock = [
-  {
-    date: 1_647_354_226,
-    valueUSD: 0
-  },
-  {
-    date: 1_647_440_626,
-    valueUSD: 0
-  }
-]
-
-export const TopLpsMock = [
-  {
-    userId: 'TM1zzNDZD2DPASbKcgdVoTYhfmYgtfwx9R',
-    pairName: 'ETH-USDT',
-    pairAddress: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
-    tokenOne: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    tokenTwo: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    usd: 50_826.933_152_378_85
-  },
-  {
-    userId: 'TVMC8C7Y4f4ABr48PJencVdunVVB4XUW96',
-    pairName: 'ETH-USDT',
-    pairAddress: '0xa029a744b4e44e22f68a1bb9a848caafbf6bb233',
-    tokenOne: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    tokenTwo: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    usd: 50_826.933_152_378_85
-  }
-]

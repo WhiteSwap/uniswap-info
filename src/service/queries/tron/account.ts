@@ -39,3 +39,14 @@ export const ACCOUNT_POSITIONS = gql`
     }
   }
 `
+
+export const ACCOUNT_LIQUIDITY_CHART = gql`
+  query AccountLiquidityData($accountAddress: String!, $startTime: Int!) {
+    account {
+      liquidityData(accountAddress: $accountAddress, startTime: $startTime) {
+        timestamp
+        totalLiquidityUSD
+      }
+    }
+  }
+`

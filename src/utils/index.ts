@@ -25,7 +25,7 @@ export function getTimeframe(timeWindow: string) {
     case timeframeOptions.MONTH:
       utcStartTime = utcEndTime.subtract(1, 'month').endOf('day').unix() - 1
       break
-    case timeframeOptions.ALL_TIME:
+    case timeframeOptions.YEAR:
       utcStartTime = utcEndTime.subtract(1, 'year').endOf('day').unix() - 1
       break
     default:

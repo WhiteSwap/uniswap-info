@@ -1,13 +1,16 @@
-import { UserHistoryMock, UserLiquidityChartMock } from '__mocks__/account'
+import { UserHistoryMock } from '__mocks__/account'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
-import { liquidityPositionsMapper, positionsMapper } from 'data/mappers/tron/accountMappers'
+import { liquidityChartMapper, liquidityPositionsMapper, positionsMapper } from 'data/mappers/tron/accountMappers'
 import { client } from 'service/client'
 import {
+  AccountLiquidityDataQuery,
+  AccountLiquidityDataQueryVariables,
   AccountPositionQuery,
   AccountPositionQueryVariables,
   TopLiquidityPositionsQuery
 } from 'service/generated/tronGraphql'
-import { ACCOUNT_POSITIONS, TOP_LIQUIDITY_POSITIONS } from 'service/queries/tron/account'
+import { ACCOUNT_LIQUIDITY_CHART, ACCOUNT_POSITIONS, TOP_LIQUIDITY_POSITIONS } from 'service/queries/tron/account'
+import { getTimeframe } from 'utils'
 
 export default class AccountDataController implements IAccountDataController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,9 +18,13 @@ export default class AccountDataController implements IAccountDataController {
     return UserHistoryMock
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getUserLiquidityChart(_startDateTimestamp: number, _history: LiquiditySnapshot[]) {
-    return UserLiquidityChartMock
+  async getUserLiquidityChart(account: string, timeWindow: string) {
+    const startTime = getTimeframe(timeWindow)
+    const { data } = await client.query<AccountLiquidityDataQuery, AccountLiquidityDataQueryVariables>({
+      query: ACCOUNT_LIQUIDITY_CHART,
+      variables: { accountAddress: account, startTime }
+    })
+    return { [timeWindow]: liquidityChartMapper(data) }
   }
 
   async getUserPositions(account: string) {

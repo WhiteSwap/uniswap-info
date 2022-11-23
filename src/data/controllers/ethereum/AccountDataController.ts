@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import { liquiditySnapshotListMapper } from 'data/mappers/ethereum/accountMapper'
 import { client } from 'service/client'
@@ -16,7 +17,7 @@ import {
 } from 'service/queries/ethereum/accounts'
 import { PAIR_DAY_DATA_BULK } from 'service/queries/ethereum/pairs'
 import { LiquidityChart } from 'state/features/account/types'
-import { parseTokenInfo } from 'utils'
+import { getTimeframe, parseTokenInfo } from 'utils'
 import { calculateTokenAmount } from 'utils/pair'
 import { getLPReturnsOnPair } from 'utils/returns'
 
@@ -53,7 +54,8 @@ export default class AccountDataController implements IAccountDataController {
       return []
     }
   }
-  async getUserLiquidityChart(startDateTimestamp: number, history: LiquiditySnapshot[]) {
+  async getUserLiquidityChart(_account: string, _timeWindow: string, history: LiquiditySnapshot[]) {
+    const startDateTimestamp = getTimeframe(timeframeOptions.YEAR)
     let dayIndex = Math.floor(startDateTimestamp / 86_400) // get unique day bucket unix
     const currentDayIndex = Math.floor(dayjs.utc().unix() / 86_400)
 
@@ -148,11 +150,23 @@ export default class AccountDataController implements IAccountDataController {
 
       formattedHistory.push({
         date: dayTimestamp,
-        valueUSD: dailyUSD
+        value: dailyUSD
       })
     }
 
-    return formattedHistory
+    // FIXME: ETH subgraph pairDataBulk query returns data only for all time range. Need to split to timeWindow manually
+    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
+
+    const filteredWeekChartData = formattedHistory?.filter(entry => entry.date >= weekStartTime)
+    const filteredMonthChartData = formattedHistory?.filter(entry => entry.date >= monthStartTime)
+    const filteredYearChartData = formattedHistory?.filter(entry => entry.date >= yearStartTime)
+    return {
+      [timeframeOptions.WEEK]: filteredWeekChartData,
+      [timeframeOptions.MONTH]: filteredMonthChartData,
+      [timeframeOptions.YEAR]: filteredYearChartData
+    }
   }
   async getUserPositions(account: string, price: number, snapshots: LiquiditySnapshot[]) {
     try {

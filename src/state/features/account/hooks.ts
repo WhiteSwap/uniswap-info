@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react'
-import dayjs from 'dayjs'
-import { timeframeOptions } from 'constants/index'
+import { useEffect } from 'react'
 import DataService from 'data/DataService'
 import { useStartTimestamp } from 'state/features/application/hooks'
-import { useActiveNetworkId, useTimeFrame } from 'state/features/application/selectors'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+
 import { getHistoricalPairReturns } from 'utils/returns'
 import {
   useAccountLiquiditySnapshots,
@@ -15,8 +14,14 @@ import {
   useAccountTransactions,
   useTopLiquidityPositionList
 } from './selectors'
-import { setPairReturns, setPositionHistory, setPositions, setTopLiquidityPositions, setTransactions } from './slice'
-import { LiquidityChart } from './types'
+import {
+  setLiquidityChartData,
+  setPairReturns,
+  setPositionHistory,
+  setPositions,
+  setTopLiquidityPositions,
+  setTransactions
+} from './slice'
 
 export function useUserTransactions(account: string) {
   const dispatch = useAppDispatch()
@@ -126,48 +131,50 @@ export function useUserPositionChart(position: Position, account: string) {
  * get total liquidity supplied by user in USD. Format in array with date timestamps
  * and usd liquidity value.
  */
-export function useUserLiquidityChart(account: string) {
+export function useUserLiquidityChart(account: string, timeWindow: string) {
+  const dispatch = useAppDispatch()
   const history = useUserSnapshots(account)
-  // formatetd array to return for chart data
-  const [formattedHistory, setFormattedHistory] = useState<LiquidityChart[]>([])
+  const activeNetwork = useActiveNetworkId()
+  const liquidityChartData = useAppSelector(
+    state => state.account[activeNetwork].byAddress?.[account]?.liquidityChartData?.[timeWindow]
+  )
 
-  const [startDateTimestamp, setStartDateTimestamp] = useState<number | undefined>()
-  const activeWindow = useTimeFrame()
+  // const [startDateTimestamp, setStartDateTimestamp] = useState<number | undefined>()
+  // const activeWindow = useTimeFrame()
 
-  // monitor the old date fetched
-  useEffect(() => {
-    const utcEndTime = dayjs.utc()
-    // based on window, get starttime
-    let utcStartTime
-    switch (activeWindow) {
-      case timeframeOptions.WEEK:
-        utcStartTime = utcEndTime.subtract(1, 'week').startOf('day')
-        break
-      case timeframeOptions.ALL_TIME:
-        utcStartTime = utcEndTime.subtract(1, 'year')
-        break
-      default:
-        utcStartTime = utcEndTime.subtract(1, 'year').startOf('year')
-        break
-    }
-    const startTime = utcStartTime.unix() - 1
-    if ((activeWindow && startTime < startDateTimestamp!) || !startDateTimestamp) {
-      setStartDateTimestamp(startTime)
-    }
-  }, [activeWindow, startDateTimestamp])
+  // // monitor the old date fetched
+  // useEffect(() => {
+  //   const utcEndTime = dayjs.utc()
+  //   // based on window, get starttime
+  //   let utcStartTime
+  //   switch (activeWindow) {
+  //     case timeframeOptions.WEEK:
+  //       utcStartTime = utcEndTime.subtract(1, 'week').startOf('day')
+  //       break
+  //     case timeframeOptions.YEAR:
+  //       utcStartTime = utcEndTime.subtract(1, 'year')
+  //       break
+  //     default:
+  //       utcStartTime = utcEndTime.subtract(1, 'year').startOf('year')
+  //       break
+  //   }
+  //   const startTime = utcStartTime.unix() - 1
+  //   if ((activeWindow && startTime < startDateTimestamp!) || !startDateTimestamp) {
+  //     setStartDateTimestamp(startTime)
+  //   }
+  // }, [activeWindow, startDateTimestamp])
 
   useEffect(() => {
     async function fetchData() {
-      const formattedHistory = await DataService.accounts.getUserLiquidityChart(startDateTimestamp!, [...history])
-
-      setFormattedHistory(formattedHistory)
+      const formattedHistory = await DataService.accounts.getUserLiquidityChart(account, timeWindow, [...history])
+      dispatch(setLiquidityChartData({ data: formattedHistory, account, networkId: activeNetwork }))
     }
-    if (history && startDateTimestamp && history.length > 0) {
+    if (!liquidityChartData && history && history.length > 0) {
       fetchData()
     }
-  }, [history, startDateTimestamp])
+  }, [history, timeWindow, liquidityChartData])
 
-  return formattedHistory
+  return liquidityChartData
 }
 
 export function useUserPositions(account: string) {
