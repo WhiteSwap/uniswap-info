@@ -4,7 +4,6 @@ import {
   AccountPositionQuery,
   TopLiquidityPositionsQuery
 } from 'service/generated/tronGraphql'
-import { LiquidityChart } from 'state/features/account/types'
 import { parseTokenInfo } from 'utils'
 
 export function liquidityPositionsMapper(payload: TopLiquidityPositionsQuery): LiquidityPosition[] {

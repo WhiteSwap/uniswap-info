@@ -196,3 +196,8 @@ type PairReturn = {
   fees: number
   totalLiquidityUsd: number
 }
+
+type LiquidityChart = {
+  date: number
+  value: number
+}

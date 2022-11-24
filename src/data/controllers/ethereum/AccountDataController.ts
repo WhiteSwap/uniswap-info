@@ -16,7 +16,6 @@ import {
   USER_LIQUIDITY_POSITION_SNAPSHOTS
 } from 'service/queries/ethereum/accounts'
 import { PAIR_DAY_DATA_BULK } from 'service/queries/ethereum/pairs'
-import { LiquidityChart } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { getShareValueOverTime, getTimeframe, parseTokenInfo } from 'utils'
 import { calculateTokenAmount } from 'utils/pair'

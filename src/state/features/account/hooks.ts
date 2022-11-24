@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import DataService from 'data/DataService'
-import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { useAccountLiquiditySnapshots } from './selectors'
-import { setLiquidityChartData, setPositionChartData, setPositionHistory } from './slice'
+// FIXME: remove this file from state/features/account to separate features folder
 
 export function useUserTransactions(account: string) {
   const [data, setData] = useState<Transactions | undefined>(undefined)
@@ -29,23 +26,19 @@ export function useUserTransactions(account: string) {
  * @param {*} account
  */
 export function useUserSnapshots(account: string) {
-  const dispatch = useAppDispatch()
-  const activeNetwork = useActiveNetworkId()
-  const snapshots = useAccountLiquiditySnapshots(account)
+  const [data, setData] = useState<LiquiditySnapshot[] | undefined>(undefined)
 
   useEffect(() => {
     async function fetchData() {
       const result = await DataService.accounts.getUserHistory(account)
       if (result) {
-        dispatch(setPositionHistory({ account, historyData: result, networkId: activeNetwork }))
+        setData(result)
       }
     }
-    if (!snapshots && account) {
-      fetchData()
-    }
-  }, [account, snapshots, activeNetwork])
+    fetchData()
+  }, [])
 
-  return snapshots
+  return data
 }
 
 /**
@@ -54,27 +47,20 @@ export function useUserSnapshots(account: string) {
  * @param {*} position
  * @param {*} account
  */
-export function useUserPositionChart(position: Position, account: string, timeWindow: string) {
-  const dispatch = useAppDispatch()
-  const pairAddress = position.pairAddress
-  const activeNetwork = useActiveNetworkId()
-  // get users adds and removes on this pair
-  const snapshots = useUserSnapshots(account)
-  const pairSnapshots =
-    snapshots &&
-    position &&
-    snapshots.filter(currentSnapshot => {
-      return currentSnapshot.pair.id === position.pairAddress
-    })
-
-  // get data needed for calculations
+export function useUserPositionChart(
+  pairAddress: string,
+  account: string,
+  timeWindow: string,
+  liquiditySnapshots?: LiquiditySnapshot[]
+) {
+  const [data, setData] = useState<Record<string, PairReturn[]> | undefined>(undefined)
+  const pairSnapshots = liquiditySnapshots?.filter(currentSnapshot => currentSnapshot.pair.id === pairAddress)
   const currentPairData = usePairData(pairAddress)
   const price = useActiveTokenPrice()
 
-  // formatetd array to return for chart data
-  const formattedHistory = useAppSelector(
-    state => state.account[activeNetwork][account]?.positionChartData?.[pairAddress]?.[timeWindow]
-  )
+  useEffect(() => {
+    setData(undefined)
+  }, [pairAddress])
 
   useEffect(() => {
     async function fetchData() {
@@ -82,23 +68,16 @@ export function useUserPositionChart(position: Position, account: string, timeWi
         account,
         currentPairData,
         timeWindow,
-        pairSnapshots
+        pairSnapshots!
       )
-      dispatch(setPositionChartData({ networkId: activeNetwork, account, pairAddress, data: fetchedData }))
+      setData(oldChartData => ({ ...oldChartData, ...fetchedData }))
     }
-    if (
-      pairSnapshots &&
-      !formattedHistory &&
-      currentPairData &&
-      Object.keys(currentPairData).length > 0 &&
-      pairAddress &&
-      price
-    ) {
+    if (pairSnapshots && currentPairData && Object.keys(currentPairData).length > 0 && pairAddress && price) {
       fetchData()
     }
-  }, [timeWindow, pairSnapshots, formattedHistory, pairAddress, currentPairData, price])
+  }, [timeWindow, pairAddress, Boolean(pairSnapshots && currentPairData && price)])
 
-  return formattedHistory
+  return data?.[timeWindow]
 }
 
 /**
@@ -106,43 +85,39 @@ export function useUserPositionChart(position: Position, account: string, timeWi
  * get total liquidity supplied by user in USD. Format in array with date timestamps
  * and usd liquidity value.
  */
-export function useUserLiquidityChart(account: string, timeWindow: string) {
-  const dispatch = useAppDispatch()
-  const history = useUserSnapshots(account)
-  const activeNetwork = useActiveNetworkId()
-  const liquidityChartData = useAppSelector(
-    state => state.account[activeNetwork][account]?.liquidityChartData?.[timeWindow]
-  )
+export function useUserLiquidityChart(account: string, timeWindow: string, liquiditySnapshots?: LiquiditySnapshot[]) {
+  const [data, setData] = useState<Record<string, LiquidityChart[]> | undefined>(undefined)
 
   useEffect(() => {
     async function fetchData() {
-      const formattedHistory = await DataService.accounts.getUserLiquidityChart(account, timeWindow, [...history])
-      dispatch(setLiquidityChartData({ data: formattedHistory, account, networkId: activeNetwork }))
+      const formattedHistory = await DataService.accounts.getUserLiquidityChart(account, timeWindow, [
+        ...liquiditySnapshots!
+      ])
+      setData(oldChartData => ({ ...oldChartData, ...formattedHistory }))
     }
-    if (!liquidityChartData && history && history.length > 0) {
+    if (liquiditySnapshots) {
       fetchData()
     }
-  }, [history, timeWindow, liquidityChartData])
+  }, [liquiditySnapshots, timeWindow])
 
-  return liquidityChartData
+  return data?.[timeWindow]
 }
 
-export function useUserPositions(account: string) {
+export function useUserPositions(account: string, liquiditySnapshots?: LiquiditySnapshot[]) {
   const [data, setData] = useState<Position[] | undefined>()
-  const snapshots = useUserSnapshots(account)
   const price = useActiveTokenPrice()
 
   useEffect(() => {
     async function fetchData(account: string) {
-      const positions = await DataService.accounts.getUserPositions(account, price, snapshots)
+      const positions = await DataService.accounts.getUserPositions(account, price, liquiditySnapshots!)
       if (positions) {
         setData(positions)
       }
     }
-    if (price && snapshots) {
+    if (price && liquiditySnapshots) {
       fetchData(account)
     }
-  }, [price, snapshots])
+  }, [price, Boolean(liquiditySnapshots)])
 
   return data
 }

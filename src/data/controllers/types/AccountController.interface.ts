@@ -1,4 +1,3 @@
-import { LiquidityChart } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 
 export interface IAccountDataController {

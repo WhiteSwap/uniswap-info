@@ -1,5 +1,4 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import accountReducer from 'state/features/account/slice'
 import applicationReducer from 'state/features/application/slice'
 import globalReducer from 'state/features/global/slice'
 import pairsReducer from 'state/features/pairs/slice'
@@ -11,7 +10,6 @@ const rootReducer = combineReducers({
   application: applicationReducer,
   global: globalReducer,
   pairs: pairsReducer,
-  account: accountReducer,
   token: tokenReducer
 })
 

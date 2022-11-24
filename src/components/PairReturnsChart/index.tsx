@@ -21,19 +21,23 @@ const CHART_VIEW = {
 interface IPairReturnsChart {
   account: string
   position: Position
+  liquiditySnapshots?: LiquiditySnapshot[]
 }
 
-const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
+const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturnsChart) => {
   const { t } = useTranslation()
+
   const below600 = useMedia('(max-width: 600px)')
-  const aspect = below600 ? 60 / 42 : 60 / 16
-  const color = useColor(position.tokenOne.id)
   const [darkMode] = useDarkModeManager()
-  const textColor = darkMode ? 'white' : 'black'
+  const color = useColor(position.tokenOne.id)
 
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE)
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
-  const data = useUserPositionChart(position, account, timeWindow)
+
+  const data = useUserPositionChart(position.pairAddress, account, timeWindow, liquiditySnapshots)
+
+  const textColor = darkMode ? 'white' : 'black'
+  const aspect = below600 ? 60 / 42 : 60 / 16
 
   const changeTimeFrame = (timeFrame: string) => {
     return () => {

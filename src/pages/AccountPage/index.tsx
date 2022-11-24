@@ -18,7 +18,7 @@ import { TransactionTable } from 'components/TransactionTable'
 import UserChart from 'components/UserChart'
 import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
-import { useUserPositions, useUserTransactions } from 'state/features/account/hooks'
+import { useUserPositions, useUserSnapshots, useUserTransactions } from 'state/features/account/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useToggleSavedAccount } from 'state/features/user/hooks'
 import { DashboardWrapper, TYPE } from 'Theme'
@@ -40,8 +40,8 @@ function AccountPage() {
   const below440 = useMedia('(max-width: 440px)')
 
   const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
-
-  const positions = useUserPositions(accountAddress)
+  const liquiditySnapshots = useUserSnapshots(accountAddress)
+  const positions = useUserPositions(accountAddress, liquiditySnapshots)
   const transactions = useUserTransactions(accountAddress)
   const totalTransactionsAmount = useMemo(
     () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
@@ -238,9 +238,13 @@ function AccountPage() {
           <DashboardWrapper style={{ display: 'grid' }}>
             <Panel>
               {activePosition ? (
-                <PairReturnsChart account={accountAddress} position={activePosition} />
+                <PairReturnsChart
+                  account={accountAddress}
+                  position={activePosition}
+                  liquiditySnapshots={liquiditySnapshots}
+                />
               ) : (
-                <UserChart account={accountAddress} />
+                <UserChart account={accountAddress} liquiditySnapshots={liquiditySnapshots} />
               )}
             </Panel>
           </DashboardWrapper>

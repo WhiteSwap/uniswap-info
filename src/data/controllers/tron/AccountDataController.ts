@@ -1,4 +1,3 @@
-import { UserHistoryMock } from '__mocks__/account'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import {
   liquidityPositionsMapper,
@@ -38,9 +37,9 @@ export default class AccountDataController implements IAccountDataController {
     })
     return { [timeWindow]: positionChartMapper(data) }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getUserHistory(_account: string) {
-    return UserHistoryMock
+  async getUserHistory() {
+    // FIXME: return empty array, because TRON doesn't return user history. It's necessary only for ETH chain
+    return []
   }
 
   async getUserLiquidityChart(account: string, timeWindow: string) {
