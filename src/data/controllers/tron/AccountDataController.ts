@@ -16,7 +16,12 @@ import {
   AccountPositionQueryVariables,
   TopLiquidityPositionsQuery
 } from 'service/generated/tronGraphql'
-import { ACCOUNT_LIQUIDITY_CHART, ACCOUNT_POSITIONS, TOP_LIQUIDITY_POSITIONS } from 'service/queries/tron/account'
+import {
+  ACCOUNT_LIQUIDITY_CHART,
+  ACCOUNT_POSITIONS,
+  ACCOUNT_POSITION_CHART,
+  TOP_LIQUIDITY_POSITIONS
+} from 'service/queries/tron/account'
 import { PairDetails } from 'state/features/pairs/types'
 import { getTimeframe } from 'utils'
 
@@ -28,7 +33,7 @@ export default class AccountDataController implements IAccountDataController {
   ): Promise<Record<string, PairReturn[]>> {
     const startTime = getTimeframe(timeWindow)
     const { data } = await client.query<AccountPositionChartQuery, AccountPositionChartQueryVariables>({
-      query: ACCOUNT_LIQUIDITY_CHART,
+      query: ACCOUNT_POSITION_CHART,
       variables: { accountAddress, startTime, pairAddress: pair.id }
     })
     return { [timeWindow]: positionChartMapper(data) }

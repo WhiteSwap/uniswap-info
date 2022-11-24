@@ -10,7 +10,7 @@ import { timeframeOptions } from 'constants/index'
 import { useColor } from 'hooks'
 import { useUserPositionChart } from 'state/features/account/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
-import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
 
 const CHART_VIEW = {
@@ -32,16 +32,12 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const textColor = darkMode ? 'white' : 'black'
 
   const [chartView, setChartView] = useState(CHART_VIEW.VALUE)
-  const [chartTimeFrame, setChartTimeFrame] = useState(timeframeOptions.YEAR)
-  const data = useUserPositionChart(position, account, chartTimeFrame)
-
-  // based on window, get starttime
-  const utcStartTime = getTimeframe(chartTimeFrame)
-  const filteredData = data?.filter(entry => entry.date >= utcStartTime)
+  const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
+  const data = useUserPositionChart(position, account, timeWindow)
 
   const changeTimeFrame = (timeFrame: string) => {
     return () => {
-      setChartTimeFrame(timeFrame)
+      setTimeWindow(timeFrame)
     }
   }
 
@@ -50,12 +46,7 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
       {below600 ? (
         <RowBetween mb={40}>
           <div />
-          <DropdownSelect
-            options={timeframeOptions}
-            active={chartTimeFrame}
-            setActive={setChartTimeFrame}
-            color={color}
-          />
+          <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} color={color} />
         </RowBetween>
       ) : (
         <OptionsRow>
@@ -69,19 +60,19 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
           </AutoRow>
           <AutoRow justify="flex-end" gap="6px">
             <OptionButton
-              active={chartTimeFrame === timeframeOptions.WEEK}
+              active={timeWindow === timeframeOptions.WEEK}
               onClick={changeTimeFrame(timeframeOptions.WEEK)}
             >
               1W
             </OptionButton>
             <OptionButton
-              active={chartTimeFrame === timeframeOptions.MONTH}
+              active={timeWindow === timeframeOptions.MONTH}
               onClick={changeTimeFrame(timeframeOptions.MONTH)}
             >
               1M
             </OptionButton>
             <OptionButton
-              active={chartTimeFrame === timeframeOptions.YEAR}
+              active={timeWindow === timeframeOptions.YEAR}
               onClick={changeTimeFrame(timeframeOptions.YEAR)}
             >
               1Y
@@ -90,8 +81,8 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
         </OptionsRow>
       )}
       <ResponsiveContainer aspect={aspect}>
-        {filteredData ? (
-          <LineChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }} barCategoryGap={1} data={filteredData}>
+        {data ? (
+          <LineChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }} barCategoryGap={1} data={data}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={color} stopOpacity={0.35} />
