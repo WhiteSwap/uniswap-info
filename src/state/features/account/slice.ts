@@ -2,53 +2,35 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SupportedNetwork } from 'constants/networks'
 import {
   AccountState,
-  UpdatePositionsPayload,
-  UpdateTransactionsPayload,
   UpdatePositionHistoryPayload,
   UpdatePairReturnsPayload,
-  AccountNetworkState,
-  UpdateTopLiquidityPositionsPayload,
   UpdateLiquidityChartDataPayload
 } from './types'
 
-const initialNetworkAccountState: AccountNetworkState = {
-  topLiquidityPositions: undefined,
-  byAddress: {}
-}
-
 const initialState: AccountState = {
-  [SupportedNetwork.ETHEREUM]: initialNetworkAccountState,
-  [SupportedNetwork.TRON]: initialNetworkAccountState
+  [SupportedNetwork.ETHEREUM]: {},
+  [SupportedNetwork.TRON]: {}
 }
 
 export const accountSlice = createSlice({
   name: 'accounts',
   initialState,
   reducers: {
-    setTransactions: (
-      state,
-      { payload: { networkId, transactions, account } }: PayloadAction<UpdateTransactionsPayload>
-    ) => {
-      state[networkId].byAddress[account] = { ...state[networkId].byAddress[account], transactions }
-    },
-    setPositions: (state, { payload: { networkId, account, positions } }: PayloadAction<UpdatePositionsPayload>) => {
-      state[networkId].byAddress[account] = { ...state[networkId].byAddress[account], positions }
-    },
     setLiquidityChartData: (
       state,
       { payload: { networkId, account, data } }: PayloadAction<UpdateLiquidityChartDataPayload>
     ) => {
-      state[networkId].byAddress[account] = {
-        ...state[networkId].byAddress[account],
-        liquidityChartData: { ...state[networkId].byAddress[account]?.liquidityChartData, ...data }
+      state[networkId][account] = {
+        ...state[networkId][account],
+        liquidityChartData: { ...state[networkId][account]?.liquidityChartData, ...data }
       }
     },
     setPositionHistory: (
       state,
       { payload: { networkId, account, historyData } }: PayloadAction<UpdatePositionHistoryPayload>
     ) => {
-      state[networkId].byAddress[account] = {
-        ...state[networkId].byAddress[account],
+      state[networkId][account] = {
+        ...state[networkId][account],
         liquiditySnapshots: historyData
       }
     },
@@ -56,30 +38,17 @@ export const accountSlice = createSlice({
       state,
       { payload: { networkId, account, pairAddress, data } }: PayloadAction<UpdatePairReturnsPayload>
     ) => {
-      state[networkId].byAddress[account] = {
-        ...state[networkId].byAddress[account],
+      state[networkId][account] = {
+        ...state[networkId][account],
         positionChartData: {
-          ...state[networkId].byAddress[account]?.positionChartData,
-          [pairAddress]: { ...state[networkId].byAddress[account]?.positionChartData?.[pairAddress], ...data }
+          ...state[networkId][account]?.positionChartData,
+          [pairAddress]: { ...state[networkId][account]?.positionChartData?.[pairAddress], ...data }
         }
       }
-    },
-    setTopLiquidityPositions: (
-      state,
-      { payload: { networkId, liquidityPositions } }: PayloadAction<UpdateTopLiquidityPositionsPayload>
-    ) => {
-      state[networkId].topLiquidityPositions = liquidityPositions
     }
   }
 })
 
-export const {
-  setTransactions,
-  setPositions,
-  setPositionHistory,
-  setPositionChartData,
-  setTopLiquidityPositions,
-  setLiquidityChartData
-} = accountSlice.actions
+export const { setPositionHistory, setPositionChartData, setLiquidityChartData } = accountSlice.actions
 
 export default accountSlice.reducer

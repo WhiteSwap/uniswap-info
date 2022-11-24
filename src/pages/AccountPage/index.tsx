@@ -43,9 +43,10 @@ function AccountPage() {
 
   const positions = useUserPositions(accountAddress)
   const transactions = useUserTransactions(accountAddress)
-  const totalTransactionsAmount = useMemo(() => {
-    return transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0
-  }, [transactions])
+  const totalTransactionsAmount = useMemo(
+    () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
+    [transactions]
+  )
   const totalSwappedUSD = transactions?.swaps.reduce((total, swap) => total + swap.amountUSD, 0)
   const totalFeesPaid = calculateDayFees(totalSwappedUSD)
 
