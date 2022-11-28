@@ -16,7 +16,9 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0x77b8ae2e83c7d044d159878445841e2a9777af38':
       'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png',
     '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9':
-      'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png'
+      'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png',
+    '0x925206b8a707096ed26ae47c84747fe0bb734f59':
+      'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png?1663654854'
   },
   [SupportedNetwork.TRON]: {
     TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t:
