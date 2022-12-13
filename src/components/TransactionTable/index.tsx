@@ -148,10 +148,10 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         {!below780 && (
           <>
             <DataText>
-              {formattedNumber(item.tokenTwo.amount) + ' '} {item.tokenTwo.symbol}
+              {formattedNumber(item.tokenOne.amount) + ' '} {item.tokenOne.symbol}
             </DataText>
             <DataText>
-              {formattedNumber(item.tokenOne.amount) + ' '} {item.tokenOne.symbol}
+              {formattedNumber(item.tokenTwo.amount) + ' '} {item.tokenTwo.symbol}
             </DataText>
           </>
         )}
