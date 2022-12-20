@@ -1,5 +1,4 @@
 import { StrictMode, Suspense, useEffect } from 'react'
-
 import { ApolloClient, ApolloProvider } from '@apollo/react-hooks'
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
@@ -9,6 +8,7 @@ import weekOfYear from 'dayjs/plugin/weekOfYear'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
+import TagManager from 'react-gtm-module'
 import { Provider } from 'react-redux'
 import { BrowserRouter, createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -34,6 +34,9 @@ Sentry.init({
   ],
   tracesSampleRate: process.env.REACT_APP_ENV === 'production' ? 0.2 : 1
 })
+
+const GTM_ID = process.env.REACT_APP_GTM_ID
+if (GTM_ID) TagManager.initialize({ gtmId: GTM_ID })
 
 // initialize custom dayjs plugin
 dayjs.extend(utc)
