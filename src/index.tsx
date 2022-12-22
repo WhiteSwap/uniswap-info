@@ -35,16 +35,12 @@ Sentry.init({
   tracesSampleRate: process.env.REACT_APP_ENV === 'production' ? 0.2 : 1
 })
 
-const GTM_ID = process.env.REACT_APP_GTM_ID
-if (GTM_ID) TagManager.initialize({ gtmId: GTM_ID })
-
 // initialize custom dayjs plugin
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 
 // initialize GA
 const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
-
 if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
