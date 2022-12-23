@@ -1,6 +1,6 @@
 import { PairListQuery, Pair as TronPair } from 'service/generated/tronGraphql'
 import { parseTokenInfo } from 'utils'
-import { calculateApy, calculateDayFees } from 'utils/pair'
+import { calculateApy } from 'utils/pair'
 
 export function pairMapper(payload?: TronPair | null): Pair {
   return {
@@ -10,7 +10,8 @@ export function pairMapper(payload?: TronPair | null): Pair {
     dayVolumeUSD: payload?.dayVolumeUSD ? +payload.dayVolumeUSD : 0,
     volumeChangeUSD: payload?.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
     weekVolumeUSD: payload?.weekVolumeUSD ? +payload.weekVolumeUSD : 0,
-    dayFees: calculateDayFees(payload?.dayVolumeUSD),
+    dayFees: payload?.fee ? +payload?.fee : 0,
+    dayFeesChange: payload?.volumeFeeChangeUSD ? +payload.volumeFeeChangeUSD : 0,
     apy: calculateApy(payload?.dayVolumeUSD, payload?.totalLiquidityUSD),
     totalSupply: 0,
     tokenOne: {

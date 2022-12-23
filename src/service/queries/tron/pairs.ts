@@ -24,6 +24,8 @@ const PAIR_DATA = gql`
     weekVolumeUSD
     liquidityChangeUSD
     volumeChangeUSD
+    fee
+    volumeFeeChangeUSD
   }
 `
 
