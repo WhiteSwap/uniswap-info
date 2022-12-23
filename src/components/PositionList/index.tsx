@@ -38,7 +38,7 @@ interface IPositionList {
 }
 
 const ListItem = ({
-  position: { totalUsd, tokenOne, tokenTwo, pairAddress, totalFeeUsd },
+  position: { totalUsd, tokenOne, tokenTwo, pairAddress, earningFeeTotalUsd },
   index
 }: {
   position: Position
@@ -124,7 +124,7 @@ const ListItem = ({
         <DataText>
           <AutoColumn gap="12px" justify="flex-end">
             <TYPE.main color={'green'}>
-              <RowFixed>{formattedNumber(totalFeeUsd, true)}</RowFixed>
+              <RowFixed>{formattedNumber(earningFeeTotalUsd, true)}</RowFixed>
             </TYPE.main>
             <AutoColumn gap="4px" justify="flex-end">
               <RowFixed>
@@ -215,7 +215,7 @@ const PositionList = ({ positions }: IPositionList) => {
           const direction = sortDirection ? -1 : 1
           switch (sortedColumn) {
             case PositionSortField.fee:
-              order = p0?.totalFeeUsd > p1?.totalFeeUsd
+              order = p0?.earningFeeTotalUsd > p1?.earningFeeTotalUsd
               break
             case PositionSortField.value:
             default: {

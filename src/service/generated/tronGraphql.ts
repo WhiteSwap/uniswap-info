@@ -175,6 +175,12 @@ export type AccountLiquidityData = {
 /** Token Daily Data for Graph */
 export type AccountPosition = {
   __typename?: 'AccountPosition'
+  /** Earning Fee Token One amount */
+  earningFeeTokenOneAmount: Scalars['Float']
+  /** Earning Fee Token Two amount */
+  earningFeeTokenTwoAmount: Scalars['Float']
+  /** Earning Fee Total usd amount */
+  earningFeeTotalUsd: Scalars['Float']
   /** Pair address */
   id: Scalars['String']
   /** Pair name */
@@ -200,6 +206,8 @@ export type Pair = {
   __typename?: 'Pair'
   /** Day Volume Usd */
   dayVolumeUSD: Scalars['Float']
+  /** Day Volume Fee Usd */
+  fee: Scalars['Float']
   /** Pair address */
   id: Scalars['String']
   /** Liquidity Change Usd */
@@ -212,6 +220,8 @@ export type Pair = {
   totalLiquidityUSD: Scalars['Float']
   /** Volume Change Usd */
   volumeChangeUSD: Scalars['Float']
+  /** Volume Fee Change Usd */
+  volumeFeeChangeUSD: Scalars['Float']
   /** Week Volume Usd */
   weekVolumeUSD: Scalars['Float']
 }
@@ -383,6 +393,9 @@ export type AccountPositionQuery = {
       tokenTwoAddress: string
       tokenTwoAmount: number
       totalUsd: number
+      earningFeeTokenOneAmount: number
+      earningFeeTokenTwoAmount: number
+      earningFeeTotalUsd: number
     } | null> | null
   } | null
 }
@@ -447,6 +460,8 @@ export type LastBlockQuery = { __typename?: 'RootQuery'; lastBlock: number }
 export type PairDataFragment = {
   __typename?: 'Pair'
   id: string
+  fee: number
+  volumeFeeChangeUSD: number
   totalLiquidityUSD: number
   dayVolumeUSD: number
   weekVolumeUSD: number
@@ -479,6 +494,8 @@ export type PairListQuery = {
   pairs?: Array<{
     __typename?: 'Pair'
     id: string
+    fee: number
+    volumeFeeChangeUSD: number
     totalLiquidityUSD: number
     dayVolumeUSD: number
     weekVolumeUSD: number
@@ -514,6 +531,8 @@ export type PairQuery = {
   pair?: {
     __typename?: 'Pair'
     id: string
+    fee: number
+    volumeFeeChangeUSD: number
     totalLiquidityUSD: number
     dayVolumeUSD: number
     weekVolumeUSD: number

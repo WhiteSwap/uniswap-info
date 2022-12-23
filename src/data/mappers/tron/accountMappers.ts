@@ -34,18 +34,15 @@ export function positionsMapper(payload: AccountPositionQuery): Position[] {
         id: position?.tokenOneAddress || '',
         symbol: parseTokenInfo('symbol', position?.tokenOneAddress, position?.tokenOneCode),
         amount: position?.tokenOneAmount ? +position.tokenOneAmount : 0,
-        // FIXME: add real value
-        fee: 0.3
+        fee: position?.earningFeeTokenOneAmount ? +position.earningFeeTokenOneAmount : 0
       },
       tokenTwo: {
         id: position?.tokenTwoAddress || '',
         symbol: parseTokenInfo('symbol', position?.tokenTwoAddress, position?.tokenTwoCode),
         amount: position?.tokenTwoAmount ? +position?.tokenTwoAmount : 0,
-        // FIXME: add real value
-        fee: 0.3
+        fee: position?.earningFeeTokenTwoAmount ? +position.earningFeeTokenTwoAmount : 0
       },
-      // FIXME: add real value
-      totalFeeUsd: 0.3,
+      earningFeeTotalUsd: position?.earningFeeTotalUsd ? +position.earningFeeTotalUsd : 0,
       totalUsd: position?.totalUsd ? +position?.totalUsd : 0
     })) || []
   )

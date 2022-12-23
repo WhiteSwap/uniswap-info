@@ -282,18 +282,18 @@ export default class AccountDataController implements IAccountDataController {
         const formattedPositions: Position[] = result?.data?.liquidityPositions.map<Position>(positionData => {
           const { pair, liquidityTokenBalance } = positionData
           const { token0, token1, id, totalSupply, reserveUSD, reserve0, reserve1 } = pair
-          const totalFeeUsd = getLPReturnsOnPair(pair, price, snapshots)
+          const earningFeeTotalUsd = getLPReturnsOnPair(pair, price, snapshots)
           const totalUsd = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserveUSD)
           const tokenOneAmount = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserve0)
           const tokenTwoAmount = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserve1)
-          const tokenFeeUsd = totalFeeUsd / 2
+          const tokenFeeUsd = earningFeeTotalUsd / 2
           const tokenOneFee = tokenFeeUsd / (+token0.derivedETH * price)
           const tokenTwoFee = tokenFeeUsd / (+token1.derivedETH * price)
 
           return {
             pairAddress: id,
             totalUsd,
-            totalFeeUsd,
+            earningFeeTotalUsd,
             tokenOne: {
               id: token0.id,
               symbol: parseTokenInfo('symbol', token0.id, token0.symbol),

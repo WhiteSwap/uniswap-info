@@ -56,9 +56,8 @@ function AccountPage() {
   const [activePosition, setActivePosition] = useState<Position | undefined>()
 
   const dynamicPositions = activePosition ? [activePosition] : positions
-  const feesEarnedCumulative = dynamicPositions?.reduce((total, position) => total + position.totalFeeUsd, 0)
+  const feesEarnedCumulative = dynamicPositions?.reduce((total, position) => total + position.earningFeeTotalUsd, 0)
   const liquidityIncludingFees = dynamicPositions?.reduce((total, position) => total + position.totalUsd, 0)
-
   const node = useRef(null)
   useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
 

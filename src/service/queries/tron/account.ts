@@ -35,6 +35,9 @@ export const ACCOUNT_POSITIONS = gql`
         tokenTwoAddress
         tokenTwoAmount
         totalUsd
+        earningFeeTokenOneAmount
+        earningFeeTokenTwoAmount
+        earningFeeTotalUsd
       }
     }
   }

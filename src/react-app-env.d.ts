@@ -163,7 +163,7 @@ interface Position {
   tokenOne: PositionToken
   tokenTwo: PositionToken
   totalUsd: number
-  totalFeeUsd: number
+  earningFeeTotalUsd: number
 }
 
 interface LiquiditySnapshot {
