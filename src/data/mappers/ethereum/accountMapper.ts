@@ -41,18 +41,3 @@ export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot 
 export function liquiditySnapshotListMapper(payload: any[] | null): LiquiditySnapshot[] {
   return payload?.map(snapshot => liquiditySnapshotMapper(snapshot)) || []
 }
-
-export function liquidityPositionMapper(payload: any | null): LiquidityPosition {
-  return {
-    pairAddress: payload?.pairAddress ?? '',
-    pairName: payload?.pairName ?? '',
-    tokenOne: payload?.token0 ?? '',
-    tokenTwo: payload?.token1 ?? '',
-    usd: payload?.usd ? +payload.usd : 0,
-    userId: payload?.user?.id ?? ''
-  }
-}
-
-export function liquidityPositionListMapper(payload: any[] | null): LiquidityPosition[] {
-  return payload?.map(position => liquidityPositionMapper(position)) || []
-}

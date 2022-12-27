@@ -45,7 +45,7 @@ function AccountSearch({ small }: IAccountSearch) {
           <Wrapper>
             <Input
               style={below440 ? { marginRight: '0px' } : {}}
-              placeholder="0x..."
+              placeholder={t('searchAccount')}
               onChange={event => {
                 setAccountValue(event.target.value)
               }}

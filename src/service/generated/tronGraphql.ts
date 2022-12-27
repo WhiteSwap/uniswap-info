@@ -296,8 +296,8 @@ export type TopLiquidityPosition = {
   account: Scalars['String']
   /** Token amount */
   amount: Scalars['Float']
-  /** Pair name */
-  pair: Scalars['String']
+  /** Pair */
+  pair: Pair
 }
 
 /** Transactions list */
@@ -341,6 +341,23 @@ export type WhiteSwapDayData = {
   date: Scalars['Int']
   /** Data totalLiquidityUSD */
   totalLiquidityUSD: Scalars['Float']
+}
+
+export type TopLiquidityPositionsQueryVariables = Exact<{ [key: string]: never }>
+
+export type TopLiquidityPositionsQuery = {
+  __typename?: 'RootQuery'
+  topLiquidityPosition?: Array<{
+    __typename?: 'TopLiquidityPosition'
+    account: string
+    amount: number
+    pair: {
+      __typename?: 'Pair'
+      id: string
+      tokenOne: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
+      tokenTwo: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
+    }
+  } | null> | null
 }
 
 export type GlobalChartQueryVariables = Exact<{
