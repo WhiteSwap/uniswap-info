@@ -21,20 +21,21 @@ export function mintTransactionMapper(payload: MintTransaction): Transaction {
 }
 
 export function swapTransactionMapper(payload: SwapTransaction): Transaction {
-  const netTokenOne = +payload.amount0In - +payload.amount0Out
-  const netTokenTwo = +payload.amount1In - +payload.amount1Out
+  const netTokenOne = +payload.amount1In - +payload.amount1Out
+  const netTokenTwo = +payload.amount0In - +payload.amount0Out
 
   const transaction: Transaction = {
     hash: payload.transaction.id || '',
     timestamp: +payload.transaction.timestamp || 0,
+    // TODO: fix incorrect token0 & token1 for transaction on the subgraph side
     tokenOne: {
-      id: payload.pair.token0.id,
-      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
+      id: payload.pair.token1.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
       amount: 0
     },
     tokenTwo: {
-      id: payload.pair.token1.id,
-      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+      id: payload.pair.token0.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
       amount: 0
     },
     amountUSD: +payload.amountUSD || 0,
@@ -42,18 +43,18 @@ export function swapTransactionMapper(payload: SwapTransaction): Transaction {
     type: 'swap'
   }
 
-  if (netTokenOne < 0) {
+  if (netTokenTwo < 0) {
     transaction.tokenOne.amount = Math.abs(netTokenOne)
     transaction.tokenTwo.amount = Math.abs(netTokenTwo)
-  } else if (netTokenTwo < 0) {
+  } else if (netTokenOne < 0) {
     transaction.tokenOne = {
-      id: payload.pair?.token1?.id,
-      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
+      id: payload.pair?.token0?.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
       amount: Math.abs(netTokenTwo)
     }
     transaction.tokenTwo = {
-      id: payload.pair?.token0?.id,
-      symbol: parseTokenInfo('symbol', payload.pair?.token0?.id, payload.pair?.token0?.symbol),
+      id: payload.pair?.token1?.id,
+      symbol: parseTokenInfo('symbol', payload.pair?.token1?.id, payload.pair?.token1?.symbol),
       amount: Math.abs(netTokenOne)
     }
   }
