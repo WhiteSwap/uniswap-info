@@ -30,3 +30,7 @@ export function calculateTokenAmount(balance: string, totalSupply: string, reser
   }
   return 0
 }
+
+export function getPairName(tokenOneSymbol: string, tokenTwoSymbol: string, isReversedPair = false): string {
+  return isReversedPair ? `${tokenTwoSymbol}-${tokenOneSymbol}` : `${tokenOneSymbol}-${tokenTwoSymbol}`
+}

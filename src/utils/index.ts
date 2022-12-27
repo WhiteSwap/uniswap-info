@@ -25,6 +25,7 @@ export function getTimeframe(timeWindow: string) {
     case timeframeOptions.MONTH:
       utcStartTime = utcEndTime.subtract(1, 'month').endOf('day').unix() - 1
       break
+    case timeframeOptions.ALL_TIME:
     case timeframeOptions.YEAR:
       utcStartTime = utcEndTime.subtract(1, 'year').endOf('day').unix() - 1
       break
@@ -70,18 +71,16 @@ export function getExchangeLink({
       exchangePageRoute = 'swap'
       break
   }
-  const url = new URL(`https://app.ws.exchange/${network}/${exchangePageRoute}`)
+  //TODO: rename network to chain
+  const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === network)
+  const url = new URL(`https://app.ws.exchange/${network}/${networkInfo?.networkUrlPrefix}/${exchangePageRoute}`)
   const inputCurrencyAddress = parseRouteAddress(inputCurrency)
-  const searchParameters = new URLSearchParams({ inputCurrency: inputCurrencyAddress })
+  url.searchParams.set('inputCurrency', inputCurrencyAddress)
   if (outputCurrency) {
     const outputCurrencyAddress = parseRouteAddress(outputCurrency)
-    searchParameters.append('outputCurrency', outputCurrencyAddress)
+    url.searchParams.set('outputCurrency', outputCurrencyAddress)
   }
-  const chainIdFromInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === network)?.chainId
-  if (chainIdFromInfo) {
-    searchParameters.append('chainId', chainIdFromInfo.toString())
-  }
-  return `${url.href}?${searchParameters.toString()}`
+  return url.href
 }
 
 export function getWhiteSwapAppLink(network: SupportedNetwork, linkVariable: string) {
