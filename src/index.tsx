@@ -1,5 +1,4 @@
 import { StrictMode, Suspense, useEffect } from 'react'
-
 import { ApolloClient, ApolloProvider } from '@apollo/react-hooks'
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
@@ -41,7 +40,6 @@ dayjs.extend(weekOfYear)
 
 // initialize GA
 const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
-
 if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
