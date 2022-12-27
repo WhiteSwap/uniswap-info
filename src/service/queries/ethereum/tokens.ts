@@ -19,9 +19,7 @@ export const TOKEN_SEARCH = gql`
 export const TOKEN_CHART = gql`
   query TokenChart($tokenAddr: String!, $skip: Int!) {
     tokenDayDatas(first: 1000, skip: $skip, orderBy: date, orderDirection: asc, where: { token: $tokenAddr }) {
-      id
       date
-      priceUSD
       totalLiquidityUSD
       dailyVolumeUSD
     }

@@ -1,4 +1,10 @@
-import { Token as TronToken, TokenPriceOpenClose, TokensQuery } from 'service/generated/tronGraphql'
+import {
+  SnapshotPriceOpenClose,
+  Token as TronToken,
+  TokenDailyData,
+  TokenDailyDataQuery,
+  TokensQuery
+} from 'service/generated/tronGraphql'
 import { parseTokenInfo } from 'utils'
 
 export function tokenMapper(payload?: TronToken | null): Token {
@@ -21,21 +27,19 @@ export function topTokensMapper(payload?: TokensQuery): Token[] {
   return payload?.tokens?.map(token => tokenMapper(token!)) || []
 }
 
-export function tokenDayDataMapper(payload: any): TokenDayData {
+export function tokenDayDataMapper(payload?: TokenDailyData): TokenDayData {
   return {
-    id: payload.id ? payload.id.toString() : '',
-    date: payload.date ?? Date.now(),
-    priceUSD: payload.priceUSD ? payload.priceUSD.toString() : '',
-    totalLiquidityUSD: payload.totalLiquidityUSD ? payload.totalLiquidityUSD.toString() : '',
-    dailyVolumeUSD: payload.dailyVolumeUSD ? +payload.dailyVolumeUSD : 0
+    date: payload?.date ?? Date.now(),
+    totalLiquidityUSD: payload?.liquidity ? payload?.liquidity.toString() : '',
+    dailyVolumeUSD: payload?.volume ? +payload?.volume : 0
   }
 }
 
-export function tokenChartDataMapper(payload: any[]): TokenDayData[] {
-  return payload.map(token => tokenDayDataMapper(token))
+export function tokenChartDataMapper(payload: TokenDailyDataQuery): TokenDayData[] {
+  return payload.tokenDailyData?.map(token => tokenDayDataMapper(token)) || []
 }
 
-export function tokenPriceDataMapper(payload?: TokenPriceOpenClose[] | null): TimeWindowItem[] {
+export function tokenPriceDataMapper(payload?: SnapshotPriceOpenClose[] | null): TimeWindowItem[] {
   return (
     payload?.map(chartData => ({
       timestamp: chartData.timestamp.toString(),
