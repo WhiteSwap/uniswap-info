@@ -1,35 +1,57 @@
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
-import { timeframeOptions } from 'constants/index'
+import { timeframeOptions, timestampUnitType } from 'constants/index'
 import DataService from 'data/DataService'
 import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isValidAddress } from 'utils'
+import { getPairName } from 'utils/pair'
 import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs } from './slice'
 
-export function useHourlyRateData(pairAddress: string, timeWindow: string) {
+export function useHourlyRateData(pairAddress: string, timeWindow: string, enabled: boolean, isReversedPair: boolean) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const latestBlock = useLatestBlock()
-  const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.timeWindowData?.[timeWindow])
+  const pairData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress])
+  const chartData = useAppSelector(state => {
+    if (pairData?.tokenOne && pairData?.tokenTwo) {
+      const pairName = getPairName(pairData.tokenOne.symbol, pairData.tokenTwo.symbol, isReversedPair)
+      return state.pairs[activeNetwork]?.[pairAddress]?.timeWindowData?.[timeWindow]?.[pairName]
+    }
+    return []
+  })
 
   useEffect(() => {
     const currentTime = dayjs.utc()
-    const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
-    const startTime =
-      timeWindow === timeframeOptions.ALL_TIME
-        ? 1_589_760_000
-        : currentTime.subtract(1, windowSize).startOf('hour').unix()
+    const subtractUnit = timeWindow === timeframeOptions.YEAR ? 'year' : 'hour'
+    const startTime = currentTime.subtract(1, timestampUnitType[timeWindow]).startOf(subtractUnit).unix()
 
     async function fetch() {
-      const data = await DataService.pairs.getHourlyRateData(pairAddress, startTime, latestBlock)
+      const data = await DataService.pairs.getHourlyRateData(
+        pairAddress,
+        startTime,
+        latestBlock,
+        pairData.tokenOne,
+        pairData.tokenTwo,
+        isReversedPair
+      )
       dispatch(setHourlyData({ address: pairAddress, hourlyData: data, timeWindow, networkId: activeNetwork }))
     }
-    if (!chartData && latestBlock) {
+    if (!chartData?.length && latestBlock && pairData?.tokenOne && pairData?.tokenTwo && enabled) {
       fetch()
     }
-  }, [chartData, timeWindow, pairAddress, latestBlock, activeNetwork])
+  }, [
+    chartData,
+    timeWindow,
+    pairAddress,
+    latestBlock,
+    activeNetwork,
+    pairData?.tokenOne?.id,
+    pairData?.tokenTwo?.id,
+    isReversedPair,
+    enabled
+  ])
 
   return chartData
 }
@@ -73,20 +95,20 @@ export function usePairTransactions(pairAddress: string) {
   return pairTxns
 }
 
-export function usePairChartData(pairAddress: string) {
+export function usePairChartData(pairAddress: string, timeWindow: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.chartData)
+  const chartData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress]?.chartData?.[timeWindow])
 
   useEffect(() => {
     async function checkForChartData() {
-      if (!chartData) {
-        const data = await DataService.pairs.getPairChartData(pairAddress)
-        dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: pairAddress }))
-      }
+      const data = await DataService.pairs.getPairChartData(pairAddress, timeWindow)
+      dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: pairAddress }))
     }
-    checkForChartData()
-  }, [chartData, pairAddress, activeNetwork])
+    if (!chartData && pairAddress) {
+      checkForChartData()
+    }
+  }, [chartData, pairAddress, activeNetwork, timeWindow])
   return chartData
 }
 

@@ -10,6 +10,13 @@ export const timeframeOptions = {
   ALL_TIME: 'All time'
 }
 
+// TODO: refactor timestamp options
+export const timestampUnitType: Record<string, TimeWindow> = {
+  '1 week': 'week',
+  '1 month': 'month',
+  '1 year': 'year'
+}
+
 // token list urls to fetch tokens from - use for warnings on tokens and pairs
 export const SUPPORTED_LIST_URLS__NO_ENS = ['https://app.ws.exchange/assets/whiteswap-default.tokenlist.json']
 

@@ -33,7 +33,10 @@ export const tokenSlice = createSlice({
       state[networkId][address].transactions = transactions
     },
     setChartData: (state, { payload: { networkId, chartData, address } }: PayloadAction<UpdateChartDataPayload>) => {
-      state[networkId][address].chartData = chartData
+      state[networkId][address].chartData = {
+        ...state[networkId][address].chartData,
+        ...chartData
+      }
     },
     setPriceData: (
       state,
