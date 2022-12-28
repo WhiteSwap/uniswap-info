@@ -189,12 +189,6 @@ interface ChartDailyItem {
   totalLiquidityUSD: number
 }
 
-type PairReturn = {
-  date: number
-  fees: number
-  totalLiquidityUsd: number
-}
-
 type LiquidityChart = {
   date: number
   value: number

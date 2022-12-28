@@ -3,7 +3,8 @@ import {
   liquidityPositionsMapper,
   positionsMapper,
   liquidityChartMapper,
-  positionChartMapper
+  positionLiquidityChartMapper,
+  positionFeeChartMapper
 } from 'data/mappers/tron/accountMappers'
 import { client } from 'service/client'
 import {
@@ -11,6 +12,7 @@ import {
   AccountLiquidityDataQueryVariables,
   AccountPositionQuery,
   AccountPositionQueryVariables,
+  PositionFeeChartDataQuery,
   PositionLiquidityChartDataQuery,
   PositionLiquidityChartDataQueryVariables,
   TopLiquidityPositionsQuery
@@ -18,9 +20,11 @@ import {
 import {
   ACCOUNT_LIQUIDITY_CHART,
   ACCOUNT_POSITIONS,
+  POSITION_FEE_CHART_DATA,
   POSITION_LIQUIDITY_CHART_DATA,
   TOP_LIQUIDITY_POSITIONS
 } from 'service/queries/tron/account'
+import { PositionChartData, PositionPairChartKey } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { getTimeframe } from 'utils'
 
@@ -28,14 +32,25 @@ export default class AccountDataController implements IAccountDataController {
   async getPositionChart(
     accountAddress: string,
     pair: PairDetails,
-    timeWindow: string
-  ): Promise<Record<string, PairReturn[]>> {
+    timeWindow: string,
+    key: PositionPairChartKey
+  ): Promise<Partial<PositionChartData>> {
+    // FIXME: not the best solution. This chart loading realization depends on ethereum position chart data
+    // Need to load fee & liquidity chart data in one controller
     const startTime = getTimeframe(timeWindow)
-    const { data } = await client.query<PositionLiquidityChartDataQuery, PositionLiquidityChartDataQueryVariables>({
-      query: POSITION_LIQUIDITY_CHART_DATA,
-      variables: { accountAddress, startTime, pairAddress: pair.id }
-    })
-    return { [timeWindow]: positionChartMapper(data) }
+    if (key === 'liquidity') {
+      const { data } = await client.query<PositionLiquidityChartDataQuery, PositionLiquidityChartDataQueryVariables>({
+        query: POSITION_LIQUIDITY_CHART_DATA,
+        variables: { accountAddress, startTime, pairAddress: pair.id }
+      })
+      return { [key]: { [timeWindow]: positionLiquidityChartMapper(data) } }
+    } else {
+      const { data } = await client.query<PositionFeeChartDataQuery, PositionLiquidityChartDataQueryVariables>({
+        query: POSITION_FEE_CHART_DATA,
+        variables: { accountAddress, startTime, pairAddress: pair.id }
+      })
+      return { [key]: { [timeWindow]: positionFeeChartMapper(data) } }
+    }
   }
   async getUserHistory() {
     // FIXME: return empty array, because TRON doesn't return user history. It's necessary only for ETH chain

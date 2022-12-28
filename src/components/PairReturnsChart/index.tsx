@@ -9,14 +9,10 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { timeframeOptions } from 'constants/index'
 import { useColor } from 'hooks'
 import { useUserPositionChart } from 'state/features/account/hooks'
+import { PositionPairChartKey } from 'state/features/account/types'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
-
-const CHART_VIEW = {
-  VALUE: 'Value',
-  FEES: 'Fees'
-}
 
 interface IPairReturnsChart {
   account: string
@@ -31,10 +27,10 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
   const [darkMode] = useDarkModeManager()
   const color = useColor(position.tokenOne.id)
 
-  const [chartView, setChartView] = useState(CHART_VIEW.VALUE)
+  const [chartView, setChartView] = useState<PositionPairChartKey>('liquidity')
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
 
-  const data = useUserPositionChart(position.pairAddress, account, timeWindow, liquiditySnapshots)
+  const data = useUserPositionChart(position.pairAddress, account, timeWindow, chartView, liquiditySnapshots)
 
   const textColor = darkMode ? 'white' : 'black'
   const aspect = below600 ? 60 / 42 : 60 / 16
@@ -55,10 +51,10 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
       ) : (
         <OptionsRow>
           <AutoRow gap="6px" style={{ flexWrap: 'nowrap' }}>
-            <OptionButton active={chartView === CHART_VIEW.VALUE} onClick={() => setChartView(CHART_VIEW.VALUE)}>
+            <OptionButton active={chartView === 'liquidity'} onClick={() => setChartView('liquidity')}>
               {t('liquidity')}
             </OptionButton>
-            <OptionButton active={chartView === CHART_VIEW.FEES} onClick={() => setChartView(CHART_VIEW.FEES)}>
+            <OptionButton active={chartView === 'fee'} onClick={() => setChartView('fee')}>
               {t('fees')}
             </OptionButton>
           </AutoRow>
@@ -132,10 +128,10 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
 
             <Line
               type="monotone"
-              dataKey={chartView === CHART_VIEW.VALUE ? 'totalLiquidityUsd' : 'fees'}
+              dataKey="value"
               stroke={color}
               yAxisId={0}
-              name={chartView === CHART_VIEW.VALUE ? t('liquidity') : t('feesEarnedCumulative')}
+              name={chartView === 'liquidity' ? t('liquidity') : t('feesEarnedCumulative')}
             />
           </LineChart>
         ) : (

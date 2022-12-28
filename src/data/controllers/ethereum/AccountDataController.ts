@@ -1,7 +1,11 @@
 import dayjs from 'dayjs'
 import { timeframeOptions } from 'constants/index'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
-import { liquiditySnapshotListMapper } from 'data/mappers/ethereum/accountMapper'
+import {
+  liquiditySnapshotListMapper,
+  positionFeeChartMapper,
+  positionLiquidityChartMapper
+} from 'data/mappers/ethereum/accountMapper'
 import { client } from 'service/client'
 import {
   TopLiquidityPositionQuery,
@@ -16,6 +20,7 @@ import {
   USER_LIQUIDITY_POSITION_SNAPSHOTS
 } from 'service/queries/ethereum/accounts'
 import { PAIR_DAY_DATA_BULK } from 'service/queries/ethereum/pairs'
+import { PositionChartData, PositionPairChartKey } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { getShareValueOverTime, getTimeframe, parseTokenInfo } from 'utils'
 import { calculateTokenAmount } from 'utils/pair'
@@ -31,100 +36,123 @@ export default class AccountDataController implements IAccountDataController {
     _accountAddress: string,
     currentPairData: PairDetails,
     timeWindow: string,
+    _key: PositionPairChartKey,
     pairSnapshots: LiquiditySnapshot[]
-  ): Promise<Record<string, PairReturn[]>> {
-    const startDateTimestamp = getTimeframe(timeWindow)
-    // catch case where data not puplated yet
-    if (!currentPairData.createdAtTimestamp) {
-      return {}
-    }
-    let dayIndex: number = Math.round(startDateTimestamp / 86_400) // get unique day bucket unix
-    const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86_400)
-    const sortedPositions = pairSnapshots.sort((a: any, b: any) => {
-      return Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1
-    })
-    if (sortedPositions[0].timestamp > startDateTimestamp) {
-      dayIndex = Math.round(sortedPositions[0].timestamp / 86_400)
-    }
-
-    const dayTimestamps = []
-    while (dayIndex < currentDayIndex) {
-      // only account for days where this pair existed
-      if (dayIndex * 86_400 >= currentPairData?.createdAtTimestamp) {
-        dayTimestamps.push(dayIndex * 86_400)
+  ): Promise<Partial<PositionChartData>> {
+    try {
+      const startDateTimestamp = getTimeframe(timeWindow)
+      // catch case where data not puplated yet
+      if (!currentPairData.createdAtTimestamp) {
+        return {}
       }
-      dayIndex = dayIndex + 1
-    }
-
-    const shareValues = await getShareValueOverTime(currentPairData.id, dayTimestamps)
-    const shareValuesFormatted: any = {}
-    shareValues &&
-      shareValues.forEach(share => {
-        shareValuesFormatted[share.timestamp] = share
+      let dayIndex: number = Math.round(startDateTimestamp / 86_400) // get unique day bucket unix
+      const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86_400)
+      const sortedPositions = pairSnapshots.sort((a: any, b: any) => {
+        return Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1
       })
-
-    // set the default position and data
-    let positionT0 = pairSnapshots[0]
-    const formattedHistory = []
-    let netFees = 0
-
-    // keep track of up to date metrics as we parse each day
-    for (const index in dayTimestamps) {
-      // get the bounds on the day
-      const dayTimestamp = dayTimestamps[index]
-      const timestampCeiling = dayTimestamp + 86_400
-
-      // for each change in position value that day, create a window and update
-      const dailyChanges = pairSnapshots.filter((snapshot: any) => {
-        return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
-      })
-      for (const positionT1 of dailyChanges) {
-        const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
-        netFees = netFees + localReturns.fees
-        positionT0 = positionT1
+      if (sortedPositions[0].timestamp > startDateTimestamp) {
+        dayIndex = Math.round(sortedPositions[0].timestamp / 86_400)
       }
 
-      // now treat the end of the day as a hypothetical position
-      let positionT1: LiquiditySnapshot = shareValuesFormatted[dayTimestamp + 86_400]
-      if (!positionT1) {
-        positionT1 = {
-          timestamp: 0,
-          pair: currentPairData,
-          liquidityTokenBalance: positionT0.liquidityTokenBalance,
-          reserveOne: currentPairData.tokenOne.reserve,
-          reserveTwo: currentPairData.tokenTwo.reserve,
-          reserveUSD: currentPairData.reserveUSD,
-          liquidityTokenTotalSupply: currentPairData.totalSupply
+      const dayTimestamps = []
+      while (dayIndex < currentDayIndex) {
+        // only account for days where this pair existed
+        if (dayIndex * 86_400 >= currentPairData?.createdAtTimestamp) {
+          dayTimestamps.push(dayIndex * 86_400)
+        }
+        dayIndex = dayIndex + 1
+      }
+
+      // FIXME: subgraph update his request limits. This query is too large for subgraph
+      // Current status for most request is 413
+      // Need to refactor whole realization of position chart data
+      const shareValues = await getShareValueOverTime(currentPairData.id, dayTimestamps)
+      const shareValuesFormatted: any = {}
+      shareValues &&
+        shareValues.forEach(share => {
+          shareValuesFormatted[share.timestamp] = share
+        })
+
+      // set the default position and data
+      let positionT0 = pairSnapshots[0]
+      const formattedHistory = []
+      let netFees = 0
+
+      // keep track of up to date metrics as we parse each day
+      for (const index in dayTimestamps) {
+        // get the bounds on the day
+        const dayTimestamp = dayTimestamps[index]
+        const timestampCeiling = dayTimestamp + 86_400
+
+        // for each change in position value that day, create a window and update
+        const dailyChanges = pairSnapshots.filter((snapshot: any) => {
+          return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
+        })
+        for (const positionT1 of dailyChanges) {
+          const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
+          netFees = netFees + localReturns.fees
+          positionT0 = positionT1
+        }
+
+        // now treat the end of the day as a hypothetical position
+        let positionT1: LiquiditySnapshot = shareValuesFormatted[dayTimestamp + 86_400]
+        if (!positionT1) {
+          positionT1 = {
+            timestamp: 0,
+            pair: currentPairData,
+            liquidityTokenBalance: positionT0.liquidityTokenBalance,
+            reserveOne: currentPairData.tokenOne.reserve,
+            reserveTwo: currentPairData.tokenTwo.reserve,
+            reserveUSD: currentPairData.reserveUSD,
+            liquidityTokenTotalSupply: currentPairData.totalSupply
+          }
+        }
+
+        if (positionT1) {
+          positionT1.liquidityTokenBalance = positionT0.liquidityTokenBalance
+          const currentLiquidityValue =
+            (positionT1.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply) * positionT1.reserveUSD
+          const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
+          const localFees = netFees + localReturns.fees
+
+          formattedHistory.push({
+            date: dayTimestamp,
+            totalLiquidityUsd: currentLiquidityValue,
+            fees: localFees
+          })
         }
       }
 
-      if (positionT1) {
-        positionT1.liquidityTokenBalance = positionT0.liquidityTokenBalance
-        const currentLiquidityValue =
-          (positionT1.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply) * positionT1.reserveUSD
-        const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
-        const localFees = netFees + localReturns.fees
+      // FIXME: ETH subgraph  query returns data only for all time range. Need to split to timeWindow manually
+      const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+      const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+      const yearStartTime = getTimeframe(timeframeOptions.YEAR)
 
-        formattedHistory.push({
-          date: dayTimestamp,
-          totalLiquidityUsd: currentLiquidityValue,
-          fees: localFees
-        })
+      const filteredWeekChartData = formattedHistory?.filter(entry => entry.date >= weekStartTime)
+      const filteredMonthChartData = formattedHistory?.filter(entry => entry.date >= monthStartTime)
+      const filteredYearChartData = formattedHistory?.filter(entry => entry.date >= yearStartTime)
+
+      // FIXME: temporarily not the best solution. Need to global refactor fetching position chart data
+      // Current realization of loading position chart contains both liquidity and fee
+      // Tron chain load liquidity and fee chart data in separate request
+      // Need to manually split liquidity and fee chart data
+      const formattedLiquidityHistory = {
+        [timeframeOptions.WEEK]: positionLiquidityChartMapper(filteredWeekChartData),
+        [timeframeOptions.MONTH]: positionLiquidityChartMapper(filteredMonthChartData),
+        [timeframeOptions.YEAR]: positionLiquidityChartMapper(filteredYearChartData)
       }
-    }
+      const formattedFeeHistory = {
+        [timeframeOptions.WEEK]: positionFeeChartMapper(filteredWeekChartData),
+        [timeframeOptions.MONTH]: positionFeeChartMapper(filteredMonthChartData),
+        [timeframeOptions.YEAR]: positionFeeChartMapper(filteredYearChartData)
+      }
 
-    // FIXME: ETH subgraph  query returns data only for all time range. Need to split to timeWindow manually
-    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
-    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
-    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
-
-    const filteredWeekChartData = formattedHistory?.filter(entry => entry.date >= weekStartTime)
-    const filteredMonthChartData = formattedHistory?.filter(entry => entry.date >= monthStartTime)
-    const filteredYearChartData = formattedHistory?.filter(entry => entry.date >= yearStartTime)
-    return {
-      [timeframeOptions.WEEK]: filteredWeekChartData,
-      [timeframeOptions.MONTH]: filteredMonthChartData,
-      [timeframeOptions.YEAR]: filteredYearChartData
+      return {
+        fee: formattedFeeHistory,
+        liquidity: formattedLiquidityHistory
+      }
+    } catch {
+      return {}
     }
   }
   async getUserHistory(account: string) {

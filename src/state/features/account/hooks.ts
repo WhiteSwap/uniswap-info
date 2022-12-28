@@ -3,6 +3,7 @@ import DataService from 'data/DataService'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
+import { PositionChartData, PositionPairChartKey } from './types'
 
 // FIXME: remove this file from state/features/account to separate features folder
 
@@ -51,12 +52,14 @@ export function useUserPositionChart(
   pairAddress: string,
   account: string,
   timeWindow: string,
+  key: PositionPairChartKey,
   liquiditySnapshots?: LiquiditySnapshot[]
 ) {
-  const [data, setData] = useState<Record<string, PairReturn[]> | undefined>(undefined)
+  const [data, setData] = useState<PositionChartData | undefined>(undefined)
   const pairSnapshots = liquiditySnapshots?.filter(currentSnapshot => currentSnapshot.pair.id === pairAddress)
   const currentPairData = usePairData(pairAddress)
   const price = useActiveTokenPrice()
+  const chartData = data?.[key]?.[timeWindow]
 
   useEffect(() => {
     setData(undefined)
@@ -68,16 +71,27 @@ export function useUserPositionChart(
         account,
         currentPairData,
         timeWindow,
+        key,
         pairSnapshots!
       )
-      setData(oldChartData => ({ ...oldChartData, ...fetchedData }))
+      setData(oldChartData => ({
+        liquidity: { ...oldChartData?.liquidity, ...fetchedData?.liquidity },
+        fee: { ...oldChartData?.fee, ...fetchedData?.fee }
+      }))
     }
-    if (pairSnapshots && currentPairData && Object.keys(currentPairData).length > 0 && pairAddress && price) {
+    if (
+      pairSnapshots &&
+      currentPairData &&
+      Object.keys(currentPairData).length > 0 &&
+      pairAddress &&
+      price &&
+      !chartData
+    ) {
       fetchData()
     }
-  }, [timeWindow, pairAddress, Boolean(pairSnapshots && currentPairData && price)])
+  }, [timeWindow, pairAddress, Boolean(pairSnapshots && currentPairData && price), key])
 
-  return data?.[timeWindow]
+  return chartData
 }
 
 /**

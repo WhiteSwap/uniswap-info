@@ -1,3 +1,5 @@
+import { AccountChartData } from 'state/features/account/types'
+
 export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot {
   return {
     liquidityTokenBalance: +payload?.liquidityTokenBalance || 0,
@@ -25,4 +27,12 @@ export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot 
 
 export function liquiditySnapshotListMapper(payload: any[] | null): LiquiditySnapshot[] {
   return payload?.map(snapshot => liquiditySnapshotMapper(snapshot)) || []
+}
+
+export function positionLiquidityChartMapper(payload: any[]): AccountChartData[] {
+  return payload.map(element => ({ date: element.date, value: element.totalLiquidityUsd }))
+}
+
+export function positionFeeChartMapper(payload: any[]): AccountChartData[] {
+  return payload.map(element => ({ date: element.date, value: element.fees }))
 }

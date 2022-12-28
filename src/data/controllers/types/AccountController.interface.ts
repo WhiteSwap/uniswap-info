@@ -1,3 +1,4 @@
+import { PositionChartData, PositionPairChartKey } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 
 export interface IAccountDataController {
@@ -38,6 +39,7 @@ export interface IAccountDataController {
     accountAddress: string,
     pair: PairDetails,
     timeWindow: string,
+    key: PositionPairChartKey,
     snapshots: LiquiditySnapshot[]
-  ): Promise<Record<string, PairReturn[]>>
+  ): Promise<Partial<PositionChartData>>
 }

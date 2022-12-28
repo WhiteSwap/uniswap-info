@@ -1,9 +1,11 @@
 import {
   AccountLiquidityDataQuery,
   AccountPositionQuery,
+  PositionFeeChartDataQuery,
   PositionLiquidityChartDataQuery,
   TopLiquidityPositionsQuery
 } from 'service/generated/tronGraphql'
+import { AccountChartData } from 'state/features/account/types'
 import { parseTokenInfo } from 'utils'
 
 export function liquidityPositionsMapper(payload: TopLiquidityPositionsQuery): LiquidityPosition[] {
@@ -57,13 +59,20 @@ export function liquidityChartMapper(payload: AccountLiquidityDataQuery): Liquid
   )
 }
 
-export function positionChartMapper(payload: PositionLiquidityChartDataQuery): PairReturn[] {
+export function positionLiquidityChartMapper(payload: PositionLiquidityChartDataQuery): AccountChartData[] {
   return (
     payload.account?.liquidityPairData?.map(element => ({
       date: element?.timestamp || 0,
-      // FIXME: add real value
-      fees: 1,
-      totalLiquidityUsd: element?.totalLiquidityUSD || 0
+      value: element?.totalLiquidityUSD || 0
+    })) || []
+  )
+}
+
+export function positionFeeChartMapper(payload: PositionFeeChartDataQuery): AccountChartData[] {
+  return (
+    payload.account?.earningFeePairData?.map(element => ({
+      date: element?.timestamp || 0,
+      value: element?.totalEarningFeeUSD || 0
     })) || []
   )
 }
