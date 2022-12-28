@@ -54,12 +54,23 @@ export const ACCOUNT_LIQUIDITY_CHART = gql`
   }
 `
 
-export const ACCOUNT_POSITION_CHART = gql`
-  query AccountPositionChart($accountAddress: String!, $pairAddress: String!, $startTime: Int!) {
+export const POSITION_LIQUIDITY_CHART_DATA = gql`
+  query PositionLiquidityChartData($accountAddress: String!, $pairAddress: String!, $startTime: Int!) {
     account {
       liquidityPairData(accountAddress: $accountAddress, pairAddress: $pairAddress, startTime: $startTime) {
         timestamp
         totalLiquidityUSD
+      }
+    }
+  }
+`
+
+export const POSITION_FEE_CHART_DATA = gql`
+  query PositionFeeChartData($accountAddress: String!, $pairAddress: String!, $startTime: Int!) {
+    account {
+      earningFeePairData(accountAddress: $accountAddress, pairAddress: $pairAddress, startTime: $startTime) {
+        timestamp
+        totalEarningFeeUSD
       }
     }
   }

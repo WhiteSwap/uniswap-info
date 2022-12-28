@@ -1,7 +1,7 @@
 import {
   AccountLiquidityDataQuery,
-  AccountPositionChartQuery,
   AccountPositionQuery,
+  PositionLiquidityChartDataQuery,
   TopLiquidityPositionsQuery
 } from 'service/generated/tronGraphql'
 import { parseTokenInfo } from 'utils'
@@ -57,7 +57,7 @@ export function liquidityChartMapper(payload: AccountLiquidityDataQuery): Liquid
   )
 }
 
-export function positionChartMapper(payload: AccountPositionChartQuery): PairReturn[] {
+export function positionChartMapper(payload: PositionLiquidityChartDataQuery): PairReturn[] {
   return (
     payload.account?.liquidityPairData?.map(element => ({
       date: element?.timestamp || 0,

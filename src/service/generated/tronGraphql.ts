@@ -87,6 +87,8 @@ export type AccountCollection = {
   __typename?: 'AccountCollection'
   /** Burns Account Transactions */
   burns?: Maybe<Array<Maybe<Transaction>>>
+  /** Account earning fee pair data */
+  earningFeePairData?: Maybe<Array<Maybe<AccountEarningFeeData>>>
   /** Account liquidity full data */
   liquidityData?: Maybe<Array<Maybe<AccountLiquidityData>>>
   /** Account liquidity pair data */
@@ -103,6 +105,13 @@ export type AccountCollection = {
 export type AccountCollectionBurnsArgs = {
   accountAddress: Scalars['String']
   limit: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollectionEarningFeePairDataArgs = {
+  accountAddress: Scalars['String']
+  pairAddress: Scalars['String']
+  startTime: Scalars['Int']
 }
 
 /** Account details page */
@@ -161,6 +170,15 @@ export type TokenTransaction = {
   id: Scalars['String']
   /** Token symbol */
   symbol: Scalars['String']
+}
+
+/** WhiteSwapDayData for Graph */
+export type AccountEarningFeeData = {
+  __typename?: 'AccountEarningFeeData'
+  /** Data date */
+  timestamp: Scalars['Int']
+  /** Data totalEarningFeeUSD */
+  totalEarningFeeUSD: Scalars['Float']
 }
 
 /** WhiteSwapDayData for Graph */
@@ -417,13 +435,13 @@ export type AccountLiquidityDataQuery = {
   } | null
 }
 
-export type AccountPositionChartQueryVariables = Exact<{
+export type PositionLiquidityChartDataQueryVariables = Exact<{
   accountAddress: Scalars['String']
   pairAddress: Scalars['String']
   startTime: Scalars['Int']
 }>
 
-export type AccountPositionChartQuery = {
+export type PositionLiquidityChartDataQuery = {
   __typename?: 'RootQuery'
   account?: {
     __typename?: 'AccountCollection'
@@ -431,6 +449,24 @@ export type AccountPositionChartQuery = {
       __typename?: 'AccountLiquidityData'
       timestamp: number
       totalLiquidityUSD: number
+    } | null> | null
+  } | null
+}
+
+export type PositionFeeChartDataQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+  pairAddress: Scalars['String']
+  startTime: Scalars['Int']
+}>
+
+export type PositionFeeChartDataQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    earningFeePairData?: Array<{
+      __typename?: 'AccountEarningFeeData'
+      timestamp: number
+      totalEarningFeeUSD: number
     } | null> | null
   } | null
 }
