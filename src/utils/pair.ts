@@ -15,3 +15,7 @@ export function calculateDayFees(dayVolumeUSD?: number): number {
 export function calculateTokenPrice(reserveOne?: string, reserveTwo?: string): number {
   return reserveOne && reserveTwo ? +reserveOne / +reserveTwo : 0
 }
+
+export function getPairName(tokenOneSymbol: string, tokenTwoSymbol: string, isReversedPair = false): string {
+  return isReversedPair ? `${tokenTwoSymbol}-${tokenOneSymbol}` : `${tokenOneSymbol}-${tokenTwoSymbol}`
+}

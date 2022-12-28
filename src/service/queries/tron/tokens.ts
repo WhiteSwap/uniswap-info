@@ -36,6 +36,16 @@ export const TOKEN = gql`
   }
 `
 
+export const TOKEN_DAILY_DATA = gql`
+  query TokenDailyData($startTime: Int!, $id: String!) {
+    tokenDailyData(startTime: $startTime, id: $id) {
+      date
+      volume
+      liquidity
+    }
+  }
+`
+
 export const TOKEN_PAIRS = gql`
   query TokenPairs($tokenAddress: String!) {
     tokenPairs(id: $tokenAddress)

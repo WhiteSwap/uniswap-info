@@ -109,8 +109,6 @@ interface Token {
 interface TokenDayData {
   dailyVolumeUSD: number
   date: number
-  id?: string
-  priceUSD: string
   totalLiquidityUSD: string
 }
 
@@ -177,12 +175,12 @@ type PairReturn = {
 }
 
 interface LiquidityPosition {
-  pairAddress: string
-  pairName: string
-  tokenOne: string
-  tokenTwo: string
-  usd: number
-  userId: string
+  account: string
+  amount: number
+  pair: Pick<Pair, 'id'> & {
+    tokenOne: Pick<Token, 'id' | 'symbol'>
+    tokenTwo: Pick<Token, 'id' | 'symbol'>
+  }
 }
 
 interface ChartDailyItem {
@@ -190,3 +188,5 @@ interface ChartDailyItem {
   dailyVolumeUSD: number
   totalLiquidityUSD: number
 }
+
+type TimeWindow = 'hour' | 'day' | 'week' | 'month' | 'year'

@@ -45,7 +45,7 @@ export function pairChartMapper(payload: PairChartItem[]): PairDayData[] {
   return payload.map(element => ({
     dailyVolumeUSD: +element.dailyVolumeUSD || 0,
     date: +element.date || 0,
-    reserveUSD: +element.reserveUSD || 0
+    liquidityUSD: +element.reserveUSD || 0
   }))
 }
 

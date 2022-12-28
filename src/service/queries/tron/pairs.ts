@@ -46,3 +46,23 @@ export const PAIR = gql`
     }
   }
 `
+
+export const PAIR_HOURLY_PRICE = gql`
+  query PairHourlyPrice($startTime: Int!, $name: String!, $id: String!) {
+    pairHourlyPrice(startTime: $startTime, name: $name, id: $id) {
+      timestamp
+      open
+      close
+    }
+  }
+`
+
+export const PAIR_DAILY_DATA = gql`
+  query PairDailyData($startTime: Int!, $id: String!) {
+    pairDailyData(startTime: $startTime, id: $id) {
+      date
+      volume
+      liquidity
+    }
+  }
+`

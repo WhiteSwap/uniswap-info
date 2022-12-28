@@ -10,7 +10,14 @@ export interface IPairDataController {
    * @param  {number} startDateTimestamp - selected period of time
    */
   getPairData(pairList: string, price: number): Promise<Pair>
-  getPairChartData(pairAddress: string): Promise<PairDayData[]>
-  getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number): Promise<TimeWindowItem[][]>
+  getPairChartData(pairAddress: string, timeWindow: string): Promise<Record<string, PairDayData[]>>
+  getHourlyRateData(
+    pairAddress: string,
+    startTime: number,
+    latestBlock: number,
+    tokenOne: PairToken,
+    tokenTwo: PairToken,
+    isReversedPair: boolean
+  ): Promise<Record<string, TimeWindowItem[]>>
   searchPair(tokens: string[], id: string): any
 }

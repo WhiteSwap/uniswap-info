@@ -12,9 +12,7 @@ import { AccountWrapper } from './styled'
 
 function AccountLookup() {
   const { t } = useTranslation()
-
   const topLps = useTopLiquidityPositions()
-
   const below600 = useMedia('(max-width: 600px)')
 
   return (
@@ -29,12 +27,11 @@ function AccountLookup() {
             <AccountSearch />
           </AccountWrapper>
         </DashboardWrapper>
-
         <DashboardWrapper>
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('topLiquidityPositions')}
           </TYPE.main>
-          {topLps && topLps.length > 0 ? <LPList lps={topLps} maxItems={200} /> : <LocalLoader />}
+          {topLps && topLps.length > 0 ? <LPList data={topLps} itemMax={20} /> : <LocalLoader />}
         </DashboardWrapper>
       </FullWrapper>
     </PageWrapper>

@@ -1,4 +1,11 @@
-import { PairListQuery, Pair as TronPair } from 'service/generated/tronGraphql'
+import {
+  PairListQuery,
+  Pair as TronPair,
+  PairHourlyPriceQuery,
+  PairDailyDataQuery,
+  PairDailyData
+} from 'service/generated/tronGraphql'
+import { PairDayData } from 'state/features/pairs/types'
 import { parseTokenInfo } from 'utils'
 import { calculateApy } from 'utils/pair'
 
@@ -40,4 +47,26 @@ export function pairMapper(payload?: TronPair | null): Pair {
 
 export function pairListMapper(payload: PairListQuery): Pair[] {
   return payload?.pairs?.map(pairMapper) || []
+}
+
+export function pairPriceDataMapper(payload: PairHourlyPriceQuery): TimeWindowItem[] {
+  return (
+    payload?.pairHourlyPrice?.map(chartData => ({
+      timestamp: chartData.timestamp.toString(),
+      close: chartData.close,
+      open: chartData.open
+    })) || []
+  )
+}
+
+export function pairDayDataMapper(payload?: PairDailyData): PairDayData {
+  return {
+    date: payload?.date ?? Date.now(),
+    liquidityUSD: payload?.liquidity ? +payload?.liquidity : 0,
+    dailyVolumeUSD: payload?.volume ? +payload?.volume : 0
+  }
+}
+
+export function pairChartDataMapper(payload: PairDailyDataQuery): PairDayData[] {
+  return payload.pairDailyData?.map(token => pairDayDataMapper(token)) || []
 }

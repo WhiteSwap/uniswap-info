@@ -357,6 +357,23 @@ export type WhiteSwapDayData = {
   totalLiquidityUSD: Scalars['Float']
 }
 
+export type TopLiquidityPositionsQueryVariables = Exact<{ [key: string]: never }>
+
+export type TopLiquidityPositionsQuery = {
+  __typename?: 'RootQuery'
+  topLiquidityPosition?: Array<{
+    __typename?: 'TopLiquidityPosition'
+    account: string
+    amount: number
+    pair: {
+      __typename?: 'Pair'
+      id: string
+      tokenOne: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
+      tokenTwo: { __typename?: 'TokenPair'; id: string; symbol: string; name: string }
+    }
+  } | null> | null
+}
+
 export type GlobalChartQueryVariables = Exact<{
   startTime: Scalars['Int']
 }>
@@ -481,6 +498,32 @@ export type PairQuery = {
   } | null
 }
 
+export type PairHourlyPriceQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  name: Scalars['String']
+  id: Scalars['String']
+}>
+
+export type PairHourlyPriceQuery = {
+  __typename?: 'RootQuery'
+  pairHourlyPrice?: Array<{
+    __typename?: 'SnapshotPriceOpenClose'
+    timestamp: number
+    open: number
+    close: number
+  }> | null
+}
+
+export type PairDailyDataQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  id: Scalars['String']
+}>
+
+export type PairDailyDataQuery = {
+  __typename?: 'RootQuery'
+  pairDailyData?: Array<{ __typename?: 'PairDailyData'; date: number; volume: number; liquidity: number }> | null
+}
+
 export type TokensQueryVariables = Exact<{ [key: string]: never }>
 
 export type TokensQuery = {
@@ -521,6 +564,16 @@ export type TokenQuery = {
     oneDayTxns: number
     txnChange: number
   } | null
+}
+
+export type TokenDailyDataQueryVariables = Exact<{
+  startTime: Scalars['Int']
+  id: Scalars['String']
+}>
+
+export type TokenDailyDataQuery = {
+  __typename?: 'RootQuery'
+  tokenDailyData?: Array<{ __typename?: 'TokenDailyData'; date: number; volume: number; liquidity: number }> | null
 }
 
 export type TokenPairsQueryVariables = Exact<{

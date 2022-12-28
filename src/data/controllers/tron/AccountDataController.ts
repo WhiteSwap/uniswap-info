@@ -1,5 +1,9 @@
-import { TopLpsMock, UserHistoryMock, UserLiquidityChartMock, UserPositionsMock } from '__mocks__/account'
+import { UserHistoryMock, UserLiquidityChartMock, UserPositionsMock } from '__mocks__/account'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
+import { liquidityPositionsMapper } from 'data/mappers/tron/accountMappers'
+import { client } from 'service/client'
+import { TopLiquidityPositionsQuery } from 'service/generated/tronGraphql'
+import { TOP_LIQUIDITY_POSITIONS } from 'service/queries/tron/account'
 
 export default class AccountDataController implements IAccountDataController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,8 +22,10 @@ export default class AccountDataController implements IAccountDataController {
     return UserPositionsMock
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getTopLps(_allPairs: any) {
-    return TopLpsMock
+  async getTopLps() {
+    const { data } = await client.query<TopLiquidityPositionsQuery>({
+      query: TOP_LIQUIDITY_POSITIONS
+    })
+    return liquidityPositionsMapper(data)
   }
 }

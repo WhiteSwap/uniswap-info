@@ -8,6 +8,6 @@ export interface ITokenDataController {
     interval: number,
     latestBlock: number
   ): Promise<TimeWindowItem[]>
-  getTokenChartData(tokenAddress: string): Promise<TokenDayData[]>
+  getTokenChartData(tokenAddress: string, timeWindow: string): Promise<Record<string, TokenDayData[]>>
   searchToken(value: string, id: string): Promise<any>
 }
