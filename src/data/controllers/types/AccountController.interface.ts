@@ -1,4 +1,4 @@
-import { PositionChartData, PositionPairChartKey } from 'state/features/account/types'
+import { AccountChartData, PositionChartData, PositionPairChartKey } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 
 export interface IAccountDataController {
@@ -13,7 +13,7 @@ export interface IAccountDataController {
     account: string,
     timeWindow: string,
     history: LiquiditySnapshot[]
-  ): Promise<Record<string, LiquidityChart[]>>
+  ): Promise<Record<string, AccountChartData[]>>
   /**
    * Fetch user active liquidity positions.
    * Get user liquidity pools,

@@ -189,9 +189,4 @@ interface ChartDailyItem {
   totalLiquidityUSD: number
 }
 
-type LiquidityChart = {
-  date: number
-  value: number
-}
-
 type TimeWindow = 'hour' | 'day' | 'week' | 'month' | 'year'

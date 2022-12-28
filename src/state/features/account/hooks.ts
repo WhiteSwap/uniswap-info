@@ -3,7 +3,7 @@ import DataService from 'data/DataService'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
-import { PositionChartData, PositionPairChartKey } from './types'
+import { AccountChartData, PositionChartData, PositionPairChartKey } from './types'
 
 // FIXME: remove this file from state/features/account to separate features folder
 
@@ -100,7 +100,7 @@ export function useUserPositionChart(
  * and usd liquidity value.
  */
 export function useUserLiquidityChart(account: string, timeWindow: string, liquiditySnapshots?: LiquiditySnapshot[]) {
-  const [data, setData] = useState<Record<string, LiquidityChart[]> | undefined>(undefined)
+  const [data, setData] = useState<Record<string, AccountChartData[]> | undefined>(undefined)
 
   useEffect(() => {
     async function fetchData() {

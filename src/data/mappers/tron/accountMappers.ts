@@ -50,7 +50,7 @@ export function positionsMapper(payload: AccountPositionQuery): Position[] {
   )
 }
 
-export function liquidityChartMapper(payload: AccountLiquidityDataQuery): LiquidityChart[] {
+export function liquidityChartMapper(payload: AccountLiquidityDataQuery): AccountChartData[] {
   return (
     payload.account?.liquidityData?.map(element => ({
       date: element?.timestamp || 0,
