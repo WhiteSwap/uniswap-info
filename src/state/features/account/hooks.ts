@@ -1,24 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import DataService from 'data/DataService'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
-import { AccountChartData, PositionChartData, PositionChartKey } from './types'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { setPairReturns, setPositionHistory, setPositions, setTopLiquidityPositions, setTransactions } from './slice'
+import { AccountChartData, PositionChartKey } from './types'
 
 // FIXME: remove this file from state/features/account to separate features folder
 
 export function useUserTransactions(account: string) {
-  const [data, setData] = useState<Transactions | undefined>(undefined)
+  const dispatch = useAppDispatch()
+  const activeNetwork = useActiveNetworkId()
+  const transactions = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.transactions)
 
   useEffect(() => {
     async function fetchData(account: string) {
       const result = await DataService.transactions.getUserTransactions(account)
-      setData(result)
+      dispatch(setTransactions({ account, transactions: result, networkId: activeNetwork }))
     }
     fetchData(account)
   }, [])
 
-  return data
+  return transactions
 }
 
 /**
@@ -27,19 +32,21 @@ export function useUserTransactions(account: string) {
  * @param {*} account
  */
 export function useUserSnapshots(account: string) {
-  const [data, setData] = useState<LiquiditySnapshot[] | undefined>(undefined)
+  const dispatch = useAppDispatch()
+  const activeNetwork = useActiveNetworkId()
+  const snapshots = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.liquiditySnapshots)
 
   useEffect(() => {
     async function fetchData() {
       const result = await DataService.accounts.getUserHistory(account)
       if (result) {
-        setData(result)
+        dispatch(setPositionHistory({ account, historyData: result, networkId: activeNetwork }))
       }
     }
     fetchData()
   }, [])
 
-  return data
+  return snapshots
 }
 
 /**
@@ -55,15 +62,17 @@ export function useUserPositionChart(
   key: PositionChartKey,
   liquiditySnapshots?: LiquiditySnapshot[]
 ) {
-  const [data, setData] = useState<PositionChartData | undefined>(undefined)
-  const pairSnapshots = liquiditySnapshots?.filter(currentSnapshot => currentSnapshot.pair.id === pairAddress)
+  const dispatch = useAppDispatch()
+  const activeNetwork = useActiveNetworkId()
+  const chartData = useAppSelector(
+    state => state.account[activeNetwork].byAddress?.[account]?.pairReturns?.[pairAddress][key][timeWindow]
+  )
+  const pairSnapshots = useMemo(
+    () => liquiditySnapshots?.filter(currentSnapshot => currentSnapshot.pair.id === pairAddress),
+    [liquiditySnapshots]
+  )
   const currentPairData = usePairData(pairAddress)
   const price = useActiveTokenPrice()
-  const chartData = data?.[key]?.[timeWindow]
-
-  useEffect(() => {
-    setData(undefined)
-  }, [pairAddress])
 
   useEffect(() => {
     async function fetchData() {
@@ -74,10 +83,7 @@ export function useUserPositionChart(
         key,
         pairSnapshots!
       )
-      setData(oldChartData => ({
-        liquidity: { ...oldChartData?.liquidity, ...fetchedData?.liquidity },
-        fee: { ...oldChartData?.fee, ...fetchedData?.fee }
-      }))
+      dispatch(setPairReturns({ networkId: activeNetwork, account, pairAddress, data: fetchedData }))
     }
     if (
       pairSnapshots &&
@@ -118,14 +124,16 @@ export function useUserLiquidityChart(account: string, timeWindow: string, liqui
 }
 
 export function useUserPositions(account: string, liquiditySnapshots?: LiquiditySnapshot[]) {
-  const [data, setData] = useState<Position[] | undefined>()
+  const dispatch = useAppDispatch()
+  const activeNetwork = useActiveNetworkId()
+  const positions = useAppSelector(state => state.account[activeNetwork].byAddress?.[account]?.positions)
   const price = useActiveTokenPrice()
 
   useEffect(() => {
     async function fetchData(account: string) {
       const positions = await DataService.accounts.getUserPositions(account, price, liquiditySnapshots!)
       if (positions) {
-        setData(positions)
+        dispatch(setPositions({ networkId: activeNetwork, account, positions }))
       }
     }
     if (price && liquiditySnapshots) {
@@ -133,17 +141,19 @@ export function useUserPositions(account: string, liquiditySnapshots?: Liquidity
     }
   }, [price, Boolean(liquiditySnapshots)])
 
-  return data
+  return positions
 }
 
 export function useTopLiquidityPositions() {
+  const dispatch = useAppDispatch()
+  const activeNetwork = useActiveNetworkId()
+  const topLps = useAppSelector(state => state.account[activeNetwork].topLiquidityPositions)
   const allPairs = usePairs()
-  const [data, setData] = useState<LiquidityPosition[] | undefined>(undefined)
 
   useEffect(() => {
     async function fetchData() {
       const response = await DataService.accounts.getTopLps(allPairs)
-      setData(response)
+      dispatch(setTopLiquidityPositions({ liquidityPositions: response, networkId: activeNetwork }))
     }
 
     if (allPairs && Object.keys(allPairs).length > 0) {
@@ -151,5 +161,5 @@ export function useTopLiquidityPositions() {
     }
   }, [Object.keys(allPairs).length])
 
-  return data
+  return topLps
 }
