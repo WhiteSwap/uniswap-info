@@ -47,8 +47,11 @@ function AccountPage() {
     () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
     [transactions]
   )
-  const totalSwappedUSD = transactions?.swaps.reduce((total, swap) => total + swap.amountUSD, 0)
-  const totalFeesPaid = calculateDayFees(totalSwappedUSD)
+  const totalSwappedUSD = useMemo(
+    () => transactions?.swaps.reduce((total, swap) => total + swap.amountUSD, 0),
+    [transactions?.swaps?.length]
+  )
+  const totalFeesPaid = useMemo(() => calculateDayFees(totalSwappedUSD), [totalSwappedUSD])
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0
@@ -56,8 +59,19 @@ function AccountPage() {
   const [activePosition, setActivePosition] = useState<Position | undefined>()
 
   const dynamicPositions = activePosition ? [activePosition] : positions
-  const feesEarnedCumulative = dynamicPositions?.reduce((total, position) => total + position.earningFeeTotalUsd, 0)
-  const liquidityIncludingFees = dynamicPositions?.reduce((total, position) => total + position.totalUsd, 0)
+
+  const positionStatistics = useMemo(
+    () =>
+      dynamicPositions?.reduce(
+        (accumulator, position) => {
+          accumulator.feesEarnedCumulative += position.earningFeeTotalUsd
+          accumulator.liquidityIncludingFees += position.totalUsd
+          return accumulator
+        },
+        { feesEarnedCumulative: 0, liquidityIncludingFees: 0 }
+      ),
+    [dynamicPositions]
+  )
   const node = useRef(null)
   useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
 
@@ -210,9 +224,9 @@ function AccountPage() {
                 </RowBetween>
                 <RowFixed>
                   <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1}>
-                    {liquidityIncludingFees
-                      ? formattedNumber(liquidityIncludingFees, true)
-                      : liquidityIncludingFees === 0
+                    {positionStatistics?.liquidityIncludingFees
+                      ? formattedNumber(positionStatistics.liquidityIncludingFees, true)
+                      : positionStatistics?.liquidityIncludingFees === 0
                       ? formattedNumber(0, true)
                       : '-'}
                   </TYPE.header>
@@ -225,8 +239,14 @@ function AccountPage() {
                   </TYPE.light>
                 </RowBetween>
                 <RowFixed align="flex-end">
-                  <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={feesEarnedCumulative && 'green'}>
-                    {feesEarnedCumulative ? formattedNumber(feesEarnedCumulative, true) : '-'}
+                  <TYPE.header
+                    fontSize={below440 ? 18 : 24}
+                    lineHeight={1}
+                    color={positionStatistics?.feesEarnedCumulative && 'green'}
+                  >
+                    {positionStatistics?.feesEarnedCumulative
+                      ? formattedNumber(positionStatistics.feesEarnedCumulative, true)
+                      : '-'}
                   </TYPE.header>
                 </RowFixed>
               </AutoColumn>
