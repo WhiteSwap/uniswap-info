@@ -1,8 +1,8 @@
-export type PositionPairChartKey = 'fee' | 'liquidity'
+export type PositionChartKey = 'fee' | 'liquidity'
 
 export type AccountChartData = {
   date: number
   value: number
 }
 
-export type PositionChartData = Record<PositionPairChartKey, Record<string, AccountChartData[]>>
+export type PositionChartData = Record<PositionChartKey, Record<string, AccountChartData[]>>

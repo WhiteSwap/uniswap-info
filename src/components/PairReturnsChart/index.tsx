@@ -9,7 +9,7 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { timeframeOptions } from 'constants/index'
 import { useColor } from 'hooks'
 import { useUserPositionChart } from 'state/features/account/hooks'
-import { PositionPairChartKey } from 'state/features/account/types'
+import { PositionChartKey } from 'state/features/account/types'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
@@ -27,7 +27,7 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
   const [darkMode] = useDarkModeManager()
   const color = useColor(position.tokenOne.id)
 
-  const [chartView, setChartView] = useState<PositionPairChartKey>('liquidity')
+  const [chartView, setChartView] = useState<PositionChartKey>('liquidity')
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
 
   const data = useUserPositionChart(position.pairAddress, account, timeWindow, chartView, liquiditySnapshots)
