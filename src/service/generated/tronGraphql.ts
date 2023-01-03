@@ -175,18 +175,28 @@ export type AccountLiquidityData = {
 /** Token Daily Data for Graph */
 export type AccountPosition = {
   __typename?: 'AccountPosition'
+  /** Earning Fee Token One amount */
+  earningFeeTokenOneAmount: Scalars['Float']
+  /** Earning Fee Token Two amount */
+  earningFeeTokenTwoAmount: Scalars['Float']
+  /** Earning Fee Total usd amount */
+  earningFeeTotalUsd: Scalars['Float']
   /** Pair address */
   id: Scalars['String']
   /** Pair name */
   pair: Scalars['String']
-  /** Token One name */
-  tokenOne: Scalars['String']
+  /** Token One address */
+  tokenOneAddress: Scalars['String']
   /** Token One amount */
   tokenOneAmount: Scalars['Float']
-  /** Token Two name */
-  tokenTwo: Scalars['String']
+  /** Token One code */
+  tokenOneCode: Scalars['String']
+  /** Token Two address */
+  tokenTwoAddress: Scalars['String']
   /** Token Two amount */
   tokenTwoAmount: Scalars['Float']
+  /** Token Two code */
+  tokenTwoCode: Scalars['String']
   /** Total usd amount */
   totalUsd: Scalars['Float']
 }
@@ -196,6 +206,8 @@ export type Pair = {
   __typename?: 'Pair'
   /** Day Volume Usd */
   dayVolumeUSD: Scalars['Float']
+  /** Day Volume Fee Usd */
+  fee: Scalars['Float']
   /** Pair address */
   id: Scalars['String']
   /** Liquidity Change Usd */
@@ -208,6 +220,8 @@ export type Pair = {
   totalLiquidityUSD: Scalars['Float']
   /** Volume Change Usd */
   volumeChangeUSD: Scalars['Float']
+  /** Volume Fee Change Usd */
+  volumeFeeChangeUSD: Scalars['Float']
   /** Week Volume Usd */
   weekVolumeUSD: Scalars['Float']
 }
@@ -390,6 +404,8 @@ export type PairDataFragment = {
   weekVolumeUSD: number
   liquidityChangeUSD: number
   volumeChangeUSD: number
+  fee: number
+  volumeFeeChangeUSD: number
   tokenOne: {
     __typename?: 'TokenPair'
     id: string
@@ -422,6 +438,8 @@ export type PairListQuery = {
     weekVolumeUSD: number
     liquidityChangeUSD: number
     volumeChangeUSD: number
+    fee: number
+    volumeFeeChangeUSD: number
     tokenOne: {
       __typename?: 'TokenPair'
       id: string
@@ -457,6 +475,8 @@ export type PairQuery = {
     weekVolumeUSD: number
     liquidityChangeUSD: number
     volumeChangeUSD: number
+    fee: number
+    volumeFeeChangeUSD: number
     tokenOne: {
       __typename?: 'TokenPair'
       id: string

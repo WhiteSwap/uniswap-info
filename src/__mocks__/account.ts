@@ -60,6 +60,7 @@ export const UserPositionsMock: Position[] = [
       volumeChangeUSD: 142.434_426_28,
       weekVolumeUSD: 122.2428,
       dayFees: 0,
+      dayFeesChange: 0,
       apy: 0,
       totalSupply: 0,
       reserveUSD: 0

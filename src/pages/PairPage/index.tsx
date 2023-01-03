@@ -40,6 +40,7 @@ const PairPage = () => {
     totalLiquidityUSD,
     trackedReserveUSD,
     dayFees,
+    dayFeesChange,
     dayVolumeUSD,
     volumeChangeUSD,
     oneDayVolumeUntracked,
@@ -258,7 +259,7 @@ const PairPage = () => {
                         {formattedNumber(dayFees, true)}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
-                        <Percent percent={volumeChange || 0} />
+                        <Percent percent={dayFeesChange} />
                       </TYPE.main>
                     </RowBetween>
                   </AutoColumn>

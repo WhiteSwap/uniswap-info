@@ -24,6 +24,7 @@ export function pairMapper(payload: EthereumPair, ethPrice?: number): Pair {
       priceUSD: ethPrice && payload.token1.derivedETH ? +payload.token1.derivedETH * ethPrice : 0
     },
     dayFees: calculateDayFees(payload.oneDayVolumeUSD),
+    dayFeesChange: payload.volumeChangeUSD ? +payload.volumeChangeUSD : 0,
     apy: calculateApy(payload.oneDayVolumeUSD, payload.reserveUSD),
     totalSupply: payload.totalSupply ? +payload.totalSupply : 0,
     totalLiquidityUSD: payload.reserveUSD ? +payload.reserveUSD : 0,
