@@ -126,6 +126,7 @@ interface Pair {
   volumeChangeUSD: number
   weekVolumeUSD: number
   dayFees: number
+  dayFeesChange: number
   apy: number
   totalSupply: number
   tokenOne: PairToken
