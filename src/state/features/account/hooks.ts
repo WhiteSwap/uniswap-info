@@ -65,7 +65,7 @@ export function useUserPositionChart(
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
   const chartData = useAppSelector(
-    state => state.account[activeNetwork].byAddress?.[account]?.pairReturns?.[pairAddress][key][timeWindow]
+    state => state.account[activeNetwork].byAddress?.[account]?.pairReturns?.[pairAddress]?.[key]?.[timeWindow]
   )
   const pairSnapshots = useMemo(
     () => liquiditySnapshots?.filter(currentSnapshot => currentSnapshot.pair.id === pairAddress),
