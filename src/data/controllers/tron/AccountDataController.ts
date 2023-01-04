@@ -69,7 +69,8 @@ export default class AccountDataController implements IAccountDataController {
   async getUserPositions(account: string) {
     const { data } = await client.query<AccountPositionQuery, AccountPositionQueryVariables>({
       query: ACCOUNT_POSITIONS,
-      variables: { accountAddress: account }
+      variables: { accountAddress: account },
+      fetchPolicy: 'no-cache'
     })
     return positionsMapper(data)
   }
