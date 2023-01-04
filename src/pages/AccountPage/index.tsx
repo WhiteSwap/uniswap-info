@@ -181,13 +181,11 @@ function AccountPage() {
                   <TYPE.main>{t('totalValueSwapped')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>
-                    {totalSwappedUSD ? formattedNumber(totalFeesPaid, true) : '-'}
-                  </TYPE.header>
+                  <TYPE.header fontSize={24}>{totalFeesPaid ? formattedNumber(totalFeesPaid, true) : '-'}</TYPE.header>
                   <TYPE.main>{t('totalFeesPaid')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{totalTransactionsAmount ? totalTransactionsAmount : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>{totalTransactionsAmount ?? '-'}</TYPE.header>
                   <TYPE.main>{t('totalTransactions')}</TYPE.main>
                 </AutoColumn>
               </AutoColumn>
@@ -205,7 +203,7 @@ function AccountPage() {
                   <TYPE.main>{t('totalFeesPaid')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{totalTransactionsAmount ? totalTransactionsAmount : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>{totalTransactionsAmount ?? '-'}</TYPE.header>
                   <TYPE.main>{t('totalTransactions')}</TYPE.main>
                 </AutoColumn>
               </AutoRow>
