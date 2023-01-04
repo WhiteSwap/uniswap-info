@@ -9,7 +9,7 @@ import { AutoRow, RowBetween } from 'components/Row'
 import { timeframeOptions } from 'constants/index'
 import { useColor } from 'hooks'
 import { useUserPositionChart } from 'state/features/account/hooks'
-import { PositionChartKey } from 'state/features/account/types'
+import { PositionChartView } from 'state/features/account/types'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartWrapper, OptionsRow } from './styled'
@@ -27,7 +27,7 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
   const [darkMode] = useDarkModeManager()
   const color = useColor(position.tokenOne.id)
 
-  const [chartView, setChartView] = useState<PositionChartKey>('liquidity')
+  const [chartView, setChartView] = useState<PositionChartView>(PositionChartView.liquidity)
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
 
   const data = useUserPositionChart(position.pairAddress, account, timeWindow, chartView, liquiditySnapshots)
@@ -51,10 +51,16 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
       ) : (
         <OptionsRow>
           <AutoRow gap="6px" style={{ flexWrap: 'nowrap' }}>
-            <OptionButton active={chartView === 'liquidity'} onClick={() => setChartView('liquidity')}>
+            <OptionButton
+              active={chartView === PositionChartView.liquidity}
+              onClick={() => setChartView(PositionChartView.liquidity)}
+            >
               {t('liquidity')}
             </OptionButton>
-            <OptionButton active={chartView === 'fee'} onClick={() => setChartView('fee')}>
+            <OptionButton
+              active={chartView === PositionChartView.fee}
+              onClick={() => setChartView(PositionChartView.fee)}
+            >
               {t('fees')}
             </OptionButton>
           </AutoRow>
@@ -131,7 +137,7 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
               dataKey="value"
               stroke={color}
               yAxisId={0}
-              name={chartView === 'liquidity' ? t('liquidity') : t('feesEarnedCumulative')}
+              name={chartView === PositionChartView.liquidity ? t('liquidity') : t('feesEarnedCumulative')}
             />
           </LineChart>
         ) : (

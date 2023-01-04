@@ -6,7 +6,7 @@ import { usePairData } from 'state/features/pairs/hooks'
 import { usePairs } from 'state/features/pairs/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { setPairReturns, setPositionHistory, setPositions, setTopLiquidityPositions, setTransactions } from './slice'
-import { AccountChartData, PositionChartKey } from './types'
+import { AccountChartData, PositionChartView } from './types'
 
 // FIXME: remove this file from state/features/account to separate features folder
 
@@ -59,7 +59,7 @@ export function useUserPositionChart(
   pairAddress: string,
   account: string,
   timeWindow: string,
-  key: PositionChartKey,
+  key: PositionChartView,
   liquiditySnapshots?: LiquiditySnapshot[]
 ) {
   const dispatch = useAppDispatch()

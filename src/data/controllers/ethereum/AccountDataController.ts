@@ -20,7 +20,7 @@ import {
   USER_LIQUIDITY_POSITION_SNAPSHOTS
 } from 'service/queries/ethereum/accounts'
 import { PAIR_DAY_DATA_BULK } from 'service/queries/ethereum/pairs'
-import { AccountChartData, PositionChartData, PositionChartKey } from 'state/features/account/types'
+import { AccountChartData, PositionChartData, PositionChartView } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { getShareValueOverTime, getTimeframe, parseTokenInfo } from 'utils'
 import { calculateTokenAmount } from 'utils/pair'
@@ -36,7 +36,7 @@ export default class AccountDataController implements IAccountDataController {
     _accountAddress: string,
     currentPairData: PairDetails,
     timeWindow: string,
-    _key: PositionChartKey,
+    _key: PositionChartView,
     pairSnapshots: LiquiditySnapshot[]
   ): Promise<Partial<PositionChartData>> {
     try {

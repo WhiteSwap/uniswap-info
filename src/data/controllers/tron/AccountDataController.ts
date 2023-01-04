@@ -24,7 +24,7 @@ import {
   POSITION_LIQUIDITY_CHART_DATA,
   TOP_LIQUIDITY_POSITIONS
 } from 'service/queries/tron/account'
-import { PositionChartData, PositionChartKey } from 'state/features/account/types'
+import { PositionChartData, PositionChartView } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { getTimeframe } from 'utils'
 
@@ -33,7 +33,7 @@ export default class AccountDataController implements IAccountDataController {
     accountAddress: string,
     pair: PairDetails,
     timeWindow: string,
-    key: PositionChartKey
+    key: PositionChartView
   ): Promise<Partial<PositionChartData>> {
     // FIXME: not the best solution. This chart loading realization depends on ethereum position chart data
     // Need to load fee & liquidity chart data in one controller

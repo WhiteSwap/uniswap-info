@@ -1,11 +1,14 @@
-export type PositionChartKey = 'fee' | 'liquidity'
+export enum PositionChartView {
+  fee = 'fee',
+  liquidity = 'liquidity'
+}
 
 export type AccountChartData = {
   date: number
   value: number
 }
 
-export type PositionChartData = Record<PositionChartKey, Record<string, AccountChartData[]>>
+export type PositionChartData = Record<PositionChartView, Record<string, AccountChartData[]>>
 
 export interface Account {
   positions: Position[]
