@@ -313,7 +313,11 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
 }
 
 export const toK = (number: string) => {
-  return Numeral(number).format('0.[00]a')
+  if (Number.isNaN(number)) {
+    return '0'
+  }
+  const amountToFormat = Number(number).toFixed(4)
+  return Numeral(amountToFormat).format('0.[00]a')
 }
 
 const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
