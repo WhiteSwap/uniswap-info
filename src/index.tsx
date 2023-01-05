@@ -43,7 +43,11 @@ const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
-    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
+    customBrowserType: isMobile
+      ? 'web3' in window || 'ethereum' in window
+        ? 'mobileWeb3'
+        : 'mobileRegular'
+      : 'desktop'
   })
   ReactGA.pageview(window.location.pathname)
 } else {

@@ -274,16 +274,16 @@ function MiningPositionList({ miningPositions }) {
               area="uniswap"
               onClick={() => {
                 setSortedColumn(SORT_FIELD.VALUE)
-                setSortDirection(sortedColumn !== SORT_FIELD.VALUE ? true : !sortDirection)
+                setSortDirection(sortedColumn === SORT_FIELD.VALUE ? !sortDirection : true)
               }}
             >
               {below740 ? t('value') : t('liquidity')}{' '}
-              {sortedColumn === SORT_FIELD.VALUE ? (!sortDirection ? '↑' : '↓') : ''}
+              {sortedColumn === SORT_FIELD.VALUE ? (sortDirection ? '↓' : '↑') : ''}
             </ClickableText>
           </Flex>
         </DashGrid>
         <Divider />
-        <List p={0}>{!miningPositionsSorted ? <LocalLoader /> : miningPositionsSorted}</List>
+        <List p={0}>{miningPositionsSorted || <LocalLoader />}</List>
       </Panel>
       <PageButtons>
         <div onClick={() => setPage(page === 1 ? page : page - 1)}>

@@ -187,7 +187,9 @@ export default class TokenDataController implements ITokenDataController {
   async getTokenPairs(tokenAddress: string) {
     // fetch all current and historical data
     const result = await fetchTokenData(tokenAddress)
-    return [...result.data?.['pairs0'], ...result.data?.['pairs1']].map((p: { id: string }) => p.id)
+    const pairs0 = result.data?.pairs0
+    const pairs1 = result.data?.pairs1
+    return [...pairs0, ...pairs1].map((p: { id: string }) => p.id)
   }
   async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number, latestBlock: number) {
     const utcEndTime = dayjs.utc().unix()
@@ -313,15 +315,15 @@ export default class TokenDataController implements ITokenDataController {
       while (timestamp < utcEndTime.startOf('minute').unix() - oneDay) {
         const nextDay = timestamp + oneDay
         const currentDayIndex = (nextDay / oneDay).toFixed(0)
-        if (!dayIndexSet.has(currentDayIndex)) {
+        if (dayIndexSet.has(currentDayIndex)) {
+          latestLiquidityUSD = dayIndexArray[dayIndex].totalLiquidityUSD
+          dayIndex += 1
+        } else {
           data.push({
             date: nextDay,
             dailyVolumeUSD: 0,
             totalLiquidityUSD: latestLiquidityUSD
           })
-        } else {
-          latestLiquidityUSD = dayIndexArray[dayIndex].totalLiquidityUSD
-          dayIndex += 1
         }
         timestamp = nextDay
       }

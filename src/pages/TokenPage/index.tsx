@@ -92,7 +92,7 @@ const TokenPage = () => {
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
 
-  const volumeChange = (!usingUtVolume ? volumeChangeUSD : volumeChangeUT) || 0
+  const volumeChange = (usingUtVolume ? volumeChangeUT : volumeChangeUSD) || 0
 
   // liquidity
   const liquidity = totalLiquidityUSD ? formattedNumber(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
@@ -147,7 +147,7 @@ const TokenPage = () => {
                     style={{ alignSelf: 'center' }}
                   />
                   <TYPE.main
-                    fontSize={!below1080 ? '2.5rem' : below440 ? '1.25rem' : '1.5rem'}
+                    fontSize={below1080 ? (below440 ? '1.25rem' : '1.5rem') : '2.5rem'}
                     style={{ margin: '0 1rem' }}
                   >
                     <RowFixed>
@@ -271,7 +271,7 @@ const TokenPage = () => {
               </Panel>
               <Panel
                 style={{
-                  gridColumn: !below1080 ? '2/4' : below1024 ? '1/4' : '2/-1',
+                  gridColumn: below1080 ? (below1024 ? '1/4' : '2/-1') : '2/4',
                   gridRow: below1080 ? '' : '1/4'
                 }}
               >

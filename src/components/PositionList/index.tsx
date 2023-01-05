@@ -190,12 +190,12 @@ const PositionList = ({ positions }: IPositionList) => {
   const changeSortDirection = (direction: PositionSortField) => {
     return () => {
       setSortedColumn(direction)
-      setSortDirection(sortedColumn !== direction ? true : !sortDirection)
+      setSortDirection(sortedColumn === direction ? !sortDirection : true)
     }
   }
 
   const sortDirectionArrow = (column: PositionSortField) => {
-    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    const sortedSymbol = sortDirection ? '↓' : '↑'
     return sortedColumn === column ? sortedSymbol : ''
   }
 
@@ -214,9 +214,10 @@ const PositionList = ({ positions }: IPositionList) => {
           let order = false
           const direction = sortDirection ? -1 : 1
           switch (sortedColumn) {
-            case PositionSortField.fee:
+            case PositionSortField.fee: {
               order = p0?.earningFeeTotalUsd > p1?.earningFeeTotalUsd
               break
+            }
             case PositionSortField.value:
             default: {
               order = p0.totalUsd > p1.totalUsd
@@ -262,15 +263,15 @@ const PositionList = ({ positions }: IPositionList) => {
         </DashGrid>
         <Divider />
         <List p={0}>
-          {!positionsSorted ? (
-            <LocalLoader />
-          ) : (
+          {positionsSorted ? (
             positionsSorted.map((position, index) => (
               <div key={index}>
                 <ListItem key={index} index={(page - 1) * 10 + index + 1} position={position} />
                 <Divider />
               </div>
             ))
+          ) : (
+            <LocalLoader />
           )}
         </List>
       </Panel>

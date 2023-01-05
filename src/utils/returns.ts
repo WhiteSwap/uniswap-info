@@ -53,7 +53,7 @@ export function getMetricsForPositionWindow(posT0: LiquiditySnapshot, posT1: Liq
   const sqrK_t0 = Math.sqrt(token0_amount_t0 * token1_amount_t0)
 
   const priceRatioT1 =
-    positionT1.pair.tokenOne.priceUSD !== 0 ? positionT1.pair.tokenTwo.priceUSD / positionT1.pair.tokenOne.priceUSD : 0
+    positionT1.pair.tokenOne.priceUSD === 0 ? 0 : positionT1.pair.tokenTwo.priceUSD / positionT1.pair.tokenOne.priceUSD
 
   const token0_amount_no_fees =
     positionT1.pair.tokenTwo.priceUSD && priceRatioT1 ? sqrK_t0 * Math.sqrt(priceRatioT1) : 0
