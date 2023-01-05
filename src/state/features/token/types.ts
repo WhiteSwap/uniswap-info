@@ -1,6 +1,6 @@
 export interface TokenDetails extends Token {
   transactions?: Transactions
-  chartData?: TokenDayData[]
+  chartData?: Record<string, TokenDayData[]>
   tokenPairs?: string[] | null
   timeWindowData?: Record<string, Record<string, TimeWindowItem[]>>
 }
@@ -23,7 +23,7 @@ export type UpdateTransactionsPayload = ParametersWithNetwork<{
 
 export type UpdateChartDataPayload = ParametersWithNetwork<{
   address: string
-  chartData: TokenDayData[]
+  chartData: Record<string, TokenDayData[]>
 }>
 
 export type UpdatePriceDataPayload = ParametersWithNetwork<{

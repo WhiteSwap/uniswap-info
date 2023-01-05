@@ -6,8 +6,15 @@ export const timeframeOptions = {
   WEEK: '1 week',
   MONTH: '1 month',
   // THREE_MONTHS: '3 months',
-  // YEAR: '1 year',
+  YEAR: '1 year',
   ALL_TIME: 'All time'
+}
+
+// TODO: refactor timestamp options
+export const timestampUnitType: Record<string, TimeWindow> = {
+  '1 week': 'week',
+  '1 month': 'month',
+  '1 year': 'year'
 }
 
 // token list urls to fetch tokens from - use for warnings on tokens and pairs

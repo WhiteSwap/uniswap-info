@@ -6,7 +6,6 @@ import { Text } from 'rebass'
 import { PageWrapper, ContentWrapper, StarIcon, ExternalLinkIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
-import ComingSoon from 'components/ComingSoon'
 import FormattedName from 'components/FormattedName'
 import Link, { BasicLink } from 'components/Link'
 import PairList from 'components/PairList'
@@ -18,7 +17,6 @@ import TokenChart from 'components/TokenChart'
 import TokenLogo from 'components/TokenLogo'
 import { TransactionTable } from 'components/TransactionTable'
 import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
-import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath, useColor } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
@@ -277,10 +275,7 @@ const TokenPage = () => {
                   gridRow: below1080 ? '' : '1/4'
                 }}
               >
-                {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
-                {activeNetworkId === SupportedNetwork.ETHEREUM && priceUSD ? (
-                  <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} />
-                ) : undefined}
+                {priceUSD ? <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} /> : undefined}
               </Panel>
             </PanelWrapper>
           </DashboardWrapper>

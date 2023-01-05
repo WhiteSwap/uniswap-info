@@ -5,7 +5,6 @@ import { useMedia } from 'react-use'
 import { PageWrapper, ContentWrapperLarge, StarIcon, ExternalLinkIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
-import ComingSoon from 'components/ComingSoon'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import Link, { BasicLink } from 'components/Link'
 import PairChart from 'components/PairChart'
@@ -16,7 +15,6 @@ import Search from 'components/Search'
 import TokenLogo from 'components/TokenLogo'
 import { TransactionTable } from 'components/TransactionTable'
 import { PAIR_BLACKLIST } from 'constants/index'
-import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
@@ -42,6 +40,7 @@ const PairPage = () => {
     totalLiquidityUSD,
     trackedReserveUSD,
     dayFees,
+    dayFeesChange,
     dayVolumeUSD,
     volumeChangeUSD,
     oneDayVolumeUntracked,
@@ -260,7 +259,7 @@ const PairPage = () => {
                         {formattedNumber(dayFees, true)}
                       </TYPE.main>
                       <TYPE.main fontSize={12} fontWeight={500}>
-                        <Percent percent={volumeChange || 0} />
+                        <Percent percent={dayFeesChange} />
                       </TYPE.main>
                     </RowBetween>
                   </AutoColumn>
@@ -303,15 +302,7 @@ const PairPage = () => {
                     width: '100%'
                   }}
                 >
-                  {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
-                  {activeNetworkId === SupportedNetwork.ETHEREUM ? (
-                    <PairChart
-                      address={pairAddress}
-                      color={'#2E69BB'}
-                      base0={tokenTwo?.reserve / tokenOne?.reserve}
-                      base1={tokenOne?.reserve / tokenTwo?.reserve}
-                    />
-                  ) : undefined}
+                  <PairChart />
                 </Panel>
               </PanelWrapper>
             </>

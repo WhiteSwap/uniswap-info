@@ -1,6 +1,11 @@
 import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
-import { liquiditySnapshotListMapper, userPositionListMapper } from 'data/mappers/ethereum/accountMapper'
+import {
+  liquiditySnapshotListMapper,
+  positionFeeChartMapper,
+  positionLiquidityChartMapper
+} from 'data/mappers/ethereum/accountMapper'
 import { client } from 'service/client'
 import {
   TopLiquidityPositionQuery,
@@ -15,8 +20,11 @@ import {
   USER_LIQUIDITY_POSITION_SNAPSHOTS
 } from 'service/queries/ethereum/accounts'
 import { PAIR_DAY_DATA_BULK } from 'service/queries/ethereum/pairs'
-import { LiquidityChart } from 'state/features/account/types'
-import { getLPReturnsOnPair } from 'utils/returns'
+import { AccountChartData, PositionChartData, PositionChartView } from 'state/features/account/types'
+import { PairDetails } from 'state/features/pairs/types'
+import { getShareValueOverTime, getTimeframe, parseTokenInfo } from 'utils'
+import { calculateTokenAmount } from 'utils/pair'
+import { getLPReturnsOnPair, getMetricsForPositionWindow } from 'utils/returns'
 
 type OwnershipPair = {
   lpTokenBalance: number
@@ -24,6 +32,129 @@ type OwnershipPair = {
 }
 
 export default class AccountDataController implements IAccountDataController {
+  async getPositionChart(
+    _accountAddress: string,
+    currentPairData: PairDetails,
+    timeWindow: string,
+    _key: PositionChartView,
+    pairSnapshots: LiquiditySnapshot[]
+  ): Promise<Partial<PositionChartData>> {
+    try {
+      const startDateTimestamp = getTimeframe(timeWindow)
+      // catch case where data not puplated yet
+      if (!currentPairData.createdAtTimestamp) {
+        return {}
+      }
+      let dayIndex: number = Math.round(startDateTimestamp / 86_400) // get unique day bucket unix
+      const currentDayIndex: number = Math.round(dayjs.utc().unix() / 86_400)
+      const sortedPositions = pairSnapshots.sort((a: any, b: any) => {
+        return Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1
+      })
+      if (sortedPositions[0].timestamp > startDateTimestamp) {
+        dayIndex = Math.round(sortedPositions[0].timestamp / 86_400)
+      }
+
+      const dayTimestamps = []
+      while (dayIndex < currentDayIndex) {
+        // only account for days where this pair existed
+        if (dayIndex * 86_400 >= currentPairData?.createdAtTimestamp) {
+          dayTimestamps.push(dayIndex * 86_400)
+        }
+        dayIndex = dayIndex + 1
+      }
+
+      // FIXME: subgraph update his request limits. This query is too large for subgraph
+      // Current status for most request is 413
+      // Need to refactor whole realization of position chart data
+      const shareValues = await getShareValueOverTime(currentPairData.id, dayTimestamps)
+      const shareValuesFormatted: any = {}
+      shareValues &&
+        shareValues.forEach(share => {
+          shareValuesFormatted[share.timestamp] = share
+        })
+
+      // set the default position and data
+      let positionT0 = pairSnapshots[0]
+      const formattedHistory = []
+      let netFees = 0
+
+      // keep track of up to date metrics as we parse each day
+      for (const index in dayTimestamps) {
+        // get the bounds on the day
+        const dayTimestamp = dayTimestamps[index]
+        const timestampCeiling = dayTimestamp + 86_400
+
+        // for each change in position value that day, create a window and update
+        const dailyChanges = pairSnapshots.filter((snapshot: any) => {
+          return snapshot.timestamp < timestampCeiling && snapshot.timestamp > dayTimestamp
+        })
+        for (const positionT1 of dailyChanges) {
+          const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
+          netFees = netFees + localReturns.fees
+          positionT0 = positionT1
+        }
+
+        // now treat the end of the day as a hypothetical position
+        let positionT1: LiquiditySnapshot = shareValuesFormatted[dayTimestamp + 86_400]
+        if (!positionT1) {
+          positionT1 = {
+            timestamp: 0,
+            pair: currentPairData,
+            liquidityTokenBalance: positionT0.liquidityTokenBalance,
+            reserveOne: currentPairData.tokenOne.reserve,
+            reserveTwo: currentPairData.tokenTwo.reserve,
+            reserveUSD: currentPairData.reserveUSD,
+            liquidityTokenTotalSupply: currentPairData.totalSupply
+          }
+        }
+
+        if (positionT1) {
+          positionT1.liquidityTokenBalance = positionT0.liquidityTokenBalance
+          const currentLiquidityValue =
+            (positionT1.liquidityTokenBalance / positionT1.liquidityTokenTotalSupply) * positionT1.reserveUSD
+          const localReturns = getMetricsForPositionWindow(positionT0, positionT1)
+          const localFees = netFees + localReturns.fees
+
+          formattedHistory.push({
+            date: dayTimestamp,
+            totalLiquidityUsd: currentLiquidityValue,
+            fees: localFees
+          })
+        }
+      }
+
+      // FIXME: ETH subgraph  query returns data only for all time range. Need to split to timeWindow manually
+      const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+      const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+      const yearStartTime = getTimeframe(timeframeOptions.YEAR)
+
+      const filteredWeekChartData = formattedHistory?.filter(entry => entry.date >= weekStartTime)
+      const filteredMonthChartData = formattedHistory?.filter(entry => entry.date >= monthStartTime)
+      const filteredYearChartData = formattedHistory?.filter(entry => entry.date >= yearStartTime)
+
+      // FIXME: temporarily not the best solution. Need to global refactor fetching position chart data
+      // Current realization of loading position chart contains both liquidity and fee
+      // Tron chain load liquidity and fee chart data in separate request
+      // Need to manually split liquidity and fee chart data
+      const formattedLiquidityHistory = {
+        [timeframeOptions.WEEK]: positionLiquidityChartMapper(filteredWeekChartData),
+        [timeframeOptions.MONTH]: positionLiquidityChartMapper(filteredMonthChartData),
+        [timeframeOptions.YEAR]: positionLiquidityChartMapper(filteredYearChartData)
+      }
+      const formattedFeeHistory = {
+        [timeframeOptions.WEEK]: positionFeeChartMapper(filteredWeekChartData),
+        [timeframeOptions.MONTH]: positionFeeChartMapper(filteredMonthChartData),
+        [timeframeOptions.YEAR]: positionFeeChartMapper(filteredYearChartData)
+      }
+
+      return {
+        fee: formattedFeeHistory,
+        liquidity: formattedLiquidityHistory
+      }
+    } catch {
+      return {}
+    }
+  }
   async getUserHistory(account: string) {
     try {
       let skip = 0
@@ -51,7 +182,8 @@ export default class AccountDataController implements IAccountDataController {
       return []
     }
   }
-  async getUserLiquidityChart(startDateTimestamp: number, history: LiquiditySnapshot[]) {
+  async getUserLiquidityChart(_account: string, _timeWindow: string, history: LiquiditySnapshot[]) {
+    const startDateTimestamp = getTimeframe(timeframeOptions.YEAR)
     let dayIndex = Math.floor(startDateTimestamp / 86_400) // get unique day bucket unix
     const currentDayIndex = Math.floor(dayjs.utc().unix() / 86_400)
 
@@ -84,7 +216,7 @@ export default class AccountDataController implements IAccountDataController {
       }
     })
 
-    const formattedHistory: LiquidityChart[] = []
+    const formattedHistory: AccountChartData[] = []
 
     // map of current pair => ownership %
     const ownershipPerPair: Record<string, OwnershipPair> = {}
@@ -146,11 +278,23 @@ export default class AccountDataController implements IAccountDataController {
 
       formattedHistory.push({
         date: dayTimestamp,
-        valueUSD: dailyUSD
+        value: dailyUSD
       })
     }
 
-    return formattedHistory
+    // FIXME: ETH subgraph pairDataBulk query returns data only for all time range. Need to split to timeWindow manually
+    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
+
+    const filteredWeekChartData = formattedHistory?.filter(entry => entry.date >= weekStartTime)
+    const filteredMonthChartData = formattedHistory?.filter(entry => entry.date >= monthStartTime)
+    const filteredYearChartData = formattedHistory?.filter(entry => entry.date >= yearStartTime)
+    return {
+      [timeframeOptions.WEEK]: filteredWeekChartData,
+      [timeframeOptions.MONTH]: filteredMonthChartData,
+      [timeframeOptions.YEAR]: filteredYearChartData
+    }
   }
   async getUserPositions(account: string, price: number, snapshots: LiquiditySnapshot[]) {
     try {
@@ -161,17 +305,38 @@ export default class AccountDataController implements IAccountDataController {
         },
         fetchPolicy: 'no-cache'
       })
+
       if (result?.data?.liquidityPositions) {
-        const formattedPositions = await Promise.all(
-          result?.data?.liquidityPositions.map(async (positionData: any) => {
-            const feeEarned = await getLPReturnsOnPair(positionData.pair, price, snapshots)
-            return {
-              ...positionData,
-              feeEarned: feeEarned ?? 0
+        const formattedPositions: Position[] = result?.data?.liquidityPositions.map<Position>(positionData => {
+          const { pair, liquidityTokenBalance } = positionData
+          const { token0, token1, id, totalSupply, reserveUSD, reserve0, reserve1 } = pair
+          const earningFeeTotalUsd = getLPReturnsOnPair(pair, price, snapshots)
+          const totalUsd = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserveUSD)
+          const tokenOneAmount = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserve0)
+          const tokenTwoAmount = calculateTokenAmount(liquidityTokenBalance, totalSupply, reserve1)
+          const tokenFeeUsd = earningFeeTotalUsd / 2
+          const tokenOneFee = tokenFeeUsd / (+token0.derivedETH * price)
+          const tokenTwoFee = tokenFeeUsd / (+token1.derivedETH * price)
+
+          return {
+            pairAddress: id,
+            totalUsd,
+            earningFeeTotalUsd,
+            tokenOne: {
+              id: token0.id,
+              symbol: parseTokenInfo('symbol', token0.id, token0.symbol),
+              amount: tokenOneAmount,
+              fee: tokenOneFee
+            },
+            tokenTwo: {
+              id: token1.id,
+              symbol: parseTokenInfo('symbol', token1.id, token1.symbol),
+              amount: tokenTwoAmount,
+              fee: tokenTwoFee
             }
-          })
-        )
-        return userPositionListMapper(price, formattedPositions)
+          }
+        })
+        return formattedPositions
       }
     } catch (error) {
       console.log(error)
@@ -203,22 +368,32 @@ export default class AccountDataController implements IAccountDataController {
     // get the top lps from the results formatted
     const topLps: LiquidityPosition[] = []
     topLpLists
-      .filter(index => Boolean(index)) // check for ones not fetched correctly
-      .map(list => {
+      .filter(index => !!index) // check for ones not fetched correctly
+      .forEach(list => {
         return list.map(entry => {
           const pairData = allPairs[entry.pair.id]
+          const amount =
+            (Number.parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD
+
           return topLps.push({
-            pairAddress: entry.pair.id,
-            pairName: pairData.tokenOne.symbol + '-' + pairData.tokenTwo.symbol,
-            tokenOne: pairData.tokenOne.id,
-            tokenTwo: pairData.tokenTwo.id,
-            usd: (Number.parseFloat(entry.liquidityTokenBalance) / pairData.totalSupply) * pairData.totalLiquidityUSD,
-            userId: entry.user?.id
+            amount,
+            account: entry.user?.id,
+            pair: {
+              id: pairData.id,
+              tokenOne: {
+                id: pairData.tokenOne.id,
+                symbol: pairData.tokenOne.symbol
+              },
+              tokenTwo: {
+                id: pairData.tokenTwo.id,
+                symbol: pairData.tokenTwo.symbol
+              }
+            }
           })
         })
       })
 
-    const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1))
+    const sorted = [...topLps].sort((a, b) => (a.amount > b.amount ? -1 : 1))
     return sorted.splice(0, 100)
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
-import { timeframeOptions } from 'constants/index'
+import { timeframeOptions, timestampUnitType } from 'constants/index'
 import { SupportedNetwork } from 'constants/networks'
 import DataService from 'data/DataService'
 import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
@@ -85,20 +85,20 @@ export function useTokenPairsIds(tokenAddress: string) {
   return tokenPairs || []
 }
 
-export function useTokenChartData(tokenAddress: string) {
+export function useTokenChartData(tokenAddress: string, timeWindow: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const chartData = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress]?.chartData)
+  const chartData = useAppSelector(state => state.token[activeNetwork]?.[tokenAddress]?.chartData?.[timeWindow])
 
   useEffect(() => {
     async function fetchData() {
-      const data = await DataService.tokens.getTokenChartData(tokenAddress)
+      const data = await DataService.tokens.getTokenChartData(tokenAddress, timeWindow)
       dispatch(setChartData({ networkId: activeNetwork, chartData: data, address: tokenAddress }))
     }
     if (!chartData && tokenAddress) {
       fetchData()
     }
-  }, [chartData, tokenAddress])
+  }, [chartData, tokenAddress, timeWindow])
 
   return chartData
 }
@@ -120,11 +120,8 @@ export function useTokenPriceData(tokenAddress: string, timeWindow: string, inte
 
   useEffect(() => {
     const currentTime = dayjs.utc()
-    const windowSize = timeWindow === timeframeOptions.MONTH ? 'month' : 'week'
-    const startTime =
-      timeWindow === timeframeOptions.ALL_TIME
-        ? 1_589_760_000
-        : currentTime.subtract(1, windowSize).startOf('hour').unix()
+    const subtractUnit = timeWindow === timeframeOptions.YEAR ? 'year' : 'hour'
+    const startTime = currentTime.subtract(1, timestampUnitType[timeWindow]).startOf(subtractUnit).unix()
 
     async function fetchData() {
       const data = await DataService.tokens.getIntervalTokenData(tokenAddress, startTime, interval, latestBlock)
