@@ -63,7 +63,7 @@ export const ButtonLight = styled(Base)<{ color?: string }>`
   background-color: ${({ color, theme }) =>
     color ? transparentize(0.99, color) : transparentize(0.99, theme.primary1)};
   color: ${({ color, theme }) => (color ? darken(0.1, color) : theme.primary1)};
-  border: 2px solid ${({ color, theme }) => (color ? color : theme.primary1)};
+  border: 2px solid ${({ color, theme }) => color || theme.primary1};
 
   min-width: fit-content;
   border-radius: 0.75rem;
@@ -99,7 +99,7 @@ export function ButtonDropdown({ disabled = false, children, open, ...rest }: Pr
 }
 
 export const ButtonDark = styled(Base)<{ color?: string }>`
-  background-color: ${({ color, theme }) => (color ? color : theme.primary1)};
+  background-color: ${({ color, theme }) => color || theme.primary1};
   color: white;
   width: fit-content;
   border-radius: 0.75rem;

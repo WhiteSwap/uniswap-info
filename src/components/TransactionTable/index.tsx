@@ -34,14 +34,18 @@ enum TransactionSelect {
 
 function getTransactionType(type: TransactionType): string {
   switch (type) {
-    case 'mint':
+    case 'mint': {
       return 'transaction.add'
-    case 'burn':
+    }
+    case 'burn': {
       return 'transaction.remove'
-    case 'swap':
+    }
+    case 'swap': {
       return 'transaction.swap'
-    default:
+    }
+    default: {
       return ''
+    }
   }
 }
 
@@ -65,38 +69,46 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
     let list: Transaction[] = []
     if (transactions) {
       switch (transactionType) {
-        case TransactionSelect.Adds:
+        case TransactionSelect.Adds: {
           list = [...transactions.mints]
           break
-        case TransactionSelect.Removes:
+        }
+        case TransactionSelect.Removes: {
           list = [...transactions.burns]
           break
-        case TransactionSelect.Swaps:
+        }
+        case TransactionSelect.Swaps: {
           list = [...transactions.swaps]
           break
+        }
         case TransactionSelect.All:
-        default:
+        default: {
           list = [...transactions.mints, ...transactions.burns, ...transactions.swaps]
           break
+        }
       }
 
       list.sort((a, b) => {
         let order = false
         const direction = sortDirection ? -1 : 1
         switch (sortedColumn) {
-          case TransactionSortField.AmountUSD:
+          case TransactionSortField.AmountUSD: {
             order = a.amountUSD > b.amountUSD
             break
-          case TransactionSortField.TokenOneAmount:
+          }
+          case TransactionSortField.TokenOneAmount: {
             order = a.tokenOne.amount > b.tokenOne.amount
             break
-          case TransactionSortField.TokenTwoAmount:
+          }
+          case TransactionSortField.TokenTwoAmount: {
             order = a.tokenTwo.amount > b.tokenTwo.amount
             break
+          }
           case TransactionSortField.Timestamp:
-          default:
+          default: {
             order = a.timestamp > b.timestamp
             break
+          }
         }
         return order ? direction : direction * -1
       })
@@ -112,12 +124,12 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
   const changeSortDirection = (direction: TransactionSortField) => {
     return () => {
       setSortedColumn(direction)
-      setSortDirection(sortedColumn !== direction ? true : !sortDirection)
+      setSortDirection(sortedColumn === direction ? !sortDirection : true)
     }
   }
 
   const sortDirectionArrow = (column: TransactionSortField) => {
-    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    const sortedSymbol = sortDirection ? '↓' : '↑'
     return sortedColumn === column ? sortedSymbol : ''
   }
 
@@ -261,11 +273,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
           </>
         </DashGrid>
         <Divider />
-        {!transactions ? (
-          <List p={0}>
-            <LocalLoader />
-          </List>
-        ) : (
+        {transactions ? (
           <List p={0}>
             {transactionList.length > 0 ? (
               transactionList
@@ -274,6 +282,10 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
             ) : (
               <EmptyCard>{t('noRecentTransactions')}</EmptyCard>
             )}
+          </List>
+        ) : (
+          <List p={0}>
+            <LocalLoader />
           </List>
         )}
       </Panel>

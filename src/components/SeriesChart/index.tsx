@@ -106,7 +106,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
     const chart = chartReference.current
 
     switch (type) {
-      case 'Area':
+      case 'Area': {
         seriesReference.current = chart.addAreaSeries({
           topColor: chartColors[activeNetwork].area.topColor,
           bottomColor: chartColors[activeNetwork].area.bottomColor,
@@ -115,8 +115,9 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
           lineWidth: 2
         })
         break
+      }
       case 'Histogram':
-      default:
+      default: {
         seriesReference.current = chart.addHistogramSeries({
           color: chartColors[activeNetwork].histogram.color,
           priceFormat: {
@@ -130,6 +131,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
           baseLineWidth: 2
         })
         break
+      }
     }
     seriesReference.current.setData(data)
 
@@ -183,20 +185,22 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
       }
     })
     switch (type) {
-      case 'Area':
+      case 'Area': {
         seriesReference.current?.applyOptions({
           topColor: chartColors[activeNetwork].area.topColor,
           bottomColor: chartColors[activeNetwork].area.bottomColor,
           lineColor: chartColors[activeNetwork].area.topColor
         })
         break
+      }
       case 'Histogram':
-      default:
+      default: {
         seriesReference.current?.applyOptions({
           color: chartColors[activeNetwork].histogram.color,
           baseLineColor: chartColors[activeNetwork].histogram.color
         })
         break
+      }
     }
   }, [darkMode, activeNetwork])
 
@@ -213,7 +217,7 @@ export const SeriesChart = ({ data, type, base, baseChange, title }: ISeriesChar
           ) : (
             <div>
               <ChartInfoPrice>{formattedNumber(base ?? 0, true)}</ChartInfoPrice>{' '}
-              {baseChange !== null ? <Percent percent={baseChange} /> : undefined}
+              {baseChange === null ? undefined : <Percent percent={baseChange} />}
             </div>
           )}
         </ChartInfo>

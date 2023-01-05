@@ -69,7 +69,7 @@ const PairPage = () => {
     setUsingUtVolume(dayVolumeUSD === 0 ? true : false)
   }, [dayVolumeUSD])
 
-  const volumeChange = !usingUtVolume ? volumeChangeUSD : volumeChangeUntracked
+  const volumeChange = usingUtVolume ? volumeChangeUntracked : volumeChangeUSD
 
   // formatted symbols for overflow
   const formattedSymbol0 = tokenOne?.symbol.length > 6 ? tokenOne?.symbol.slice(0, 5) + '...' : tokenOne?.symbol
@@ -120,7 +120,7 @@ const PairPage = () => {
                       />
                     )}{' '}
                     <TYPE.main
-                      fontSize={!below1080 ? '2.5rem' : below440 ? '1.25rem' : '1.5rem'}
+                      fontSize={below1080 ? (below440 ? '1.25rem' : '1.5rem') : '2.5rem'}
                       style={{ margin: '0 1rem' }}
                     >
                       {tokenOne && tokenTwo ? (
@@ -297,7 +297,7 @@ const PairPage = () => {
                 </Panel>
                 <Panel
                   style={{
-                    gridColumn: !below1080 ? '2/4' : below1024 ? '1/4' : '2/-1',
+                    gridColumn: below1080 ? (below1024 ? '1/4' : '2/-1') : '2/4',
                     gridRow: below1080 ? '' : '1/5',
                     width: '100%'
                   }}

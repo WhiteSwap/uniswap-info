@@ -71,7 +71,7 @@ const Search = () => {
           }
           return false
         })
-        return regexMatches.some(m => m)
+        return regexMatches.some(Boolean)
       })
       .sort((t0, t1) => (t0.totalLiquidityUSD > t1.totalLiquidityUSD ? -1 : 1))
   }, [combinedTokens, value])
@@ -100,7 +100,7 @@ const Search = () => {
           }
           return false
         })
-        return regexMatches.some(m => m)
+        return regexMatches.some(Boolean)
       })
       .sort((p0, p1) => (p0.totalLiquidityUSD > p1.totalLiquidityUSD ? -1 : 1))
   }, [combinedPools, value])
@@ -163,7 +163,7 @@ const Search = () => {
             setValue(event.target.value)
           }}
         />
-        {!showMenu ? <SearchIconLarge /> : <CloseIcon onClick={onDismiss} />}
+        {showMenu ? <CloseIcon onClick={onDismiss} /> : <SearchIconLarge />}
       </Wrapper>
       <Menu hide={!showMenu}>
         <Heading>

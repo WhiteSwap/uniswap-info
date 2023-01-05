@@ -104,7 +104,7 @@ function parseData(data: any, oneDayData: any, twoDayData: any, oneWeekData: any
   const [oneDayVolumeUntracked, volumeChangeUntracked] = get2DayPercentChange(
     data?.untrackedVolumeUSD,
     oneDayData?.untrackedVolumeUSD ? Number.parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
-    twoDayData?.untrackedVolumeUSD ? twoDayData?.untrackedVolumeUSD : 0
+    twoDayData?.untrackedVolumeUSD || 0
   )
   const oneWeekVolumeUSD = Number.parseFloat(oneWeekData ? data?.volumeUSD - oneWeekData?.volumeUSD : data.volumeUSD)
   const parsedData = { ...data }
@@ -209,21 +209,21 @@ export default class PairDataController implements IPairDataController {
 
       if (data[0]) {
         // fill in empty days
-        let timestamp = data[0].date ? data[0].date : startTime
+        let timestamp = data[0].date || startTime
         let latestLiquidityUSD = data[0].reserveUSD
         let index = 1
         while (timestamp < utcEndTime.unix() - oneDay) {
           const nextDay = timestamp + oneDay
           const currentDayIndex = (nextDay / oneDay).toFixed(0)
-          if (!dayIndexSet.has(currentDayIndex)) {
+          if (dayIndexSet.has(currentDayIndex)) {
+            latestLiquidityUSD = dayIndexArray[index].reserveUSD
+            index = index + 1
+          } else {
             data.push({
               date: nextDay,
               dailyVolumeUSD: 0,
               reserveUSD: +latestLiquidityUSD
             })
-          } else {
-            latestLiquidityUSD = dayIndexArray[index].reserveUSD
-            index = index + 1
           }
           timestamp = nextDay
         }

@@ -31,7 +31,7 @@ const ListItem = ({ data, index }: ListItemProperties) => {
 
   return (
     <DashGrid style={{ padding: below440 ? '.75rem' : '.75rem 2rem' }}>
-      {!below600 ? <DataText fontWeight="500">{index}</DataText> : undefined}
+      {below600 ? undefined : <DataText fontWeight="500">{index}</DataText>}
       <DataText alignItems="center" justifyContent="flex-start">
         <CustomLink to={formatPath(`/accounts/${data.account}`)}>
           {below800 ? ellipsisAddress(data.account) : data.account}
