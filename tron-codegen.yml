@@ -1,8 +1,0 @@
-overwrite: true
-schema: 'https://info-portal-api.wswap-st.com/graphql/'
-documents: './src/service/queries/tron/*.ts'
-generates:
-  src/service/generated/tronGraphql.ts:
-    plugins:
-      - 'typescript'
-      - 'typescript-operations'
