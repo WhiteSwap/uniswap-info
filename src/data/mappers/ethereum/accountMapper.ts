@@ -1,17 +1,4 @@
-import { EthereumPosition } from 'data/controllers/types/ethTypes'
-import { pairMapper } from 'data/mappers/ethereum/pairMappers'
-
-export function userPositionMapper(payload: EthereumPosition, price: number): Position {
-  return {
-    pair: pairMapper(payload?.pair, price),
-    liquidityTokenBalance: payload?.liquidityTokenBalance ? +payload.liquidityTokenBalance : 0,
-    feeEarned: payload?.feeEarned ? +payload.feeEarned : 0
-  }
-}
-
-export function userPositionListMapper(price: number, payload?: EthereumPosition[] | null): Position[] {
-  return payload?.map(position => userPositionMapper(position, price)) || []
-}
+import { AccountChartData } from 'state/features/account/types'
 
 export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot {
   return {
@@ -40,4 +27,12 @@ export function liquiditySnapshotMapper(payload: any | null): LiquiditySnapshot 
 
 export function liquiditySnapshotListMapper(payload: any[] | null): LiquiditySnapshot[] {
   return payload?.map(snapshot => liquiditySnapshotMapper(snapshot)) || []
+}
+
+export function positionLiquidityChartMapper(payload: any[]): AccountChartData[] {
+  return payload.map(element => ({ date: element.date, value: element.totalLiquidityUsd }))
+}
+
+export function positionFeeChartMapper(payload: any[]): AccountChartData[] {
+  return payload.map(element => ({ date: element.date, value: element.fees }))
 }

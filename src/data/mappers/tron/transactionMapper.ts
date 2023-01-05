@@ -1,5 +1,11 @@
-import { Transaction as TronTransaction, GlobalTransactionsQuery } from 'service/generated/tronGraphql'
+import { Transaction as TronTransaction, TransactionDetailsFragment } from 'service/generated/tronGraphql'
 import { parseTokenInfo } from 'utils'
+
+type TransactionsPayload = {
+  mints?: Array<TransactionDetailsFragment | null> | null
+  burns?: Array<TransactionDetailsFragment | null> | null
+  swaps?: Array<TransactionDetailsFragment | null> | null
+} | null
 
 export function transactionMapper(type: TransactionType, payload?: TronTransaction | null): Transaction {
   return {
@@ -21,10 +27,10 @@ export function transactionMapper(type: TransactionType, payload?: TronTransacti
   }
 }
 
-export function transactionsMapper(payload: GlobalTransactionsQuery): Transactions {
+export function transactionsMapper(payload?: TransactionsPayload): Transactions {
   return {
-    mints: payload?.transactions?.mints?.map(element => transactionMapper('mint', element)) || [],
-    burns: payload.transactions?.burns?.map(element => transactionMapper('burn', element)) || [],
-    swaps: payload.transactions?.swaps?.map(element => transactionMapper('swap', element)) || []
+    mints: payload?.mints?.map(element => transactionMapper('mint', element)) || [],
+    burns: payload?.burns?.map(element => transactionMapper('burn', element)) || [],
+    swaps: payload?.swaps?.map(element => transactionMapper('swap', element)) || []
   }
 }

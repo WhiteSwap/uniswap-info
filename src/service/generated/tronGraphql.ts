@@ -87,6 +87,8 @@ export type AccountCollection = {
   __typename?: 'AccountCollection'
   /** Burns Account Transactions */
   burns?: Maybe<Array<Maybe<Transaction>>>
+  /** Account earning fee pair data */
+  earningFeePairData?: Maybe<Array<Maybe<AccountEarningFeeData>>>
   /** Account liquidity full data */
   liquidityData?: Maybe<Array<Maybe<AccountLiquidityData>>>
   /** Account liquidity pair data */
@@ -103,6 +105,13 @@ export type AccountCollection = {
 export type AccountCollectionBurnsArgs = {
   accountAddress: Scalars['String']
   limit: Scalars['Int']
+}
+
+/** Account details page */
+export type AccountCollectionEarningFeePairDataArgs = {
+  accountAddress: Scalars['String']
+  pairAddress: Scalars['String']
+  startTime: Scalars['Int']
 }
 
 /** Account details page */
@@ -161,6 +170,15 @@ export type TokenTransaction = {
   id: Scalars['String']
   /** Token symbol */
   symbol: Scalars['String']
+}
+
+/** WhiteSwapDayData for Graph */
+export type AccountEarningFeeData = {
+  __typename?: 'AccountEarningFeeData'
+  /** Data date */
+  timestamp: Scalars['Int']
+  /** Data totalEarningFeeUSD */
+  totalEarningFeeUSD: Scalars['Float']
 }
 
 /** WhiteSwapDayData for Graph */
@@ -374,6 +392,85 @@ export type TopLiquidityPositionsQuery = {
   } | null> | null
 }
 
+export type AccountPositionQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+}>
+
+export type AccountPositionQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    positions?: Array<{
+      __typename?: 'AccountPosition'
+      id: string
+      pair: string
+      tokenOneCode: string
+      tokenOneAddress: string
+      tokenOneAmount: number
+      tokenTwoCode: string
+      tokenTwoAddress: string
+      tokenTwoAmount: number
+      totalUsd: number
+      earningFeeTokenOneAmount: number
+      earningFeeTokenTwoAmount: number
+      earningFeeTotalUsd: number
+    } | null> | null
+  } | null
+}
+
+export type AccountLiquidityDataQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+  startTime: Scalars['Int']
+}>
+
+export type AccountLiquidityDataQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    liquidityData?: Array<{
+      __typename?: 'AccountLiquidityData'
+      timestamp: number
+      totalLiquidityUSD: number
+    } | null> | null
+  } | null
+}
+
+export type PositionLiquidityChartDataQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+  pairAddress: Scalars['String']
+  startTime: Scalars['Int']
+}>
+
+export type PositionLiquidityChartDataQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    liquidityPairData?: Array<{
+      __typename?: 'AccountLiquidityData'
+      timestamp: number
+      totalLiquidityUSD: number
+    } | null> | null
+  } | null
+}
+
+export type PositionFeeChartDataQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+  pairAddress: Scalars['String']
+  startTime: Scalars['Int']
+}>
+
+export type PositionFeeChartDataQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
+    earningFeePairData?: Array<{
+      __typename?: 'AccountEarningFeeData'
+      timestamp: number
+      totalEarningFeeUSD: number
+    } | null> | null
+  } | null
+}
+
 export type GlobalChartQueryVariables = Exact<{
   startTime: Scalars['Int']
 }>
@@ -399,13 +496,13 @@ export type LastBlockQuery = { __typename?: 'RootQuery'; lastBlock: number }
 export type PairDataFragment = {
   __typename?: 'Pair'
   id: string
+  fee: number
+  volumeFeeChangeUSD: number
   totalLiquidityUSD: number
   dayVolumeUSD: number
   weekVolumeUSD: number
   liquidityChangeUSD: number
   volumeChangeUSD: number
-  fee: number
-  volumeFeeChangeUSD: number
   tokenOne: {
     __typename?: 'TokenPair'
     id: string
@@ -433,13 +530,13 @@ export type PairListQuery = {
   pairs?: Array<{
     __typename?: 'Pair'
     id: string
+    fee: number
+    volumeFeeChangeUSD: number
     totalLiquidityUSD: number
     dayVolumeUSD: number
     weekVolumeUSD: number
     liquidityChangeUSD: number
     volumeChangeUSD: number
-    fee: number
-    volumeFeeChangeUSD: number
     tokenOne: {
       __typename?: 'TokenPair'
       id: string
@@ -470,13 +567,13 @@ export type PairQuery = {
   pair?: {
     __typename?: 'Pair'
     id: string
+    fee: number
+    volumeFeeChangeUSD: number
     totalLiquidityUSD: number
     dayVolumeUSD: number
     weekVolumeUSD: number
     liquidityChangeUSD: number
     volumeChangeUSD: number
-    fee: number
-    volumeFeeChangeUSD: number
     tokenOne: {
       __typename?: 'TokenPair'
       id: string
@@ -704,6 +801,44 @@ export type PairTransactionsQuery = {
   __typename?: 'RootQuery'
   transactions?: {
     __typename?: 'TransactionsCollection'
+    mints?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    swaps?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+    burns?: Array<{
+      __typename?: 'Transaction'
+      hash: string
+      timestamp: number
+      totalUSD: number
+      account: string
+      tokenOne: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+      tokenTwo: { __typename?: 'TokenTransaction'; id: string; symbol: string; amount: number }
+    } | null> | null
+  } | null
+}
+
+export type AccountTransactionsQueryVariables = Exact<{
+  accountAddress: Scalars['String']
+}>
+
+export type AccountTransactionsQuery = {
+  __typename?: 'RootQuery'
+  account?: {
+    __typename?: 'AccountCollection'
     mints?: Array<{
       __typename?: 'Transaction'
       hash: string

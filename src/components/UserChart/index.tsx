@@ -12,7 +12,7 @@ import { timeframeOptions } from 'constants/index'
 import { useUserLiquidityChart } from 'state/features/account/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { TYPE } from 'Theme'
-import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 
 const ChartWrapper = styled.div`
   height: 100%;
@@ -23,21 +23,19 @@ const ChartWrapper = styled.div`
   }
 `
 
-const UserChart = ({ account }) => {
-  const { t } = useTranslation()
+interface IUserChart {
+  account: string
+  liquiditySnapshots?: LiquiditySnapshot[]
+}
 
+const UserChart = ({ account, liquiditySnapshots }: IUserChart) => {
+  const { t } = useTranslation()
   const below600 = useMedia('(max-width: 600px)')
   const above1600 = useMedia('(min-width: 1600px)')
   const [darkMode] = useDarkModeManager()
+  const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
+  const chartData = useUserLiquidityChart(account, timeWindow, liquiditySnapshots)
   const textColor = darkMode ? 'white' : 'black'
-
-  const chartData = useUserLiquidityChart(account)
-
-  const [timeWindow, setTimeWindow] = useState(timeframeOptions.ALL_TIME)
-  let utcStartTime = getTimeframe(timeWindow)
-
-  const domain = [dataMin => (dataMin > utcStartTime ? dataMin : utcStartTime), 'dataMax']
-
   const aspect = above1600 ? 60 / 12 : below600 ? 60 / 42 : 60 / 16
 
   return (
@@ -66,16 +64,16 @@ const UserChart = ({ account }) => {
               1W
             </OptionButton>
             <OptionButton
-              active={timeWindow === timeframeOptions.ALL_TIME}
-              onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+              active={timeWindow === timeframeOptions.YEAR}
+              onClick={() => setTimeWindow(timeframeOptions.YEAR)}
             >
-              {t('all')}
+              1Y
             </OptionButton>
           </AutoRow>
         </RowBetween>
       )}
       {chartData ? (
-        <ResponsiveContainer aspect={aspect} style={{ height: 'inherit' }}>
+        <ResponsiveContainer aspect={aspect}>
           <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -92,8 +90,8 @@ const UserChart = ({ account }) => {
               tickFormatter={tick => toNiceDate(tick)}
               dataKey="date"
               tick={{ fill: textColor }}
-              type={'number'}
-              domain={domain}
+              type="number"
+              domain={['dataMin', 'dataMax']}
             />
             <YAxis
               type="number"
@@ -108,7 +106,7 @@ const UserChart = ({ account }) => {
             />
             <Tooltip
               cursor={true}
-              formatter={value => formattedNumber(value, true)}
+              formatter={(value: string | number) => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{
@@ -120,8 +118,8 @@ const UserChart = ({ account }) => {
               wrapperStyle={{ top: -70, left: -10 }}
             />
             <Area
-              key={'other'}
-              dataKey={'valueUSD'}
+              key="other"
+              dataKey="value"
               stackId="2"
               strokeWidth={1}
               dot={false}

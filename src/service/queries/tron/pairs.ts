@@ -19,6 +19,8 @@ const PAIR_DATA = gql`
       price
       derivedPrice
     }
+    fee
+    volumeFeeChangeUSD
     totalLiquidityUSD
     dayVolumeUSD
     weekVolumeUSD

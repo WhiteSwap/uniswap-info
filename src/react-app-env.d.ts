@@ -152,10 +152,17 @@ type SnapshotPair = Pick<Pair, 'id' | 'reserveUSD'> & {
   tokenTwo: SnapshotPairToken
 }
 
+type PositionToken = Pick<Token, 'symbol' | 'id'> & {
+  amount: number
+  fee: number
+}
+
 interface Position {
-  pair: Pair
-  liquidityTokenBalance: number
-  feeEarned: number
+  pairAddress: string
+  tokenOne: PositionToken
+  tokenTwo: PositionToken
+  totalUsd: number
+  earningFeeTotalUsd: number
 }
 
 interface LiquiditySnapshot {
@@ -166,12 +173,6 @@ interface LiquiditySnapshot {
   reserveOne: number
   reserveTwo: number
   timestamp: number
-}
-
-type PairReturn = {
-  date: number
-  fees: number
-  usdValue: number
 }
 
 interface LiquidityPosition {

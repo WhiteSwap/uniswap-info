@@ -16,6 +16,21 @@ export function calculateTokenPrice(reserveOne?: string, reserveTwo?: string): n
   return reserveOne && reserveTwo ? +reserveOne / +reserveTwo : 0
 }
 
+export function calculatePoolShare(balance: string, totalSupply: string): number {
+  if (!Number.isNaN(balance) && !Number.isNaN(totalSupply)) {
+    return +balance / +totalSupply
+  }
+  return 0
+}
+
+export function calculateTokenAmount(balance: string, totalSupply: string, reserve: string): number {
+  if (!Number.isNaN(reserve)) {
+    const poolShare = calculatePoolShare(balance, totalSupply)
+    return poolShare * +reserve
+  }
+  return 0
+}
+
 export function getPairName(tokenOneSymbol: string, tokenTwoSymbol: string, isReversedPair = false): string {
   return isReversedPair ? `${tokenTwoSymbol}-${tokenOneSymbol}` : `${tokenOneSymbol}-${tokenTwoSymbol}`
 }
