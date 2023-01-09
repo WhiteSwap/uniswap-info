@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+import { timestampUnitType } from 'constants/index'
 import { IAccountDataController } from 'data/controllers/types/AccountController.interface'
 import {
   liquidityPositionsMapper,
@@ -26,7 +28,6 @@ import {
 } from 'service/queries/tron/account'
 import { PositionChartData, PositionChartView } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
-import { getTimeframe } from 'utils'
 
 export default class AccountDataController implements IAccountDataController {
   async getPositionChart(
@@ -37,7 +38,9 @@ export default class AccountDataController implements IAccountDataController {
   ): Promise<Partial<PositionChartData>> {
     // FIXME: not the best solution. This chart loading realization depends on ethereum position chart data
     // Need to load fee & liquidity chart data in one controller
-    const startTime = getTimeframe(timeWindow)
+    const currentTime = dayjs.utc()
+    const startTime = currentTime.subtract(1, timestampUnitType[timeWindow]).startOf('day').unix()
+
     if (key === 'liquidity') {
       const { data } = await client.query<PositionLiquidityChartDataQuery, PositionLiquidityChartDataQueryVariables>({
         query: POSITION_LIQUIDITY_CHART_DATA,
@@ -58,7 +61,9 @@ export default class AccountDataController implements IAccountDataController {
   }
 
   async getUserLiquidityChart(account: string, timeWindow: string) {
-    const startTime = getTimeframe(timeWindow)
+    const currentTime = dayjs.utc()
+    const startTime = currentTime.subtract(1, timestampUnitType[timeWindow]).startOf('day').unix()
+
     const { data } = await client.query<AccountLiquidityDataQuery, AccountLiquidityDataQueryVariables>({
       query: ACCOUNT_LIQUIDITY_CHART,
       variables: { accountAddress: account, startTime }
