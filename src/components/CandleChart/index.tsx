@@ -3,6 +3,8 @@ import dayjs from 'dayjs'
 import { createChart, CrosshairMode, CandlestickData, IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { Play } from 'react-feather'
 import { useTheme } from 'styled-components'
+import { SupportedNetwork } from 'constants/networks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { formattedNumber } from 'utils'
 import { ChartWrapper, IconWrapper } from './styled'
 
@@ -13,6 +15,8 @@ interface CandleStickChartProperties {
 }
 
 const CandleStickChart = ({ data, height = 300, base }: CandleStickChartProperties) => {
+  // FIXME: hotfix
+  const currentNetwork = useActiveNetworkId()
   const chartContainerReference = useRef<HTMLDivElement>(null)
   const chartReference = useRef<IChartApi>()
   const candlestickReference = useRef<ISeriesApi<'Candlestick'>>()
@@ -29,7 +33,10 @@ const CandleStickChart = ({ data, height = 300, base }: CandleStickChartProperti
         close: entry.close
       }
     })
-    if (mappedData && mappedData.length > 0) {
+
+    // FIXME: chart data should not be modified in candle stick chart component
+    // current modify only for ethereum chain
+    if (mappedData && mappedData.length > 0 && currentNetwork === SupportedNetwork.ETHEREUM) {
       const { close } = mappedData[mappedData.length - 1]
 
       mappedData.push({
