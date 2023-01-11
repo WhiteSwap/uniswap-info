@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { EthereumPair } from 'data/controllers/types/ethTypes'
 import { IPairDataController } from 'data/controllers/types/PairController.interface'
 import { pairChartMapper, pairListMapper, pairMapper } from 'data/mappers/ethereum/pairMappers'
@@ -19,8 +20,10 @@ import {
   get2DayPercentChange,
   getPercentChange,
   splitQuery,
-  parseTokenInfo
+  parseTokenInfo,
+  getTimeframe
 } from 'utils'
+import { getPairName } from 'utils/pair'
 
 async function fetchPairData(pairAddress: string, block?: number) {
   return client.query({
@@ -101,7 +104,7 @@ function parseData(data: any, oneDayData: any, twoDayData: any, oneWeekData: any
   const [oneDayVolumeUntracked, volumeChangeUntracked] = get2DayPercentChange(
     data?.untrackedVolumeUSD,
     oneDayData?.untrackedVolumeUSD ? Number.parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
-    twoDayData?.untrackedVolumeUSD ? twoDayData?.untrackedVolumeUSD : 0
+    twoDayData?.untrackedVolumeUSD || 0
   )
   const oneWeekVolumeUSD = Number.parseFloat(oneWeekData ? data?.volumeUSD - oneWeekData?.volumeUSD : data.volumeUSD)
   const parsedData = { ...data }
@@ -206,21 +209,21 @@ export default class PairDataController implements IPairDataController {
 
       if (data[0]) {
         // fill in empty days
-        let timestamp = data[0].date ? data[0].date : startTime
+        let timestamp = data[0].date || startTime
         let latestLiquidityUSD = data[0].reserveUSD
         let index = 1
         while (timestamp < utcEndTime.unix() - oneDay) {
           const nextDay = timestamp + oneDay
           const currentDayIndex = (nextDay / oneDay).toFixed(0)
-          if (!dayIndexSet.has(currentDayIndex)) {
+          if (dayIndexSet.has(currentDayIndex)) {
+            latestLiquidityUSD = dayIndexArray[index].reserveUSD
+            index = index + 1
+          } else {
             data.push({
               date: nextDay,
               dailyVolumeUSD: 0,
               reserveUSD: +latestLiquidityUSD
             })
-          } else {
-            latestLiquidityUSD = dayIndexArray[index].reserveUSD
-            index = index + 1
           }
           timestamp = nextDay
         }
@@ -230,11 +233,30 @@ export default class PairDataController implements IPairDataController {
     } catch (error) {
       console.log(error)
     }
+    const chartData = pairChartMapper(data)
+    // FIXME: ETH subgraph pairData query returns data only for all time range. Need to split to timeWindow manually
+    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
 
-    return pairChartMapper(data)
+    const filteredWeekChartData = chartData?.filter(entry => entry.date >= weekStartTime)
+    const filteredMonthChartData = chartData?.filter(entry => entry.date >= monthStartTime)
+    const filteredYearChartData = chartData?.filter(entry => entry.date >= yearStartTime)
+
+    return {
+      [timeframeOptions.WEEK]: filteredWeekChartData,
+      [timeframeOptions.MONTH]: filteredMonthChartData,
+      [timeframeOptions.YEAR]: filteredYearChartData
+    }
   }
 
-  async getHourlyRateData(pairAddress: string, startTime: number, latestBlock: number) {
+  async getHourlyRateData(
+    pairAddress: string,
+    startTime: number,
+    latestBlock: number,
+    tokenOne: PairToken,
+    tokenTwo: PairToken
+  ): Promise<Record<string, TimeWindowItem[]>> {
     try {
       const utcEndTime = dayjs.utc()
       let time = startTime
@@ -248,7 +270,7 @@ export default class PairDataController implements IPairDataController {
 
       // backout if invalid timestamp format
       if (timestamps.length === 0) {
-        return []
+        return {}
       }
 
       // once you have all the timestamps, get the blocks for each timestamp in a bulk query
@@ -258,7 +280,7 @@ export default class PairDataController implements IPairDataController {
 
       // catch failing case
       if (!blocks || blocks?.length === 0) {
-        return []
+        return {}
       }
 
       if (latestBlock) {
@@ -305,11 +327,16 @@ export default class PairDataController implements IPairDataController {
           close: values[index + 1].rate1
         })
       }
-
-      return [formattedHistoryRate0, formattedHistoryRate1]
+      // FIXME: ETH subgraph load pair data for token0/token1 & token1/token0. Need to split data manually
+      const rateOne = getPairName(tokenOne.symbol, tokenTwo.symbol)
+      const rateTwo = getPairName(tokenOne.symbol, tokenTwo.symbol, true)
+      return {
+        [rateOne]: formattedHistoryRate1,
+        [rateTwo]: formattedHistoryRate0
+      }
     } catch (error) {
       console.log(error)
-      return [[], []]
+      return {}
     }
   }
 }

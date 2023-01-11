@@ -28,7 +28,6 @@ const Panel = styled(RebassBox)`
   justify-content: flex-start;
   border-radius: 1rem;
   border: 1px solid ${({ theme }) => theme.bg7};
-  cursor: pointer;
 
   ${props => props.background && `background-color: ${props.theme.advancedBG};`}
 
@@ -54,7 +53,7 @@ const Panel = styled(RebassBox)`
       @media only screen and (min-width: 40em) {
         border-radius: 10px;
       }
-    `};
+    `}
 
   ${props => !props.last && panelPseudo}
 `

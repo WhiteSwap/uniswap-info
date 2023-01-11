@@ -6,7 +6,6 @@ import { Text } from 'rebass'
 import { PageWrapper, ContentWrapper, StarIcon, ExternalLinkIcon } from 'components'
 import { ButtonLight, ButtonDark } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
-import ComingSoon from 'components/ComingSoon'
 import FormattedName from 'components/FormattedName'
 import Link, { BasicLink } from 'components/Link'
 import PairList from 'components/PairList'
@@ -18,7 +17,6 @@ import TokenChart from 'components/TokenChart'
 import TokenLogo from 'components/TokenLogo'
 import { TransactionTable } from 'components/TransactionTable'
 import { OVERVIEW_TOKEN_BLACKLIST } from 'constants/index'
-import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath, useColor } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/features/token/hooks'
@@ -94,7 +92,7 @@ const TokenPage = () => {
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
 
-  const volumeChange = (!usingUtVolume ? volumeChangeUSD : volumeChangeUT) || 0
+  const volumeChange = (usingUtVolume ? volumeChangeUT : volumeChangeUSD) || 0
 
   // liquidity
   const liquidity = totalLiquidityUSD ? formattedNumber(totalLiquidityUSD, true) : totalLiquidityUSD === 0 ? '$0' : '-'
@@ -149,7 +147,7 @@ const TokenPage = () => {
                     style={{ alignSelf: 'center' }}
                   />
                   <TYPE.main
-                    fontSize={!below1080 ? '2.5rem' : below440 ? '1.25rem' : '1.5rem'}
+                    fontSize={below1080 ? (below440 ? '1.25rem' : '1.5rem') : '2.5rem'}
                     style={{ margin: '0 1rem' }}
                   >
                     <RowFixed>
@@ -273,14 +271,11 @@ const TokenPage = () => {
               </Panel>
               <Panel
                 style={{
-                  gridColumn: !below1080 ? '2/4' : below1024 ? '1/4' : '2/-1',
+                  gridColumn: below1080 ? (below1024 ? '1/4' : '2/-1') : '2/4',
                   gridRow: below1080 ? '' : '1/4'
                 }}
               >
-                {activeNetworkId === SupportedNetwork.TRON ? <ComingSoon /> : undefined}
-                {activeNetworkId === SupportedNetwork.ETHEREUM && priceUSD ? (
-                  <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} />
-                ) : undefined}
+                {priceUSD ? <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} /> : undefined}
               </Panel>
             </PanelWrapper>
           </DashboardWrapper>

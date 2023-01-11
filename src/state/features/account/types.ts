@@ -1,25 +1,28 @@
-import { SupportedNetwork } from 'constants/networks'
+export enum PositionChartView {
+  fee = 'fee',
+  liquidity = 'liquidity'
+}
 
-type PairReturns = Record<string, PairReturn[]>
+export type AccountChartData = {
+  date: number
+  value: number
+}
+
+export type PositionChartData = Record<PositionChartView, Record<string, AccountChartData[]>>
 
 export interface Account {
   positions: Position[]
   transactions: Transactions
   liquiditySnapshots: LiquiditySnapshot[]
-  pairReturns: PairReturns
+  pairReturns: Record<string, PositionChartData>
 }
 
-export type AccountNetworkState = {
+export type AccountStatistics = {
   topLiquidityPositions?: Array<LiquidityPosition>
   byAddress: Record<string, Account>
 }
 
-export type LiquidityChart = {
-  date: number
-  valueUSD: number
-}
-
-export type AccountState = Record<SupportedNetwork, AccountNetworkState>
+export type AccountState = Record<SupportedNetwork, AccountStatistics>
 
 export type UpdateTransactionsPayload = ParametersWithNetwork<{
   account: string
@@ -39,7 +42,7 @@ export type UpdatePositionHistoryPayload = ParametersWithNetwork<{
 export type UpdatePairReturnsPayload = ParametersWithNetwork<{
   account: string
   pairAddress: string
-  data: PairReturn[]
+  data: Partial<PositionChartData>
 }>
 
 export type UpdateTopLiquidityPositionsPayload = ParametersWithNetwork<{

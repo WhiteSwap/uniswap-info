@@ -18,11 +18,12 @@ import { TransactionTable } from 'components/TransactionTable'
 import UserChart from 'components/UserChart'
 import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
-import { useAccountData } from 'state/features/account/hooks'
+import { useUserPositions, useUserSnapshots, useUserTransactions } from 'state/features/account/hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useToggleSavedAccount } from 'state/features/user/hooks'
 import { DashboardWrapper, TYPE } from 'Theme'
 import { ellipsisAddress, formattedNumber, getBlockChainScanLink, isValidAddress } from 'utils'
+import { calculateDayFees } from 'utils/pair'
 import { DropdownWrapper, Flyout, Header, MenuRow, ActionsContainer } from './styled'
 
 function AccountPage() {
@@ -39,8 +40,18 @@ function AccountPage() {
   const below440 = useMedia('(max-width: 440px)')
 
   const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
-
-  const { transactions, positions, transactionCount, totalSwappedUSD } = useAccountData(accountAddress)
+  const liquiditySnapshots = useUserSnapshots(accountAddress)
+  const positions = useUserPositions(accountAddress, liquiditySnapshots)
+  const transactions = useUserTransactions(accountAddress)
+  const totalTransactionsAmount = useMemo(
+    () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
+    [transactions]
+  )
+  const totalSwappedUSD = useMemo(
+    () => transactions?.swaps.reduce((total, swap) => total + swap.amountUSD, 0),
+    [transactions?.swaps?.length]
+  )
+  const totalFeesPaid = useMemo(() => calculateDayFees(totalSwappedUSD), [totalSwappedUSD])
 
   // settings for list view and dropdowns
   const hideLPContent = positions && positions.length === 0
@@ -49,22 +60,18 @@ function AccountPage() {
 
   const dynamicPositions = activePosition ? [activePosition] : positions
 
-  const aggregateFees = dynamicPositions?.reduce(function (total, position) {
-    return total + position.feeEarned
-  }, 0)
-
-  const positionValue = useMemo(() => {
-    return dynamicPositions
-      ? dynamicPositions.reduce((total, position) => {
-          const calcPos =
-            position?.pair && position.pair.reserveUSD
-              ? (position.liquidityTokenBalance / position.pair.totalSupply) * position.pair.reserveUSD
-              : 0
-          return total + calcPos
-        }, 0)
-      : null
-  }, [dynamicPositions])
-
+  const positionStatistics = useMemo(
+    () =>
+      dynamicPositions?.reduce(
+        (accumulator, position) => {
+          accumulator.feesEarnedCumulative += position.earningFeeTotalUsd
+          accumulator.liquidityIncludingFees += position.totalUsd
+          return accumulator
+        },
+        { feesEarnedCumulative: 0, liquidityIncludingFees: 0 }
+      ),
+    [dynamicPositions]
+  )
   const node = useRef(null)
   useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
 
@@ -108,13 +115,9 @@ function AccountPage() {
               )}
               {activePosition && (
                 <RowFixed>
-                  <DoubleTokenLogo
-                    a0={activePosition.pair.tokenOne?.id}
-                    a1={activePosition.pair.tokenTwo?.id}
-                    size={16}
-                  />
+                  <DoubleTokenLogo a0={activePosition.tokenOne?.id} a1={activePosition.tokenTwo?.id} size={16} />
                   <TYPE.body ml={'16px'}>
-                    {activePosition.pair.tokenOne?.symbol}-{activePosition.pair.tokenTwo?.symbol} {t('position')}
+                    {activePosition.tokenOne?.symbol}-{activePosition.tokenTwo?.symbol} {t('position')}
                   </TYPE.body>
                 </RowFixed>
               )}
@@ -123,16 +126,8 @@ function AccountPage() {
               <Flyout>
                 <AutoColumn gap="0px">
                   {positions?.map((p, index) => {
-                    let tokenOneSymbol = p.pair.tokenOne?.symbol
-                    let tokenTwoSymbol = p.pair.tokenTwo?.symbol
-                    if (tokenOneSymbol === 'WETH') {
-                      tokenOneSymbol = 'ETH'
-                    }
-                    if (tokenTwoSymbol === 'WETH') {
-                      tokenTwoSymbol = 'ETH'
-                    }
                     return (
-                      p.pair.id !== activePosition?.pair.id && (
+                      p.pairAddress !== activePosition?.pairAddress && (
                         <MenuRow
                           onClick={() => {
                             setActivePosition(p)
@@ -140,9 +135,9 @@ function AccountPage() {
                           }}
                           key={index}
                         >
-                          <DoubleTokenLogo a0={p.pair.tokenOne?.id} a1={p.pair.tokenTwo?.id} size={16} />
+                          <DoubleTokenLogo a0={p.tokenOne?.id} a1={p.tokenTwo?.id} size={16} />
                           <TYPE.body ml={'16px'}>
-                            {tokenOneSymbol}-{tokenTwoSymbol} {t('position')}
+                            {p.tokenOne?.symbol}-{p.tokenTwo?.symbol} {t('position')}
                           </TYPE.body>
                         </MenuRow>
                       )
@@ -186,13 +181,11 @@ function AccountPage() {
                   <TYPE.main>{t('totalValueSwapped')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>
-                    {totalSwappedUSD ? formattedNumber(totalSwappedUSD * 0.003, true) : '-'}
-                  </TYPE.header>
-                  <TYPE.main>Total Fees Paid</TYPE.main>
+                  <TYPE.header fontSize={24}>{totalFeesPaid ? formattedNumber(totalFeesPaid, true) : '-'}</TYPE.header>
+                  <TYPE.main>{t('totalFeesPaid')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{transactionCount ? transactionCount : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>{totalTransactionsAmount ?? '-'}</TYPE.header>
                   <TYPE.main>{t('totalTransactions')}</TYPE.main>
                 </AutoColumn>
               </AutoColumn>
@@ -206,13 +199,11 @@ function AccountPage() {
                   <TYPE.main>{t('totalValueSwapped')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>
-                    {totalSwappedUSD ? formattedNumber(totalSwappedUSD * 0.003, true) : '-'}
-                  </TYPE.header>
+                  <TYPE.header fontSize={24}>{totalFeesPaid ? formattedNumber(totalFeesPaid, true) : '-'}</TYPE.header>
                   <TYPE.main>{t('totalFeesPaid')}</TYPE.main>
                 </AutoColumn>
                 <AutoColumn gap="8px">
-                  <TYPE.header fontSize={24}>{transactionCount ? transactionCount : '-'}</TYPE.header>
+                  <TYPE.header fontSize={24}>{totalTransactionsAmount ?? '-'}</TYPE.header>
                   <TYPE.main>{t('totalTransactions')}</TYPE.main>
                 </AutoColumn>
               </AutoRow>
@@ -231,9 +222,9 @@ function AccountPage() {
                 </RowBetween>
                 <RowFixed>
                   <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1}>
-                    {positionValue
-                      ? formattedNumber(positionValue, true)
-                      : positionValue === 0
+                    {positionStatistics?.liquidityIncludingFees
+                      ? formattedNumber(positionStatistics.liquidityIncludingFees, true)
+                      : positionStatistics?.liquidityIncludingFees === 0
                       ? formattedNumber(0, true)
                       : '-'}
                   </TYPE.header>
@@ -246,8 +237,14 @@ function AccountPage() {
                   </TYPE.light>
                 </RowBetween>
                 <RowFixed align="flex-end">
-                  <TYPE.header fontSize={below440 ? 18 : 24} lineHeight={1} color={aggregateFees && 'green'}>
-                    {aggregateFees ? formattedNumber(aggregateFees, true) : '-'}
+                  <TYPE.header
+                    fontSize={below440 ? 18 : 24}
+                    lineHeight={1}
+                    color={positionStatistics?.feesEarnedCumulative && 'green'}
+                  >
+                    {positionStatistics?.feesEarnedCumulative
+                      ? formattedNumber(positionStatistics.feesEarnedCumulative, true)
+                      : '-'}
                   </TYPE.header>
                 </RowFixed>
               </AutoColumn>
@@ -258,9 +255,13 @@ function AccountPage() {
           <DashboardWrapper style={{ display: 'grid' }}>
             <Panel>
               {activePosition ? (
-                <PairReturnsChart account={accountAddress} position={activePosition} />
+                <PairReturnsChart
+                  account={accountAddress}
+                  position={activePosition}
+                  liquiditySnapshots={liquiditySnapshots}
+                />
               ) : (
-                <UserChart account={accountAddress} />
+                <UserChart account={accountAddress} liquiditySnapshots={liquiditySnapshots} />
               )}
             </Panel>
           </DashboardWrapper>

@@ -62,21 +62,21 @@ export default class GlobalDataController implements IGlobalDataController {
         })
 
         // fill in empty days ( there will be no day datas if no trades made that day )
-        let timestamp = data[0].date ? data[0].date : oldestDateToFetch
+        let timestamp = data[0].date || oldestDateToFetch
         let latestLiquidityUSD = data[0].totalLiquidityUSD
         let index = 1
         while (timestamp < utcEndTime.unix() - oneDay) {
           const nextDay = timestamp + oneDay
           const currentDayIndex = (nextDay / oneDay).toFixed(0)
-          if (!dayIndexSet.has(currentDayIndex)) {
+          if (dayIndexSet.has(currentDayIndex)) {
+            latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
+            index = index + 1
+          } else {
             data.push({
               date: nextDay,
               dailyVolumeUSD: 0,
               totalLiquidityUSD: latestLiquidityUSD
             })
-          } else {
-            latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
-            index = index + 1
           }
           timestamp = nextDay
         }

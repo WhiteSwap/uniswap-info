@@ -19,30 +19,38 @@ export function getTimeframe(timeWindow: string) {
   // based on window, get starttime
   let utcStartTime
   switch (timeWindow) {
-    case timeframeOptions.WEEK:
+    case timeframeOptions.WEEK: {
       utcStartTime = utcEndTime.subtract(1, 'week').endOf('day').unix() - 1
       break
-    case timeframeOptions.MONTH:
+    }
+    case timeframeOptions.MONTH: {
       utcStartTime = utcEndTime.subtract(1, 'month').endOf('day').unix() - 1
       break
+    }
     case timeframeOptions.ALL_TIME:
+    case timeframeOptions.YEAR: {
       utcStartTime = utcEndTime.subtract(1, 'year').endOf('day').unix() - 1
       break
-    default:
+    }
+    default: {
       utcStartTime = utcEndTime.subtract(1, 'year').startOf('year').unix() - 1
       break
+    }
   }
   return utcStartTime
 }
 
 function parseRouteAddress(address: string) {
   switch (address) {
-    case WETH_ADDRESS:
+    case WETH_ADDRESS: {
       return SupportedNetwork.ETHEREUM.toUpperCase()
-    case WTRX_ADDRESS:
+    }
+    case WTRX_ADDRESS: {
       return SupportedNetwork.TRON.toUpperCase()
-    default:
+    }
+    default: {
       return address
+    }
   }
 }
 
@@ -59,16 +67,19 @@ export function getExchangeLink({
 }) {
   let exchangePageRoute = ''
   switch (type) {
-    case 'remove':
+    case 'remove': {
       exchangePageRoute = 'pool/remove'
       break
-    case 'add':
+    }
+    case 'add': {
       exchangePageRoute = 'pool/add'
       break
+    }
     case 'swap':
-    default:
+    default: {
       exchangePageRoute = 'swap'
       break
+    }
   }
   //TODO: rename network to chain
   const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === network)
@@ -278,13 +289,15 @@ export function getTokenLogoUrl(network: SupportedNetwork, address: string) {
   const tokenAddress = network === SupportedNetwork.ETHEREUM ? checksumEthAddress(address) : address
   let urlPrefix = ''
   switch (network) {
-    case SupportedNetwork.ETHEREUM:
+    case SupportedNetwork.ETHEREUM: {
       urlPrefix = '/logo.png'
       break
+    }
     case SupportedNetwork.TRON:
-    default:
+    default: {
       urlPrefix = '.png'
       break
+    }
   }
   return LOGO_OVERRIDES[network][address] || `${LOGO_SOURCE[network]}/${tokenAddress}${urlPrefix}`
 }
@@ -303,16 +316,22 @@ export const isTronAddress = (value: string) => {
 
 export const isValidAddress = (address: string, networkId: SupportedNetwork) => {
   switch (networkId) {
-    case SupportedNetwork.ETHEREUM:
+    case SupportedNetwork.ETHEREUM: {
       return Boolean(checksumEthAddress(address))
+    }
     case SupportedNetwork.TRON:
-    default:
+    default: {
       return isTronAddress(address)
+    }
   }
 }
 
 export const toK = (number: string) => {
-  return Numeral(number).format('0.[00]a')
+  if (Number.isNaN(number)) {
+    return '0'
+  }
+  const amountToFormat = Number(number).toFixed(4)
+  return Numeral(amountToFormat).format('0.[00]a')
 }
 
 const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
@@ -352,11 +371,13 @@ export function getBlockChainScanLink(
 
 export function getViewOnScanKey(networkId: SupportedNetwork) {
   switch (networkId) {
-    case SupportedNetwork.ETHEREUM:
+    case SupportedNetwork.ETHEREUM: {
       return 'viewOnEtherscan'
+    }
     case SupportedNetwork.TRON:
-    default:
+    default: {
       return 'viewOnTronScan'
+    }
   }
 }
 
@@ -508,7 +529,7 @@ export function networkPrefix(activeNetwork: NetworkInfo) {
 export function getCurrentNetwork() {
   const locationNetworkId = location.pathname.split('/')[1]
   const newNetworkInfo = SUPPORTED_NETWORK_VERSIONS.find(n => locationNetworkId === n.route.toLowerCase())
-  return newNetworkInfo ? newNetworkInfo : TronNetworkInfo
+  return newNetworkInfo || TronNetworkInfo
 }
 
 export function escapeRegExp(value: string) {

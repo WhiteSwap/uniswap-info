@@ -19,11 +19,15 @@ const PAIR_DATA = gql`
       price
       derivedPrice
     }
+    fee
+    volumeFeeChangeUSD
     totalLiquidityUSD
     dayVolumeUSD
     weekVolumeUSD
     liquidityChangeUSD
     volumeChangeUSD
+    fee
+    volumeFeeChangeUSD
   }
 `
 
@@ -41,6 +45,26 @@ export const PAIR = gql`
   query Pair($address: String!) {
     pair(id: $address) {
       ...PairData
+    }
+  }
+`
+
+export const PAIR_HOURLY_PRICE = gql`
+  query PairHourlyPrice($startTime: Int!, $name: String!, $id: String!) {
+    pairHourlyPrice(startTime: $startTime, name: $name, id: $id) {
+      timestamp
+      open
+      close
+    }
+  }
+`
+
+export const PAIR_DAILY_DATA = gql`
+  query PairDailyData($startTime: Int!, $id: String!) {
+    pairDailyData(startTime: $startTime, id: $id) {
+      date
+      volume
+      liquidity
     }
   }
 `

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
@@ -34,14 +34,131 @@ enum PositionSortField {
 }
 
 interface IPositionList {
-  positions: Position[]
+  positions?: Position[]
+}
+
+const ListItem = ({
+  position: { totalUsd, tokenOne, tokenTwo, pairAddress, earningFeeTotalUsd },
+  index
+}: {
+  position: Position
+  index: number
+}) => {
+  const { t } = useTranslation()
+  const below500 = useMedia('(max-width: 500px)')
+  const below740 = useMedia('(max-width: 740px)')
+  const activeNetworkId = useActiveNetworkId()
+  const formatPath = useFormatPath()
+
+  return (
+    <DashGrid style={{ opacity: totalUsd > 0 ? 1 : 0.6 }}>
+      {!below740 && <DataText>{index}</DataText>}
+      <DataText justifyContent="flex-start" alignItems="flex-start">
+        <AutoColumn gap="8px" justify="flex-start">
+          <DoubleTokenLogo size={16} a0={tokenOne.id} a1={tokenTwo.id} margin={!below740} />
+        </AutoColumn>
+        <AutoColumn gap="8px" justify="flex-start" style={{ marginLeft: '20px' }}>
+          <CustomLink to={formatPath(`/pairs/${pairAddress}`)} style={{ whiteSpace: 'nowrap' }}>
+            {`${tokenOne.symbol}-${tokenTwo.symbol}`}
+          </CustomLink>
+
+          <ButtonsContainer justify="flex-start">
+            <Link
+              external
+              href={getExchangeLink({
+                network: activeNetworkId,
+                inputCurrency: tokenOne.id,
+                outputCurrency: tokenTwo.id,
+                type: 'add'
+              })}
+              style={{ marginRight: '.5rem' }}
+            >
+              <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('add')}</ButtonLight>
+            </Link>
+            {totalUsd > 0 && (
+              <Link
+                external
+                href={getExchangeLink({
+                  network: activeNetworkId,
+                  inputCurrency: tokenOne?.id,
+                  outputCurrency: tokenTwo?.id,
+                  type: 'remove'
+                })}
+              >
+                <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('remove')}</ButtonLight>
+              </Link>
+            )}
+          </ButtonsContainer>
+        </AutoColumn>
+      </DataText>
+      <DataText>
+        <AutoColumn gap="12px" justify="flex-end">
+          <DataText>{formattedNumber(totalUsd, true)}</DataText>
+          <AutoColumn gap="4px" justify="flex-end">
+            <RowFixed>
+              <DataText fontWeight={400} fontSize={11}>
+                {formattedNumber(tokenOne.amount)}
+              </DataText>
+              <FormattedName
+                text={tokenOne.symbol}
+                maxCharacters={below740 ? 10 : 18}
+                margin={true}
+                fontSize={'11px'}
+              />
+            </RowFixed>
+            <RowFixed>
+              <DataText fontWeight={400} fontSize={11}>
+                {formattedNumber(tokenTwo.amount)}
+              </DataText>
+              <FormattedName
+                text={tokenTwo.symbol}
+                maxCharacters={below740 ? 10 : 18}
+                margin={true}
+                fontSize={'11px'}
+              />
+            </RowFixed>
+          </AutoColumn>
+        </AutoColumn>
+      </DataText>
+      {!below500 && (
+        <DataText>
+          <AutoColumn gap="12px" justify="flex-end">
+            <TYPE.main color={'green'}>
+              <RowFixed>{formattedNumber(earningFeeTotalUsd, true)}</RowFixed>
+            </TYPE.main>
+            <AutoColumn gap="4px" justify="flex-end">
+              <RowFixed>
+                <DataText fontWeight={400} fontSize={11}>
+                  {formattedNumber(tokenOne.fee)}
+                </DataText>
+                <FormattedName
+                  text={tokenOne.symbol}
+                  maxCharacters={below740 ? 10 : 18}
+                  margin={true}
+                  fontSize={'11px'}
+                />
+              </RowFixed>
+              <RowFixed>
+                <DataText fontWeight={400} fontSize={11}>
+                  {formattedNumber(tokenTwo.fee)}
+                </DataText>
+                <FormattedName
+                  text={tokenTwo.symbol}
+                  maxCharacters={below740 ? 10 : 18}
+                  margin={true}
+                  fontSize={'11px'}
+                />
+              </RowFixed>
+            </AutoColumn>
+          </AutoColumn>
+        </DataText>
+      )}
+    </DashGrid>
+  )
 }
 
 const PositionList = ({ positions }: IPositionList) => {
   const { t } = useTranslation()
-  const formatPath = useFormatPath()
-  const activeNetworkId = useActiveNetworkId()
-
   const below440 = useMedia('(max-width: 440px)')
   const below500 = useMedia('(max-width: 500px)')
   const below740 = useMedia('(max-width: 740px)')
@@ -70,135 +187,15 @@ const PositionList = ({ positions }: IPositionList) => {
     }
   }, [positions])
 
-  const ListItem = ({ position, index }: { position: Position; index: number }) => {
-    const poolOwnership = position.liquidityTokenBalance / position.pair.totalSupply
-    const valueUSD = poolOwnership * position.pair.reserveUSD
-
-    return (
-      <DashGrid style={{ opacity: poolOwnership > 0 ? 1 : 0.6 }}>
-        {!below740 && <DataText>{index}</DataText>}
-        <DataText justifyContent="flex-start" alignItems="flex-start">
-          <AutoColumn gap="8px" justify="flex-start">
-            <DoubleTokenLogo
-              size={16}
-              a0={position.pair.tokenOne?.id}
-              a1={position.pair.tokenTwo?.id}
-              margin={!below740}
-            />
-          </AutoColumn>
-          <AutoColumn gap="8px" justify="flex-start" style={{ marginLeft: '20px' }}>
-            <CustomLink to={formatPath(`/pairs/${position.pair?.id}`)} style={{ whiteSpace: 'nowrap' }}>
-              {`${position.pair.tokenOne?.symbol}-${position.pair.tokenTwo?.symbol}`}
-            </CustomLink>
-
-            <ButtonsContainer justify="flex-start">
-              <Link
-                external
-                href={getExchangeLink({
-                  network: activeNetworkId,
-                  inputCurrency: position.pair.tokenOne?.id,
-                  outputCurrency: position.pair.tokenTwo?.id,
-                  type: 'add'
-                })}
-                style={{ marginRight: '.5rem' }}
-              >
-                <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('add')}</ButtonLight>
-              </Link>
-              {poolOwnership > 0 && (
-                <Link
-                  external
-                  href={getExchangeLink({
-                    network: activeNetworkId,
-                    inputCurrency: position.pair.tokenOne?.id,
-                    outputCurrency: position.pair.tokenTwo?.id,
-                    type: 'remove'
-                  })}
-                >
-                  <ButtonLight style={{ padding: '.5rem 1rem', borderRadius: '.625rem' }}>{t('remove')}</ButtonLight>
-                </Link>
-              )}
-            </ButtonsContainer>
-          </AutoColumn>
-        </DataText>
-        <DataText>
-          <AutoColumn gap="12px" justify="flex-end">
-            <DataText>{formattedNumber(valueUSD, true)}</DataText>
-            <AutoColumn gap="4px" justify="flex-end">
-              <RowFixed>
-                <DataText fontWeight={400} fontSize={11}>
-                  {formattedNumber(poolOwnership * position.pair.tokenOne?.reserve)}
-                </DataText>
-                <FormattedName
-                  text={position.pair.tokenOne?.symbol}
-                  maxCharacters={below740 ? 10 : 18}
-                  margin={true}
-                  fontSize={'11px'}
-                />
-              </RowFixed>
-              <RowFixed>
-                <DataText fontWeight={400} fontSize={11}>
-                  {formattedNumber(poolOwnership * position.pair.tokenTwo?.reserve)}
-                </DataText>
-                <FormattedName
-                  text={position.pair.tokenTwo?.symbol}
-                  maxCharacters={below740 ? 10 : 18}
-                  margin={true}
-                  fontSize={'11px'}
-                />
-              </RowFixed>
-            </AutoColumn>
-          </AutoColumn>
-        </DataText>
-        {!below500 && (
-          <DataText>
-            <AutoColumn gap="12px" justify="flex-end">
-              <TYPE.main color={'green'}>
-                <RowFixed>{formattedNumber(position?.feeEarned, true)}</RowFixed>
-              </TYPE.main>
-              <AutoColumn gap="4px" justify="flex-end">
-                <RowFixed>
-                  <DataText fontWeight={400} fontSize={11}>
-                    {position.pair.tokenOne?.price > 0
-                      ? formattedNumber(position?.feeEarned / position.pair.tokenOne?.priceUSD / 2, false)
-                      : 0}
-                  </DataText>
-                  <FormattedName
-                    text={position.pair.tokenOne?.symbol}
-                    maxCharacters={below740 ? 10 : 18}
-                    margin={true}
-                    fontSize={'11px'}
-                  />
-                </RowFixed>
-                <RowFixed>
-                  <DataText fontWeight={400} fontSize={11}>
-                    {position.pair.tokenTwo?.price > 0
-                      ? formattedNumber(position?.feeEarned / position.pair.tokenTwo?.priceUSD / 2, false)
-                      : 0}
-                  </DataText>
-                  <FormattedName
-                    text={position.pair.tokenTwo?.symbol}
-                    maxCharacters={below740 ? 10 : 18}
-                    margin={true}
-                    fontSize={'11px'}
-                  />
-                </RowFixed>
-              </AutoColumn>
-            </AutoColumn>
-          </DataText>
-        )}
-      </DashGrid>
-    )
-  }
-
   const changeSortDirection = (direction: PositionSortField) => {
     return () => {
       setSortedColumn(direction)
-      setSortDirection(sortedColumn !== direction ? true : !sortDirection)
+      setSortDirection(sortedColumn === direction ? !sortDirection : true)
     }
   }
 
   const sortDirectionArrow = (column: PositionSortField) => {
-    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    const sortedSymbol = sortDirection ? '↓' : '↑'
     return sortedColumn === column ? sortedSymbol : ''
   }
 
@@ -210,28 +207,29 @@ const PositionList = ({ positions }: IPositionList) => {
     setPage(page === maxPage ? page : page + 1)
   }
 
-  const positionsSorted =
-    positions &&
-    [...positions]
-
-      .sort((p0, p1) => {
-        let order = false
-        const direction = sortDirection ? -1 : 1
-        switch (sortedColumn) {
-          case PositionSortField.fee:
-            order = p0?.feeEarned > p1?.feeEarned
-            break
-          case PositionSortField.value:
-          default: {
-            const bal0 = (p0.liquidityTokenBalance / p0.pair.totalSupply) * p0.pair.reserveUSD
-            const bal1 = (p1.liquidityTokenBalance / p1.pair.totalSupply) * p1.pair.reserveUSD
-            order = bal0 > bal1
-            break
+  const positionsSorted = useMemo(() => {
+    if (positions) {
+      return [...positions]
+        .sort((p0, p1) => {
+          let order = false
+          const direction = sortDirection ? -1 : 1
+          switch (sortedColumn) {
+            case PositionSortField.fee: {
+              order = p0?.earningFeeTotalUsd > p1?.earningFeeTotalUsd
+              break
+            }
+            case PositionSortField.value:
+            default: {
+              order = p0.totalUsd > p1.totalUsd
+              break
+            }
           }
-        }
-        return order ? direction : direction * -1
-      })
-      .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
+          return order ? direction : direction * -1
+        })
+        .slice(ITEMS_PER_PAGE * (page - 1), page * ITEMS_PER_PAGE)
+    }
+    return undefined
+  }, [positions, page, sortDirection, sortedColumn])
 
   return (
     <ListWrapper>
@@ -265,15 +263,15 @@ const PositionList = ({ positions }: IPositionList) => {
         </DashGrid>
         <Divider />
         <List p={0}>
-          {!positionsSorted ? (
-            <LocalLoader />
-          ) : (
+          {positionsSorted ? (
             positionsSorted.map((position, index) => (
               <div key={index}>
                 <ListItem key={index} index={(page - 1) * 10 + index + 1} position={position} />
                 <Divider />
               </div>
             ))
+          ) : (
+            <LocalLoader />
           )}
         </List>
       </Panel>

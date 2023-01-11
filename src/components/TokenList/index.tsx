@@ -35,25 +35,31 @@ function compareTokenList(a: Token, b: Token, sortedColumn: TokenSortField, sort
   let order = false
   const direction = sortDirection ? -1 : 1
   switch (sortedColumn) {
-    case TokenSortField.liquidity:
+    case TokenSortField.liquidity: {
       order = a.totalLiquidityUSD > b.totalLiquidityUSD
       break
-    case TokenSortField.change:
+    }
+    case TokenSortField.change: {
       order = a.priceChangeUSD > b.priceChangeUSD
       break
-    case TokenSortField.name:
+    }
+    case TokenSortField.name: {
       order = a.name > b.name
       break
-    case TokenSortField.price:
+    }
+    case TokenSortField.price: {
       order = a.priceUSD > b.priceUSD
       break
-    case TokenSortField.symbol:
+    }
+    case TokenSortField.symbol: {
       order = a.symbol > b.symbol
       break
+    }
     case TokenSortField.volume:
-    default:
+    default: {
       order = a.dayVolumeUSD > b.dayVolumeUSD
       break
+    }
   }
   return order ? direction : direction * -1
 }
@@ -104,12 +110,12 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
   const changeSortDirection = (direction: TokenSortField) => {
     return () => {
       setSortedColumn(direction)
-      setSortDirection(sortedColumn !== direction ? true : !sortDirection)
+      setSortDirection(sortedColumn === direction ? !sortDirection : true)
     }
   }
 
   const sortDirectionArrow = (column: TokenSortField) => {
-    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    const sortedSymbol = sortDirection ? '↓' : '↑'
     return sortedColumn === column ? sortedSymbol : ''
   }
 

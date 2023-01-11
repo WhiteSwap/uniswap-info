@@ -18,7 +18,7 @@ const WrappedLink = ({ external, target, children, ...rest }: WrappedLinkPropert
 )
 
 const Link = styled(WrappedLink)`
-  color: ${({ color, theme }) => (color ? color : theme.link)};
+  color: ${({ color, theme }) => color || theme.link};
   cursor: pointer;
 `
 
@@ -26,7 +26,7 @@ export const CustomLink = styled(RouterLink)<{ color?: string }>`
   text-decoration: none;
   font-size: 14px;
   font-weight: 700;
-  color: ${({ color, theme }) => (color ? color : theme.blueGrey)};
+  color: ${({ color, theme }) => color || theme.blueGrey};
   cursor: pointer;
 
   &:visited {

@@ -1,8 +1,9 @@
-import { TransactionsMock } from '__mocks__/transactions'
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
 import { transactionsMapper } from 'data/mappers/tron/transactionMapper'
 import { client } from 'service/client'
 import {
+  AccountTransactionsQuery,
+  AccountTransactionsQueryVariables,
   GlobalTransactionsQuery,
   PairTransactionsQuery,
   PairTransactionsQueryVariables,
@@ -11,6 +12,7 @@ import {
   TransactionCountQuery
 } from 'service/generated/tronGraphql'
 import {
+  ACCOUNT_TRANSACTIONS,
   GLOBAL_TRANSACTIONS,
   PAIR_TRANSACTIONS,
   TOKEN_TRANSACTIONS,
@@ -28,7 +30,7 @@ export default class TransactionDataController implements ITransactionDataContro
       variables: { pairAddress },
       fetchPolicy: 'no-cache'
     })
-    return transactionsMapper(data)
+    return transactionsMapper(data.transactions)
   }
   async getTokenTransactions(tokenAddress: string) {
     const { data } = await client.query<TokenTransactionsQuery, TokenTransactionsQueryVariables>({
@@ -36,17 +38,21 @@ export default class TransactionDataController implements ITransactionDataContro
       variables: { tokenAddress },
       fetchPolicy: 'no-cache'
     })
-    return transactionsMapper(data)
+    return transactionsMapper(data.transactions)
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getUserTransactions(_account: string) {
-    return TransactionsMock
+  async getUserTransactions(account: string) {
+    const { data } = await client.query<AccountTransactionsQuery, AccountTransactionsQueryVariables>({
+      query: ACCOUNT_TRANSACTIONS,
+      variables: { accountAddress: account },
+      fetchPolicy: 'no-cache'
+    })
+    return transactionsMapper(data.account)
   }
   async getAllTransactions() {
     const { data } = await client.query<GlobalTransactionsQuery>({
       query: GLOBAL_TRANSACTIONS,
       fetchPolicy: 'no-cache'
     })
-    return transactionsMapper(data)
+    return transactionsMapper(data.transactions)
   }
 }

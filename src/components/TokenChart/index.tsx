@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useMedia, usePrevious } from 'react-use'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
@@ -11,7 +10,7 @@ import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { timeframeOptions } from 'constants/index'
 import { useTokenChartData, useTokenPriceData } from 'state/features/token/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
-import { toK, toNiceDate, toNiceDateYear, formattedNumber, getTimeframe } from 'utils'
+import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartButtonsGrid, ChartWrapper, PriceOption } from './styled'
 
 const CHART_VIEW = {
@@ -52,22 +51,14 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
     }
   }, [address, addressPrevious])
 
-  const chartData = useTokenChartData(address)
-
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK)
+
+  const chartData = useTokenChartData(address, timeWindow)
 
   const interval = frequency === DATA_FREQUENCY.DAY ? 86_400 : 3600
   const priceData = useTokenPriceData(address, timeWindow, interval)
 
-  const utcStartTime = getTimeframe(timeWindow)
-
-  const domain = ([dataMin, dataMax]: [number, number], allowDataOverflow: boolean): [number, number] => [
-    +dataMin > utcStartTime && allowDataOverflow ? dataMin : utcStartTime,
-    dataMax
-  ]
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22
-
-  const filteredChartData = chartData?.filter(entry => entry.date >= utcStartTime)
 
   return (
     <ChartWrapper>
@@ -116,8 +107,8 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
               1M
             </OptionButton>
             <OptionButton
-              active={timeWindow === timeframeOptions.ALL_TIME}
-              onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+              active={timeWindow === timeframeOptions.YEAR}
+              onClick={() => setTimeWindow(timeframeOptions.YEAR)}
             >
               1Y
             </OptionButton>
@@ -130,16 +121,13 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
               <PriceOption active={frequency === DATA_FREQUENCY.HOUR} onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}>
                 H
               </PriceOption>
-              <PriceOption active={frequency === DATA_FREQUENCY.LINE} onClick={() => setFrequency(DATA_FREQUENCY.LINE)}>
-                <Activity size={14} />
-              </PriceOption>
             </AutoRow>
           )}
         </ChartButtonsGrid>
       )}
-      {chartFilter === CHART_VIEW.LIQUIDITY && filteredChartData && (
+      {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>
-          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap="1" data={filteredChartData}>
+          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap="1" data={chartData}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={color} stopOpacity="0.35" />
@@ -198,76 +186,16 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
           </AreaChart>
         </ResponsiveContainer>
       )}
-      {chartFilter === CHART_VIEW.PRICE &&
-        (frequency === DATA_FREQUENCY.LINE ? (
-          <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
-            <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={filteredChartData}>
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={color} stopOpacity={0.35} />
-                  <stop offset="95%" stopColor={color} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis
-                tickLine={false}
-                axisLine={false}
-                interval="preserveEnd"
-                tickMargin={16}
-                minTickGap={120}
-                tickFormatter={tick => toNiceDate(tick)}
-                dataKey="date"
-                tick={{ fill: textColor }}
-                type="number"
-                allowDataOverflow
-                domain={domain}
-              />
-              <YAxis
-                type="number"
-                orientation="right"
-                tickFormatter={tick => '$' + toK(tick)}
-                axisLine={false}
-                tickLine={false}
-                interval="preserveEnd"
-                minTickGap={80}
-                yAxisId={0}
-                tick={{ fill: textColor }}
-              />
-              <Tooltip
-                cursor={true}
-                formatter={(value: string | number) => formattedNumber(value, true)}
-                labelFormatter={label => toNiceDateYear(label)}
-                labelStyle={{ paddingTop: 4 }}
-                contentStyle={{
-                  padding: '10px 14px',
-                  borderRadius: 10,
-                  borderColor: color,
-                  color: 'black'
-                }}
-                wrapperStyle={{ top: '-70px', left: '-10px' }}
-              />
-              <Area
-                key="other"
-                dataKey="priceUSD"
-                stackId="2"
-                strokeWidth={2}
-                dot={false}
-                type="monotone"
-                name={t('price')}
-                yAxisId={0}
-                stroke={color}
-                fill="url(#colorUv)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        ) : priceData ? (
+      {chartFilter === CHART_VIEW.PRICE ? (
+        priceData ? (
           <CandleStickChart data={priceData} base={base} />
         ) : (
           <LocalLoader />
-        ))}
-
+        )
+      ) : undefined}
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
-          <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={filteredChartData}>
+          <BarChart margin={{ top: 0, right: 10, bottom: 6, left: 10 }} barCategoryGap={1} data={chartData}>
             <XAxis
               tickLine={false}
               axisLine={false}

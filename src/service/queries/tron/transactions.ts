@@ -70,6 +70,23 @@ export const PAIR_TRANSACTIONS = gql`
   }
 `
 
+export const ACCOUNT_TRANSACTIONS = gql`
+  ${TRANSACTION_DETAILS}
+  query AccountTransactions($accountAddress: String!) {
+    account {
+      mints(limit: 30, accountAddress: $accountAddress) {
+        ...TransactionDetails
+      }
+      swaps(limit: 30, accountAddress: $accountAddress) {
+        ...TransactionDetails
+      }
+      burns(limit: 30, accountAddress: $accountAddress) {
+        ...TransactionDetails
+      }
+    }
+  }
+`
+
 export const TRANSACTION_COUNT = gql`
   query TransactionCount {
     countTransactions

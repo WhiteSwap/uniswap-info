@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { timeframeOptions } from 'constants/index'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import { tokenChartDataMapper } from 'data/mappers/ethereum/tokenMappers'
 import { client } from 'service/client'
@@ -11,7 +12,8 @@ import {
   getPercentChange,
   getBlocksFromTimestamps,
   splitQuery,
-  parseTokenInfo
+  parseTokenInfo,
+  getTimeframe
 } from 'utils'
 
 async function fetchTokens(block?: number) {
@@ -185,7 +187,9 @@ export default class TokenDataController implements ITokenDataController {
   async getTokenPairs(tokenAddress: string) {
     // fetch all current and historical data
     const result = await fetchTokenData(tokenAddress)
-    return [...result.data?.['pairs0'], ...result.data?.['pairs1']].map((p: { id: string }) => p.id)
+    const pairs0 = result.data?.pairs0
+    const pairs1 = result.data?.pairs1
+    return [...pairs0, ...pairs1].map((p: { id: string }) => p.id)
   }
   async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number, latestBlock: number) {
     const utcEndTime = dayjs.utc().unix()
@@ -307,22 +311,19 @@ export default class TokenDataController implements ITokenDataController {
       // fill in empty days
       let timestamp = data[0] && data[0].date ? data[0].date : startTime
       let latestLiquidityUSD = data[0] && data[0].totalLiquidityUSD
-      let latestPriceUSD = data[0] && data[0].priceUSD
       let dayIndex = 1
       while (timestamp < utcEndTime.startOf('minute').unix() - oneDay) {
         const nextDay = timestamp + oneDay
         const currentDayIndex = (nextDay / oneDay).toFixed(0)
-        if (!dayIndexSet.has(currentDayIndex)) {
+        if (dayIndexSet.has(currentDayIndex)) {
+          latestLiquidityUSD = dayIndexArray[dayIndex].totalLiquidityUSD
+          dayIndex += 1
+        } else {
           data.push({
             date: nextDay,
             dailyVolumeUSD: 0,
-            priceUSD: latestPriceUSD,
             totalLiquidityUSD: latestLiquidityUSD
           })
-        } else {
-          latestLiquidityUSD = dayIndexArray[dayIndex].totalLiquidityUSD
-          latestPriceUSD = dayIndexArray[dayIndex].priceUSD
-          dayIndex += 1
         }
         timestamp = nextDay
       }
@@ -331,6 +332,21 @@ export default class TokenDataController implements ITokenDataController {
       console.error(error)
     }
 
-    return tokenChartDataMapper(data)
+    const chartData = tokenChartDataMapper(data)
+
+    // FIXME: ETH subgraph tokenData query returns data only for all time range. Need to split to timeWindow manually
+    const weekStartTime = getTimeframe(timeframeOptions.WEEK)
+    const monthStartTime = getTimeframe(timeframeOptions.MONTH)
+    const yearStartTime = getTimeframe(timeframeOptions.YEAR)
+
+    const filteredWeekChartData = chartData?.filter(entry => entry.date >= weekStartTime)
+    const filteredMonthChartData = chartData?.filter(entry => entry.date >= monthStartTime)
+    const filteredYearChartData = chartData?.filter(entry => entry.date >= yearStartTime)
+
+    return {
+      [timeframeOptions.WEEK]: filteredWeekChartData,
+      [timeframeOptions.MONTH]: filteredMonthChartData,
+      [timeframeOptions.YEAR]: filteredYearChartData
+    }
   }
 }

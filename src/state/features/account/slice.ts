@@ -6,11 +6,11 @@ import {
   UpdateTransactionsPayload,
   UpdatePositionHistoryPayload,
   UpdatePairReturnsPayload,
-  AccountNetworkState,
-  UpdateTopLiquidityPositionsPayload
+  UpdateTopLiquidityPositionsPayload,
+  AccountStatistics
 } from './types'
 
-const initialNetworkAccountState: AccountNetworkState = {
+const initialNetworkAccountState: AccountStatistics = {
   topLiquidityPositions: undefined,
   byAddress: {}
 }
@@ -46,9 +46,16 @@ export const accountSlice = createSlice({
       state,
       { payload: { networkId, account, pairAddress, data } }: PayloadAction<UpdatePairReturnsPayload>
     ) => {
+      const statePairReturns = state[networkId].byAddress[account]?.pairReturns?.[pairAddress]
       state[networkId].byAddress[account] = {
         ...state[networkId].byAddress[account],
-        pairReturns: { ...state[networkId].byAddress[account]?.pairReturns, [pairAddress]: data }
+        pairReturns: {
+          ...state[networkId].byAddress[account]?.pairReturns,
+          [pairAddress]: {
+            liquidity: { ...statePairReturns?.liquidity, ...data?.liquidity },
+            fee: { ...statePairReturns?.fee, ...data?.fee }
+          }
+        }
       }
     },
     setTopLiquidityPositions: (

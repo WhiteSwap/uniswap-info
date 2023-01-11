@@ -109,8 +109,6 @@ interface Token {
 interface TokenDayData {
   dailyVolumeUSD: number
   date: number
-  id?: string
-  priceUSD: string
   totalLiquidityUSD: string
 }
 
@@ -128,6 +126,7 @@ interface Pair {
   volumeChangeUSD: number
   weekVolumeUSD: number
   dayFees: number
+  dayFeesChange: number
   apy: number
   totalSupply: number
   tokenOne: PairToken
@@ -153,10 +152,17 @@ type SnapshotPair = Pick<Pair, 'id' | 'reserveUSD'> & {
   tokenTwo: SnapshotPairToken
 }
 
+type PositionToken = Pick<Token, 'symbol' | 'id'> & {
+  amount: number
+  fee: number
+}
+
 interface Position {
-  pair: Pair
-  liquidityTokenBalance: number
-  feeEarned: number
+  pairAddress: string
+  tokenOne: PositionToken
+  tokenTwo: PositionToken
+  totalUsd: number
+  earningFeeTotalUsd: number
 }
 
 interface LiquiditySnapshot {
@@ -169,19 +175,13 @@ interface LiquiditySnapshot {
   timestamp: number
 }
 
-type PairReturn = {
-  date: number
-  fees: number
-  usdValue: number
-}
-
 interface LiquidityPosition {
-  pairAddress: string
-  pairName: string
-  tokenOne: string
-  tokenTwo: string
-  usd: number
-  userId: string
+  account: string
+  amount: number
+  pair: Pick<Pair, 'id'> & {
+    tokenOne: Pick<Token, 'id' | 'symbol'>
+    tokenTwo: Pick<Token, 'id' | 'symbol'>
+  }
 }
 
 interface ChartDailyItem {
@@ -189,3 +189,5 @@ interface ChartDailyItem {
   dailyVolumeUSD: number
   totalLiquidityUSD: number
 }
+
+type TimeWindow = 'hour' | 'day' | 'week' | 'month' | 'year'

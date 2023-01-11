@@ -87,7 +87,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
         </DataText>
         <DataText>{liquidity}</DataText>
         <DataText>{volume}</DataText>
-        {!below1080 ? (
+        {below1080 ? undefined : (
           <>
             <DataText>{formattedNumber(pairData.weekVolumeUSD, true)}</DataText>
             <DataText>{formattedNumber(pairData.dayFees, true)}</DataText>
@@ -95,7 +95,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
               <Percent percent={pairData.apy} />
             </DataText>
           </>
-        ) : undefined}
+        )}
       </DashGrid>
     )
   }
@@ -103,12 +103,12 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
   const changeSortDirection = (direction: PairSortField) => {
     return () => {
       setSortedColumn(direction)
-      setSortDirection(sortedColumn !== direction ? true : !sortDirection)
+      setSortDirection(sortedColumn === direction ? !sortDirection : true)
     }
   }
 
   const sortDirectionArrow = (column: PairSortField) => {
-    const sortedSymbol = !sortDirection ? '↑' : '↓'
+    const sortedSymbol = sortDirection ? '↓' : '↑'
     return sortedColumn === column ? sortedSymbol : ''
   }
 
@@ -128,22 +128,27 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
         let order = false
         const direction = sortDirection ? -1 : 1
         switch (sortedColumn) {
-          case PairSortField.Apy:
+          case PairSortField.Apy: {
             order = a.apy > b.apy
             break
-          case PairSortField.Fees:
+          }
+          case PairSortField.Fees: {
             order = a.dayFees > b.dayFees
             break
-          case PairSortField.Liquidity:
+          }
+          case PairSortField.Liquidity: {
             order = a.totalLiquidityUSD > b.totalLiquidityUSD
             break
-          case PairSortField.Volume:
+          }
+          case PairSortField.Volume: {
             order = a.dayVolumeUSD > b.dayVolumeUSD
             break
+          }
           case PairSortField.WeekVolume:
-          default:
+          default: {
             order = a.weekVolumeUSD > b.weekVolumeUSD
             break
+          }
         }
         return order ? direction : direction * -1
       })
@@ -172,7 +177,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
               {sortDirectionArrow(PairSortField.Volume)}
             </ClickableText>
           </Flex>
-          {!below1080 ? (
+          {below1080 ? undefined : (
             <>
               <Flex alignItems="center" justifyContent="flexEnd">
                 <ClickableText onClick={changeSortDirection(PairSortField.WeekVolume)}>
@@ -191,17 +196,17 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
                 <QuestionHelper text={t('basedOn24hrVolume')} />
               </Flex>
             </>
-          ) : undefined}
+          )}
         </DashGrid>
         <Divider />
         <List p={0}>
-          {!pairList ? (
-            <LocalLoader />
-          ) : (
+          {pairList ? (
             pairList.map(
               (pair, index) =>
                 pair && <ListItem key={index} index={(page - 1) * ITEMS_PER_PAGE + index + 1} pairData={pair} />
             )
+          ) : (
+            <LocalLoader />
           )}
         </List>
       </Panel>
