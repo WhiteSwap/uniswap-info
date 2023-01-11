@@ -68,7 +68,7 @@ const socialLinks = [
     name: 'Doc'
   },
   {
-    url: 'https://t.me/whiteswap',
+    url: 'https://t.me/whiteswapfinance',
     name: 'Telegram'
   },
   {
