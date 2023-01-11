@@ -468,12 +468,12 @@ export function parsePercent(percent: number) {
     return { data: '0%' }
   }
 
-  if (percent < 0.0001 && percent > 0) {
-    return { data: '< 0.0001%', color: '#54B45D' }
+  if (percent < 0.01 && percent > 0) {
+    return { data: '< 0.01%', color: '#54B45D' }
   }
 
-  if (percent < 0 && percent > -0.0001) {
-    return { data: '< 0.0001%', color: '#C73846' }
+  if (percent < 0 && percent > -0.01) {
+    return { data: '< 0.01%', color: '#C73846' }
   }
 
   const fixedPercent = percent.toFixed(2)
