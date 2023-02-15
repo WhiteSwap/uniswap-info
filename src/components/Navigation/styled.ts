@@ -28,6 +28,13 @@ export const Badge = styled.span`
   color: ${({ theme }) => theme.blueGrey};
 `
 
+export const HeaderContainer = styled.div`
+  position: fixed;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
 export const Header = styled.header`
   background-color: ${({ theme }) => darken(0.05, theme.bg1)};
   width: 100%;
@@ -39,9 +46,9 @@ export const Header = styled.header`
   align-items: center;
   grid-template-columns: 1fr min-content min-content;
   gap: 1rem;
-  position: fixed;
   height: 4.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
+  position: fixed;
 `
 
 export const SocialLinksList = styled.ul`
