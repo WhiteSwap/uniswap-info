@@ -11,7 +11,11 @@ export const TitleWrapper = styled(Link)`
 
   img {
     max-width: 100%;
-    height: 3.75rem;
     border-radius: 0.5rem;
+    height: 3.75rem;
+
+    @media screen and (min-width: 1080px) {
+      height: auto;
+    }
   }
 `
