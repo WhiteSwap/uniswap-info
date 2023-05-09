@@ -17,10 +17,9 @@ import { ChartWrapper, OptionsRow } from './styled'
 interface IPairReturnsChart {
   account: string
   position: Position
-  liquiditySnapshots?: LiquiditySnapshot[]
 }
 
-const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturnsChart) => {
+const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
   const { t } = useTranslation()
 
   const below600 = useMedia('(max-width: 600px)')
@@ -30,7 +29,7 @@ const PairReturnsChart = ({ account, position, liquiditySnapshots }: IPairReturn
   const [chartView, setChartView] = useState<PositionChartView>(PositionChartView.liquidity)
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
 
-  const data = useUserPositionChart(position.pairAddress, account, timeWindow, chartView, liquiditySnapshots)
+  const data = useUserPositionChart(position.pairAddress, account, timeWindow, chartView)
 
   const textColor = darkMode ? 'white' : 'black'
   const aspect = below600 ? 60 / 42 : 60 / 16

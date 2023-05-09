@@ -5,7 +5,7 @@ import {
   liquidityChartMapper,
   positionLiquidityChartMapper,
   positionFeeChartMapper
-} from 'data/mappers/tron/accountMappers'
+} from 'data/mappers/accountMappers'
 import { client } from 'service/client'
 import {
   AccountLiquidityDataQuery,
@@ -16,19 +16,24 @@ import {
   PositionLiquidityChartDataQuery,
   PositionLiquidityChartDataQueryVariables,
   TopLiquidityPositionsQuery
-} from 'service/generated/tronGraphql'
+} from 'service/generated/graphql'
 import {
   ACCOUNT_LIQUIDITY_CHART,
   ACCOUNT_POSITIONS,
   POSITION_FEE_CHART_DATA,
   POSITION_LIQUIDITY_CHART_DATA,
   TOP_LIQUIDITY_POSITIONS
-} from 'service/queries/tron/account'
+} from 'service/queries/account'
 import { PositionChartData, PositionChartView } from 'state/features/account/types'
 import { PairDetails } from 'state/features/pairs/types'
 import { getTimeframe } from 'utils'
 
 export default class AccountDataController implements IAccountDataController {
+  async getUserHistory() {
+    // FIXME: return empty array, because TRON doesn't return user history. It's necessary only for ETH chain
+    return []
+  }
+
   async getPositionChart(
     accountAddress: string,
     pair: PairDetails,
@@ -51,10 +56,6 @@ export default class AccountDataController implements IAccountDataController {
       })
       return { [key]: { [timeWindow]: positionFeeChartMapper(data) } }
     }
-  }
-  async getUserHistory() {
-    // FIXME: return empty array, because TRON doesn't return user history. It's necessary only for ETH chain
-    return []
   }
 
   async getUserLiquidityChart(account: string, timeWindow: string) {
