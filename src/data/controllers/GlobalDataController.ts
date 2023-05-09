@@ -5,6 +5,7 @@ import { CURRENT_TRX_PRICE, GLOBAL_CHART } from 'service/queries/global'
 
 export default class GlobalDataController implements IGlobalDataController {
   async getHealthStatus() {
+    // FIXME: load data from server. Temporary solution for ETH
     // const { data } = await client.query<LastBlockQuery>({ query: LAST_BLOCK })
     const { data } = await Promise.resolve({ data: { lastBlock: 17_223_893 } })
     // lastBlock === headBlock because TRONWEB cannot return headBlock
