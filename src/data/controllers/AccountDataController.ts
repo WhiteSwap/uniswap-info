@@ -29,11 +29,6 @@ import { PairDetails } from 'state/features/pairs/types'
 import { getTimeframe } from 'utils'
 
 export default class AccountDataController implements IAccountDataController {
-  async getUserHistory() {
-    // FIXME: return empty array, because TRON doesn't return user history. It's necessary only for ETH chain
-    return []
-  }
-
   async getPositionChart(
     accountAddress: string,
     pair: PairDetails,
