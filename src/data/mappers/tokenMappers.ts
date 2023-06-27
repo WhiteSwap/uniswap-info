@@ -4,7 +4,7 @@ import {
   TokenDailyData,
   TokenDailyDataQuery,
   TokensQuery
-} from 'service/generated/tronGraphql'
+} from 'service/generated/graphql'
 import { parseTokenInfo } from 'utils'
 
 export function tokenMapper(payload?: TronToken | null): Token {

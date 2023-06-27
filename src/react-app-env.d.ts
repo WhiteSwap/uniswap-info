@@ -3,6 +3,7 @@
 declare namespace NodeJS {
   interface ProcessEnvironment {
     REACT_APP_TRON_API: string
+    REACT_APP_ETHEREUM_API: string
     REACT_APP_GOOGLE_ANALYTICS_ID: string
   }
 }

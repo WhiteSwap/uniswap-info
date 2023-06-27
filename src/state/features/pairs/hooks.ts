@@ -2,8 +2,7 @@ import { useEffect } from 'react'
 import dayjs from 'dayjs'
 import { timeframeOptions, timestampUnitType } from 'constants/index'
 import DataService from 'data/DataService'
-import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isValidAddress } from 'utils'
 import { getPairName } from 'utils/pair'
@@ -12,7 +11,6 @@ import { setChartData, setHourlyData, setPair, setPairTransactions, setTopPairs 
 export function useHourlyRateData(pairAddress: string, timeWindow: string, enabled: boolean, isReversedPair: boolean) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const latestBlock = useLatestBlock()
   const pairData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress])
   const chartData = useAppSelector(state => {
     if (pairData?.tokenOne && pairData?.tokenTwo) {
@@ -31,21 +29,19 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string, enabl
       const data = await DataService.pairs.getHourlyRateData(
         pairAddress,
         startTime,
-        latestBlock,
         pairData.tokenOne,
         pairData.tokenTwo,
         isReversedPair
       )
       dispatch(setHourlyData({ address: pairAddress, hourlyData: data, timeWindow, networkId: activeNetwork }))
     }
-    if (!chartData?.length && latestBlock && pairData?.tokenOne && pairData?.tokenTwo && enabled) {
+    if (!chartData?.length && pairData?.tokenOne && pairData?.tokenTwo && enabled) {
       fetch()
     }
   }, [
     chartData,
     timeWindow,
     pairAddress,
-    latestBlock,
     activeNetwork,
     pairData?.tokenOne?.id,
     pairData?.tokenTwo?.id,
@@ -62,18 +58,17 @@ export function useHourlyRateData(pairAddress: string, timeWindow: string, enabl
 export function usePairData(pairAddress: string) {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const price = useActiveTokenPrice()
   const pairData = useAppSelector(state => state.pairs[activeNetwork]?.[pairAddress])
 
   useEffect(() => {
     async function fetchData() {
-      const data = await DataService.pairs.getPairData(pairAddress, price)
+      const data = await DataService.pairs.getPairData(pairAddress)
       data && dispatch(setPair({ networkId: activeNetwork, pairAddress, data }))
     }
-    if (!pairData && pairAddress && price && isValidAddress(pairAddress, activeNetwork)) {
+    if (!pairData && pairAddress && isValidAddress(pairAddress, activeNetwork)) {
       fetchData()
     }
-  }, [pairAddress, pairData, price, activeNetwork])
+  }, [pairAddress, pairData, activeNetwork])
 
   return pairData || {}
 }
@@ -115,13 +110,12 @@ export function usePairChartData(pairAddress: string, timeWindow: string) {
 export function useFetchPairs() {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const price = useActiveTokenPrice()
 
   useEffect(() => {
     async function getData() {
-      const topPairs = await DataService.pairs.getPairList(price)
+      const topPairs = await DataService.pairs.getPairList()
       topPairs && dispatch(setTopPairs({ topPairs, networkId: activeNetwork }))
     }
-    price && getData()
-  }, [price, activeNetwork])
+    getData()
+  }, [activeNetwork])
 }
