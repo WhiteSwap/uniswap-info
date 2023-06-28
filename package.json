@@ -2,7 +2,7 @@
   "name": "@whiteswap/info",
   "private": true,
   "homepage": "https://info.ws.exchange",
-  "version": "2.0.5",
+  "version": "2.1.2",
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
     "@popperjs/core": "^2.11.5",
