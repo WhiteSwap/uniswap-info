@@ -155,7 +155,7 @@ const TokenPage = () => {
                       {formattedSymbol ? `(${formattedSymbol})` : ''}
                     </RowFixed>
                   </TYPE.main>
-                  {!below1080 && (
+                  {!below1024 && (
                     <>
                       <TYPE.main fontSize="1.5rem" fontWeight={500} style={{ marginRight: '1rem' }}>
                         {price}
@@ -198,7 +198,7 @@ const TokenPage = () => {
             </RowBetween>
 
             <PanelWrapper>
-              {below1080 && price && (
+              {below1024 && price && (
                 <Panel>
                   <AutoColumn gap="1.25rem">
                     <RowBetween>
@@ -271,8 +271,8 @@ const TokenPage = () => {
               </Panel>
               <Panel
                 style={{
-                  gridColumn: below1080 ? (below1024 ? '1/4' : '2/-1') : '2/4',
-                  gridRow: below1080 ? '' : '1/4'
+                  gridColumn: below1024 ? '1/4' : '2/4',
+                  gridRow: below1024 ? '' : '1/4'
                 }}
               >
                 {priceUSD ? <TokenChart address={tokenAddress} color={backgroundColor} base={priceUSD} /> : undefined}
