@@ -1,5 +1,5 @@
 {
-  "protocolAnalytics": "Protocol Analytics",
+  "protocolAnalytics": "WhiteSwap Protocol Analytics: {{ network }}",
   "volume24hrs": "Volume (24hrs)",
   "totalLiquidity": "Total Liquidity",
   "seeAll": "See All",
