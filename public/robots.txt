@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: *.css
+Allow: *.js
+
+Host: https://info.ws.exchange
