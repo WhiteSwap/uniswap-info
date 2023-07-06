@@ -17,6 +17,7 @@ export interface NetworkInfo {
   chainId?: number
   blurb?: string
   networkUrlPrefix: string
+  headingTitle: string
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
@@ -28,7 +29,8 @@ export const EthereumNetworkInfo: NetworkInfo = {
   primaryColor: '#607BEE',
   secondaryColor: '#2172E5',
   chainId: 1,
-  networkUrlPrefix: 'mainnet'
+  networkUrlPrefix: 'mainnet',
+  headingTitle: 'Ethereum'
 }
 
 export const TronNetworkInfo: NetworkInfo = {
@@ -40,7 +42,8 @@ export const TronNetworkInfo: NetworkInfo = {
   primaryColor: '#F45670',
   secondaryColor: '#96BEDC',
   blurb: 'Beta',
-  networkUrlPrefix: 'mainnet'
+  networkUrlPrefix: 'mainnet',
+  headingTitle: 'TRON (TRX)'
 }
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, TronNetworkInfo]

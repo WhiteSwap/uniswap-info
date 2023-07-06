@@ -15,7 +15,9 @@ import Search from 'components/Search'
 import { SeriesChart } from 'components/SeriesChart'
 import TopTokenList from 'components/TokenList'
 import { TransactionTable } from 'components/TransactionTable'
+import { SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import { useFormatPath } from 'hooks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useGlobalTransactions } from 'state/features/global/hooks'
 import {
   useDayVolumeUsd,
@@ -57,6 +59,8 @@ const CHART_VIEW = {
 function GlobalPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
+  const activeNetwork = useActiveNetworkId()
+  const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === activeNetwork)
 
   const allPairs = usePairs()
   const allTokens = useTokens()
@@ -78,9 +82,7 @@ function GlobalPage() {
         <DashboardWrapper>
           <AutoColumn gap={below440 ? '.75rem' : '1.5rem'} style={{ paddingBottom: below800 ? '0' : '24px' }}>
             <RowBetween>
-              <TYPE.largeHeader>
-                {below800 ? t('protocolAnalytics') : `WhiteSwap ${t('protocolAnalytics')}`}
-              </TYPE.largeHeader>
+              <TYPE.largeHeader>{t('protocolAnalytics', { network: networkInfo?.headingTitle })}</TYPE.largeHeader>
               {!below800 && <Search />}
             </RowBetween>
             <GlobalStats />
