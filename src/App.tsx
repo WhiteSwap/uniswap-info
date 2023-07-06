@@ -16,7 +16,6 @@ import PairPage from 'pages/PairPage'
 import TokenPage from 'pages/TokenPage'
 import { useLatestBlocks } from 'state/features/application/hooks'
 import { useFetchActiveTokenPrice, useGlobalChartData } from 'state/features/global/hooks'
-import { useActiveTokenPrice } from 'state/features/global/selectors'
 import { useFetchPairs } from 'state/features/pairs/hooks'
 import { useFetchTokens } from 'state/features/token/hooks'
 import { useAppSelector } from 'state/hooks'
@@ -109,7 +108,6 @@ function App() {
 
   const globalChartData = useGlobalChartData()
   const [latestBlock, headBlock] = useLatestBlocks()
-  const price = useActiveTokenPrice()
   const formatPath = useFormatPath()
   const showWarning = headBlock - latestBlock > BLOCK_DIFFERENCE_THRESHOLD
   const showDesktopWarning = showWarning && !below1080
@@ -132,7 +130,7 @@ function App() {
           </WarningWrapper>
         ) : undefined}
         <Sentry.ErrorBoundary fallback={FallbackError}>
-          {latestBlock && headBlock && price && Object.keys(globalChartData).length > 0 ? (
+          {latestBlock && headBlock && Object.keys(globalChartData).length > 0 ? (
             <ContentWrapper open={savedOpen}>
               {showMobileWarning ? (
                 <HeaderContainerWithWarning>

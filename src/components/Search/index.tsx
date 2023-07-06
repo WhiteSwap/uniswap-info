@@ -5,7 +5,6 @@ import { BasicLink } from 'components/Link'
 import { RowFixed } from 'components/Row'
 import TokenLogo from 'components/TokenLogo'
 import { SupportedNetwork } from 'constants/networks'
-import DataService from 'data/DataService'
 import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { useActiveNetworkId } from 'state/features/application/selectors'
@@ -116,12 +115,15 @@ const Search = () => {
   useEffect(() => {
     async function fetch() {
       try {
-        const tokens = await DataService.tokens.searchToken(value ? value.toUpperCase() : '', value)
-        const pools = await DataService.pairs.searchPair(
-          // @ts-ignore
-          tokens.data.asSymbol?.map(t => t.id),
-          value
-        )
+        // const tokens = await DataService.tokens.searchToken(value ? value.toUpperCase() : '', value)
+        // const pools = await DataService.pairs.searchPair(
+        //   // @ts-ignore
+        //   tokens.data.asSymbol?.map(t => t.id),
+        //   value
+        //   )
+        // FIXME: research this feature
+        const tokens: any = { data: undefined }
+        const pools: any = { data: undefined }
 
         if (tokens.data) {
           setTokenData([...tokens.data.asAddress, ...tokens.data.asName, ...tokens.data.asSymbol])

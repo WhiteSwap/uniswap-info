@@ -1,4 +1,4 @@
-import { Transaction as TronTransaction, TransactionDetailsFragment } from 'service/generated/tronGraphql'
+import { Transaction as TronTransaction, TransactionDetailsFragment } from 'service/generated/graphql'
 import { parseTokenInfo } from 'utils'
 
 type TransactionsPayload = {
