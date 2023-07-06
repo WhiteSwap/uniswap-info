@@ -8,21 +8,26 @@ export interface IAccountDataController {
    * @param  {string} account - user wallet address
    * @param  {number} skip - offset
    */
-  getUserLiquidityChart(account: string, timeWindow: string): Promise<Record<string, AccountChartData[]>>
+  getUserHistory(account: string): Promise<LiquiditySnapshot[]>
+  getUserLiquidityChart(
+    account: string,
+    timeWindow: string,
+    history: LiquiditySnapshot[]
+  ): Promise<Record<string, AccountChartData[]>>
   /**
    * Fetch user active liquidity positions.
    * Get user liquidity pools,
    * information about amount of supplied tokens in each pool
    * @param  {string} account - user wallet address
    */
-  getUserPositions(account: string): Promise<Position[]>
+  getUserPositions(account: string, price: number, snapshots: LiquiditySnapshot[]): Promise<Position[]>
   /**
    * Fetch rating list of liquidity position for specific pair address.
    * List sorts by liquidity token balance
    *
    * @param  {string} pair - pair address
    */
-  getTopLps(): Promise<LiquidityPosition[]>
+  getTopLps(allPairs: any): Promise<LiquidityPosition[]>
   /**
    * formats data for historical chart for an LPs position in 1 pair over time
    * @param accountAddress // account address to load data
@@ -34,6 +39,7 @@ export interface IAccountDataController {
     accountAddress: string,
     pair: PairDetails,
     timeWindow: string,
-    key: PositionChartView
+    key: PositionChartView,
+    snapshots: LiquiditySnapshot[]
   ): Promise<Partial<PositionChartData>>
 }

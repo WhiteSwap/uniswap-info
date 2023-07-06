@@ -4,7 +4,7 @@ import {
   PositionFeeChartDataQuery,
   PositionLiquidityChartDataQuery,
   TopLiquidityPositionsQuery
-} from 'service/generated/graphql'
+} from 'service/generated/tronGraphql'
 import { AccountChartData } from 'state/features/account/types'
 import { parseTokenInfo } from 'utils'
 

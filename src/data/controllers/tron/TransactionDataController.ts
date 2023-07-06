@@ -1,5 +1,5 @@
 import { ITransactionDataController } from 'data/controllers/types/TransactionController.interface'
-import { transactionsMapper } from 'data/mappers/transactionMapper'
+import { transactionsMapper } from 'data/mappers/tron/transactionMapper'
 import { client } from 'service/client'
 import {
   AccountTransactionsQuery,
@@ -10,14 +10,14 @@ import {
   TokenTransactionsQuery,
   TokenTransactionsQueryVariables,
   TransactionCountQuery
-} from 'service/generated/graphql'
+} from 'service/generated/tronGraphql'
 import {
   ACCOUNT_TRANSACTIONS,
   GLOBAL_TRANSACTIONS,
   PAIR_TRANSACTIONS,
   TOKEN_TRANSACTIONS,
   TRANSACTION_COUNT
-} from 'service/queries/transactions'
+} from 'service/queries/tron/transactions'
 
 export default class TransactionDataController implements ITransactionDataController {
   async getDayTransactionCount() {

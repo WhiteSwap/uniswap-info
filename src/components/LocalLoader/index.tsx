@@ -1,15 +1,20 @@
-import Lottie from 'lottie-react'
-import loaderAnimation from 'assets/loaderAnimation.json'
-import { Wrapper } from './styled'
+import { useDarkModeManager } from 'state/features/user/hooks'
+import { AnimatedImg, Wrapper } from './styled'
 
 interface ILocalLoader {
   fullscreen?: boolean
 }
 
 const LocalLoader = ({ fullscreen }: ILocalLoader) => {
+  const [darkMode] = useDarkModeManager()
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const source = require(darkMode ? 'assets/logo_white.svg' : 'assets/logo.svg').default
+
   return (
     <Wrapper fullscreen={fullscreen}>
-      <Lottie animationData={loaderAnimation} loop={true} />
+      <AnimatedImg>
+        <img src={source} alt="loading-icon" />
+      </AnimatedImg>
     </Wrapper>
   )
 }

@@ -1,3 +1,4 @@
+import Logo from 'assets/logo_full.svg'
 import { useFormatPath } from 'hooks'
 import { TitleWrapper } from './styled'
 
@@ -6,7 +7,7 @@ export default function Title() {
 
   return (
     <TitleWrapper to={formatPath('/')}>
-      <img src="/logo.svg" alt="WhiteSwap logo" />
+      <img src={Logo} alt="logo" />
     </TitleWrapper>
   )
 }

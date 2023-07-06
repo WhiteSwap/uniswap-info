@@ -9,7 +9,10 @@ const TextWrapper = styled.div`
   margin-left: ${({ margin }) => margin && '4px'};
   color: ${({ theme, link }) => (link ? theme.blueGrey : transparentize(0.5, theme.text6))};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
-  cursor: ${({ link }) => (link ? 'pointer' : 'auto')};
+
+  :hover {
+    cursor: pointer;
+  }
 
   @media screen and (max-width: 600px) {
     font-size: ${({ adjustSize }) => adjustSize && '10px'};

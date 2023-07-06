@@ -25,15 +25,16 @@ const ChartWrapper = styled.div`
 
 interface IUserChart {
   account: string
+  liquiditySnapshots?: LiquiditySnapshot[]
 }
 
-const UserChart = ({ account }: IUserChart) => {
+const UserChart = ({ account, liquiditySnapshots }: IUserChart) => {
   const { t } = useTranslation()
   const below600 = useMedia('(max-width: 600px)')
   const above1600 = useMedia('(min-width: 1600px)')
   const [darkMode] = useDarkModeManager()
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.YEAR)
-  const chartData = useUserLiquidityChart(account, timeWindow)
+  const chartData = useUserLiquidityChart(account, timeWindow, liquiditySnapshots)
   const textColor = darkMode ? 'white' : 'black'
   const aspect = above1600 ? 60 / 12 : below600 ? 60 / 42 : 60 / 16
 
