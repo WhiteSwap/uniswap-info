@@ -30,7 +30,7 @@ export type RootQuery = {
   tokens?: Maybe<Array<Maybe<Token>>>
   topLiquidityPosition?: Maybe<Array<Maybe<TopLiquidityPosition>>>
   transactions?: Maybe<TransactionsCollection>
-  trxPrice: Scalars['Float']
+  nativeTokenPrice: Scalars['Float']
   whiteSwapDayDatas?: Maybe<Array<WhiteSwapDayData>>
 }
 
@@ -487,7 +487,7 @@ export type GlobalChartQuery = {
 
 export type CurrentTrxPriceQueryVariables = Exact<{ [key: string]: never }>
 
-export type CurrentTrxPriceQuery = { __typename?: 'RootQuery'; trxPrice: number }
+export type CurrentTrxPriceQuery = { __typename?: 'RootQuery'; nativeTokenPrice: number }
 
 export type LastBlockQueryVariables = Exact<{ [key: string]: never }>
 
