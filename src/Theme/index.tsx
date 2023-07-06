@@ -140,7 +140,7 @@ export const TYPE = {
   },
 
   largeHeader(props: TextProps) {
-    return <TextWrapper margin={0} fontWeight={500} color={'text1'} fontSize={28} forwardedAs="h1" {...props} />
+    return <TextWrapper fontWeight={500} color={'text1'} fontSize={28} {...props} />
   },
 
   light(props: TextProps) {

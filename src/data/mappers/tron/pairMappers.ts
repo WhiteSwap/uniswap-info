@@ -4,7 +4,7 @@ import {
   PairHourlyPriceQuery,
   PairDailyDataQuery,
   PairDailyData
-} from 'service/generated/graphql'
+} from 'service/generated/tronGraphql'
 import { PairDayData } from 'state/features/pairs/types'
 import { parseTokenInfo } from 'utils'
 import { calculateApy } from 'utils/pair'

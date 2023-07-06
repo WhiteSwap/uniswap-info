@@ -208,7 +208,7 @@ const PairPage = () => {
               </FixedPanel>
             </AutoRow>
             <>
-              {!below1024 && <TYPE.main fontSize={'1.375rem'}>{t('pairStats')}</TYPE.main>}
+              {!below1080 && <TYPE.main fontSize={'1.375rem'}>{t('pairStats')}</TYPE.main>}
               <PanelWrapper style={{ marginTop: '.875rem' }}>
                 <Panel>
                   <AutoColumn gap="1.25rem">
@@ -297,8 +297,8 @@ const PairPage = () => {
                 </Panel>
                 <Panel
                   style={{
-                    gridColumn: below1024 ? '1/4' : '2/4',
-                    gridRow: below1024 ? '' : '1/5',
+                    gridColumn: below1080 ? (below1024 ? '1/4' : '2/-1') : '2/4',
+                    gridRow: below1080 ? '' : '1/5',
                     width: '100%'
                   }}
                 >

@@ -1,8 +1,12 @@
 import dayjs from 'dayjs'
-// import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { timestampUnitType } from 'constants/index'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
-import { tokenMapper, topTokensMapper, tokenChartDataMapper, tokenPriceDataMapper } from 'data/mappers/tokenMappers'
+import {
+  tokenMapper,
+  topTokensMapper,
+  tokenChartDataMapper,
+  tokenPriceDataMapper
+} from 'data/mappers/tron/tokenMappers'
 import { client } from 'service/client'
 import {
   TokenQueryVariables,
@@ -16,7 +20,8 @@ import {
   TokenHourlyPriceQueryVariables,
   TokenDailyDataQuery,
   TokenDailyDataQueryVariables
-} from 'service/generated/graphql'
+} from 'service/generated/tronGraphql'
+import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import {
   TOKENS,
   TOKEN,
@@ -24,18 +29,18 @@ import {
   TOKEN_DAILY_PRICE,
   TOKEN_HOURLY_PRICE,
   TOKEN_DAILY_DATA
-} from 'service/queries/tokens'
+} from 'service/queries/tron/tokens'
 
 export default class TokenDataController implements ITokenDataController {
-  // async searchToken(value: string, id: string) {
-  //   return client.query({
-  //     query: TOKEN_SEARCH,
-  //     variables: {
-  //       value,
-  //       id
-  //     }
-  //   })
-  // }
+  async searchToken(value: string, id: string) {
+    return client.query({
+      query: TOKEN_SEARCH,
+      variables: {
+        value,
+        id
+      }
+    })
+  }
   async getTopTokens() {
     const { data } = await client.query<TokensQuery>({ query: TOKENS })
     return topTokensMapper(data)
