@@ -13,7 +13,6 @@ export type PositionChartData = Record<PositionChartView, Record<string, Account
 export interface Account {
   positions: Position[]
   transactions: Transactions
-  liquiditySnapshots: LiquiditySnapshot[]
   pairReturns: Record<string, PositionChartData>
 }
 

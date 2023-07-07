@@ -14,11 +14,3 @@ export const Wrapper = styled.div<{ fullscreen?: boolean }>`
   width: 100%;
   height: ${({ fullscreen }) => (fullscreen ? '100vh' : '180px')};
 `
-
-export const AnimatedImg = styled.div`
-  animation: ${pulse} 800ms linear infinite;
-
-  & > * {
-    width: 72px;
-  }
-`
