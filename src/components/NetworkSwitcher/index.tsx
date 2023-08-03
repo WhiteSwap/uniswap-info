@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-use'
 import { SUPPORTED_NETWORK_VERSIONS, NetworkInfo } from 'constants/networks'
-import DataService from 'data/DataService'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { changeApiClient } from 'service/client'
 import { setActiveNetwork } from 'state/features/application/slice'
@@ -29,7 +28,6 @@ const NetworkSwitcher = () => {
       if (activeNetwork.id !== network.id) {
         dispatch(setActiveNetwork(network))
         changeApiClient(network.id)
-        DataService.initDataControllers(network.id)
       }
       setIsOpen(false)
     },

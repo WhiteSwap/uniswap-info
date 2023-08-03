@@ -9,8 +9,6 @@ import { timeframeOptions } from 'constants/index'
 import { LOGO_OVERRIDES, LOGO_SOURCE } from 'constants/logo'
 import { NetworkInfo, SupportedNetwork, SUPPORTED_NETWORK_VERSIONS, TronNetworkInfo } from 'constants/networks'
 import { TOKEN_OVERRIDES, WETH_ADDRESS, WTRX_ADDRESS } from 'constants/tokens'
-import { client } from 'service/client'
-import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from 'service/queries/ethereum/global'
 
 BigNumber.set({ EXPONENTIAL_AT: 50 })
 
@@ -146,126 +144,6 @@ export async function splitQuery<T>(
   }
 
   return fetchedData
-}
-
-/**
- * @notice Fetches first block after a given timestamp
- * @dev Query speed is optimized by limiting to a 600-second period
- * @param {Int} timestamp in seconds
- */
-export async function getBlockFromTimestamp(timestamp: number) {
-  const result = await client.query({
-    query: GET_BLOCK,
-    variables: {
-      timestampFrom: timestamp,
-      timestampTo: timestamp + 600
-    },
-    context: {
-      client: 'block'
-    }
-  })
-  return +result?.data?.blocks?.[0]?.number
-}
-
-/**
- * @notice Fetches block objects for an array of timestamps.
- * @dev blocks are returned in chronological order (ASC) regardless of input.
- * @dev blocks are returned at string representations of Int
- * @dev timestamps are returns as they were provided; not the block time.
- * @param {Array} timestamps
- */
-export async function getBlocksFromTimestamps(timestamps: number[], skipCount = 500) {
-  if (timestamps?.length === 0) {
-    return []
-  }
-
-  const fetchedData = await splitQuery(
-    parameters =>
-      client.query({
-        query: GET_BLOCKS(parameters),
-        context: {
-          client: 'block'
-        }
-      }),
-    timestamps,
-    skipCount
-  )
-
-  const blocks = []
-  if (fetchedData) {
-    for (const t in fetchedData) {
-      if (fetchedData[t].length > 0) {
-        blocks.push({
-          timestamp: t.split('t')[1],
-          number: +fetchedData[t][0]['number']
-        })
-      }
-    }
-  }
-  return blocks
-}
-
-/**
- * @notice Example query using time travel queries
- * @dev TODO - handle scenario where blocks are not available for a timestamps (e.g. current time)
- * @param {String} pairAddress
- * @param {Array} timestamps
- */
-export async function getShareValueOverTime(pairAddress: string, timestamps: number[]) {
-  if (!timestamps) {
-    const utcCurrentTime = dayjs()
-    const utcSevenDaysBack = utcCurrentTime.subtract(8, 'day').unix()
-    timestamps = getTimestampRange(utcSevenDaysBack, 86_400, 7)
-  }
-
-  // get blocks based on timestamps
-  const blocks = await getBlocksFromTimestamps(timestamps)
-
-  // get historical share values with time travel queries
-  const result = await client.query({
-    query: SHARE_VALUE(pairAddress, blocks),
-    fetchPolicy: 'no-cache'
-  })
-
-  const values: any[] = []
-  for (const row in result?.data) {
-    const timestamp = row.split('t')[1]
-    if (timestamp) {
-      values.push({
-        timestamp: +timestamp,
-        liquidityTokenTotalSupply: +result.data[row].totalSupply,
-        pair: {
-          id: result.data[row].id,
-          tokenOne: {
-            id: result.data[row].token0.id,
-            priceUSD: 0
-          },
-          tokenTwo: {
-            id: result.data[row].token1.id,
-            priceUSD: 0
-          }
-        },
-        reserveOne: +result.data[row].reserve0,
-        reserveTwo: +result.data[row].reserve1,
-        reserveUSD: +result.data[row].reserveUSD,
-        token0DerivedETH: +result.data[row].token0.derivedETH,
-        token1DerivedETH: +result.data[row].token1.derivedETH
-      })
-    }
-  }
-
-  // add eth prices
-  let index = 0
-  for (const brow in result?.data) {
-    const timestamp = brow.split('b')[1]
-    if (timestamp) {
-      values[index].pair.tokenOne.priceUSD = result.data[brow].ethPrice * values[index].token0DerivedETH
-      values[index].pair.tokenTwo.priceUSD = result.data[brow].ethPrice * values[index].token1DerivedETH
-      index += 1
-    }
-  }
-
-  return values
 }
 
 /**

@@ -1,12 +1,12 @@
 import { IGlobalDataController } from 'data/controllers/types/GlobalController.interface'
 import { client } from 'service/client'
 import {
-  CurrentTrxPriceQuery,
   GlobalChartQuery,
   GlobalChartQueryVariables,
-  LastBlockQuery
-} from 'service/generated/tronGraphql'
-import { NATIVE_TOKEN_PRICE, GLOBAL_CHART, LAST_BLOCK } from 'service/queries/tron/global'
+  LastBlockQuery,
+  NativeTokenPriceQuery
+} from 'service/generated/graphql'
+import { NATIVE_TOKEN_PRICE, GLOBAL_CHART, LAST_BLOCK } from 'service/queries/global'
 
 export default class GlobalDataController implements IGlobalDataController {
   async getHealthStatus() {
@@ -28,7 +28,7 @@ export default class GlobalDataController implements IGlobalDataController {
   }
 
   async getPrice() {
-    const { data } = await client.query<CurrentTrxPriceQuery>({ query: NATIVE_TOKEN_PRICE })
+    const { data } = await client.query<NativeTokenPriceQuery>({ query: NATIVE_TOKEN_PRICE })
     return data.nativeTokenPrice ? +data.nativeTokenPrice : 0
   }
 }

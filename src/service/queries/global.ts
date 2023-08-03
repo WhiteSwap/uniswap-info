@@ -11,7 +11,7 @@ export const GLOBAL_CHART = gql`
 `
 
 export const NATIVE_TOKEN_PRICE = gql`
-  query CurrentTrxPrice {
+  query NativeTokenPrice {
     nativeTokenPrice
   }
 `
