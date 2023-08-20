@@ -308,6 +308,8 @@ export type Token = {
   txnChange: Scalars['Float']
   /** Token volume Change USD */
   volumeChangeUSD: Scalars['Float']
+  isFullActive: Scalars['Boolean']
+  isTokenList?: Scalars['Boolean']
 }
 
 /** Token Daily Data for Graph */
@@ -638,6 +640,8 @@ export type TokensQuery = {
     priceChangeUSD: number
     oneDayTxns: number
     txnChange: number
+    isFullActive: boolean
+    isTokenList: boolean
   } | null> | null
 }
 
@@ -660,6 +664,8 @@ export type TokenQuery = {
     priceChangeUSD: number
     oneDayTxns: number
     txnChange: number
+    isFullActive: boolean
+    isTokenList: boolean
   } | null
 }
 

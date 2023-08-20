@@ -105,6 +105,8 @@ interface Token {
   txnChange: number
   oneDayVolumeUT?: number
   volumeChangeUT?: number
+  isFullActive?: boolean
+  isTokenList?: boolean
 }
 
 interface TokenDayData {

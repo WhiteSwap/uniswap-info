@@ -134,15 +134,25 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
           <Row>
             {!below680 && <div style={{ marginRight: '1rem', width: '10px' }}>{index}</div>}
             <TokenLogo alt={item.symbol} address={item.id} />
-            <CustomLink style={{ marginLeft: '16px', whiteSpace: 'nowrap' }} to={formatPath(`/tokens/${item.id}`)}>
+            {item.isFullActive ? (
+              <CustomLink style={{ marginLeft: '16px', whiteSpace: 'nowrap' }} to={formatPath(`/tokens/${item.id}`)}>
+                <FormattedName
+                  text={below680 ? item.symbol : item.name}
+                  maxCharacters={below600 ? 8 : 16}
+                  adjustSize={true}
+                  link={true}
+                  fontSize={below440 ? 10 : 14}
+                />
+              </CustomLink>
+            ) : (
               <FormattedName
+                style={{ marginLeft: '16px', whiteSpace: 'nowrap' }}
                 text={below680 ? item.symbol : item.name}
                 maxCharacters={below600 ? 8 : 16}
                 adjustSize={true}
-                link={true}
                 fontSize={below440 ? 10 : 14}
               />
-            </CustomLink>
+            )}
           </Row>
         </DataText>
         {!below680 && (
