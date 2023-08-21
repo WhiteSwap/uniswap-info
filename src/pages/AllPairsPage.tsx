@@ -12,14 +12,14 @@ import { TYPE, DashboardWrapper } from 'Theme'
 function AllPairsPage() {
   const [isAllPairs, toggleAllPairs] = useToggle(true)
   const allPairs = usePairs()
-  const farmingPairs = useMemo(() => {
-    const farmingPairsObject: Record<string, PairDetails> = {}
+  const farmingPools = useMemo(() => {
+    const farmingPoolsObject: Record<string, PairDetails> = {}
     allPairs
       ? Object.values(allPairs).forEach(pair => {
-          if (pair.isFarming) farmingPairsObject[pair.id] = pair
+          if (pair.isFarming) farmingPoolsObject[pair.id] = pair
         })
       : {}
-    return farmingPairsObject
+    return farmingPoolsObject
   }, [allPairs])
 
   const below800 = useMedia('(max-width: 800px)')
@@ -38,7 +38,7 @@ function AllPairsPage() {
 
             {!below800 && <Search />}
           </RowBetween>
-          <PairList pairs={isAllPairs ? allPairs : farmingPairs} maxItems={50} />
+          <PairList pairs={isAllPairs ? allPairs : farmingPools} maxItems={50} />
         </DashboardWrapper>
       </FullWrapper>
     </PageWrapper>
