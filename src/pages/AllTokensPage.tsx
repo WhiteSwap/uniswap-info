@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useMedia, useToggle } from 'react-use'
 import { PageWrapper, FullWrapper } from 'components'
-import { ButtonDark } from 'components/ButtonStyled'
+import { ButtonLight } from 'components/ButtonStyled'
 import { Row, RowBetween } from 'components/Row'
 import Search from 'components/Search'
 import TopTokenList from 'components/TokenList'
@@ -12,7 +12,6 @@ import { TYPE, DashboardWrapper } from 'Theme'
 function AllTokensPage() {
   const [isAllTokens, toggleAllTokens] = useToggle(true)
   const allTokens = useTokens()
-
   const tokenList = useMemo(() => {
     const tokenListObject: Record<string, TokenDetails> = {}
     allTokens
@@ -31,9 +30,9 @@ function AllTokensPage() {
           <RowBetween>
             <Row>
               <TYPE.largeHeader>{isAllTokens ? 'All Tokens' : 'Tokenlist'}</TYPE.largeHeader>
-              <ButtonDark marginLeft="1rem" onClick={() => toggleAllTokens(!isAllTokens)}>
+              <ButtonLight marginLeft="1rem" onClick={() => toggleAllTokens(!isAllTokens)}>
                 {isAllTokens ? 'Show Tokenlist' : 'Show All Tokens'}
-              </ButtonDark>
+              </ButtonLight>
             </Row>
             {!below600 && <Search />}
           </RowBetween>

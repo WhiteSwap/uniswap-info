@@ -242,6 +242,8 @@ export type Pair = {
   volumeFeeChangeUSD: Scalars['Float']
   /** Week Volume Usd */
   weekVolumeUSD: Scalars['Float']
+  isFarming: Scalars['Boolean']
+  isFullActive: Scalars['Boolean']
 }
 
 /** Crypto token */
@@ -309,7 +311,7 @@ export type Token = {
   /** Token volume Change USD */
   volumeChangeUSD: Scalars['Float']
   isFullActive: Scalars['Boolean']
-  isTokenList?: Scalars['Boolean']
+  isTokenList: Scalars['Boolean']
 }
 
 /** Token Daily Data for Graph */
@@ -557,6 +559,8 @@ export type PairListQuery = {
       price: number
       derivedPrice: number
     }
+    isFarming: boolean
+    isFullActive: boolean
   } | null> | null
 }
 
@@ -594,6 +598,8 @@ export type PairQuery = {
       price: number
       derivedPrice: number
     }
+    isFarming: boolean
+    isFullActive: boolean
   } | null
 }
 
