@@ -6,10 +6,12 @@ import { Flex } from 'rebass'
 import { Divider } from 'components'
 import DoubleTokenLogo from 'components/DoubleLogo'
 import FormattedName from 'components/FormattedName'
+import { CustomLink } from 'components/Link'
 import LocalLoader from 'components/LocalLoader'
 import Panel from 'components/Panel'
 import Percent from 'components/Percent'
 import QuestionHelper from 'components/QuestionHelper'
+import Row from 'components/Row'
 import { useFormatPath } from 'hooks'
 import { TYPE } from 'Theme'
 import { formattedNumber } from 'utils'
@@ -156,60 +158,78 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
 
   return (
     <div>
-      <Panel
-        style={{
-          marginTop: below440 ? '.75rem' : '1.5rem',
-          padding: 0
-        }}
-      >
-        <DashGrid style={{ height: 'fit-content', padding: below440 ? '.75rem' : '1rem 2rem', borderTop: 'none' }}>
-          <Flex alignItems="center" justifyContent="flexStart">
-            <ClickableText style={{ justifyContent: 'flex-start' }}>{t('name')}</ClickableText>
-          </Flex>
-          <Flex alignItems="center" justifyContent="flexEnd">
-            <ClickableText onClick={changeSortDirection(PairSortField.Liquidity)}>
-              {t('liquidity')} {sortDirectionArrow(PairSortField.Liquidity)}
-            </ClickableText>
-          </Flex>
-          <Flex alignItems="center">
-            <ClickableText onClick={changeSortDirection(PairSortField.Volume)}>
-              {t('volume24hrs')}
-              {sortDirectionArrow(PairSortField.Volume)}
-            </ClickableText>
-          </Flex>
-          {below1080 ? undefined : (
-            <>
-              <Flex alignItems="center" justifyContent="flexEnd">
-                <ClickableText onClick={changeSortDirection(PairSortField.WeekVolume)}>
-                  {t('volume')} (7d) {sortDirectionArrow(PairSortField.WeekVolume)}
-                </ClickableText>
-              </Flex>
-              <Flex alignItems="center" justifyContent="flexEnd">
-                <ClickableText onClick={changeSortDirection(PairSortField.Fees)}>
-                  {t('fees24hrs')} {sortDirectionArrow(PairSortField.Fees)}
-                </ClickableText>
-              </Flex>
-              <Flex alignItems="center" justifyContent="flexEnd">
-                <ClickableText onClick={changeSortDirection(PairSortField.Apy)}>
-                  {`1y ${t('fees')} / ${t('liquidity')} ${sortDirectionArrow(PairSortField.Apy)}`}
-                </ClickableText>
-                <QuestionHelper text={t('basedOn24hrVolume')} />
-              </Flex>
-            </>
-          )}
-        </DashGrid>
-        <Divider />
-        <List p={0}>
-          {pairList ? (
-            pairList.map(
-              (pair, index) =>
-                pair && <ListItem key={index} index={(page - 1) * ITEMS_PER_PAGE + index + 1} pairData={pair} />
-            )
-          ) : (
-            <LocalLoader />
-          )}
-        </List>
-      </Panel>
+      {pairList === false ? (
+        <Row justify="center" padding="3rem 0 1rem">
+          <TYPE.light>
+            There are no available pairs to display. Add your token via the{' '}
+            <CustomLink
+              as="a"
+              href="https://app.ws.exchange/eth/mainnet/token-listing"
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+            >
+              form
+            </CustomLink>
+            .
+          </TYPE.light>
+        </Row>
+      ) : (
+        <Panel
+          style={{
+            marginTop: below440 ? '.75rem' : '1.5rem',
+            padding: 0
+          }}
+        >
+          <DashGrid style={{ height: 'fit-content', padding: below440 ? '.75rem' : '1rem 2rem', borderTop: 'none' }}>
+            <Flex alignItems="center" justifyContent="flexStart">
+              <ClickableText style={{ justifyContent: 'flex-start' }}>{t('name')}</ClickableText>
+            </Flex>
+            <Flex alignItems="center" justifyContent="flexEnd">
+              <ClickableText onClick={changeSortDirection(PairSortField.Liquidity)}>
+                {t('liquidity')} {sortDirectionArrow(PairSortField.Liquidity)}
+              </ClickableText>
+            </Flex>
+            <Flex alignItems="center">
+              <ClickableText onClick={changeSortDirection(PairSortField.Volume)}>
+                {t('volume24hrs')}
+                {sortDirectionArrow(PairSortField.Volume)}
+              </ClickableText>
+            </Flex>
+            {below1080 ? undefined : (
+              <>
+                <Flex alignItems="center" justifyContent="flexEnd">
+                  <ClickableText onClick={changeSortDirection(PairSortField.WeekVolume)}>
+                    {t('volume')} (7d) {sortDirectionArrow(PairSortField.WeekVolume)}
+                  </ClickableText>
+                </Flex>
+                <Flex alignItems="center" justifyContent="flexEnd">
+                  <ClickableText onClick={changeSortDirection(PairSortField.Fees)}>
+                    {t('fees24hrs')} {sortDirectionArrow(PairSortField.Fees)}
+                  </ClickableText>
+                </Flex>
+                <Flex alignItems="center" justifyContent="flexEnd">
+                  <ClickableText onClick={changeSortDirection(PairSortField.Apy)}>
+                    {`1y ${t('fees')} / ${t('liquidity')} ${sortDirectionArrow(PairSortField.Apy)}`}
+                  </ClickableText>
+                  <QuestionHelper text={t('basedOn24hrVolume')} />
+                </Flex>
+              </>
+            )}
+          </DashGrid>
+          <Divider />
+
+          <List p={0}>
+            {pairList === undefined ? (
+              <LocalLoader />
+            ) : pairList && pairList.length > 0 ? (
+              pairList.map(
+                (pair, index) =>
+                  pair && <ListItem key={index} index={(page - 1) * ITEMS_PER_PAGE + index + 1} pairData={pair} />
+              )
+            ) : undefined}
+          </List>
+        </Panel>
+      )}
       {maxPage ? (
         <PageButtons>
           <PaginationButton type="button" disabled={page === 1} onClick={incrementPage}>

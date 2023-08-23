@@ -35,7 +35,6 @@ function AllPairsPage() {
                 {isAllPairs ? 'Show Farming Pools' : 'Show All Pairs'}
               </ButtonLight>
             </Row>
-
             {!below800 && <Search />}
           </RowBetween>
           <PairList pairs={isAllPairs ? allPairs : farmingPools} maxItems={50} />
