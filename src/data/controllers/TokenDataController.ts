@@ -36,10 +36,12 @@ export default class TokenDataController implements ITokenDataController {
   //     }
   //   })
   // }
+
   async getTopTokens() {
     const { data } = await client.query<TokensQuery>({ query: TOKENS })
     return topTokensMapper(data)
   }
+
   async getTokenData(address: string) {
     const { data } = await client.query<TokenQuery, TokenQueryVariables>({
       query: TOKEN,
@@ -47,6 +49,7 @@ export default class TokenDataController implements ITokenDataController {
     })
     return tokenMapper(data.token)
   }
+
   async getTokenPairs(tokenAddress: string) {
     const { data } = await client.query<TokenPairsQuery, TokenPairsQueryVariables>({
       query: TOKEN_PAIRS,
@@ -54,6 +57,7 @@ export default class TokenDataController implements ITokenDataController {
     })
     return data.tokenPairs
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getIntervalTokenData(tokenAddress: string, startTime: number, interval: number) {
     // TODO: fix interval format
@@ -71,6 +75,7 @@ export default class TokenDataController implements ITokenDataController {
       return tokenPriceDataMapper(data?.tokenHourlyPrice)
     }
   }
+
   async getTokenChartData(tokenAddress: string, timeWindow: string) {
     const currentTime = dayjs.utc()
     const startTime = currentTime.subtract(1, timestampUnitType[timeWindow]).startOf('day').unix()

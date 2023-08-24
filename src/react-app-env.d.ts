@@ -105,6 +105,8 @@ interface Token {
   txnChange: number
   oneDayVolumeUT?: number
   volumeChangeUT?: number
+  isFullActive?: boolean
+  isTokenList?: boolean
 }
 
 interface TokenDayData {
@@ -139,6 +141,8 @@ interface Pair {
   // TODO: remove after mvp
   createdAtTimestamp?: number
   reserveUSD: number
+  isFarming?: boolean
+  isFullActive?: boolean
 }
 
 type PositionPair = Pick<Pair, 'id' | 'reserveUSD' | 'totalSupply'> & {
