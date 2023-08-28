@@ -18,11 +18,12 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9':
       'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png',
     '0x925206b8a707096ed26ae47c84747fe0bb734f59':
-      'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png'
+      'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png?1663654854'
   },
   [SupportedNetwork.TRON]: {
     TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png',
-    TFptbWaARrWTX5Yvy3gNG5Lm8BmhPx82Bt: 'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png'
+    TFptbWaARrWTX5Yvy3gNG5Lm8BmhPx82Bt:
+      'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png?1663654854'
   }
 }

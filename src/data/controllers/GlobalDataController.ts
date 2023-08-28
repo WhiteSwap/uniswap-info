@@ -14,7 +14,6 @@ export default class GlobalDataController implements IGlobalDataController {
     // lastBlock === headBlock because TRONWEB cannot return headBlock
     return { syncedBlock: data.lastBlock, headBlock: data.lastBlock }
   }
-
   async getChartData(oldestDateToFetch: number): Promise<ChartDailyItem[]> {
     const { data } = await client.query<GlobalChartQuery, GlobalChartQueryVariables>({
       query: GLOBAL_CHART,
