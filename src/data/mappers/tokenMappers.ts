@@ -19,9 +19,7 @@ export function tokenMapper(payload?: TronToken | null): Token {
     priceChangeUSD: payload?.priceChangeUSD ? +payload.priceChangeUSD : 0,
     liquidityChangeUSD: payload?.liquidityChangeUSD ? +payload.liquidityChangeUSD : 0,
     oneDayTxns: payload?.oneDayTxns ? +payload.oneDayTxns : 0,
-    txnChange: payload?.txnChange ? +payload.txnChange : 0,
-    isFullActive: payload?.isFullActive ?? false,
-    isTokenList: payload?.isTokenList ?? false
+    txnChange: payload?.txnChange ? +payload.txnChange : 0
   }
 }
 

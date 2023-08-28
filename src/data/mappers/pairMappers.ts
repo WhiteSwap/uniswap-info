@@ -41,9 +41,7 @@ export function pairMapper(payload?: TronPair | null): Pair {
     untrackedVolumeUSD: 0,
     volumeChangeUntracked: 0,
     trackedReserveUSD: 0,
-    reserveUSD: 0,
-    isFarming: payload?.isFarming,
-    isFullActive: payload?.isFullActive
+    reserveUSD: 0
   }
 }
 
