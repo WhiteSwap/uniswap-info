@@ -28,6 +28,8 @@ const PAIR_DATA = gql`
     volumeChangeUSD
     fee
     volumeFeeChangeUSD
+    isFarming
+    isFullActive
   }
 `
 
