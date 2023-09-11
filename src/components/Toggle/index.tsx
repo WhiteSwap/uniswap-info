@@ -25,6 +25,16 @@ const StyledToggle = styled.div`
   :hover {
     text-decoration: none;
   }
+
+  @media screen and (max-width: 1080px) {
+    flex-basis: 8rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+    flex-basis: fit-content;
+    margin-top: 0;
+  }
 `
 
 const Span = styled.span`

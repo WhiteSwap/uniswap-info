@@ -114,7 +114,7 @@ function Navigation() {
           </MenuList>
         </AutoColumn>
       </AutoColumn>
-      <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem' }}>
+      <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem', marginTop: '1.5rem' }}>
         <SocialLinksList>
           {socialLinks.map(link => (
             <SocialLinkItem key={link.name}>
