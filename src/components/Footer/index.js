@@ -9,7 +9,7 @@ import {
   LatestBlock,
   LatestBlockDot
 } from 'components/Navigation/styled.ts'
-import Row, { AutoRow } from 'components/Row'
+import Row, { AutoRow, FooterRow } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
 import { useDarkModeManager } from 'state/features/user/hooks'
@@ -46,15 +46,7 @@ function MobileFooter() {
 
   return (
     <FooterWrapper>
-      <AutoRow
-        gap=".5rem"
-        style={{
-          marginLeft: '0',
-          marginBottom: '1.5rem',
-          marginTop: '1.5rem',
-          justifyContent: 'space-between'
-        }}
-      >
+      <AutoRow justify="space-between" padding="1.5rem 0">
         <SocialLinksList>
           {socialLinks.map(link => (
             <SocialLinkItem key={link.name}>
@@ -65,14 +57,14 @@ function MobileFooter() {
           ))}
         </SocialLinksList>
         {below768 ? (
-          <Row style={{ flexDirection: 'column', alignContent: 'end', flexWrap: 'wrap', flexShrink: '2' }}>
+          <FooterRow>
             <Toggle isActive={isDark} toggle={toggleDarkMode} />
             <LatestBlockContainer to="/">
               <LatestBlockText>{t('latestBlock')}</LatestBlockText>
               <LatestBlock>{latestBlock}</LatestBlock>
               <LatestBlockDot />
             </LatestBlockContainer>
-          </Row>
+          </FooterRow>
         ) : (
           <>
             <Toggle isActive={isDark} toggle={toggleDarkMode} />
