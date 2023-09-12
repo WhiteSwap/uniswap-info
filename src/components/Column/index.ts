@@ -15,7 +15,7 @@ export const AutoColumn = styled.div<{ gap?: string; justify?: string; margin?: 
   grid-auto-rows: auto;
   grid-row-gap: ${({ gap }) => (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || gap};
   justify-items: ${({ justify = 'auto' }) => justify};
-  margin: ${({ margin }) => (margin === '1.5rem' && '1.5rem 0 1.5rem 1.5rem') || margin};
+  margin: ${({ margin = '0' }) => margin};
   margin-top: ${({ marginTop = '0' }) => marginTop};
 `
 
