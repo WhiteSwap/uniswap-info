@@ -429,3 +429,8 @@ export function ellipsisAddress(address: string): string {
   const length = address.length
   return address.slice(0, 6) + '...' + address.slice(length - 4, length)
 }
+
+export function specialChars(value: string) {
+  const specialChars = /[ !"#$%&'()*+,./:;<=>?@[\\\]^_`{|}~-]/
+  return specialChars.test(value)
+}

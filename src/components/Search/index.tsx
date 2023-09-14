@@ -13,7 +13,7 @@ import { PairDetails } from 'state/features/pairs/types'
 import { useTokens } from 'state/features/token/selectors'
 import { TokenDetails } from 'state/features/token/types'
 import { TYPE } from 'Theme'
-import { escapeRegExp, isValidAddress } from 'utils'
+import { escapeRegExp, isValidAddress, specialChars } from 'utils'
 import {
   Container,
   Wrapper,
@@ -88,8 +88,41 @@ const Search = () => {
       .filter(t => {
         const regexMatches = Object.keys(t || {}).map(key => {
           const isAddress = isValidAddress(value, activeNetwork)
+          const firstTokenValue = value.includes('-') ? value.slice(0, value.indexOf('-')) : ''
+          const secondTokenValue = value.includes('-') ? value.slice(value.indexOf('-') + 1) : ''
+
           if (key === 'id' && isAddress) {
             return t[key].match(new RegExp(escapeRegExp(value), 'i'))
+          }
+          if (secondTokenValue && specialChars(secondTokenValue)) return
+          if (
+            key === 'tokenTwo' &&
+            firstTokenValue &&
+            (t[key].symbol.toLocaleLowerCase() === firstTokenValue.toLocaleLowerCase() ||
+              t[key].name.toLocaleLowerCase() === firstTokenValue.toLocaleLowerCase()) &&
+            !isAddress
+          ) {
+            return
+          }
+          if (firstTokenValue && secondTokenValue) {
+            return (
+              (t['tokenOne'].name.match(new RegExp(escapeRegExp(firstTokenValue), 'i')) ||
+                t['tokenOne'].symbol
+                  .toLocaleLowerCase()
+                  .match(new RegExp(escapeRegExp(firstTokenValue.toLocaleLowerCase()), 'i'))) &&
+              (t['tokenTwo'].name.match(new RegExp(escapeRegExp(secondTokenValue), 'i')) ||
+                t['tokenTwo'].symbol
+                  .toLocaleLowerCase()
+                  .match(new RegExp(escapeRegExp(secondTokenValue.toLocaleLowerCase()), 'i')))
+            )
+          }
+          if ((key === 'tokenOne' || key === 'tokenTwo') && firstTokenValue && !isAddress) {
+            return (
+              t[key].name.match(new RegExp(escapeRegExp(firstTokenValue), 'i')) ||
+              t[key].symbol
+                .toLocaleLowerCase()
+                .match(new RegExp(escapeRegExp(firstTokenValue.toLocaleLowerCase()), 'i'))
+            )
           }
           if ((key === 'tokenOne' || key === 'tokenTwo') && !isAddress) {
             return (
@@ -182,7 +215,7 @@ const Search = () => {
                 <MenuItem>
                   <DoubleTokenLogo a0={pair?.tokenOne?.id} a1={pair?.tokenTwo?.id} margin={true} />
                   <TYPE.body style={{ marginLeft: '10px' }}>
-                    {pair.tokenOne.symbol + '-' + pair.tokenTwo.symbol} {t('pair')}
+                    {pair.tokenOne.symbol + '-' + pair.tokenTwo.symbol}
                   </TYPE.body>
                 </MenuItem>
               </BasicLink>
