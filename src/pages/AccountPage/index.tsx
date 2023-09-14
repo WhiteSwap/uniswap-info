@@ -88,7 +88,7 @@ function AccountPage() {
         </RowBetween>
         <Header>
           <RowBetween>
-            <TYPE.header fontSize={24}>{ellipsisAddress(accountAddress)}</TYPE.header>
+            <TYPE.header fontSize={24}>{accountAddress}</TYPE.header>
             <ActionsContainer>
               <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a
