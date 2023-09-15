@@ -34,4 +34,10 @@ export const RowFixed = styled(Row)`
   width: fit-content;
 `
 
+export const FooterRow = styled(Row)`
+  flex-direction: column;
+  align-content: end;
+  flex-wrap: wrap;
+  flex-shrink: 2;
+`
 export default Row

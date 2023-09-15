@@ -182,7 +182,7 @@ const Search = () => {
                 <MenuItem>
                   <DoubleTokenLogo a0={pair?.tokenOne?.id} a1={pair?.tokenTwo?.id} margin={true} />
                   <TYPE.body style={{ marginLeft: '10px' }}>
-                    {pair.tokenOne.symbol + '-' + pair.tokenTwo.symbol} {t('pair')}
+                    {pair.tokenOne.symbol + '-' + pair.tokenTwo.symbol}
                   </TYPE.body>
                 </MenuItem>
               </BasicLink>

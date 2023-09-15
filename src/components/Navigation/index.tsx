@@ -100,7 +100,7 @@ function Navigation() {
       <AutoColumn gap="1rem">
         <Title />
         <NetworkSwitcher />
-        <AutoColumn as="nav" style={{ marginTop: '5.25rem' }}>
+        <AutoColumn as="nav" margin=" 0 0 3rem">
           <MenuList>
             {navigationLinks.map(({ route, key, Icon, label, isSoon }) => (
               <MenuLink
@@ -114,7 +114,7 @@ function Navigation() {
           </MenuList>
         </AutoColumn>
       </AutoColumn>
-      <AutoColumn gap=".5rem" style={{ marginLeft: '1.5rem', marginBottom: '1.5rem' }}>
+      <AutoColumn gap=".5rem" margin="0 0 1.5rem 1.5rem">
         <SocialLinksList>
           {socialLinks.map(link => (
             <SocialLinkItem key={link.name}>
