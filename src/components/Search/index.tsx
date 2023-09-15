@@ -13,7 +13,7 @@ import { PairDetails } from 'state/features/pairs/types'
 import { useTokens } from 'state/features/token/selectors'
 import { TokenDetails } from 'state/features/token/types'
 import { TYPE } from 'Theme'
-import { escapeRegExp, isValidAddress } from 'utils'
+import { escapeRegExp, isValidAddress, specialChars } from 'utils'
 import {
   Container,
   Wrapper,
@@ -88,9 +88,51 @@ const Search = () => {
       .filter(t => {
         const regexMatches = Object.keys(t || {}).map(key => {
           const isAddress = isValidAddress(value, activeNetwork)
+          const firstTokenValue = value.includes('-') ? value.slice(0, value.indexOf('-')) : ''
+          const secondTokenValue = value.includes('-') ? value.slice(value.indexOf('-') + 1) : ''
+
           if (key === 'id' && isAddress) {
             return t[key].match(new RegExp(escapeRegExp(value), 'i'))
           }
+
+          //won't filter with special characters at the second part of the value
+          if (secondTokenValue && specialChars(secondTokenValue)) return
+
+          //filter when first part of the value appears to be tokenTwo
+          if (
+            key === 'tokenTwo' &&
+            firstTokenValue &&
+            (t[key].symbol.toLocaleLowerCase() === firstTokenValue.toLocaleLowerCase() ||
+              t[key].name.toLocaleLowerCase() === firstTokenValue.toLocaleLowerCase()) &&
+            !isAddress
+          ) {
+            return
+          }
+
+          //filter only match for first and the second parts of the value
+          if (firstTokenValue && secondTokenValue) {
+            return (
+              (t['tokenOne'].name.match(new RegExp(escapeRegExp(firstTokenValue), 'i')) ||
+                t['tokenOne'].symbol
+                  .toLocaleLowerCase()
+                  .match(new RegExp(escapeRegExp(firstTokenValue.toLocaleLowerCase()), 'i'))) &&
+              (t['tokenTwo'].name.match(new RegExp(escapeRegExp(secondTokenValue), 'i')) ||
+                t['tokenTwo'].symbol
+                  .toLocaleLowerCase()
+                  .match(new RegExp(escapeRegExp(secondTokenValue.toLocaleLowerCase()), 'i')))
+            )
+          }
+
+          //filter when first token value exist, allows '-' to be inserted
+          if ((key === 'tokenOne' || key === 'tokenTwo') && firstTokenValue && !isAddress) {
+            return (
+              t[key].name.match(new RegExp(escapeRegExp(firstTokenValue), 'i')) ||
+              t[key].symbol
+                .toLocaleLowerCase()
+                .match(new RegExp(escapeRegExp(firstTokenValue.toLocaleLowerCase()), 'i'))
+            )
+          }
+          //filter character by character match
           if ((key === 'tokenOne' || key === 'tokenTwo') && !isAddress) {
             return (
               t[key].name.match(new RegExp(escapeRegExp(value), 'i')) ||
