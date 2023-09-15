@@ -94,7 +94,11 @@ const Search = () => {
           if (key === 'id' && isAddress) {
             return t[key].match(new RegExp(escapeRegExp(value), 'i'))
           }
+
+          //won't filter with special characters at the second part of the value
           if (secondTokenValue && specialChars(secondTokenValue)) return
+
+          //filter when first part of the value appears to be tokenTwo
           if (
             key === 'tokenTwo' &&
             firstTokenValue &&
@@ -104,6 +108,8 @@ const Search = () => {
           ) {
             return
           }
+
+          //filter only match for first and the second parts of the value
           if (firstTokenValue && secondTokenValue) {
             return (
               (t['tokenOne'].name.match(new RegExp(escapeRegExp(firstTokenValue), 'i')) ||
@@ -116,6 +122,8 @@ const Search = () => {
                   .match(new RegExp(escapeRegExp(secondTokenValue.toLocaleLowerCase()), 'i')))
             )
           }
+
+          //filter when first token value exist, allows '-' to be inserted
           if ((key === 'tokenOne' || key === 'tokenTwo') && firstTokenValue && !isAddress) {
             return (
               t[key].name.match(new RegExp(escapeRegExp(firstTokenValue), 'i')) ||
@@ -124,6 +132,7 @@ const Search = () => {
                 .match(new RegExp(escapeRegExp(firstTokenValue.toLocaleLowerCase()), 'i'))
             )
           }
+          //filter character by character match
           if ((key === 'tokenOne' || key === 'tokenTwo') && !isAddress) {
             return (
               t[key].name.match(new RegExp(escapeRegExp(value), 'i')) ||
