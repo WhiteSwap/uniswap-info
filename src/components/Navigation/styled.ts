@@ -17,7 +17,6 @@ export const Aside = styled.aside`
   border-right: 1px solid ${({ theme }) => theme.mercuryGray};
   color: ${({ theme }) => theme.bg2};
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
-  overflow-y: scroll;
 `
 
 export const Badge = styled.span`
