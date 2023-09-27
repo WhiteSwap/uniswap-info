@@ -165,24 +165,26 @@ export const toNiceDateYear = (date: number) => dayjs.utc(dayjs.unix(date)).form
 
 export function getTokenLogoUrl(network: SupportedNetwork, address: string) {
   const tokenAddress = network === SupportedNetwork.ETHEREUM ? checksumEthAddress(address) : address
-  let urlPrefix = ''
+  let url = ''
   switch (network) {
     case SupportedNetwork.ETHEREUM: {
-      urlPrefix = '/logo.png'
+      url = `${LOGO_SOURCE[network]}/${tokenAddress}/logo.png`
       break
     }
     case SupportedNetwork.POLYGON: {
-      urlPrefix = ''
+      // FIXME: find solution to get polygon assets
+      // url = `${LOGO_SOURCE[network]}/${tokenAddress.toString().toLowerCase()}.svg`
+      url = ''
       break
     }
     case SupportedNetwork.TRON:
     default: {
-      urlPrefix = '.png'
+      url = `${LOGO_SOURCE[network]}/${tokenAddress}.png`
       break
     }
   }
 
-  return LOGO_OVERRIDES[network][address.toLowerCase()] || `${LOGO_SOURCE[network]}/${tokenAddress}${urlPrefix}`
+  return LOGO_OVERRIDES[network][address.toLowerCase()] || url
 }
 
 export const checksumEthAddress = (value: string) => {

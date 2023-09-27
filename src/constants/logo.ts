@@ -6,7 +6,8 @@ export type OverrideUrls = Record<SupportedNetwork, Record<string, string>>
 export const LOGO_SOURCE: LogoUrls = {
   [SupportedNetwork.ETHEREUM]:
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets',
-  [SupportedNetwork.POLYGON]: '',
+  [SupportedNetwork.POLYGON]:
+    'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets',
   [SupportedNetwork.TRON]: 'https://coin.top/production/upload/logo'
 }
 

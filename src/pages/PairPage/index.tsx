@@ -183,7 +183,7 @@ const PairPage = () => {
             >
               <FixedPanel as={RouterLink} to={formatPath(`/tokens/${tokenOne?.id}`)}>
                 <RowFixed>
-                  <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size={'1rem'} />
+                  <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size="1rem" />
                   <TYPE.light fontSize=".875rem" lineHeight="1rem" fontWeight={700} ml=".25rem" mr="3.75rem">
                     {tokenOne && tokenTwo
                       ? `1 ${formattedSymbol0} = ${formattedNumber(tokenOne.price) || '-'} ${formattedSymbol1} ${

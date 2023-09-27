@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ImgHTMLAttributes } from 'react'
 import { HelpCircle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { useActiveNetworkId } from 'state/features/application/selectors'
@@ -10,13 +10,18 @@ const Inline = styled.div`
   align-self: center;
 `
 
-const Image = styled.img`
+const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: 50%;
 `
 
-export default function TokenLogo({ address, size = '24px', alt = 'token', ...rest }) {
+interface ITokenLogoProperties extends ImgHTMLAttributes<HTMLImageElement> {
+  address: string
+  size?: string
+}
+
+export default function TokenLogo({ address, size = '24px', alt = 'token', ...rest }: ITokenLogoProperties) {
   const [error, setError] = useState(false)
   const activeNetworkId = useActiveNetworkId()
   const path = getTokenLogoUrl(activeNetworkId, address)
@@ -28,7 +33,7 @@ export default function TokenLogo({ address, size = '24px', alt = 'token', ...re
   if (error || !address) {
     return (
       <Inline>
-        <HelpCircle {...rest} alt={alt} size={size} />
+        <HelpCircle size={size} />
       </Inline>
     )
   }
