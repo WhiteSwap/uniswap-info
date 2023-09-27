@@ -23,14 +23,7 @@ import { useTokenData, useTokenTransactions, useTokenPairsIds } from 'state/feat
 import { useTokenPairs } from 'state/features/token/selectors'
 import { useToggleSavedToken } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
-import {
-  formattedNumber,
-  getBlockChainScanLink,
-  isValidAddress,
-  ellipsisAddress,
-  localNumber,
-  getExchangeLink
-} from 'utils'
+import { formattedNumber, getExplorerLink, isValidAddress, ellipsisAddress, localNumber, getExchangeLink } from 'utils'
 import { ActionsContainer, PanelWrapper, WarningGrouping } from './styled'
 
 const TokenPage = () => {
@@ -120,7 +113,7 @@ const TokenPage = () => {
               style={{ width: 'fit-content' }}
               color={backgroundColor}
               external
-              href={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
+              href={getExplorerLink(activeNetworkId, tokenAddress, 'token')}
             >
               <Text style={{ marginLeft: '.15rem' }} fontSize={'14px'} fontWeight={400}>
                 ({ellipsisAddress(tokenAddress)})
@@ -188,7 +181,7 @@ const TokenPage = () => {
                   <ButtonDark color={backgroundColor}>{t('trade')}</ButtonDark>
                 </Link>
                 <a
-                  href={getBlockChainScanLink(activeNetworkId, tokenAddress, 'token')}
+                  href={getExplorerLink(activeNetworkId, tokenAddress, 'token')}
                   target="_blank"
                   rel="noopener nofollow noreferrer"
                 >

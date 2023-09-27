@@ -22,7 +22,7 @@ import { useUserPositions, useUserTransactions } from 'state/features/account/ho
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useToggleSavedAccount } from 'state/features/user/hooks'
 import { DashboardWrapper, TYPE } from 'Theme'
-import { ellipsisAddress, formattedNumber, getBlockChainScanLink, isValidAddress } from 'utils'
+import { ellipsisAddress, formattedNumber, getExplorerLink, isValidAddress } from 'utils'
 import { calculateDayFees } from 'utils/pair'
 import { DropdownWrapper, Flyout, Header, MenuRow, ActionsContainer } from './styled'
 
@@ -80,7 +80,7 @@ function AccountPage() {
         <RowBetween>
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
-            <Link href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')} target="_blank">
+            <Link href={getExplorerLink(activeNetworkId, accountAddress, 'address')} target="_blank">
               {ellipsisAddress(accountAddress)}
             </Link>
           </TYPE.body>
@@ -96,7 +96,7 @@ function AccountPage() {
             <ActionsContainer>
               <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a
-                href={getBlockChainScanLink(activeNetworkId, accountAddress, 'address')}
+                href={getExplorerLink(activeNetworkId, accountAddress, 'address')}
                 target="_blank"
                 rel="noopener nofollow noreferrer"
               >

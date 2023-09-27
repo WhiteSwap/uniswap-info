@@ -171,13 +171,18 @@ export function getTokenLogoUrl(network: SupportedNetwork, address: string) {
       urlPrefix = '/logo.png'
       break
     }
+    case SupportedNetwork.POLYGON: {
+      urlPrefix = ''
+      break
+    }
     case SupportedNetwork.TRON:
     default: {
       urlPrefix = '.png'
       break
     }
   }
-  return LOGO_OVERRIDES[network][address] || `${LOGO_SOURCE[network]}/${tokenAddress}${urlPrefix}`
+  console.log(LOGO_OVERRIDES[network][address], network, address)
+  return LOGO_OVERRIDES[network][address.toLowerCase()] || `${LOGO_SOURCE[network]}/${tokenAddress}${urlPrefix}`
 }
 
 export const checksumEthAddress = (value: string) => {
@@ -192,10 +197,17 @@ export const isTronAddress = (value: string) => {
   return cryptoValidator.validate(value, SupportedNetwork.TRON)
 }
 
+export const isErcAddress = (value: string) => {
+  return ethers.utils.isAddress(value)
+}
+
 export const isValidAddress = (address: string, networkId: SupportedNetwork) => {
   switch (networkId) {
     case SupportedNetwork.ETHEREUM: {
       return Boolean(checksumEthAddress(address))
+    }
+    case SupportedNetwork.POLYGON: {
+      return isErcAddress(address)
     }
     case SupportedNetwork.TRON:
     default: {
@@ -218,7 +230,7 @@ const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
   [SupportedNetwork.TRON]: 'https://tronscan.org/#'
 }
 
-export function getBlockChainScanLink(
+export function getExplorerLink(
   networkId: SupportedNetwork,
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'

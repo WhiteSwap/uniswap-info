@@ -30,7 +30,7 @@ export function useSavedAccounts(): [string[], (account: string) => void, (accou
 
 export function useToggleSavedAccount(account?: string): [boolean, () => void] {
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
-  const isSaved = savedAccounts.includes(account || '')
+  const isSaved = savedAccounts?.includes(account || '')
 
   const toggleSavedAccount = () => {
     if (account) {

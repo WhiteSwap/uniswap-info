@@ -4,8 +4,6 @@ import styled from 'styled-components/macro'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { getTokenLogoUrl } from 'utils'
 
-const BAD_IMAGES = {}
-
 const Inline = styled.div`
   display: flex;
   align-items: center;
@@ -27,7 +25,9 @@ export default function TokenLogo({ address, size = '24px', alt = 'token', ...re
     setError(false)
   }, [address])
 
-  if (error || BAD_IMAGES[address] || !address) {
+  console.log(error, !address)
+
+  if (error || !address) {
     return (
       <Inline>
         <HelpCircle {...rest} alt={alt} size={size} />
@@ -43,7 +43,6 @@ export default function TokenLogo({ address, size = '24px', alt = 'token', ...re
         src={path}
         size={size}
         onError={event => {
-          BAD_IMAGES[address] = true
           setError(true)
           event.preventDefault()
         }}
