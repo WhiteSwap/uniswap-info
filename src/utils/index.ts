@@ -7,7 +7,7 @@ import cryptoValidator from 'multicoin-address-validator'
 import Numeral from 'numeral'
 import { timeframeOptions } from 'constants/index'
 import { LOGO_OVERRIDES, LOGO_SOURCE } from 'constants/logo'
-import { NetworkInfo, SupportedNetwork, SUPPORTED_NETWORK_VERSIONS, TronNetworkInfo } from 'constants/networks'
+import { NetworkInfo, SUPPORTED_NETWORK_VERSIONS, TronNetworkInfo, SupportedNetwork } from 'constants/networks'
 import { TOKEN_OVERRIDES, WETH_ADDRESS, WTRX_ADDRESS } from 'constants/tokens'
 
 BigNumber.set({ EXPONENTIAL_AT: 50 })
@@ -81,7 +81,7 @@ export function getExchangeLink({
   }
   //TODO: rename network to chain
   const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === network)
-  const url = new URL(`https://app.ws.exchange/${network}/${networkInfo?.networkUrlPrefix}/${exchangePageRoute}`)
+  const url = new URL(`https://app.ws.exchange/${networkInfo?.dexUrlPrefix}/${exchangePageRoute}`)
   const inputCurrencyAddress = parseRouteAddress(inputCurrency)
   url.searchParams.set('inputCurrency', inputCurrencyAddress)
   if (outputCurrency) {
@@ -214,6 +214,7 @@ export const toK = (number: string) => {
 
 const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
   [SupportedNetwork.ETHEREUM]: 'https://etherscan.io',
+  [SupportedNetwork.POLYGON]: 'https://polygonscan.com',
   [SupportedNetwork.TRON]: 'https://tronscan.org/#'
 }
 
@@ -226,16 +227,16 @@ export function getBlockChainScanLink(
 
   switch (type) {
     case 'transaction': {
-      if (networkId === SupportedNetwork.ETHEREUM) {
-        return `${scanUrl}/tx/${data}`
+      if (networkId === SupportedNetwork.TRON) {
+        return `${scanUrl}/transaction/${data}`
       }
-      return `${scanUrl}/transaction/${data}`
+      return `${scanUrl}/tx/${data}`
     }
     case 'token': {
-      if (networkId === SupportedNetwork.ETHEREUM) {
-        return `${scanUrl}/token/${data}`
+      if (networkId === SupportedNetwork.TRON) {
+        return `${scanUrl}/token20/${data}`
       }
-      return `${scanUrl}/token20/${data}`
+      return `${scanUrl}/token/${data}`
     }
     case 'block': {
       return `${scanUrl}/block/${data}`
@@ -251,6 +252,9 @@ export function getViewOnScanKey(networkId: SupportedNetwork) {
   switch (networkId) {
     case SupportedNetwork.ETHEREUM: {
       return 'viewOnEtherscan'
+    }
+    case SupportedNetwork.POLYGON: {
+      return 'View on Polygonscan'
     }
     case SupportedNetwork.TRON:
     default: {

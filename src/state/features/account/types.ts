@@ -1,3 +1,5 @@
+import { SupportedNetwork } from 'constants/networks'
+
 export enum PositionChartView {
   fee = 'fee',
   liquidity = 'liquidity'

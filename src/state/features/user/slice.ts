@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { AddPairPayload, AddTokenPayload, SavedItemPayload, UserState, NetworkSavedState } from './types'
 import { SupportedNetwork } from 'constants/networks'
-import { AddPairPayload, AddTokenPayload, SavedItemPayload, UserState } from './types'
 
-const initialNetworkSavedState = {
+const initialNetworkSavedState: NetworkSavedState = {
   savedAccounts: [],
   savedTokens: {},
   savedPairs: {}
@@ -11,6 +11,7 @@ const initialNetworkSavedState = {
 const initialState: UserState = {
   darkMode: true,
   [SupportedNetwork.ETHEREUM]: initialNetworkSavedState,
+  [SupportedNetwork.POLYGON]: initialNetworkSavedState,
   [SupportedNetwork.TRON]: initialNetworkSavedState
 }
 

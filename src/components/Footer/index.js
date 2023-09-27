@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
-import { AutoColumn } from 'components/Column'
 import {
   SocialLinksList,
   SocialLinkItem,
@@ -9,9 +8,9 @@ import {
   LatestBlock,
   LatestBlockDot
 } from 'components/Navigation/styled.ts'
-import Row, { AutoRow, FooterRow } from 'components/Row'
+import { AutoRow, FooterRow } from 'components/Row'
 import Toggle from 'components/Toggle'
-import { useActiveNetworkId, useLatestBlock } from 'state/features/application/selectors'
+import { useLatestBlock } from 'state/features/application/selectors'
 import { useDarkModeManager } from 'state/features/user/hooks'
 import { FooterWrapper } from './styled'
 

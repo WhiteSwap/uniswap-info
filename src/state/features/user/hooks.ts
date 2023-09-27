@@ -52,7 +52,7 @@ export function useSavedPairs(): [
 ] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const savedPairs = useAppSelector(state => state.user[activeNetwork].savedPairs)
+  const savedPairs = useAppSelector(state => state.user[activeNetwork]?.savedPairs)
 
   const addSavedPair = (
     address: string,
@@ -114,7 +114,7 @@ export function useSavedTokens(): [
 ] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const savedTokens = useAppSelector(state => state.user[activeNetwork].savedTokens)
+  const savedTokens = useAppSelector(state => state.user[activeNetwork]?.savedTokens)
 
   const addSavedToken = (address: string, symbol: string) => {
     dispatch(addToken({ id: address, symbol, networkId: activeNetwork }))

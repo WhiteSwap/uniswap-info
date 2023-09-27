@@ -21,6 +21,7 @@ function safeAccess(object: any, path: any) {
 
 const initialState: PairsState = {
   [SupportedNetwork.ETHEREUM]: {},
+  [SupportedNetwork.POLYGON]: {},
   [SupportedNetwork.TRON]: {}
 }
 

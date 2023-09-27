@@ -1,5 +1,3 @@
-import { SupportedNetwork } from 'constants/networks'
-
 export interface NetworkSavedState {
   savedAccounts: Array<string>
   savedTokens: Record<string, SavedToken>
