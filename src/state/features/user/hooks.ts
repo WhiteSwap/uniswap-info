@@ -15,7 +15,7 @@ export function useDarkModeManager(): [boolean, () => void] {
 export function useSavedAccounts(): [string[], (account: string) => void, (account: string) => void] {
   const activeNetwork = useActiveNetworkId()
   const dispatch = useAppDispatch()
-  const savedAccounts = useAppSelector(state => state.user[activeNetwork].savedAccounts)
+  const savedAccounts = useAppSelector(state => state.user[activeNetwork]?.savedAccounts)
 
   const addSavedAccount = (account: string) => {
     dispatch(addAccount({ id: account, networkId: activeNetwork }))
