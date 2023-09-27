@@ -181,7 +181,7 @@ export function getTokenLogoUrl(network: SupportedNetwork, address: string) {
       break
     }
   }
-  console.log(LOGO_OVERRIDES[network][address], network, address)
+
   return LOGO_OVERRIDES[network][address.toLowerCase()] || `${LOGO_SOURCE[network]}/${tokenAddress}${urlPrefix}`
 }
 

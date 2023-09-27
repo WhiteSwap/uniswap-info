@@ -25,8 +25,6 @@ export default function TokenLogo({ address, size = '24px', alt = 'token', ...re
     setError(false)
   }, [address])
 
-  console.log(error, !address)
-
   if (error || !address) {
     return (
       <Inline>
