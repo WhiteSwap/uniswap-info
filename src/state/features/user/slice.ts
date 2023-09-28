@@ -34,9 +34,18 @@ export const userSlice = createSlice({
     removePair: (state, { payload: { networkId, id } }: PayloadAction<SavedItemPayload>) => {
       delete state[networkId].savedPairs[id]
     },
-    addAccount: (state, { payload: { networkId, id } }: PayloadAction<SavedItemPayload>) => {
-      state[networkId].savedAccounts.push(id)
-    },
+    addAccount: (state, { payload: { networkId, id } }: PayloadAction<SavedItemPayload>) => ({
+      ...state,
+      [networkId]: state[networkId]
+        ? {
+            ...state[networkId],
+            savedAccounts: [...state[networkId].savedAccounts, id]
+          }
+        : {
+            ...initialNetworkSavedState,
+            savedAccounts: [id]
+          }
+    }),
     removeAccount: (state, { payload: { networkId, id } }: PayloadAction<SavedItemPayload>) => {
       const savedAccounts = state[networkId].savedAccounts
       const index = savedAccounts.indexOf(id)
