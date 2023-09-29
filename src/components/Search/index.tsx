@@ -174,7 +174,7 @@ const Search = () => {
           setPoolData([...pools.data.asAddress, ...pools.data.as0, ...pools.data.as1])
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
     // TODO: temporary search token & pairs by API only in ETH blockchain

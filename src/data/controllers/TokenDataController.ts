@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-// import { TOKEN_SEARCH } from 'service/queries/ethereum/tokens'
 import { timestampUnitType } from 'constants/index'
 import { ITokenDataController } from 'data/controllers/types/TokenController.interface'
 import { tokenMapper, topTokensMapper, tokenChartDataMapper, tokenPriceDataMapper } from 'data/mappers/tokenMappers'

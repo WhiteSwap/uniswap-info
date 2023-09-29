@@ -5,7 +5,7 @@ import { Play } from 'react-feather'
 import { useTheme } from 'styled-components'
 import { IconWrapper } from 'components'
 import Percent from 'components/Percent'
-import { EthereumNetworkInfo, SupportedNetwork, TronNetworkInfo } from 'constants/networks'
+import { EthereumNetworkInfo, PolygonNetworkInfo, SupportedNetwork, TronNetworkInfo } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useAppSelector } from 'state/hooks'
 import { formattedNumber } from 'utils'
@@ -33,6 +33,16 @@ const chartColors = {
     histogram: {
       color: EthereumNetworkInfo.primaryColor,
       baseLineColor: EthereumNetworkInfo.primaryColor
+    }
+  },
+  [SupportedNetwork.POLYGON]: {
+    area: {
+      topColor: PolygonNetworkInfo.primaryColor,
+      bottomColor: 'rgba(137, 41, 255, 0.28)'
+    },
+    histogram: {
+      color: PolygonNetworkInfo.primaryColor,
+      baseLineColor: PolygonNetworkInfo.primaryColor
     }
   },
   [SupportedNetwork.TRON]: {

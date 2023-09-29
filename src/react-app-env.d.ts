@@ -2,15 +2,11 @@
 
 declare namespace NodeJS {
   interface ProcessEnvironment {
-    REACT_APP_TRON_API: string
-    REACT_APP_ETHEREUM_API: string
+    REACT_APP_TRON_GRAPH: string
+    REACT_APP_ETHEREUM_GRAPH: string
+    REACT_APP_POLYGON_GRAPH: string
     REACT_APP_GOOGLE_ANALYTICS_ID: string
   }
-}
-
-declare enum SupportedNetwork {
-  ETHEREUM = 'eth',
-  TRON = 'trx'
 }
 
 type TransactionType = 'swap' | 'mint' | 'burn' | 'all'
@@ -22,6 +18,12 @@ type BlockHeight = {
 
 type OffsetParameters<T> = T & {
   skip: number
+}
+
+enum SupportedNetwork {
+  ETHEREUM = 'ethereum',
+  POLYGON = 'polygon',
+  TRON = 'tron'
 }
 
 type ParametersWithNetwork<T = unknown> = T & {

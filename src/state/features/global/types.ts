@@ -1,5 +1,3 @@
-import { SupportedNetwork } from 'constants/networks'
-
 export interface GlobalNetworkState {
   chartData?: ChartDailyItem[]
   transactions?: Transactions

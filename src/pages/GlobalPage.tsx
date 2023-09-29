@@ -15,7 +15,7 @@ import Search from 'components/Search'
 import { SeriesChart } from 'components/SeriesChart'
 import TopTokenList from 'components/TokenList'
 import { TransactionTable } from 'components/TransactionTable'
-import { SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
+import { SUPPORTED_NETWORK_INFOS } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useGlobalTransactions } from 'state/features/global/hooks'
@@ -60,7 +60,7 @@ function GlobalPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetwork = useActiveNetworkId()
-  const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === activeNetwork)
+  const networkInfo = SUPPORTED_NETWORK_INFOS[activeNetwork]
 
   const allPairs = usePairs()
   const allTokens = useTokens()

@@ -1,9 +1,7 @@
-import { SupportedNetwork } from 'constants/networks'
-
 export interface NetworkSavedState {
-  savedAccounts: Array<string>
-  savedTokens: Record<string, SavedToken>
-  savedPairs: Record<string, SavedPair>
+  readonly savedAccounts: Array<string>
+  readonly savedTokens: Record<string, SavedToken>
+  readonly savedPairs: Record<string, SavedPair>
 }
 
 export type SavedPair = {

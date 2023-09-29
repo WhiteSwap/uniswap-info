@@ -10,7 +10,7 @@ import Panel from 'components/Panel'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { TYPE } from 'Theme'
-import { ellipsisAddress, formattedNumber, formatTime, getBlockChainScanLink } from 'utils'
+import { ellipsisAddress, formattedNumber, formatTime, getExplorerLink } from 'utils'
 import { ClickableText, CustomLink, DashGrid, DataText, List, SortText, PageButtons, PaginationButton } from './styled'
 
 interface ITransactionTable {
@@ -147,7 +147,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         <DataText fontWeight="500">
           <CustomLink
             external
-            href={getBlockChainScanLink(activeNetworkId, item.hash, 'transaction')}
+            href={getExplorerLink(activeNetworkId, item.hash, 'transaction')}
             style={{ fontWeight: 700 }}
           >
             {t(getTransactionType(item.type), {
@@ -165,7 +165,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         )}
         {!below1080 && (
           <DataText>
-            <CustomLink external href={getBlockChainScanLink(activeNetworkId, item.account, 'address')}>
+            <CustomLink external href={getExplorerLink(activeNetworkId, item.account, 'address')}>
               {item.account && ellipsisAddress(item.account)}
             </CustomLink>
           </DataText>

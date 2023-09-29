@@ -16,6 +16,7 @@ const initialNetworkAccountState: AccountStatistics = {
 
 const initialState: AccountState = {
   [SupportedNetwork.ETHEREUM]: initialNetworkAccountState,
+  [SupportedNetwork.POLYGON]: initialNetworkAccountState,
   [SupportedNetwork.TRON]: initialNetworkAccountState
 }
 

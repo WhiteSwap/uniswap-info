@@ -20,7 +20,7 @@ import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairData, usePairTransactions } from 'state/features/pairs/hooks'
 import { useToggleSavedPair } from 'state/features/user/hooks'
 import { TYPE, DashboardWrapper } from 'Theme'
-import { isValidAddress, formattedNumber, getBlockChainScanLink, getExchangeLink } from 'utils'
+import { isValidAddress, formattedNumber, getExplorerLink, getExchangeLink } from 'utils'
 import { WarningGrouping, TokenSymbolLink, FixedPanel, PanelWrapper, TokenLink, ActionsContainer } from './styled'
 
 const PairPage = () => {
@@ -163,7 +163,7 @@ const PairPage = () => {
                     <ButtonDark>{t('trade')}</ButtonDark>
                   </Link>
                   <a
-                    href={getBlockChainScanLink(activeNetworkId, pairAddress, 'address')}
+                    href={getExplorerLink(activeNetworkId, pairAddress, 'address')}
                     target="_blank"
                     rel="noopener nofollow noreferrer"
                   >
@@ -183,7 +183,7 @@ const PairPage = () => {
             >
               <FixedPanel as={RouterLink} to={formatPath(`/tokens/${tokenOne?.id}`)}>
                 <RowFixed>
-                  <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size={'1rem'} />
+                  <TokenLogo alt={tokenOne?.symbol} address={tokenOne?.id} size="1rem" />
                   <TYPE.light fontSize=".875rem" lineHeight="1rem" fontWeight={700} ml=".25rem" mr="3.75rem">
                     {tokenOne && tokenTwo
                       ? `1 ${formattedSymbol0} = ${formattedNumber(tokenOne.price) || '-'} ${formattedSymbol1} ${
