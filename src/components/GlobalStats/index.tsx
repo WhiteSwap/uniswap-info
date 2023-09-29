@@ -4,7 +4,7 @@ import { useMedia } from 'react-use'
 import styled from 'styled-components/macro'
 import { RowFixed, RowBetween } from 'components/Row'
 import UniPrice from 'components/UniPrice'
-import { SupportedNetwork } from 'constants/networks'
+import { SUPPORTED_NETWORK_INFOS, SupportedNetwork } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useDayTransactionCount } from 'state/features/global/hooks'
 import { useActiveTokenPrice, useDayFeesUsd } from 'state/features/global/selectors'
@@ -54,12 +54,12 @@ export default function GlobalStats() {
                   }}
                   style={{ position: 'relative' }}
                 >
-                  {activeNetworkId.toUpperCase()} {t('price')}: {formattedPrice}
+                  {SUPPORTED_NETWORK_INFOS[activeNetworkId].coinSymbol.toUpperCase()} {t('price')}: {formattedPrice}
                   {showPriceCard && <UniPrice />}
                 </TYPE.light>
               ) : (
                 <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
-                  {activeNetworkId.toUpperCase()} {t('price')}: {formattedPrice}
+                  {SUPPORTED_NETWORK_INFOS[activeNetworkId].coinSymbol.toUpperCase()} {t('price')}: {formattedPrice}
                 </TYPE.light>
               ))}
 

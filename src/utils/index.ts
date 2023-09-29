@@ -7,7 +7,13 @@ import cryptoValidator from 'multicoin-address-validator'
 import Numeral from 'numeral'
 import { timeframeOptions } from 'constants/index'
 import { LOGO_OVERRIDES, LOGO_SOURCE } from 'constants/logo'
-import { NetworkInfo, SUPPORTED_NETWORK_VERSIONS, TronNetworkInfo, SupportedNetwork } from 'constants/networks'
+import {
+  NetworkInfo,
+  SUPPORTED_NETWORK_VERSIONS,
+  TronNetworkInfo,
+  SupportedNetwork,
+  SUPPORTED_NETWORK_INFOS
+} from 'constants/networks'
 import { TOKEN_OVERRIDES, WETH_ADDRESS, WTRX_ADDRESS } from 'constants/tokens'
 
 BigNumber.set({ EXPONENTIAL_AT: 50 })
@@ -80,7 +86,7 @@ export function getExchangeLink({
     }
   }
   //TODO: rename network to chain
-  const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === network)
+  const networkInfo = SUPPORTED_NETWORK_INFOS[network]
   const url = new URL(`https://app.ws.exchange/${networkInfo?.dexUrlPrefix}/${exchangePageRoute}`)
   const inputCurrencyAddress = parseRouteAddress(inputCurrency)
   url.searchParams.set('inputCurrency', inputCurrencyAddress)

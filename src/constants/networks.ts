@@ -19,6 +19,7 @@ export interface NetworkInfo {
   blurb?: string
   headingTitle: string
   dexUrlPrefix: string
+  coinSymbol: string
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
@@ -31,7 +32,8 @@ export const EthereumNetworkInfo: NetworkInfo = {
   secondaryColor: '#2172E5',
   chainId: 1,
   headingTitle: 'Ethereum',
-  dexUrlPrefix: 'eth/mainnet'
+  dexUrlPrefix: 'eth/mainnet',
+  coinSymbol: 'ETH'
 }
 
 export const PolygonNetworkInfo: NetworkInfo = {
@@ -44,7 +46,8 @@ export const PolygonNetworkInfo: NetworkInfo = {
   secondaryColor: '#A625C0',
   chainId: 137,
   headingTitle: 'Polygon',
-  dexUrlPrefix: 'eth/polygon'
+  dexUrlPrefix: 'eth/polygon',
+  coinSymbol: 'MATIC'
 }
 
 export const TronNetworkInfo: NetworkInfo = {
@@ -56,7 +59,14 @@ export const TronNetworkInfo: NetworkInfo = {
   primaryColor: '#F45670',
   secondaryColor: '#96BEDC',
   headingTitle: 'TRON (TRX)',
-  dexUrlPrefix: 'trx/mainnet'
+  dexUrlPrefix: 'trx/mainnet',
+  coinSymbol: 'TRX'
 }
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, PolygonNetworkInfo, TronNetworkInfo]
+
+export const SUPPORTED_NETWORK_INFOS: { [key in SupportedNetwork]: NetworkInfo } = {
+  [SupportedNetwork.ETHEREUM]: EthereumNetworkInfo,
+  [SupportedNetwork.POLYGON]: PolygonNetworkInfo,
+  [SupportedNetwork.TRON]: TronNetworkInfo
+}

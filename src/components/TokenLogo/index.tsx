@@ -1,7 +1,7 @@
 import { useState, useEffect, ImgHTMLAttributes } from 'react'
 import { HelpCircle } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
-import { SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
+import { SUPPORTED_NETWORK_INFOS } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { getTokenLogoUrl } from 'utils'
 
@@ -42,7 +42,7 @@ export default function TokenLogo({
   const [error, setError] = useState(false)
   const activeNetworkId = useActiveNetworkId()
   const path = address ? getTokenLogoUrl(activeNetworkId, address) : undefined
-  const networkInfo = SUPPORTED_NETWORK_VERSIONS.find(supportedNetwork => supportedNetwork.id === activeNetworkId)
+  const networkInfo = SUPPORTED_NETWORK_INFOS[activeNetworkId]
 
   useEffect(() => {
     setError(false)
