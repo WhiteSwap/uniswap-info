@@ -47,7 +47,7 @@ function AccountSearch({ small }: IAccountSearch) {
               style={below440 ? { marginRight: '0px' } : {}}
               placeholder={t('searchAccount')}
               onChange={event => {
-                setAccountValue(event.target.value)
+                setAccountValue(event.target.value.toLocaleLowerCase())
               }}
             />
           </Wrapper>
