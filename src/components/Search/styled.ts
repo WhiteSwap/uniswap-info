@@ -2,7 +2,7 @@ import { transparentize } from 'polished'
 import { Search, X } from 'react-feather'
 import styled from 'styled-components'
 import FormattedName from 'components/FormattedName'
-import Row from 'components/Row'
+import { Row } from 'components/Row'
 
 export const Container = styled.div`
   height: 48px;

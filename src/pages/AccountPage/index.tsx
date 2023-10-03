@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useParams, Navigate } from 'react-router-dom'
@@ -48,7 +48,7 @@ function AccountPage() {
   )
   const totalSwappedUSD = useMemo(
     () => transactions?.swaps.reduce((total, swap) => total + swap.amountUSD, 0),
-    [transactions?.swaps?.length]
+    [transactions?.swaps?.length, transactions]
   )
   const totalFeesPaid = useMemo(() => calculateDayFees(totalSwappedUSD), [totalSwappedUSD])
 
@@ -56,7 +56,6 @@ function AccountPage() {
   const hideLPContent = positions && positions.length === 0
   const [showDropdown, setShowDropdown] = useState(false)
   const [activePosition, setActivePosition] = useState<Position | undefined>()
-
   const dynamicPositions = activePosition ? [activePosition] : positions
 
   const positionStatistics = useMemo(
@@ -73,6 +72,14 @@ function AccountPage() {
   )
   const node = useRef(null)
   useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
+
+  useEffect(() => {
+    if (activePosition && positions && accountAddress && !positions.includes(activePosition)) {
+      setActivePosition(undefined)
+    }
+
+    return () => setActivePosition(undefined)
+  }, [accountAddress])
 
   return (
     <PageWrapper>
