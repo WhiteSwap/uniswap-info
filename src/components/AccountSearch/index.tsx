@@ -46,9 +46,11 @@ function AccountSearch({ small }: IAccountSearch) {
             <Input
               style={below440 ? { marginRight: '0px' } : {}}
               placeholder={t('searchAccount')}
-              onChange={event => {
-                setAccountValue(event.target.value.toLocaleLowerCase())
-              }}
+              onChange={event =>
+                activeNetworkId === 'tron'
+                  ? setAccountValue(event.target.value)
+                  : setAccountValue(event.target.value.toLowerCase())
+              }
             />
           </Wrapper>
           <ButtonLight style={below440 ? { width: '100%', marginTop: '1rem' } : {}} onClick={handleAccountSearch}>

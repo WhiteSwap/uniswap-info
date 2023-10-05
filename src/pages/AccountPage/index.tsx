@@ -30,18 +30,20 @@ function AccountPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
-
   const { accountAddress } = useParams()
-  if (!accountAddress || !isValidAddress(accountAddress, activeNetworkId)) {
+
+  const address = activeNetworkId === 'tron' ? accountAddress : accountAddress?.toLowerCase()
+
+  if (!address || !isValidAddress(address, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
 
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
 
-  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
-  const positions = useUserPositions(accountAddress)
-  const transactions = useUserTransactions(accountAddress)
+  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(address)
+  const positions = useUserPositions(address)
+  const transactions = useUserTransactions(address)
   const totalTransactionsAmount = useMemo(
     () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
     [transactions]
@@ -80,8 +82,8 @@ function AccountPage() {
         <RowBetween>
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
-            <Link href={getExplorerLink(activeNetworkId, accountAddress, 'address')} target="_blank">
-              {ellipsisAddress(accountAddress)}
+            <Link href={getExplorerLink(activeNetworkId, address, 'address')} target="_blank">
+              {ellipsisAddress(address)}
             </Link>
           </TYPE.body>
           {!below600 && <Search />}
@@ -89,14 +91,14 @@ function AccountPage() {
         <Header>
           <RowBetween>
             {!below600 ? (
-              <TYPE.header fontSize={24}>{accountAddress}</TYPE.header>
+              <TYPE.header fontSize={24}>{address}</TYPE.header>
             ) : (
-              <TYPE.header fontSize={24}>{ellipsisAddress(accountAddress)}</TYPE.header>
+              <TYPE.header fontSize={24}>{ellipsisAddress(address)}</TYPE.header>
             )}
             <ActionsContainer>
               <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a
-                href={getExplorerLink(activeNetworkId, accountAddress, 'address')}
+                href={getExplorerLink(activeNetworkId, address, 'address')}
                 target="_blank"
                 rel="noopener nofollow noreferrer"
               >
@@ -258,9 +260,9 @@ function AccountPage() {
           <DashboardWrapper style={{ display: 'grid' }}>
             <Panel>
               {activePosition ? (
-                <PairReturnsChart account={accountAddress} position={activePosition} />
+                <PairReturnsChart account={address} position={activePosition} />
               ) : (
-                <UserChart account={accountAddress} />
+                <UserChart account={address} />
               )}
             </Panel>
           </DashboardWrapper>
