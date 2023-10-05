@@ -20,7 +20,7 @@ export function useUserTransactions(account: string) {
       dispatch(setTransactions({ account, transactions: result, networkId: activeNetwork }))
     }
     fetchData(account)
-  }, [])
+  }, [account])
 
   return transactions
 }
@@ -86,7 +86,7 @@ export function useUserPositions(account: string) {
       }
     }
     fetchData(account)
-  }, [])
+  }, [account])
 
   return positions
 }
