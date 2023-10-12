@@ -4,6 +4,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import styled, { ThemeProvider } from 'styled-components/macro'
 import FallbackError from 'components/FallbackError'
+import MobileFooter from 'components/Footer'
 import LocalLoader from 'components/LocalLoader'
 import Navigation from 'components/Navigation'
 import PinnedData from 'components/PinnedData'
@@ -156,6 +157,7 @@ function App() {
                   <Route path="*" element={<Navigate to={formatPath('/')} replace />} />
                 </SentryRoutes>
               </Main>
+              {below1080 && <MobileFooter />}
               <Right open={savedOpen}>
                 <PinnedData open={savedOpen} setSavedOpen={setSavedOpen} />
               </Right>

@@ -50,7 +50,7 @@ export const Header = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
   position: fixed;
 `
-
+// Media quaries are used for MobileFooter
 export const SocialLinksList = styled.ul`
   list-style: none;
   margin: 0;
@@ -58,6 +58,30 @@ export const SocialLinksList = styled.ul`
   display: grid;
   grid-auto-flow: row;
   grid-gap: 0.5rem;
+
+  @media screen and (max-width: 1080px) {
+    display: flex;
+  }
+
+  @media screen and (max-width: 768px) and (min-width: 425px) {
+    width: 100%;
+    height: 5rem;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+
+    & :nth-child(2) {
+      padding-bottom: 1.4rem;
+    }
+
+    & :nth-child(n + 3) {
+      margin-left: 2.5rem;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    flex-direction: column;
+  }
 `
 
 export const SocialLinkItem = styled.li`
@@ -74,7 +98,7 @@ export const SocialLinkItem = styled.li`
     opacity: 1;
   }
 `
-
+// Media quaries are used for MobileFooter
 export const LatestBlockContainer = styled(RouterLink)`
   align-items: center;
   display: grid;
@@ -87,6 +111,11 @@ export const LatestBlockContainer = styled(RouterLink)`
   font-weight: 500;
   font-size: 11px;
   transition: opacity 0.25s ease 0s;
+
+  @media screen and (max-width: 768px) {
+    padding-top: 1rem;
+    padding-bottom: 0;
+  }
 `
 
 export const LatestBlockDot = styled.div`

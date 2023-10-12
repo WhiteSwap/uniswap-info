@@ -32,7 +32,7 @@ function AccountSearch({ small }: IAccountSearch) {
   function handleAccountSearch() {
     if (accountValue && isValidAddress(accountValue, activeNetworkId)) {
       navigate(formatPath(`/accounts/${accountValue}`))
-      if (!savedAccounts.includes(accountValue)) {
+      if (!savedAccounts?.includes(accountValue)) {
         addAccount(accountValue)
       }
     }

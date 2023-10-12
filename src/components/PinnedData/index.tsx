@@ -54,7 +54,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
       <AutoColumn gap="2.5rem" style={{ marginTop: '2rem' }}>
         <AutoColumn gap="0.75rem">
           <TYPE.main>{t('pinnedPairs')}</TYPE.main>
-          {Object.keys(savedPairs).length > 0 ? (
+          {savedPairs && Object.keys(savedPairs).length > 0 ? (
             Object.values(savedPairs).map(pair => (
               <RowBetween key={pair.address}>
                 <ButtonFaded as={Link} to={formatPath(`/pairs/${pair.address}`)}>
@@ -81,7 +81,7 @@ const PinnedData = ({ open, setSavedOpen }: IPinnedData) => {
         </AutoColumn>
         <ScrollableDiv gap="0.75rem">
           <TYPE.main>{t('pinnedTokens')}</TYPE.main>
-          {Object.keys(savedTokens).length > 0 ? (
+          {savedTokens && Object.keys(savedTokens).length > 0 ? (
             Object.keys(savedTokens).map(address => {
               const token = savedTokens[address]
               return (

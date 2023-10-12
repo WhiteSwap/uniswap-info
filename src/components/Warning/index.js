@@ -9,7 +9,7 @@ import { AutoColumn } from 'components/Column'
 import Link from 'components/Link'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveNetworkId } from 'state/features/application/selectors'
-import { getBlockChainScanLink, getViewOnScanKey } from 'utils'
+import { getExplorerLink, getViewOnScanKey } from 'utils'
 
 const WarningWrapper = styled.div`
   border-radius: 1.25rem;
@@ -71,7 +71,7 @@ export default function Warning({ show, setShow, address }) {
                 fontWeight={500}
                 lineHeight={'145.23%'}
                 color={'#2172E5'}
-                href={getBlockChainScanLink(activeNetworkId, address, 'address')}
+                href={getExplorerLink(activeNetworkId, address, 'address')}
                 target="_blank"
               >
                 {t(getViewOnScanKey(activeNetworkId))}
@@ -91,7 +91,7 @@ export default function Warning({ show, setShow, address }) {
                 fontWeight={500}
                 lineHeight={'145.23%'}
                 color={'#2172E5'}
-                href={getBlockChainScanLink(activeNetworkId, address, 'address')}
+                href={getExplorerLink(activeNetworkId, address, 'address')}
                 target="_blank"
               >
                 {t(getViewOnScanKey(activeNetworkId))}

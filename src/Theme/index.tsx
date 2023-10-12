@@ -158,7 +158,6 @@ export const DashboardWrapper = styled.div`
     padding: 1rem;
   }
 `
-
 export const Hover = styled.div`
   :hover {
     cursor: pointer;

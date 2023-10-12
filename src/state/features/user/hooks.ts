@@ -15,7 +15,7 @@ export function useDarkModeManager(): [boolean, () => void] {
 export function useSavedAccounts(): [string[], (account: string) => void, (account: string) => void] {
   const activeNetwork = useActiveNetworkId()
   const dispatch = useAppDispatch()
-  const savedAccounts = useAppSelector(state => state.user[activeNetwork].savedAccounts)
+  const savedAccounts = useAppSelector(state => state.user[activeNetwork]?.savedAccounts)
 
   const addSavedAccount = (account: string) => {
     dispatch(addAccount({ id: account, networkId: activeNetwork }))
@@ -30,7 +30,7 @@ export function useSavedAccounts(): [string[], (account: string) => void, (accou
 
 export function useToggleSavedAccount(account?: string): [boolean, () => void] {
   const [savedAccounts, addAccount, removeAccount] = useSavedAccounts()
-  const isSaved = savedAccounts.includes(account || '')
+  const isSaved = savedAccounts?.includes(account || '')
 
   const toggleSavedAccount = () => {
     if (account) {
@@ -52,7 +52,7 @@ export function useSavedPairs(): [
 ] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const savedPairs = useAppSelector(state => state.user[activeNetwork].savedPairs)
+  const savedPairs = useAppSelector(state => state.user[activeNetwork]?.savedPairs)
 
   const addSavedPair = (
     address: string,
@@ -114,7 +114,7 @@ export function useSavedTokens(): [
 ] {
   const dispatch = useAppDispatch()
   const activeNetwork = useActiveNetworkId()
-  const savedTokens = useAppSelector(state => state.user[activeNetwork].savedTokens)
+  const savedTokens = useAppSelector(state => state.user[activeNetwork]?.savedTokens)
 
   const addSavedToken = (address: string, symbol: string) => {
     dispatch(addToken({ id: address, symbol, networkId: activeNetwork }))

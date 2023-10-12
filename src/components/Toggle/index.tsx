@@ -19,11 +19,21 @@ const StyledToggle = styled.div`
   width: fit-content;
   cursor: pointer;
   text-decoration: none;
-  margin-top: 1rem;
   color: white;
 
   :hover {
     text-decoration: none;
+  }
+
+  @media screen and (max-width: 1080px) {
+    flex-basis: 8rem;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+    flex-basis: fit-content;
+    margin-top: 0;
   }
 `
 
