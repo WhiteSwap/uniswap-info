@@ -317,8 +317,6 @@ function AccountPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          {/* {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />} */}
-          {/* {filteredTransactions ? <TransactionTable transactions={filteredTransactions} /> : <LocalLoader />}*/}
           {filteredTransactions ? (
             <TransactionTable transactions={filteredTransactions} />
           ) : transactions ? (
