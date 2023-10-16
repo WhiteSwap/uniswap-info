@@ -75,12 +75,6 @@ function AccountPage() {
         (transTokenOne.id === tokenTwo.id && transTokenTwo.id === tokenOne.id)
       )
     }
-
-    // return {
-    //   mints: transactions.mints.filter(trans => isMatchingTransaction(trans)),
-    //   burns: transactions.burns.filter(trans => isMatchingTransaction(trans)),
-    //   swaps: transactions.swaps.filter(trans => isMatchingTransaction(trans))
-    // }
     const filteredData: Partial<Transactions> = {}
 
     if (transactions.burns.some(trans => isMatchingTransaction(trans))) {
@@ -96,9 +90,6 @@ function AccountPage() {
     }
     return filteredData as Transactions
   }, [transactions, activePosition])
-
-  console.log(filteredTransactions)
-  console.log(transactions)
 
   const positionStatistics = useMemo(
     () =>
