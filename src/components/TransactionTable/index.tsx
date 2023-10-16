@@ -83,7 +83,7 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
         }
         case TransactionSelect.All:
         default: {
-          list = [...transactions.mints, ...transactions.burns, ...transactions.swaps]
+          list = [...(transactions.mints ?? []), ...(transactions.burns ?? []), ...(transactions.swaps ?? [])]
           break
         }
       }
