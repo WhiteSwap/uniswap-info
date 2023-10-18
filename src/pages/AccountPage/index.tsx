@@ -44,6 +44,7 @@ function AccountPage() {
   const [isSaved, toggleSavedAccount] = useToggleSavedAccount(address)
   const positions = useUserPositions(address)
   const transactions = useUserTransactions(address)
+
   const totalTransactionsAmount = useMemo(
     () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
     [transactions]
@@ -59,6 +60,36 @@ function AccountPage() {
   const [showDropdown, setShowDropdown] = useState(false)
   const [activePosition, setActivePosition] = useState<Position | undefined>()
   const dynamicPositions = activePosition ? [activePosition] : positions
+
+  const filteredTransactions = useMemo(() => {
+    if (!transactions || !activePosition) {
+      return null
+    }
+
+    const { tokenOne, tokenTwo } = activePosition
+
+    const isMatchingTransaction = (trans: { tokenOne: any; tokenTwo: any }): any => {
+      const { tokenOne: transTokenOne, tokenTwo: transTokenTwo } = trans
+      return (
+        (transTokenOne.id === tokenOne.id && transTokenTwo.id === tokenTwo.id) ||
+        (transTokenOne.id === tokenTwo.id && transTokenTwo.id === tokenOne.id)
+      )
+    }
+    const filteredData: Partial<Transactions> = {}
+
+    if (transactions.burns.some(trans => isMatchingTransaction(trans))) {
+      filteredData.burns = transactions.burns.filter(trans => isMatchingTransaction(trans))
+    }
+
+    if (transactions.mints && transactions.mints.some(trans => isMatchingTransaction(trans))) {
+      filteredData.mints = transactions.mints.filter(trans => isMatchingTransaction(trans))
+    }
+
+    if (transactions.swaps.some(trans => isMatchingTransaction(trans))) {
+      filteredData.swaps = transactions.swaps.filter(trans => isMatchingTransaction(trans))
+    }
+    return filteredData as Transactions
+  }, [transactions, activePosition])
 
   const positionStatistics = useMemo(
     () =>
@@ -286,7 +317,13 @@ function AccountPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
+          {filteredTransactions ? (
+            <TransactionTable transactions={filteredTransactions} />
+          ) : transactions ? (
+            <TransactionTable transactions={transactions} />
+          ) : (
+            <LocalLoader />
+          )}
         </DashboardWrapper>
       </ContentWrapperLarge>
     </PageWrapper>
