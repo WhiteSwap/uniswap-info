@@ -8,8 +8,11 @@ import DropdownSelect from 'components/DropdownSelect'
 import LocalLoader from 'components/LocalLoader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { timeframeOptions } from 'constants/index'
+import { SupportedNetwork } from 'constants/networks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useTokenChartData, useTokenPriceData } from 'state/features/token/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
+import { TYPE } from 'Theme'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartButtonsGrid, ChartWrapper, PriceOption } from './styled'
 
@@ -34,6 +37,9 @@ interface TokenChartProperties {
 
 const TokenChart = ({ address, color, base }: TokenChartProperties) => {
   const { t } = useTranslation()
+  const activeNetwork = useActiveNetworkId()
+
+  const isPolygon = activeNetwork === SupportedNetwork.POLYGON
 
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
@@ -59,6 +65,69 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
   const priceData = useTokenPriceData(address, timeWindow, interval)
 
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22
+
+  if (isPolygon) {
+    return (
+      <ChartWrapper>
+        {below600 ? (
+          <RowBetween mb={40}>
+            <DropdownSelect options={CHART_VIEW} active={chartFilter} setActive={setChartFilter} color={color} />
+            <DropdownSelect options={timeframeOptions} active={timeWindow} setActive={setTimeWindow} color={color} />
+          </RowBetween>
+        ) : (
+          <ChartButtonsGrid>
+            <RowFixed>
+              <OptionButton
+                active={chartFilter === CHART_VIEW.LIQUIDITY}
+                onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
+                style={{ marginRight: '6px' }}
+              >
+                {t('liquidity')}
+              </OptionButton>
+              <OptionButton
+                active={chartFilter === CHART_VIEW.VOLUME}
+                onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
+                style={{ marginRight: '6px' }}
+              >
+                {t('volume')}
+              </OptionButton>
+              <OptionButton
+                active={chartFilter === CHART_VIEW.PRICE}
+                onClick={() => {
+                  setChartFilter(CHART_VIEW.PRICE)
+                }}
+              >
+                {t('price')}
+              </OptionButton>
+            </RowFixed>
+            <AutoRow justify="flex-end" gap="6px">
+              <OptionButton
+                active={timeWindow === timeframeOptions.WEEK}
+                onClick={() => setTimeWindow(timeframeOptions.WEEK)}
+              >
+                1W
+              </OptionButton>
+              <OptionButton
+                active={timeWindow === timeframeOptions.MONTH}
+                onClick={() => setTimeWindow(timeframeOptions.MONTH)}
+              >
+                1M
+              </OptionButton>
+              <OptionButton
+                active={timeWindow === timeframeOptions.YEAR}
+                onClick={() => setTimeWindow(timeframeOptions.YEAR)}
+              >
+                1Y
+              </OptionButton>
+            </AutoRow>
+          </ChartButtonsGrid>
+        )}
+        <TYPE.largeHeader position={'absolute'} top={'50%'} left={below600 ? '25%' : '40%'}>
+          Coming soon
+        </TYPE.largeHeader>
+      </ChartWrapper>
+    )
+  }
 
   return (
     <ChartWrapper>

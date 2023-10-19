@@ -10,6 +10,7 @@ export const ChartButtonsGrid = styled.div`
 `
 
 export const ChartWrapper = styled.div`
+  position: relative;
   height: 100%;
   min-height: 300px;
 
