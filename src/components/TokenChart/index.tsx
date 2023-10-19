@@ -68,7 +68,7 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
 
   if (isPolygon) {
     return (
-      <ChartWrapper>
+      <ChartWrapper position="relative">
         {below600 ? (
           <RowBetween mb={40}>
             <DropdownSelect options={CHART_VIEW} active={chartFilter} setActive={setChartFilter} color={color} />
@@ -122,7 +122,7 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
             </AutoRow>
           </ChartButtonsGrid>
         )}
-        <TYPE.largeHeader position={'absolute'} top={'50%'} left={below600 ? '25%' : '40%'}>
+        <TYPE.largeHeader position="absolute" top="50%" left={below600 ? '25%' : '40%'}>
           Coming soon
         </TYPE.largeHeader>
       </ChartWrapper>
