@@ -9,8 +9,7 @@ export const ChartButtonsGrid = styled.div`
   gap: 0.5rem;
 `
 
-export const ChartWrapper = styled.div<{ position?: string }>`
-  position: ${({ position = 'static' }) => position};
+export const ChartWrapper = styled.div`
   height: 100%;
   min-height: 300px;
 

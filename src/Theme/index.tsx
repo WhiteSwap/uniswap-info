@@ -118,13 +118,9 @@ export const globalTheme = (darkMode: boolean): DefaultTheme => {
   return lightTheme
 }
 
-const TextWrapper = styled(Text)<{ position?: string; top?: string; left?: string }>`
+const TextWrapper = styled(Text)`
   color: ${({ color, theme }) => theme[color as keyof DefaultTheme]};
-  position: ${({ position = 'static' }) => position};
-  top: ${({ top = 'auto' }) => top};
-  left: ${({ left = 'auto' }) => left};
 `
-
 export const TYPE = {
   main(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color={'text1'} {...props} />
