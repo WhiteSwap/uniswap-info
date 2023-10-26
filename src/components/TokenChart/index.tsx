@@ -4,6 +4,7 @@ import { useMedia, usePrevious } from 'react-use'
 import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
 import { OptionButton } from 'components/ButtonStyled'
 import CandleStickChart from 'components/CandleChart'
+import ComingSoon from 'components/ComingSoon'
 import DropdownSelect from 'components/DropdownSelect'
 import LocalLoader from 'components/LocalLoader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
@@ -12,7 +13,6 @@ import { SupportedNetwork } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useTokenChartData, useTokenPriceData } from 'state/features/token/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
-import { TYPE } from 'Theme'
 import { toK, toNiceDate, toNiceDateYear, formattedNumber } from 'utils'
 import { ChartButtonsGrid, ChartWrapper, PriceOption } from './styled'
 
@@ -122,9 +122,7 @@ const TokenChart = ({ address, color, base }: TokenChartProperties) => {
             </AutoRow>
           </ChartButtonsGrid>
         )}
-        <TYPE.largeHeader position="absolute" top="50%" left={below600 ? '25%' : '40%'}>
-          Coming soon
-        </TYPE.largeHeader>
+        <ComingSoon />
       </ChartWrapper>
     )
   }

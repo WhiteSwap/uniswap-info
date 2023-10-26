@@ -125,30 +125,28 @@ const TextWrapper = styled(Text)<{ position?: string; top?: string; left?: strin
   left: ${({ left = 'auto' }) => left};
 `
 
-type TypeProperties = TextProps & { position?: string; top?: string; left?: string }
-
 export const TYPE = {
-  main(props: TypeProperties) {
+  main(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color={'text1'} {...props} />
   },
 
-  body(props: TypeProperties) {
+  body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...props} />
   },
 
-  small(props: TypeProperties) {
+  small(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} color={'text1'} {...props} />
   },
 
-  header(props: TypeProperties) {
+  header(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
   },
 
-  largeHeader(props: TypeProperties) {
+  largeHeader(props: TextProps) {
     return <TextWrapper margin={0} fontWeight={500} color={'text1'} fontSize={28} forwardedAs="h1" {...props} />
   },
 
-  light(props: TypeProperties) {
+  light(props: TextProps) {
     return <TextWrapper fontWeight={400} color={'text3'} fontSize={14} {...props} />
   }
 }
