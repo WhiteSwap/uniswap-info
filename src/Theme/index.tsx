@@ -128,19 +128,19 @@ const TextWrapper = styled(Text)<{ position?: string; top?: string; left?: strin
 type TypeProperties = TextProps & { position?: string; top?: string; left?: string }
 
 export const TYPE = {
-  main(props: TextProps) {
+  main(props: TypeProperties) {
     return <TextWrapper fontWeight={500} fontSize={14} color={'text1'} {...props} />
   },
 
-  body(props: TextProps) {
+  body(props: TypeProperties) {
     return <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...props} />
   },
 
-  small(props: TextProps) {
+  small(props: TypeProperties) {
     return <TextWrapper fontWeight={500} fontSize={11} color={'text1'} {...props} />
   },
 
-  header(props: TextProps) {
+  header(props: TypeProperties) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
   },
 
@@ -148,7 +148,7 @@ export const TYPE = {
     return <TextWrapper margin={0} fontWeight={500} color={'text1'} fontSize={28} forwardedAs="h1" {...props} />
   },
 
-  light(props: TextProps) {
+  light(props: TypeProperties) {
     return <TextWrapper fontWeight={400} color={'text3'} fontSize={14} {...props} />
   }
 }
