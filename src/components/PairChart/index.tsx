@@ -7,10 +7,12 @@ import { useTheme } from 'styled-components'
 import { EmptyCard } from 'components'
 import { OptionButton } from 'components/ButtonStyled'
 import CandleStickChart from 'components/CandleChart'
+import ComingSoon from 'components/ComingSoon'
 import DropdownSelect from 'components/DropdownSelect'
 import LocalLoader from 'components/LocalLoader'
 import { RowBetween, AutoRow } from 'components/Row'
 import { timeframeOptions } from 'constants/index'
+import { SupportedNetwork } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairChartData, useHourlyRateData } from 'state/features/pairs/hooks'
 import { useDarkModeManager } from 'state/features/user/hooks'
@@ -25,6 +27,9 @@ const PairChart = () => {
   const chartColor = theme.blue
   const address = parameters.pairAddress!
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH)
+  const activeNetwork = useActiveNetworkId()
+
+  const isPolygon = activeNetwork === SupportedNetwork.POLYGON
 
   const [darkMode] = useDarkModeManager()
   const textColor = darkMode ? 'white' : 'black'
@@ -73,6 +78,89 @@ const PairChart = () => {
   }
 
   const aspect = below1080 ? 60 / 20 : below1600 ? 60 / 28 : 60 / 22
+
+  if (isPolygon) {
+    return (
+      <ChartWrapper>
+        {below700 ? (
+          <RowBetween mb={40}>
+            <DropdownSelect options={chartView} active={chartFilter} setActive={setChartFilter} color={chartColor} />
+            <DropdownSelect
+              options={timeframeOptions}
+              active={timeWindow}
+              setActive={setTimeWindow}
+              color={chartColor}
+            />
+          </RowBetween>
+        ) : (
+          <OptionsRow>
+            <AutoRow>
+              <OptionButton
+                active={chartFilter === chartView.RATE0}
+                onClick={() => {
+                  setTimeWindow(timeframeOptions.WEEK)
+                  setChartFilter(chartView.RATE0)
+                }}
+              >
+                {rate0 || '-'}
+              </OptionButton>
+              <OptionButton
+                active={chartFilter === chartView.RATE1}
+                onClick={() => {
+                  setTimeWindow(timeframeOptions.WEEK)
+                  setChartFilter(chartView.RATE1)
+                }}
+              >
+                {rate1 || '-'}
+              </OptionButton>
+            </AutoRow>
+            <AutoRow justify="flex-end">
+              <OptionButton
+                active={chartFilter === chartView.LIQUIDITY}
+                onClick={() => {
+                  setTimeWindow(timeframeOptions.YEAR)
+                  setChartFilter(chartView.LIQUIDITY)
+                }}
+              >
+                {t('liquidity')}
+              </OptionButton>
+              <OptionButton
+                active={chartFilter === chartView.VOLUME}
+                onClick={() => {
+                  setTimeWindow(timeframeOptions.YEAR)
+                  setChartFilter(chartView.VOLUME)
+                }}
+              >
+                {t('volume')}
+              </OptionButton>
+            </AutoRow>
+            <AutoRow />
+            <AutoRow justify="flex-end">
+              <OptionButton
+                active={timeWindow === timeframeOptions.WEEK}
+                onClick={() => setTimeWindow(timeframeOptions.WEEK)}
+              >
+                1W
+              </OptionButton>
+              <OptionButton
+                active={timeWindow === timeframeOptions.MONTH}
+                onClick={() => setTimeWindow(timeframeOptions.MONTH)}
+              >
+                1M
+              </OptionButton>
+              <OptionButton
+                active={timeWindow === timeframeOptions.YEAR}
+                onClick={() => setTimeWindow(timeframeOptions.YEAR)}
+              >
+                1Y
+              </OptionButton>
+            </AutoRow>
+          </OptionsRow>
+        )}
+        <ComingSoon />
+      </ChartWrapper>
+    )
+  }
 
   return (
     <ChartWrapper>
