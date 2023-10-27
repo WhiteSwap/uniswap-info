@@ -13,9 +13,10 @@ import Percent from 'components/Percent'
 import { AutoRow, RowBetween } from 'components/Row'
 import Search from 'components/Search'
 import { SeriesChart } from 'components/SeriesChart'
+import { Title } from 'components/Title/styled'
 import TopTokenList from 'components/TokenList'
 import { TransactionTable } from 'components/TransactionTable'
-import { SUPPORTED_NETWORK_INFOS } from 'constants/networks'
+import { SUPPORTED_NETWORK_INFOS, SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useGlobalTransactions } from 'state/features/global/hooks'
@@ -60,6 +61,7 @@ function GlobalPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetwork = useActiveNetworkId()
+  const isPolygon = activeNetwork === SupportedNetwork.POLYGON
   const networkInfo = SUPPORTED_NETWORK_INFOS[activeNetwork]
 
   const allPairs = usePairs()
@@ -185,7 +187,7 @@ function GlobalPage() {
               <CustomLink to={formatPath('/tokens')}>{t('seeAll')}</CustomLink>
             </RowBetween>
           </ListOptions>
-          <TopTokenList tokens={allTokens} />
+          {isPolygon ? <Title fontSize="1">{t('comingSoon')}</Title> : <TopTokenList tokens={allTokens} />}
         </DashboardWrapper>
 
         <DashboardWrapper style={{ marginTop: '1rem' }}>
@@ -197,7 +199,7 @@ function GlobalPage() {
               <CustomLink to={formatPath(`/pairs`)}>{t('seeAll')}</CustomLink>
             </RowBetween>
           </ListOptions>
-          <PairList pairs={allPairs} />
+          {isPolygon ? <Title fontSize="1">{t('comingSoon')}</Title> : <PairList pairs={allPairs} />}
         </DashboardWrapper>
 
         <DashboardWrapper style={{ marginTop: '1rem' }}>
