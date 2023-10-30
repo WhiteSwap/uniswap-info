@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Row from 'components/Row'
+import { Row } from 'components/Row'
 
 export const Header = styled.div``
 

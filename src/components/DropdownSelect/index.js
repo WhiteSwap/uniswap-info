@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StyledIcon } from 'components'
 import { AutoColumn } from 'components/Column'
-import Row, { RowBetween } from 'components/Row'
+import { RowBetween, Row } from 'components/Row'
 import { TYPE } from 'Theme'
 import { Wrapper, Dropdown, ArrowStyled } from './styled'
 

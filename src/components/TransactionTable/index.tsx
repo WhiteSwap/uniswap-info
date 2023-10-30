@@ -70,20 +70,20 @@ export const TransactionTable = ({ transactions, color }: ITransactionTable) => 
     if (transactions) {
       switch (transactionType) {
         case TransactionSelect.Adds: {
-          list = [...transactions.mints]
+          list = [...(transactions.mints ?? [])]
           break
         }
         case TransactionSelect.Removes: {
-          list = [...transactions.burns]
+          list = [...(transactions.burns ?? [])]
           break
         }
         case TransactionSelect.Swaps: {
-          list = [...transactions.swaps]
+          list = [...(transactions.swaps ?? [])]
           break
         }
         case TransactionSelect.All:
         default: {
-          list = [...transactions.mints, ...transactions.burns, ...transactions.swaps]
+          list = [...(transactions.mints ?? []), ...(transactions.burns ?? []), ...(transactions.swaps ?? [])]
           break
         }
       }

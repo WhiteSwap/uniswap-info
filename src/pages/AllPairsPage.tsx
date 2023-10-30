@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMedia, useToggle } from 'react-use'
 import type { PairDetails } from 'state/features/pairs/types'
 import { PageWrapper, FullWrapper } from 'components'
@@ -6,10 +7,16 @@ import { ButtonLight } from 'components/ButtonStyled'
 import PairList from 'components/PairList'
 import { Row, RowBetween } from 'components/Row'
 import Search from 'components/Search'
+import { Title } from 'components/Title/styled'
+import { SupportedNetwork } from 'constants/networks'
+import { useActiveNetworkId } from 'state/features/application/selectors'
 import { usePairs } from 'state/features/pairs/selectors'
 import { TYPE, DashboardWrapper } from 'Theme'
 
 function AllPairsPage() {
+  const { t } = useTranslation()
+  const activeNetwork = useActiveNetworkId()
+  const isPolygon = activeNetwork === SupportedNetwork.POLYGON
   const [isAllPairs, toggleAllPairs] = useToggle(true)
   const allPairs = usePairs()
   const farmingPools = useMemo(() => {
@@ -37,7 +44,11 @@ function AllPairsPage() {
             </Row>
             {!below800 && <Search />}
           </RowBetween>
-          <PairList pairs={isAllPairs ? allPairs : farmingPools} maxItems={50} />
+          {isPolygon ? (
+            <Title marginTop="5rem">{t('comingSoon')}</Title>
+          ) : (
+            <PairList pairs={isAllPairs ? allPairs : farmingPools} maxItems={50} />
+          )}
         </DashboardWrapper>
       </FullWrapper>
     </PageWrapper>

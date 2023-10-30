@@ -9,6 +9,7 @@ import { ButtonLight, ButtonFaded } from 'components/ButtonStyled'
 import { AutoColumn } from 'components/Column'
 import Panel from 'components/Panel'
 import { AutoRow, RowBetween } from 'components/Row'
+import { SupportedNetwork } from 'constants/networks'
 import { useFormatPath } from 'hooks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { useSavedAccounts } from 'state/features/user/hooks'
@@ -46,9 +47,11 @@ function AccountSearch({ small }: IAccountSearch) {
             <Input
               style={below440 ? { marginRight: '0px' } : {}}
               placeholder={t('searchAccount')}
-              onChange={event => {
-                setAccountValue(event.target.value)
-              }}
+              onChange={event =>
+                activeNetworkId === SupportedNetwork.TRON
+                  ? setAccountValue(event.target.value)
+                  : setAccountValue(event.target.value.toLowerCase())
+              }
             />
           </Wrapper>
           <ButtonLight style={below440 ? { width: '100%', marginTop: '1rem' } : {}} onClick={handleAccountSearch}>

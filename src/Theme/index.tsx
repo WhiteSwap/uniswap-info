@@ -121,7 +121,6 @@ export const globalTheme = (darkMode: boolean): DefaultTheme => {
 const TextWrapper = styled(Text)`
   color: ${({ color, theme }) => theme[color as keyof DefaultTheme]};
 `
-
 export const TYPE = {
   main(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color={'text1'} {...props} />

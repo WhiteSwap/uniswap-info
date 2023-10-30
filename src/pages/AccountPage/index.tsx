@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useParams, Navigate } from 'react-router-dom'
@@ -30,25 +30,28 @@ function AccountPage() {
   const { t } = useTranslation()
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
-
   const { accountAddress } = useParams()
-  if (!accountAddress || !isValidAddress(accountAddress, activeNetworkId)) {
+
+  const address = activeNetworkId === 'tron' ? accountAddress : accountAddress?.toLowerCase()
+
+  if (!address || !isValidAddress(address, activeNetworkId)) {
     return <Navigate to={formatPath('/')} />
   }
 
   const below600 = useMedia('(max-width: 600px)')
   const below440 = useMedia('(max-width: 440px)')
 
-  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(accountAddress)
-  const positions = useUserPositions(accountAddress)
-  const transactions = useUserTransactions(accountAddress)
+  const [isSaved, toggleSavedAccount] = useToggleSavedAccount(address)
+  const positions = useUserPositions(address)
+  const transactions = useUserTransactions(address)
+
   const totalTransactionsAmount = useMemo(
     () => (transactions ? transactions.swaps.length + transactions.burns.length + transactions.mints.length : 0),
     [transactions]
   )
   const totalSwappedUSD = useMemo(
     () => transactions?.swaps.reduce((total, swap) => total + swap.amountUSD, 0),
-    [transactions?.swaps?.length]
+    [transactions?.swaps?.length, transactions]
   )
   const totalFeesPaid = useMemo(() => calculateDayFees(totalSwappedUSD), [totalSwappedUSD])
 
@@ -56,8 +59,37 @@ function AccountPage() {
   const hideLPContent = positions && positions.length === 0
   const [showDropdown, setShowDropdown] = useState(false)
   const [activePosition, setActivePosition] = useState<Position | undefined>()
-
   const dynamicPositions = activePosition ? [activePosition] : positions
+
+  const filteredTransactions = useMemo(() => {
+    if (!transactions || !activePosition) {
+      return null
+    }
+
+    const { tokenOne, tokenTwo } = activePosition
+
+    const isMatchingTransaction = (trans: { tokenOne: any; tokenTwo: any }): any => {
+      const { tokenOne: transTokenOne, tokenTwo: transTokenTwo } = trans
+      return (
+        (transTokenOne.id === tokenOne.id && transTokenTwo.id === tokenTwo.id) ||
+        (transTokenOne.id === tokenTwo.id && transTokenTwo.id === tokenOne.id)
+      )
+    }
+    const filteredData: Partial<Transactions> = {}
+
+    if (transactions.burns.some(trans => isMatchingTransaction(trans))) {
+      filteredData.burns = transactions.burns.filter(trans => isMatchingTransaction(trans))
+    }
+
+    if (transactions.mints && transactions.mints.some(trans => isMatchingTransaction(trans))) {
+      filteredData.mints = transactions.mints.filter(trans => isMatchingTransaction(trans))
+    }
+
+    if (transactions.swaps.some(trans => isMatchingTransaction(trans))) {
+      filteredData.swaps = transactions.swaps.filter(trans => isMatchingTransaction(trans))
+    }
+    return filteredData as Transactions
+  }, [transactions, activePosition])
 
   const positionStatistics = useMemo(
     () =>
@@ -74,14 +106,22 @@ function AccountPage() {
   const node = useRef(null)
   useOnClickOutside(node, showDropdown ? () => setShowDropdown(false) : undefined)
 
+  useEffect(() => {
+    if (activePosition && positions && accountAddress && !positions.includes(activePosition)) {
+      setActivePosition(undefined)
+    }
+
+    return () => setActivePosition(undefined)
+  }, [accountAddress])
+
   return (
     <PageWrapper>
       <ContentWrapperLarge>
         <RowBetween>
           <TYPE.body>
             <BasicLink to={formatPath('/accounts')}>{`${t('accounts')} `}</BasicLink>→
-            <Link href={getExplorerLink(activeNetworkId, accountAddress, 'address')} target="_blank">
-              {ellipsisAddress(accountAddress)}
+            <Link href={getExplorerLink(activeNetworkId, address, 'address')} target="_blank">
+              {ellipsisAddress(address)}
             </Link>
           </TYPE.body>
           {!below600 && <Search />}
@@ -89,14 +129,14 @@ function AccountPage() {
         <Header>
           <RowBetween>
             {!below600 ? (
-              <TYPE.header fontSize={24}>{accountAddress}</TYPE.header>
+              <TYPE.header fontSize={24}>{address}</TYPE.header>
             ) : (
-              <TYPE.header fontSize={24}>{ellipsisAddress(accountAddress)}</TYPE.header>
+              <TYPE.header fontSize={24}>{ellipsisAddress(address)}</TYPE.header>
             )}
             <ActionsContainer>
               <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
               <a
-                href={getExplorerLink(activeNetworkId, accountAddress, 'address')}
+                href={getExplorerLink(activeNetworkId, address, 'address')}
                 target="_blank"
                 rel="noopener nofollow noreferrer"
               >
@@ -258,9 +298,9 @@ function AccountPage() {
           <DashboardWrapper style={{ display: 'grid' }}>
             <Panel>
               {activePosition ? (
-                <PairReturnsChart account={accountAddress} position={activePosition} />
+                <PairReturnsChart account={address} position={activePosition} />
               ) : (
-                <UserChart account={accountAddress} />
+                <UserChart account={address} />
               )}
             </Panel>
           </DashboardWrapper>
@@ -277,7 +317,13 @@ function AccountPage() {
           <TYPE.main fontSize={22} fontWeight={500}>
             {t('transactions')}
           </TYPE.main>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader />}
+          {filteredTransactions ? (
+            <TransactionTable transactions={filteredTransactions} />
+          ) : transactions ? (
+            <TransactionTable transactions={transactions} />
+          ) : (
+            <LocalLoader />
+          )}
         </DashboardWrapper>
       </ContentWrapperLarge>
     </PageWrapper>

@@ -20,3 +20,17 @@ export const TitleWrapper = styled(Link)`
     }
   }
 `
+
+export const Title = styled.span<{ marginTop?: string; fontSize?: string }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${({ fontSize = '2.5rem' }) => fontSize};
+  position: absolute;
+  color: ${({ theme }) => theme.white};
+  margin-top: ${({ marginTop = '0' }) => marginTop};
+
+  @media screen and (max-width: 600px) {
+    font-size: 1.25rem;
+  }
+`
