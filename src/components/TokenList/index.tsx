@@ -157,7 +157,7 @@ function TopTokenList({ tokens, itemMax = 10 }: ITokensTable) {
         </DataText>
         {!below680 && (
           <DataText color="text" fontWeight="500">
-            {<FormattedName text={item.symbol} maxCharacters={9} />}
+            {<FormattedName text={item.symbol} maxCharacters={10} />}
           </DataText>
         )}
         <DataText>{formattedNumber(item.totalLiquidityUSD, true)}</DataText>
