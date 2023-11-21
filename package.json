@@ -92,8 +92,8 @@
     "lint": "eslint --ext .js,.ts,.tsx,.jsx .",
     "lintfix": "eslint --fix --ext .js,.ts,.tsx,.jsx .",
     "tsc": "tsc --project tsconfig.json",
-    "deploy:stage": "yarn && yarn build && ./deploy-stage.sh",
-    "deploy:prod": "yarn && yarn build && ./deploy-prod.sh",
+    "deploy:stage": "pnpm && pnpm build && ./deploy-stage.sh",
+    "deploy:prod": "pnpm && pnpm build && ./deploy-prod.sh",
     "prepare": "husky install",
     "codegen": "graphql-codegen --config codegen.ts -r dotenv/config",
     "preinstall": "npx only-allow pnpm"
