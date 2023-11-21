@@ -95,7 +95,8 @@
     "deploy:stage": "yarn && yarn build && ./deploy-stage.sh",
     "deploy:prod": "yarn && yarn build && ./deploy-prod.sh",
     "prepare": "husky install",
-    "codegen": "graphql-codegen --config codegen.ts -r dotenv/config"
+    "codegen": "graphql-codegen --config codegen.ts -r dotenv/config",
+    "preinstall": "npx only-allow pnpm"
   },
   "browserslist": {
     "production": [
