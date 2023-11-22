@@ -63,6 +63,7 @@
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.30.0",
+    "@vitejs/plugin-react": "^4.2.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-import-resolver-typescript": "^3.5.2",
@@ -85,10 +86,10 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
     "lint": "eslint --ext .js,.ts,.tsx,.jsx .",
     "lintfix": "eslint --fix --ext .js,.ts,.tsx,.jsx .",
     "tsc": "tsc --project tsconfig.json",
