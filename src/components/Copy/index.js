@@ -1,5 +1,5 @@
 import { CheckCircle, Copy } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { StyledIcon } from 'components'
 import { useCopyClipboard } from 'hooks'
 

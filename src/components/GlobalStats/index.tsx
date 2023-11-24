@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { RowFixed, RowBetween } from 'components/Row'
 import UniPrice from 'components/UniPrice'
 import { SUPPORTED_NETWORK_INFOS, SupportedNetwork } from 'constants/networks'

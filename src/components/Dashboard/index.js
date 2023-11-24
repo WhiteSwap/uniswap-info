@@ -1,5 +1,5 @@
 import { Box } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Dashboard = styled(Box)`
   width: 100%;

@@ -1,5 +1,5 @@
 import { ChevronDown as Arrow } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const Wrapper = styled.div<{ open: boolean }>`
   z-index: 20;

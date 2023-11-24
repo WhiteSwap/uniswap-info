@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import { usePopper } from 'react-popper'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import useInterval from 'hooks'
 
 const PopoverContainer = styled.div<{ show: boolean }>`

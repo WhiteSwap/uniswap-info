@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import { Area, XAxis, YAxis, ResponsiveContainer, Bar, BarChart, CartesianGrid, Tooltip, AreaChart } from 'recharts'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { toK, toNiceDate, toNiceDateYear } from 'utils'
 
 const ChartWrapper = styled.div`
