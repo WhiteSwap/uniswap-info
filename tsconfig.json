@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "baseUrl": "src",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -30,10 +26,7 @@
     "strictPropertyInitialization": true,
     "removeComments": true,
     "noUnusedParameters": true,
+    "typeRoots": ["./src/custom.d.ts"]
   },
-  "include": [
-    "src",
-    "./src/**/*.ts",
-    "./src/**/*.tsx"
-  ]
+  "include": ["src", "./src/**/*.ts", "./src/**/*.tsx"]
 }
