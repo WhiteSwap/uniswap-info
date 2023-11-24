@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import Panel from 'components/Panel'
 import { RowFixed } from 'components/Row'
