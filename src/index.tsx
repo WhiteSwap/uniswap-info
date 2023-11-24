@@ -1,4 +1,5 @@
 import { StrictMode, Suspense, useEffect } from 'react'
+import { Buffer } from 'buffer'
 import { ApolloClient, ApolloProvider } from '@apollo/react-hooks'
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
@@ -15,6 +16,8 @@ import App from 'App'
 import { client } from 'service/client'
 import { store, persistor } from 'state/store'
 import 'i18n'
+
+window.Buffer = window.Buffer || Buffer
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -33,7 +36,6 @@ Sentry.init({
   ],
   tracesSampleRate: process.env.REACT_APP_ENV === 'production' ? 0.2 : 1
 })
-
 // initialize custom dayjs plugin
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
