@@ -2,8 +2,8 @@ FROM node:16.18.0 as node
 COPY / /app
 WORKDIR /app
 
-RUN npm ci
-RUN npm run build
+RUN pnpm ci
+RUN pnpm run build
 
 FROM nginx 
 COPY --from=node /app/build /var/www/front 
