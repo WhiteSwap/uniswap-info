@@ -1,14 +1,5 @@
 /// <reference types="react-scripts" />
 
-declare namespace NodeJS {
-  interface ProcessEnvironment {
-    VITE_APP_TRON_GRAPH: string
-    VITE_APP_ETHEREUM_GRAPH: string
-    VITE_APP_POLYGON_GRAPH: string
-    VITE_APP_GOOGLE_ANALYTICS_ID: string
-  }
-}
-
 type TransactionType = 'swap' | 'mint' | 'burn' | 'all'
 
 type BlockHeight = {

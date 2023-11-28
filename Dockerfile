@@ -2,7 +2,7 @@ FROM node:16.18.0 as node
 COPY / /app
 WORKDIR /app
 
-RUN pnpm ci
+RUN pnpm i
 RUN pnpm run build
 
 FROM nginx 
