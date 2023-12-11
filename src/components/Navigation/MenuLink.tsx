@@ -16,7 +16,7 @@ export const MenuLink = ({ route, Icon, label, onClick, showSoonBadge }: IMenuLi
         <IconContainer>
           <Icon />
         </IconContainer>
-        {t(label)}
+        {t(label) as string}
         {showSoonBadge ? <Badge>{t('soon')}</Badge> : undefined}
       </MenuItemLink>
     </MenuItem>

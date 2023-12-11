@@ -37,7 +37,7 @@ export function useColor(tokenAddress: string, token?: string) {
 export function useCopyClipboard(timeout = 500) {
   const [isCopied, setIsCopied] = useState(false)
 
-  const staticCopy = useCallback(text => {
+  const staticCopy = useCallback((text: string) => {
     const didCopy = copy(text)
     setIsCopied(didCopy)
   }, [])
