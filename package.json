@@ -61,7 +61,7 @@
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@types/rebass": "^4.0.14",
-    "@types/styled-components": "^5.1.32",
+    "@types/styled-components": "^5.1.34",
     "@types/wcag-contrast": "^3.0.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
