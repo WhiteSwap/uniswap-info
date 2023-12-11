@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import { isMobile } from 'react-device-detect'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { BrowserRouter, createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-router-dom'
@@ -16,6 +16,8 @@ import App from 'App'
 import { client } from 'service/client'
 import { store, persistor } from 'state/store'
 import 'i18n'
+
+const root = createRoot(document.getElementById('root') as HTMLElement)
 
 window.Buffer = window.Buffer || Buffer
 
@@ -56,7 +58,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
-ReactDOM.render(
+root.render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -69,6 +71,5 @@ ReactDOM.render(
         </ApolloProvider>
       </PersistGate>
     </Provider>
-  </StrictMode>,
-  document.getElementById('root')
+  </StrictMode>
 )
