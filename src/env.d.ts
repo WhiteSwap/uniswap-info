@@ -2,11 +2,11 @@
 
 declare namespace NodeJS {
   interface ImportMetaEnvironment {
-    readonly VITE_APP_TITLE: string
-    VITE_APP_TRON_GRAPH: string
-    VITE_APP_ETHEREUM_GRAPH: string
-    VITE_APP_POLYGON_GRAPH: string
-    VITE_APP_GOOGLE_ANALYTICS_ID: string
+    readonly VITE_TITLE: string
+    VITE_TRON_GRAPH: string
+    VITE_ETHEREUM_GRAPH: string
+    VITE_POLYGON_GRAPH: string
+    VITE_GOOGLE_ANALYTICS_ID: string
   }
 }
 

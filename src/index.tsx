@@ -22,9 +22,9 @@ const root = createRoot(document.getElementById('root') as HTMLElement)
 window.Buffer = window.Buffer || Buffer
 
 Sentry.init({
-  dsn: import.meta.env.VITE_APP_SENTRY_DSN,
-  release: import.meta.env.VITE_APP_VERSION,
-  environment: import.meta.env.VITE_APP_ENV,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  release: import.meta.env.VITE_VERSION,
+  environment: import.meta.env.VITE_ENV,
   integrations: [
     new BrowserTracing({
       routingInstrumentation: Sentry.reactRouterV6Instrumentation(
@@ -36,14 +36,14 @@ Sentry.init({
       )
     })
   ],
-  tracesSampleRate: import.meta.env.VITE_APP_ENV === 'production' ? 0.2 : 1
+  tracesSampleRate: import.meta.env.VITE_ENV === 'production' ? 0.2 : 1
 })
 // initialize custom dayjs plugin
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 
 // initialize GA
-const GOOGLE_ANALYTICS_ID = import.meta.env.VITE_APP_GOOGLE_ANALYTICS_ID
+const GOOGLE_ANALYTICS_ID = import.meta.env.VITE_GOOGLE_ANALYTICS_ID
 if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({

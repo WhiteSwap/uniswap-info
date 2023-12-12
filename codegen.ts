@@ -2,7 +2,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: import.meta.env.VITE_APP_TRON_GRAPH,
+  schema: import.meta.env.VITE_TRON_GRAPH,
   documents: ['src/service/queries/*.ts'],
   emitLegacyCommonJSImports: false,
   ignoreNoDocuments: true,
