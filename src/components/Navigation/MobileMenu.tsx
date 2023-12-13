@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
+import { useToggle } from 'react-use'
 import { NavigationLink } from 'components/Navigation'
 import { useFormatPath } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { MenuLink } from './MenuLink'
-import { MenuWrapper, MenuButton, MenuList } from './styled'
+import { MenuWrapper, MenuButton, MenuIcon, MenuList } from './styled'
 
 interface IMobileMenu {
   links: NavigationLink[]
@@ -13,16 +14,18 @@ interface IMobileMenu {
 const MobileMenu = ({ links }: IMobileMenu) => {
   const activeNetwork = useActiveNetworkId()
   const formatPath = useFormatPath()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, toggleOpen] = useToggle(false)
   const node = useRef(null)
-  useOnClickOutside(node, isOpen ? () => setIsOpen(false) : undefined)
+  useOnClickOutside(node, isOpen ? () => toggleOpen(false) : undefined)
 
   return (
     <nav>
       <MenuWrapper>
-        <MenuButton onClick={() => setIsOpen(!isOpen)} />
+        <MenuButton onClick={toggleOpen} ref={node}>
+          <MenuIcon />
+        </MenuButton>
         {isOpen ? (
-          <MenuList ref={node}>
+          <MenuList>
             {links.map(({ key, route, Icon, label, isSoon }) => (
               <MenuLink
                 showSoonBadge={isSoon?.[activeNetwork]}
@@ -30,7 +33,7 @@ const MobileMenu = ({ links }: IMobileMenu) => {
                 Icon={Icon}
                 label={label}
                 route={formatPath(route)}
-                onClick={() => setIsOpen(false)}
+                onClick={toggleOpen}
               />
             ))}
           </MenuList>
