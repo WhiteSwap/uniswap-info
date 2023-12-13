@@ -26,5 +26,8 @@ export default defineConfig({
     hmr: { overlay: false },
     host: '0.0.0.0',
     port: 3000
+  },
+  build: {
+    commonjsOptions: { transformMixedEsModules: true }
   }
 })
