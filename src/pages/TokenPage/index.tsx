@@ -79,8 +79,8 @@ const TokenPage = () => {
     dayVolumeUSD || dayVolumeUSD === 0
       ? formattedNumber(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
       : dayVolumeUSD === 0
-      ? '$0'
-      : '-'
+        ? '$0'
+        : '-'
 
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
