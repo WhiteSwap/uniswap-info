@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-use'
+import { useLocation, useToggle } from 'react-use'
 import { SUPPORTED_NETWORK_VERSIONS, NetworkInfo } from 'constants/networks'
 import { useOnClickOutside } from 'hooks/useOnClickOutSide'
 import { changeApiClient } from 'service/client'
@@ -19,7 +19,7 @@ import {
 
 const NetworkSwitcher = () => {
   const activeNetwork = useAppSelector(state => state.application.activeNetwork)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, toggleOpen] = useToggle(false)
   const dispatch = useDispatch()
   const { pathname } = useLocation()
 
@@ -29,23 +29,22 @@ const NetworkSwitcher = () => {
         dispatch(setActiveNetwork(network))
         changeApiClient(network.id)
       }
-      setIsOpen(false)
     },
     [activeNetwork.route, pathname]
   )
 
   const node = useRef(null)
-  useOnClickOutside(node, isOpen ? () => setIsOpen(false) : undefined)
+  useOnClickOutside(node, isOpen ? () => toggleOpen(false) : undefined)
 
   return (
     <NetworkSwitcherContainer>
-      <CurrentNetwork onClick={() => setIsOpen(!isOpen)}>
+      <CurrentNetwork onClick={toggleOpen} ref={node}>
         <NetworkLogo src={activeNetwork.imageURL} alt={activeNetwork.name} />
         <NetworkName>{activeNetwork.name}</NetworkName>
         {activeNetwork.blurb ? <NetworkBlurb>{activeNetwork.blurb}</NetworkBlurb> : undefined}
       </CurrentNetwork>
       {isOpen ? (
-        <NetworkList ref={node}>
+        <NetworkList>
           {SUPPORTED_NETWORK_VERSIONS.map(network => (
             <NetworkListItem key={network.id} onClick={() => handleSelect(network)}>
               <NetworkListItemLink to={`${network.route}/`}>
