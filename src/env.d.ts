@@ -1,5 +1,12 @@
 /// <reference types="vite/client" />
 
+declare const thing: typeof object
+
+declare module '*.svg' {
+  import * as React from 'react'
+  export const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>
+}
+
 declare namespace NodeJS {
   interface ImportMetaEnvironment {
     VITE_ENV: string
@@ -13,8 +20,8 @@ declare namespace NodeJS {
 
     VITE_SENTRY_DSN: string
   }
-}
 
-interface ImportMeta {
-  readonly env: ImportMetaEnvironment
+  interface ImportMeta {
+    readonly env: ImportMetaEnvironment
+  }
 }

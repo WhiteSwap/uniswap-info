@@ -12,7 +12,7 @@ export const MenuLink = ({ route, Icon, label, onClick, showSoonBadge }: IMenuLi
 
   return (
     <MenuItem>
-      <MenuItemLink disabled={showSoonBadge} to={route} onClick={onClick}>
+      <MenuItemLink disabled={showSoonBadge} to={route} onClick={onClick} end>
         <IconContainer>
           <Icon />
         </IconContainer>

@@ -195,7 +195,7 @@ export function getTokenLogoUrl(network: SupportedNetwork, address: string) {
 
 export const checksumEthAddress = (value: string) => {
   try {
-    return ethers.utils.getAddress(value.toLowerCase())
+    return ethers.getAddress(value.toLowerCase())
   } catch {
     return false
   }
@@ -206,7 +206,7 @@ export const isTronAddress = (value: string) => {
 }
 
 export const isErcAddress = (value: string) => {
-  return ethers.utils.isAddress(value)
+  return ethers.isAddress(value)
 }
 
 export const isValidAddress = (address: string, networkId: SupportedNetwork) => {
@@ -304,7 +304,7 @@ export const formatTime = (unix: number) => {
 }
 
 export const formatNumber = (number: number) => {
-  return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  return number.toString().replaceAll(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
 // using a currency library here in case we want to add more in future
@@ -435,7 +435,7 @@ export function getCurrentNetwork() {
 }
 
 export function escapeRegExp(value: string) {
-  return value.replace(/[$()*+.?[\\\]^{|}]/g, '\\$&') // $& means the whole matched string
+  return value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&') // $& means the whole matched string
 }
 
 export function getChartData(data: ChartDailyItem[], field: keyof ChartDailyItem) {

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "baseUrl": "src",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -26,7 +26,9 @@
     "strictPropertyInitialization": true,
     "removeComments": true,
     "noUnusedParameters": true,
-    "typeRoots": ["./src/custom.d.ts"]
+    "typeRoots": ["./**/*.d.ts", "./node_modules/@types"],
+    "types": ["node", "vite/client"],
+    "useDefineForClassFields": true
   },
   "include": ["src", "./src/**/*.ts", "./src/**/*.tsx"]
 }
