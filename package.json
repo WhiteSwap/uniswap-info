@@ -7,6 +7,7 @@
   "type": "module",
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",
     "@rollup/plugin-image": "^3.0.3",
