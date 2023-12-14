@@ -107,7 +107,6 @@ const TokenPage = () => {
           <AutoRow align="flex-end" style={{ width: 'fit-content' }}>
             <TYPE.body>
               <BasicLink to={formatPath(`/tokens`)}>{`${t('tokens')} `}</BasicLink>→ {symbol}
-              {'  '}
             </TYPE.body>
             <Link
               style={{ width: 'fit-content' }}
@@ -199,7 +198,6 @@ const TokenPage = () => {
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
-                      {' '}
                       <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {price}
                       </TYPE.main>

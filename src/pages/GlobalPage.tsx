@@ -132,7 +132,7 @@ function GlobalPage() {
 
           {below800 ? (
             <AutoColumn style={{ marginTop: '6px' }} gap="24px">
-              <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={'#2E69BB'} />
+              <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color="#2E69BB" />
               <Panel>
                 {chartView === CHART_VIEW.LIQUIDITY && (
                   <SeriesChart
