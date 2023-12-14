@@ -32,6 +32,14 @@ const TokenPage = () => {
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
 
+  console.log(
+    // !tokenAddress ||
+    //   OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) ||
+    //   !isValidAddress(tokenAddress, activeNetworkId),
+    !tokenAddress,
+    tokenAddress ? OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) : '',
+    tokenAddress ? !isValidAddress(tokenAddress, activeNetworkId) : ''
+  )
   if (
     !tokenAddress ||
     OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) ||

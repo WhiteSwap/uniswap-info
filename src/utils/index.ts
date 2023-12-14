@@ -201,8 +201,8 @@ export const checksumEthAddress = (value: string) => {
   }
 }
 
-export const isTronAddress = (value: string) => {
-  return cryptoValidator.validate(value, SupportedNetwork.TRON)
+export const isTronAddress = (address: string) => {
+  return cryptoValidator.validate(address, 'Tron')
 }
 
 export const isErcAddress = (value: string) => {
@@ -217,9 +217,11 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
     case SupportedNetwork.POLYGON: {
       return isErcAddress(address)
     }
-    case SupportedNetwork.TRON:
-    default: {
+    case SupportedNetwork.TRON: {
       return isTronAddress(address)
+    }
+    default: {
+      return false
     }
   }
 }

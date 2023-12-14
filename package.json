@@ -29,7 +29,7 @@
     "i18next-xhr-backend": "^3.2.2",
     "lightweight-charts": "^3.8.0",
     "lottie-react": "^2.4.0",
-    "multicoin-address-validator": "^0.5.14",
+    "multicoin-address-validator": "0.5.13",
     "node-vibrant": "^3.1.6",
     "numeral": "^2.0.6",
     "polished": "^4.2.2",

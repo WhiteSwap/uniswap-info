@@ -78,8 +78,8 @@ dependencies:
     specifier: ^2.4.0
     version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
   multicoin-address-validator:
-    specifier: ^0.5.14
-    version: 0.5.14
+    specifier: ^0.5.13
+    version: 0.5.13
   node-vibrant:
     specifier: ^3.1.6
     version: 3.1.6
@@ -7317,8 +7317,8 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /multicoin-address-validator@0.5.14:
-    resolution: {integrity: sha512-fKMOqQtqY9J9pJ9+srkJ8/IiOI/4s2m5Xc3DamJMuqGjLI51a1Nh4X+fWOUFFSGospxI18bsAp+yD3Ba3GsY7g==}
+  /multicoin-address-validator@0.5.13:
+    resolution: {integrity: sha512-d4TmEOq7Ppsroetpe5t4RyR3r+aUMTFFxkTXexaxw8QqcIEkfFRxxAXN+aayQV9J2P5dgWtrLjsaiohZ7pzPAA==}
     engines: {node: '>=12.0.0'}
     dependencies:
       base-x: 3.0.9
