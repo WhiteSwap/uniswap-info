@@ -5,7 +5,14 @@ import { RowBetween, Row } from 'components/Row'
 import { TYPE } from 'Theme'
 import { Wrapper, Dropdown, ArrowStyled } from './styled'
 
-const DropdownSelect = ({ options, active, setActive, color }) => {
+interface IDropdownSelectProperties {
+  options: any
+  active: string
+  setActive: (value: any) => void
+  color?: string
+}
+
+const DropdownSelect = ({ options, active, setActive, color }: IDropdownSelectProperties) => {
   const [showDropdown, toggleDropdown] = useState(false)
 
   return (
@@ -20,7 +27,7 @@ const DropdownSelect = ({ options, active, setActive, color }) => {
         <Dropdown>
           <AutoColumn gap="1.25rem">
             {Object.keys(options).map((key, index) => {
-              let option = options[key]
+              const option = options[key]
               return (
                 option !== active && (
                   <Row

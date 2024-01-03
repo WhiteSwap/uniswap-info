@@ -32,6 +32,14 @@ const TokenPage = () => {
   const formatPath = useFormatPath()
   const activeNetworkId = useActiveNetworkId()
 
+  console.log(
+    // !tokenAddress ||
+    //   OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) ||
+    //   !isValidAddress(tokenAddress, activeNetworkId),
+    !tokenAddress,
+    tokenAddress ? OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) : '',
+    tokenAddress ? !isValidAddress(tokenAddress, activeNetworkId) : ''
+  )
   if (
     !tokenAddress ||
     OVERVIEW_TOKEN_BLACKLIST.includes(tokenAddress.toLowerCase()) ||
@@ -79,8 +87,8 @@ const TokenPage = () => {
     dayVolumeUSD || dayVolumeUSD === 0
       ? formattedNumber(dayVolumeUSD === 0 ? oneDayVolumeUT : dayVolumeUSD, true)
       : dayVolumeUSD === 0
-      ? '$0'
-      : '-'
+        ? '$0'
+        : '-'
 
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)
@@ -107,7 +115,6 @@ const TokenPage = () => {
           <AutoRow align="flex-end" style={{ width: 'fit-content' }}>
             <TYPE.body>
               <BasicLink to={formatPath(`/tokens`)}>{`${t('tokens')} `}</BasicLink>→ {symbol}
-              {'  '}
             </TYPE.body>
             <Link
               style={{ width: 'fit-content' }}
@@ -199,7 +206,6 @@ const TokenPage = () => {
                       <div />
                     </RowBetween>
                     <RowBetween align="flex-end">
-                      {' '}
                       <TYPE.main fontSize="1.5rem" lineHeight={1} fontWeight={500}>
                         {price}
                       </TYPE.main>

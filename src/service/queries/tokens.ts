@@ -34,6 +34,8 @@ export const TOKEN = gql`
       priceChangeUSD
       oneDayTxns
       txnChange
+      isFullActive
+      isTokenList
     }
   }
 `

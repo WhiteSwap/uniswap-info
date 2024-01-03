@@ -86,7 +86,10 @@ export const Menu = styled.div<{ hide?: boolean }>`
   background: ${({ theme }) => theme.bg6};
   border-bottom-right-radius: 0.75rem;
   border-bottom-left-radius: 0.75rem;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0.25rem 0.5rem rgba(0, 0, 0, 0.04), 0 1rem 1.5rem rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0 0 1px rgba(0, 0, 0, 0.04),
+    0 0.25rem 0.5rem rgba(0, 0, 0, 0.04),
+    0 1rem 1.5rem rgba(0, 0, 0, 0.04),
     0 1.5rem 2rem rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
 `

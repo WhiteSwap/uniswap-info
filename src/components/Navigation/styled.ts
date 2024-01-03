@@ -138,11 +138,15 @@ export const MenuWrapper = styled.div`
   height: 2rem;
 `
 
-export const MenuButton = styled(Menu)`
+export const MenuIcon = styled(Menu)`
   width: 2rem;
   height: 2rem;
   color: ${({ theme }) => theme.text2};
   cursor: pointer;
+`
+
+export const MenuButton = styled.button`
+  all: unset;
 `
 
 export const MenuList = styled.ul`

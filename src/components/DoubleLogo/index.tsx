@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import TokenLogo from 'components/TokenLogo'
 
 const TokenWrapper = styled.div<{ sizeraw: number; margin: boolean }>`

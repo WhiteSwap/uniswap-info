@@ -1,7 +1,7 @@
 import { SupportedNetwork } from 'constants/networks'
 
 export default {
-  [SupportedNetwork.ETHEREUM]: process.env.REACT_APP_ETHEREUM_GRAPH,
-  [SupportedNetwork.POLYGON]: process.env.REACT_APP_POLYGON_GRAPH,
-  [SupportedNetwork.TRON]: process.env.REACT_APP_TRON_GRAPH
+  [SupportedNetwork.ETHEREUM]: import.meta.env.VITE_ETHEREUM_GRAPH,
+  [SupportedNetwork.POLYGON]: import.meta.env.VITE_POLYGON_GRAPH,
+  [SupportedNetwork.TRON]: import.meta.env.VITE_TRON_GRAPH
 }

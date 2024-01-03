@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import {
-  SocialLinksList,
   SocialLinkItem,
   LatestBlockContainer,
   LatestBlockText,
   LatestBlock,
-  LatestBlockDot
-} from 'components/Navigation/styled.ts'
+  LatestBlockDot,
+  SocialLinksList
+} from 'components/Navigation/styled'
 import { AutoRow, FooterRow } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { useLatestBlock } from 'state/features/application/selectors'

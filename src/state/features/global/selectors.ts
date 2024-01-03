@@ -23,8 +23,8 @@ export function useDayVolumeUsd() {
   return useAppSelector(state => {
     const chart = state.global[activeNetwork]?.chartData
     if (chart) {
-      const currentChartData = chart[chart.length - 1]
-      return currentChartData.dailyVolumeUSD
+      const currentChartData = chart.at(-1)
+      return currentChartData?.dailyVolumeUSD
     }
     return 0
   })
@@ -35,8 +35,8 @@ export function useTotalLiquidityUsd() {
   return useAppSelector(state => {
     const chart = state.global[activeNetwork]?.chartData
     if (chart) {
-      const currentChartData = chart[chart.length - 1]
-      return currentChartData.totalLiquidityUSD
+      const currentChartData = chart.at(-1)
+      return currentChartData?.totalLiquidityUSD
     }
     return 0
   })
@@ -47,8 +47,8 @@ export function useVolumeChangeUsd() {
   return useAppSelector(state => {
     const chart = state.global[activeNetwork]?.chartData
     if (chart) {
-      const currentVolume = chart[chart.length - 1]?.dailyVolumeUSD
-      const previousVolume = chart[chart.length - 2]?.dailyVolumeUSD
+      const currentVolume = chart.at(-1)?.dailyVolumeUSD
+      const previousVolume = chart.at(-2)?.dailyVolumeUSD
       if (previousVolume) {
         return getPercentChange(currentVolume, previousVolume)
       }
@@ -62,8 +62,8 @@ export function useLiquidityChangeUsd() {
   return useAppSelector(state => {
     const chart = state.global[activeNetwork]?.chartData
     if (chart) {
-      const currentLiquidity = chart[chart.length - 1]?.totalLiquidityUSD
-      const previousLiquidity = chart[chart.length - 2]?.totalLiquidityUSD
+      const currentLiquidity = chart.at(-1)?.totalLiquidityUSD
+      const previousLiquidity = chart.at(-2)?.totalLiquidityUSD
       if (previousLiquidity) {
         return getPercentChange(currentLiquidity, previousLiquidity)
       }

@@ -128,10 +128,10 @@ function AccountPage() {
         </RowBetween>
         <Header>
           <RowBetween>
-            {!below600 ? (
-              <TYPE.header fontSize={24}>{address}</TYPE.header>
-            ) : (
+            {below600 ? (
               <TYPE.header fontSize={24}>{ellipsisAddress(address)}</TYPE.header>
+            ) : (
+              <TYPE.header fontSize={24}>{address}</TYPE.header>
             )}
             <ActionsContainer>
               <StarIcon $filled={isSaved} onClick={toggleSavedAccount} />
@@ -268,8 +268,8 @@ function AccountPage() {
                     {positionStatistics?.liquidityIncludingFees
                       ? formattedNumber(positionStatistics.liquidityIncludingFees, true)
                       : positionStatistics?.liquidityIncludingFees === 0
-                      ? formattedNumber(0, true)
-                      : '-'}
+                        ? formattedNumber(0, true)
+                        : '-'}
                   </TYPE.header>
                 </RowFixed>
               </AutoColumn>

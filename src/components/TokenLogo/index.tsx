@@ -1,6 +1,6 @@
 import { useState, useEffect, ImgHTMLAttributes } from 'react'
 import { HelpCircle } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { SUPPORTED_NETWORK_INFOS } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
 import { getTokenLogoUrl } from 'utils'

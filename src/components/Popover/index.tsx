@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import { usePopper } from 'react-popper'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import useInterval from 'hooks'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
@@ -10,7 +10,9 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
   opacity: ${props => (props.show ? 1 : 0)};
-  transition: visibility 150ms linear, opacity 150ms linear;
+  transition:
+    visibility 150ms linear,
+    opacity 150ms linear;
 
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};

@@ -2,7 +2,6 @@ import { ApolloQueryResult } from 'apollo-boost'
 import { BigNumber } from 'bignumber.js'
 import dayjs from 'dayjs'
 import { ethers } from 'ethers'
-import cryptoValidator from 'multicoin-address-validator'
 // eslint-disable-next-line import/no-named-as-default
 import Numeral from 'numeral'
 import { timeframeOptions } from 'constants/index'
@@ -195,18 +194,19 @@ export function getTokenLogoUrl(network: SupportedNetwork, address: string) {
 
 export const checksumEthAddress = (value: string) => {
   try {
-    return ethers.utils.getAddress(value.toLowerCase())
+    return ethers.getAddress(value.toLowerCase())
   } catch {
     return false
   }
 }
 
-export const isTronAddress = (value: string) => {
-  return cryptoValidator.validate(value, SupportedNetwork.TRON)
+export const isTronAddress = (address: string) => {
+  // TODO: update result with real validation
+  return address.match(/T[\dA-Za-z]{33}/g)
 }
 
 export const isErcAddress = (value: string) => {
-  return ethers.utils.isAddress(value)
+  return ethers.isAddress(value)
 }
 
 export const isValidAddress = (address: string, networkId: SupportedNetwork) => {
@@ -217,9 +217,11 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
     case SupportedNetwork.POLYGON: {
       return isErcAddress(address)
     }
-    case SupportedNetwork.TRON:
-    default: {
+    case SupportedNetwork.TRON: {
       return isTronAddress(address)
+    }
+    default: {
+      return false
     }
   }
 }
@@ -304,7 +306,7 @@ export const formatTime = (unix: number) => {
 }
 
 export const formatNumber = (number: number) => {
-  return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  return number.toString().replaceAll(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
 // using a currency library here in case we want to add more in future
@@ -435,7 +437,7 @@ export function getCurrentNetwork() {
 }
 
 export function escapeRegExp(value: string) {
-  return value.replace(/[$()*+.?[\\\]^{|}]/g, '\\$&') // $& means the whole matched string
+  return value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&') // $& means the whole matched string
 }
 
 export function getChartData(data: ChartDailyItem[], field: keyof ChartDailyItem) {

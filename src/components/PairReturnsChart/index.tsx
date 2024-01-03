@@ -119,7 +119,7 @@ const PairReturnsChart = ({ account, position }: IPairReturnsChart) => {
             />
             <Tooltip
               cursor={true}
-              formatter={(value: string | number | undefined) => formattedNumber(value, true)}
+              formatter={(value: string | number) => formattedNumber(value, true)}
               labelFormatter={label => toNiceDateYear(label)}
               labelStyle={{ paddingTop: 4 }}
               contentStyle={{

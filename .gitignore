@@ -5,15 +5,19 @@
 /.pnp
 .pnp.js
 
+.idea
+
 # testing
 /coverage
 
 # production
 /build
+/dist
 
-.idea
-
+# cache
 .eslintcache
+tsconfig.tsbuildinfo
+
 # misc
 .DS_Store
 .env
