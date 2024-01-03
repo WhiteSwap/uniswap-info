@@ -2,7 +2,6 @@ import { ApolloQueryResult } from 'apollo-boost'
 import { BigNumber } from 'bignumber.js'
 import dayjs from 'dayjs'
 import { ethers } from 'ethers'
-import cryptoValidator from 'multicoin-address-validator'
 // eslint-disable-next-line import/no-named-as-default
 import Numeral from 'numeral'
 import { timeframeOptions } from 'constants/index'
@@ -202,7 +201,8 @@ export const checksumEthAddress = (value: string) => {
 }
 
 export const isTronAddress = (address: string) => {
-  return cryptoValidator.validate(address, 'Tron')
+  // TODO: update result with real validation
+  return address.match(/T[\dA-Za-z]{33}/g)
 }
 
 export const isErcAddress = (value: string) => {
