@@ -217,6 +217,9 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
     case SupportedNetwork.POLYGON: {
       return isErcAddress(address)
     }
+    case SupportedNetwork.POLYGON_ZKEVM: {
+      return isErcAddress(address)
+    }
     case SupportedNetwork.TRON: {
       return isTronAddress(address)
     }
