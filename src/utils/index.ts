@@ -237,6 +237,7 @@ export const toK = (number: string) => {
 const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
   [SupportedNetwork.ETHEREUM]: 'https://etherscan.io',
   [SupportedNetwork.POLYGON]: 'https://polygonscan.com',
+  [SupportedNetwork.POLYGON_ZKEVM]: 'https://zkevm.polygonscan.com/',
   [SupportedNetwork.TRON]: 'https://tronscan.org/#'
 }
 

@@ -5,6 +5,7 @@ import TronLogo from 'assets/tron.svg'
 export enum SupportedNetwork {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
+  POLYGON_ZKEVM = 'polygon_zkevm',
   TRON = 'tron'
 }
 export interface NetworkInfo {
@@ -63,10 +64,30 @@ export const TronNetworkInfo: NetworkInfo = {
   coinSymbol: 'TRX'
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, PolygonNetworkInfo, TronNetworkInfo]
+export const PolygonZkEVMNetworkInfo: NetworkInfo = {
+  id: SupportedNetwork.POLYGON_ZKEVM,
+  route: 'polygon_zkevm',
+  name: 'Polygon zkEVM',
+  imageURL: PolygonLogo,
+  bgColor: '#0B264E',
+  primaryColor: '#5263FF',
+  secondaryColor: '#00DBAB',
+  chainId: 1101,
+  headingTitle: 'Polygon zkEVM',
+  dexUrlPrefix: 'eth/polygon_zkevm',
+  coinSymbol: 'ETH'
+}
+
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
+  EthereumNetworkInfo,
+  PolygonNetworkInfo,
+  PolygonZkEVMNetworkInfo,
+  TronNetworkInfo
+]
 
 export const SUPPORTED_NETWORK_INFOS: { [key in SupportedNetwork]: NetworkInfo } = {
   [SupportedNetwork.ETHEREUM]: EthereumNetworkInfo,
   [SupportedNetwork.POLYGON]: PolygonNetworkInfo,
-  [SupportedNetwork.TRON]: TronNetworkInfo
+  [SupportedNetwork.TRON]: TronNetworkInfo,
+  [SupportedNetwork.POLYGON_ZKEVM]: PolygonZkEVMNetworkInfo
 }

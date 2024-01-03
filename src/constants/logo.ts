@@ -8,6 +8,8 @@ export const LOGO_SOURCE: LogoUrls = {
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets',
   [SupportedNetwork.POLYGON]:
     'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets',
+  [SupportedNetwork.POLYGON_ZKEVM]:
+    'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets',
   [SupportedNetwork.TRON]: 'https://coin.top/production/upload/logo'
 }
 
@@ -29,6 +31,7 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0xc2132d05d31c914a87c6611c10748aeb04b58e8f':
       'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/usdt.svg'
   },
+  [SupportedNetwork.POLYGON_ZKEVM]: {},
   [SupportedNetwork.TRON]: {
     tr7nhqjekqxgtci8q8zy4pl8otszgjlj6t:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png',

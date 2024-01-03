@@ -22,6 +22,7 @@ function safeAccess(object: any, path: any) {
 const initialState: PairsState = {
   [SupportedNetwork.ETHEREUM]: {},
   [SupportedNetwork.POLYGON]: {},
+  [SupportedNetwork.POLYGON_ZKEVM]: {},
   [SupportedNetwork.TRON]: {}
 }
 
