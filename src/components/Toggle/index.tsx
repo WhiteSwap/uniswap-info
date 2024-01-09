@@ -1,5 +1,5 @@
 import { Sun, Moon } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const IconWrapper = styled.div<{ isActive?: boolean }>`
   opacity: ${({ isActive }) => (isActive ? 0.8 : 0.4)};

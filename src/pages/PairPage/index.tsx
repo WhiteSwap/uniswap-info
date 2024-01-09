@@ -53,15 +53,15 @@ const PairPage = () => {
   const liquidity = trackedReserveUSD
     ? formattedNumber(trackedReserveUSD, true)
     : totalLiquidityUSD
-    ? formattedNumber(totalLiquidityUSD, true)
-    : '$0'
+      ? formattedNumber(totalLiquidityUSD, true)
+      : '$0'
 
   const volume =
     dayVolumeUSD || dayVolumeUSD === 0
       ? formattedNumber(dayVolumeUSD === 0 ? oneDayVolumeUntracked : dayVolumeUSD, true)
       : dayVolumeUSD === 0
-      ? '$0'
-      : '-'
+        ? '$0'
+        : '-'
 
   // mark if using untracked volume
   const [usingUtVolume, setUsingUtVolume] = useState(false)

@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import Panel from 'components/Panel'
 
 export const PanelWrapper = styled.div`

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { PageWrapper, ContentWrapper } from 'components'
 import { AutoColumn } from 'components/Column'
 import DropdownSelect from 'components/DropdownSelect'
@@ -132,12 +132,12 @@ function GlobalPage() {
 
           {below800 ? (
             <AutoColumn style={{ marginTop: '6px' }} gap="24px">
-              <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={'#2E69BB'} />
+              <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color="#2E69BB" />
               <Panel>
                 {chartView === CHART_VIEW.LIQUIDITY && (
                   <SeriesChart
                     data={getChartData(chartData, 'totalLiquidityUSD')}
-                    base={totalLiquidityUsd}
+                    base={totalLiquidityUsd || 0}
                     baseChange={liquidityChange}
                     title={t('liquidity')}
                     type="Area"
@@ -146,7 +146,7 @@ function GlobalPage() {
                 {chartView === CHART_VIEW.VOLUME && (
                   <SeriesChart
                     data={getChartData(chartData, 'dailyVolumeUSD')}
-                    base={dayVolumeUsd}
+                    base={dayVolumeUsd || 0}
                     baseChange={volumeChange}
                     title={t('volume')}
                     type="Histogram"
@@ -159,7 +159,7 @@ function GlobalPage() {
               <Panel>
                 <SeriesChart
                   data={getChartData(chartData, 'totalLiquidityUSD')}
-                  base={totalLiquidityUsd}
+                  base={totalLiquidityUsd || 0}
                   baseChange={liquidityChange}
                   title={t('liquidity')}
                   type="Area"
@@ -168,7 +168,7 @@ function GlobalPage() {
               <Panel>
                 <SeriesChart
                   data={getChartData(chartData, 'dailyVolumeUSD')}
-                  base={dayVolumeUsd}
+                  base={dayVolumeUsd || 0}
                   baseChange={volumeChange}
                   title={t('volume')}
                   type="Histogram"

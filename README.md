@@ -11,11 +11,11 @@ Analytics site for the [WhiteSwap](https://app.ws.exchange).
 ###### Installing dependencies
 
 ```bash
-yarn
+pnpm i
 ```
 
 ###### Running locally
 
 ```bash
-yarn start
+pnpm run start
 ```

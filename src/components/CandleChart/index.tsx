@@ -37,15 +37,16 @@ const CandleStickChart = ({ data, height = 300, base }: CandleStickChartProperti
     // FIXME: chart data should not be modified in candle stick chart component
     // current modify only for ethereum chain
     if (mappedData && mappedData.length > 0 && currentNetwork === SupportedNetwork.ETHEREUM) {
-      const { close } = mappedData[mappedData.length - 1]
+      const md = mappedData.at(-1)
 
-      mappedData.push({
-        time: dayjs().unix() as UTCTimestamp,
-        open: close,
-        high: Math.max(base, close),
-        low: Math.min(base, close),
-        close: base
-      })
+      md &&
+        mappedData.push({
+          time: dayjs().unix() as UTCTimestamp,
+          open: md.close,
+          high: Math.max(base, md.close),
+          low: Math.min(base, md.close),
+          close: base
+        })
     }
     return mappedData
   }, [data.length])

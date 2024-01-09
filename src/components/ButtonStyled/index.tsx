@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { darken, transparentize } from 'polished'
 import { Plus, ChevronDown, ChevronUp } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { StyledIcon } from 'components'
 import { RowBetween } from 'components/Row'
 

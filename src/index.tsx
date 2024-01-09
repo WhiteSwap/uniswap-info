@@ -1,4 +1,5 @@
 import { StrictMode, Suspense, useEffect } from 'react'
+import { Buffer } from 'buffer'
 import { ApolloClient, ApolloProvider } from '@apollo/react-hooks'
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
@@ -6,7 +7,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import { isMobile } from 'react-device-detect'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { BrowserRouter, createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-router-dom'
@@ -16,10 +17,14 @@ import { client } from 'service/client'
 import { store, persistor } from 'state/store'
 import 'i18n'
 
+const root = createRoot(document.getElementById('root') as HTMLElement)
+
+window.Buffer = window.Buffer || Buffer
+
 Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  release: process.env.REACT_APP_VERSION,
-  environment: process.env.REACT_APP_ENV,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  release: import.meta.env.VITE_VERSION,
+  environment: import.meta.env.VITE_ENV,
   integrations: [
     new BrowserTracing({
       routingInstrumentation: Sentry.reactRouterV6Instrumentation(
@@ -31,15 +36,14 @@ Sentry.init({
       )
     })
   ],
-  tracesSampleRate: process.env.REACT_APP_ENV === 'production' ? 0.2 : 1
+  tracesSampleRate: import.meta.env.VITE_ENV === 'production' ? 0.2 : 1
 })
-
 // initialize custom dayjs plugin
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 
 // initialize GA
-const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
+const GOOGLE_ANALYTICS_ID = import.meta.env.VITE_GOOGLE_ANALYTICS_ID
 if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
@@ -54,7 +58,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string' && GOOGLE_ANALYTICS_ID !== '') {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
-ReactDOM.render(
+root.render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -67,6 +71,5 @@ ReactDOM.render(
         </ApolloProvider>
       </PersistGate>
     </Provider>
-  </StrictMode>,
-  document.getElementById('root')
+  </StrictMode>
 )
