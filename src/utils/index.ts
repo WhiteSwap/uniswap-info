@@ -214,6 +214,9 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
     case SupportedNetwork.ETHEREUM: {
       return Boolean(checksumEthAddress(address))
     }
+    case SupportedNetwork.WHITECHAIN: {
+      return Boolean(checksumEthAddress(address))
+    }
     case SupportedNetwork.POLYGON: {
       return isErcAddress(address)
     }
