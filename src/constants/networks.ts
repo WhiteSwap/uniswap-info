@@ -1,10 +1,12 @@
 import EthereumLogo from 'assets/eth.svg'
 import PolygonLogo from 'assets/polygon.svg'
 import TronLogo from 'assets/tron.svg'
+import WhitechainLogo from 'assets/whitechain-logo.svg'
 
 export enum SupportedNetwork {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
+  WHITECHAIN = 'whitechain',
   TRON = 'tron'
 }
 export interface NetworkInfo {
@@ -50,6 +52,20 @@ export const PolygonNetworkInfo: NetworkInfo = {
   coinSymbol: 'MATIC'
 }
 
+export const WhitechainNetworkInfo: NetworkInfo = {
+  id: SupportedNetwork.WHITECHAIN,
+  route: 'whitechain',
+  name: 'Whitechain',
+  imageURL: WhitechainLogo,
+  bgColor: '#0A294B',
+  primaryColor: '#0065FF',
+  secondaryColor: '#68ECBC',
+  chainId: 1875,
+  headingTitle: 'Whitechain',
+  dexUrlPrefix: 'eth/whitechain',
+  coinSymbol: 'WBT'
+}
+
 export const TronNetworkInfo: NetworkInfo = {
   id: SupportedNetwork.TRON,
   route: 'tron',
@@ -63,10 +79,16 @@ export const TronNetworkInfo: NetworkInfo = {
   coinSymbol: 'TRX'
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [EthereumNetworkInfo, PolygonNetworkInfo, TronNetworkInfo]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
+  EthereumNetworkInfo,
+  PolygonNetworkInfo,
+  WhitechainNetworkInfo,
+  TronNetworkInfo
+]
 
 export const SUPPORTED_NETWORK_INFOS: { [key in SupportedNetwork]: NetworkInfo } = {
   [SupportedNetwork.ETHEREUM]: EthereumNetworkInfo,
   [SupportedNetwork.POLYGON]: PolygonNetworkInfo,
+  [SupportedNetwork.WHITECHAIN]: WhitechainNetworkInfo,
   [SupportedNetwork.TRON]: TronNetworkInfo
 }

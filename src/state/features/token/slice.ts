@@ -13,6 +13,7 @@ import {
 const initialState: TokenState = {
   [SupportedNetwork.ETHEREUM]: {},
   [SupportedNetwork.POLYGON]: {},
+  [SupportedNetwork.WHITECHAIN]: {},
   [SupportedNetwork.TRON]: {}
 }
 
