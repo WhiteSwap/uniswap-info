@@ -12,15 +12,15 @@ export const LOGO_SOURCE: LogoUrls = {
   [SupportedNetwork.TRON]: 'https://coin.top/production/upload/logo'
 }
 
+export const WSD_LOGO = 'https://cdn.whitebit.com/currencies_icon/08f1494b-a813-43c9-84d8-43ea50e45417.png'
+
 // use lowercase
 export const LOGO_OVERRIDES: OverrideUrls = {
   [SupportedNetwork.ETHEREUM]: {
     '0x5e74c9036fb86bd7ecdcb084a0673efc32ea31cb': `${LOGO_SOURCE.ethereum}/0x42456D7084eacF4083f1140d3229471bbA2949A8/logo.png`,
     '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f': `${LOGO_SOURCE.ethereum}/0xC011A72400E58ecD99Ee497CF89E3775d4bd732F/logo.png`,
-    '0x77b8ae2e83c7d044d159878445841e2a9777af38':
-      'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png',
-    '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9':
-      'https://coin.top/production/upload/logo/THV4MnqnGk77YRDe3SPGzqFqC21cCjH2Fu.png',
+    '0x77b8ae2e83c7d044d159878445841e2a9777af38': WSD_LOGO,
+    '0x0423d7c27d1dde7eb4aae02dae6b651c7225e6f9': WSD_LOGO,
     '0x925206b8a707096ed26ae47c84747fe0bb734f59':
       'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png'
   },
@@ -28,7 +28,9 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270':
       'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/matic.svg',
     '0xc2132d05d31c914a87c6611c10748aeb04b58e8f':
-      'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/usdt.svg'
+      'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/usdt.svg',
+    '0xf3443e91b2ea741a49bb7d060037f11786407f4e':
+      'https://cdn.whitebit.com/currencies_icon/08f1494b-a813-43c9-84d8-43ea50e45417.png'
   },
   [SupportedNetwork.WHITECHAIN]: {
     '0xb044a2a1e3c3deb17e3602bf088811d9bdc762ea':
@@ -39,6 +41,7 @@ export const LOGO_OVERRIDES: OverrideUrls = {
   [SupportedNetwork.TRON]: {
     tr7nhqjekqxgtci8q8zy4pl8otszgjlj6t:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png',
-    tfptbwaarrwtx5yvy3gng5lm8bmhpx82bt: 'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png'
+    tfptbwaarrwtx5yvy3gng5lm8bmhpx82bt: 'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png',
+    thv4mnqngk77yrde3spgzqfqc21ccjh2fu: WSD_LOGO
   }
 }
