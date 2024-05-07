@@ -12,6 +12,7 @@ const initialState: UserState = {
   darkMode: true,
   [SupportedNetwork.ETHEREUM]: initialNetworkSavedState,
   [SupportedNetwork.POLYGON]: initialNetworkSavedState,
+  [SupportedNetwork.WHITECHAIN]: initialNetworkSavedState,
   [SupportedNetwork.TRON]: initialNetworkSavedState
 }
 

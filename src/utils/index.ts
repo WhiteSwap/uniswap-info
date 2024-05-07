@@ -214,6 +214,9 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
     case SupportedNetwork.ETHEREUM: {
       return Boolean(checksumEthAddress(address))
     }
+    case SupportedNetwork.WHITECHAIN: {
+      return Boolean(checksumEthAddress(address))
+    }
     case SupportedNetwork.POLYGON: {
       return isErcAddress(address)
     }
@@ -237,6 +240,7 @@ export const toK = (number: string) => {
 const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
   [SupportedNetwork.ETHEREUM]: 'https://etherscan.io',
   [SupportedNetwork.POLYGON]: 'https://polygonscan.com',
+  [SupportedNetwork.WHITECHAIN]: 'https://explorer.whitechain.io',
   [SupportedNetwork.TRON]: 'https://tronscan.org/#'
 }
 
