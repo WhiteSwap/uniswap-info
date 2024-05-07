@@ -19,6 +19,7 @@ const initialGlobalNetworkState: GlobalNetworkState = {
 const initialState: GlobalState = {
   [SupportedNetwork.ETHEREUM]: initialGlobalNetworkState,
   [SupportedNetwork.POLYGON]: initialGlobalNetworkState,
+  [SupportedNetwork.WHITECHAIN]: initialGlobalNetworkState,
   [SupportedNetwork.TRON]: initialGlobalNetworkState
 }
 

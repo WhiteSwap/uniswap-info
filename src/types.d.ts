@@ -14,6 +14,7 @@ type OffsetParameters<T> = T & {
 enum SupportedNetwork {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
+  WHITECHAIN = 'whitechain',
   TRON = 'tron'
 }
 
