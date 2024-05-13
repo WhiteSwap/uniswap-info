@@ -13,6 +13,7 @@ const initialState: UserState = {
   [SupportedNetwork.ETHEREUM]: initialNetworkSavedState,
   [SupportedNetwork.POLYGON]: initialNetworkSavedState,
   [SupportedNetwork.POLYGON_ZKEVM]: initialNetworkSavedState,
+  [SupportedNetwork.WHITECHAIN]: initialNetworkSavedState,
   [SupportedNetwork.TRON]: initialNetworkSavedState
 }
 

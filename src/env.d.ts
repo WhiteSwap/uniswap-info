@@ -15,6 +15,7 @@ declare namespace NodeJS {
     VITE_ETHEREUM_GRAPH: string
     VITE_POLYGON_GRAPH: string
     VITE_POLYGON_ZKEVM_GRAPH: string
+    VITE_WHITECHAIN_GRAPH: string
 
     VITE_GOOGLE_ANALYTICS_ID: string
     VITE_GTM_ID: string

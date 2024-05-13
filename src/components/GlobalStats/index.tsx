@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import styled from 'styled-components'
-import { RowFixed, RowBetween } from 'components/Row'
+import { AutoRow } from 'components/Row'
 import UniPrice from 'components/UniPrice'
 import { SUPPORTED_NETWORK_INFOS, SupportedNetwork } from 'constants/networks'
 import { useActiveNetworkId } from 'state/features/application/selectors'
@@ -16,13 +16,12 @@ const Header = styled.div`
   width: 100%;
   position: sticky;
   top: 0;
+  padding: 0.5rem;
 `
 
 export default function GlobalStats() {
   const { t } = useTranslation()
-  const below1295 = useMedia('(max-width: 1295px)')
-  const below1180 = useMedia('(max-width: 1180px)')
-  const below1024 = useMedia('(max-width: 1024px)')
+
   const below400 = useMedia('(max-width: 400px)')
   const below816 = useMedia('(max-width: 816px)')
 
@@ -37,50 +36,45 @@ export default function GlobalStats() {
 
   return (
     <Header>
-      {!below400 && (
-        <RowBetween style={{ padding: below816 ? '0.5rem' : '.5rem' }}>
-          <RowFixed>
-            {!below400 &&
-              (activeNetworkId === SupportedNetwork.ETHEREUM ? (
-                <TYPE.light
-                  fontSize={14}
-                  fontWeight={700}
-                  mr="1rem"
-                  onMouseEnter={() => {
-                    setShowPriceCard(true)
-                  }}
-                  onMouseLeave={() => {
-                    setShowPriceCard(false)
-                  }}
-                  style={{ position: 'relative' }}
-                >
-                  {SUPPORTED_NETWORK_INFOS[activeNetworkId].coinSymbol.toUpperCase()} {t('price')}: {formattedPrice}
-                  {showPriceCard && <UniPrice />}
-                </TYPE.light>
-              ) : (
-                <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
-                  {SUPPORTED_NETWORK_INFOS[activeNetworkId].coinSymbol.toUpperCase()} {t('price')}: {formattedPrice}
-                </TYPE.light>
-              ))}
+      <AutoRow>
+        {activeNetworkId === SupportedNetwork.ETHEREUM ? (
+          <TYPE.light
+            fontSize={14}
+            fontWeight={700}
+            mr="1rem"
+            onMouseEnter={() => {
+              setShowPriceCard(true)
+            }}
+            onMouseLeave={() => {
+              setShowPriceCard(false)
+            }}
+            style={{ position: 'relative' }}
+          >
+            {SUPPORTED_NETWORK_INFOS[activeNetworkId].coinSymbol.toUpperCase()} {t('price')}: {formattedPrice}
+            {showPriceCard && <UniPrice />}
+          </TYPE.light>
+        ) : (
+          <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
+            {SUPPORTED_NETWORK_INFOS[activeNetworkId].coinSymbol.toUpperCase()} {t('price')}: {formattedPrice}
+          </TYPE.light>
+        )}
 
-            {!below1180 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
-                {t('transactions')} (24H): {localNumber(dayTransactionCount)}
-              </TYPE.light>
-            )}
-            {!below1024 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
-                {t('pairs')}: {localNumber(pairCount)}
-              </TYPE.light>
-            )}
-            {!below1295 && (
-              <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
-                {t('fees24hrs')}: {formattedNumber(dayFees, true)}&nbsp;
-              </TYPE.light>
-            )}
-          </RowFixed>
-        </RowBetween>
-      )}
+        {!below816 && (
+          <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
+            {t('transactions')} (24H): {localNumber(dayTransactionCount)}
+          </TYPE.light>
+        )}
+        {!below400 && (
+          <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
+            {t('pairs')}: {localNumber(pairCount)}
+          </TYPE.light>
+        )}
+        {!below816 && (
+          <TYPE.light fontSize={14} fontWeight={700} mr="1rem">
+            {t('fees24hrs')}: {formattedNumber(dayFees, true)}&nbsp;
+          </TYPE.light>
+        )}
+      </AutoRow>
     </Header>
   )
 }

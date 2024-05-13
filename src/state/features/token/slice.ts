@@ -14,6 +14,7 @@ const initialState: TokenState = {
   [SupportedNetwork.ETHEREUM]: {},
   [SupportedNetwork.POLYGON]: {},
   [SupportedNetwork.POLYGON_ZKEVM]: {},
+  [SupportedNetwork.WHITECHAIN]: {},
   [SupportedNetwork.TRON]: {}
 }
 

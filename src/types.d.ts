@@ -15,6 +15,7 @@ enum SupportedNetwork {
   ETHEREUM = 'ethereum',
   POLYGON = 'polygon',
   POLYGON_ZKEVM = 'polygon_zkevm',
+  WHITECHAIN = 'whitechain',
   TRON = 'tron'
 }
 

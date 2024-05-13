@@ -18,6 +18,7 @@ const initialState: AccountState = {
   [SupportedNetwork.ETHEREUM]: initialNetworkAccountState,
   [SupportedNetwork.POLYGON]: initialNetworkAccountState,
   [SupportedNetwork.POLYGON_ZKEVM]: initialNetworkAccountState,
+  [SupportedNetwork.WHITECHAIN]: initialNetworkAccountState,
   [SupportedNetwork.TRON]: initialNetworkAccountState
 }
 
