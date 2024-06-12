@@ -32,8 +32,7 @@ export const LOGO_OVERRIDES: OverrideUrls = {
       'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/matic.svg',
     '0xc2132d05d31c914a87c6611c10748aeb04b58e8f':
       'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/usdt.svg',
-    '0xf3443e91b2ea741a49bb7d060037f11786407f4e':
-      'https://cdn.whitebit.com/currencies_icon/08f1494b-a813-43c9-84d8-43ea50e45417.png'
+    '0xf3443e91b2ea741a49bb7d060037f11786407f4e': WSD_LOGO
   },
   [SupportedNetwork.WHITECHAIN]: {
     '0xb044a2a1e3c3deb17e3602bf088811d9bdc762ea':
@@ -41,7 +40,14 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     '0xf97b9bf62916f1eb42dd906a7254603e7b9fc4a7':
       'https://cdn.whitebit.com/currencies_icon/484c5cf2-2c4d-48a6-b885-aaec5e98b975.png'
   },
-  [SupportedNetwork.POLYGON_ZKEVM]: {},
+  [SupportedNetwork.POLYGON_ZKEVM]: {
+    '0x1e4a5963abfd975d8c9021ce480b42188849d41d':
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+    '0x4374a0d2b27e61260acc9868d4a12daa80ce0de2': WSD_LOGO,
+    '0xa2036f0538221a77a3937f1379699f44945018d0':
+      'https://zkevm.polygonscan.com/assets/zkpoly/images/svg/logos/token-secondary-dim.svg?v=24.6.1.1',
+    '0x4f9a0e7fd2bf6067db6994cf12e4495df938e6e9': 'https://zkevm.polygonscan.com/token/images/wrappedeth_ofc_32.png'
+  },
   [SupportedNetwork.TRON]: {
     tr7nhqjekqxgtci8q8zy4pl8otszgjlj6t:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png',
