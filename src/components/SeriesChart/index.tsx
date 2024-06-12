@@ -51,6 +51,16 @@ const chartColors = {
       baseLineColor: PolygonNetworkInfo.primaryColor
     }
   },
+  [SupportedNetwork.POLYGON_ZKEVM]: {
+    area: {
+      topColor: PolygonNetworkInfo.primaryColor,
+      bottomColor: 'rgba(137, 41, 255, 0.28)'
+    },
+    histogram: {
+      color: PolygonNetworkInfo.primaryColor,
+      baseLineColor: PolygonNetworkInfo.primaryColor
+    }
+  },
   [SupportedNetwork.WHITECHAIN]: {
     area: {
       topColor: WhitechainNetworkInfo.primaryColor,
