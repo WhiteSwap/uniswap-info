@@ -50,7 +50,7 @@ export const PolygonNetworkInfo: NetworkInfo = {
   chainId: 137,
   headingTitle: 'Polygon',
   dexUrlPrefix: 'eth/polygon',
-  coinSymbol: 'MATIC'
+  coinSymbol: 'POL'
 }
 
 export const WhitechainNetworkInfo: NetworkInfo = {
