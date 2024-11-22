@@ -11,7 +11,7 @@ export const LOGO_SOURCE: LogoUrls = {
   [SupportedNetwork.POLYGON_ZKEVM]:
     'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets',
   [SupportedNetwork.WHITECHAIN]: '',
-  [SupportedNetwork.TRON]: 'https://coin.top/production/upload/logo'
+  [SupportedNetwork.TRON]: ''
 }
 
 export const WSD_LOGO = 'https://cdn.whitebit.com/currencies_icon/08f1494b-a813-43c9-84d8-43ea50e45417.png'
@@ -32,7 +32,11 @@ export const LOGO_OVERRIDES: OverrideUrls = {
       'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/matic.svg',
     '0xc2132d05d31c914a87c6611c10748aeb04b58e8f':
       'https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/55cf373d3a447fa52c0f9edd482a20c077b353d2/assets/tokenAssets/usdt.svg',
-    '0xf3443e91b2ea741a49bb7d060037f11786407f4e': WSD_LOGO
+    '0xf3443e91b2ea741a49bb7d060037f11786407f4e': WSD_LOGO,
+    '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063':
+      'https://tokens.pancakeswap.finance/images/0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3.png',
+    '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359':
+      'https://s3.coinmarketcap.com/static-gravity/image/5a8229787b5e4c809b5914eef709b59a.png'
   },
   [SupportedNetwork.WHITECHAIN]: {
     '0xb044a2a1e3c3deb17e3602bf088811d9bdc762ea':
@@ -52,6 +56,14 @@ export const LOGO_OVERRIDES: OverrideUrls = {
     tr7nhqjekqxgtci8q8zy4pl8otszgjlj6t:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/assets/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t/logo.png',
     tfptbwaarrwtx5yvy3gng5lm8bmhpx82bt: 'https://assets.coingecko.com/coins/images/27045/small/WBT_250x250px.png',
-    thv4mnqngk77yrde3spgzqfqc21ccjh2fu: WSD_LOGO
+    thv4mnqngk77yrde3spgzqfqc21ccjh2fu: WSD_LOGO,
+    tgtnrvekqpobtm5a22eaxdsttlkpiip9mo:
+      'https://static.tronscan.org/production/upload/logo/TGtNRvEkQPobTM5A22eAxDSTtLkpiiP9Mo.png?t=1621408878605',
+    tfg8p53avh3uwxe4kewox1gth6cumaftkc:
+      'https://static.tronscan.org/production/upload/logo/TFG8p53avh3UWxE4kEWox1gth6CuMAfTkc.png?t=1652948308665',
+    tnuc9qb1rrps5cbwlmnmxxbjyfoydxjwfr:
+      'https://static.tronscan.org/production/upload/logo/TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR.png?t=1598430824415',
+    tssmhyev2ue9qyh95dqyocunczel1nvu3s:
+      'https://static.tronscan.org/production/logo/TSSMHYeV2uE9qYH95DqyoCuNCzEL1NvU3S.png'
   }
 }
