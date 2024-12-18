@@ -220,6 +220,9 @@ export const isValidAddress = (address: string, networkId: SupportedNetwork) => 
     case SupportedNetwork.POLYGON: {
       return isErcAddress(address)
     }
+    case SupportedNetwork.POLYGON_ZKEVM: {
+      return isErcAddress(address)
+    }
     case SupportedNetwork.TRON: {
       return isTronAddress(address)
     }
@@ -240,6 +243,7 @@ export const toK = (number: string) => {
 const BLOCK_CHAIN_SCAN_URL: Record<SupportedNetwork, string> = {
   [SupportedNetwork.ETHEREUM]: 'https://etherscan.io',
   [SupportedNetwork.POLYGON]: 'https://polygonscan.com',
+  [SupportedNetwork.POLYGON_ZKEVM]: 'https://zkevm.polygonscan.com/',
   [SupportedNetwork.WHITECHAIN]: 'https://explorer.whitechain.io',
   [SupportedNetwork.TRON]: 'https://tronscan.org/#'
 }
