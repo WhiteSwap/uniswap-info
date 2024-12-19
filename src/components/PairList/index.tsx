@@ -164,7 +164,7 @@ function PairList({ pairs, maxItems = 10 }: IPairTable) {
             There are no available pairs to display. Add your token via the{' '}
             <CustomLink
               as="a"
-              href="https://app.ws.exchange/eth/mainnet/token-listing"
+              href="https://app.ws.exchange/eth/ethereum/token-listing"
               target="_blank"
               rel="noreferrer noopener nofollow"
             >
