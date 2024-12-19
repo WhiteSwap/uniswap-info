@@ -35,7 +35,7 @@ export const EthereumNetworkInfo: NetworkInfo = {
   secondaryColor: '#2172E5',
   chainId: 1,
   headingTitle: 'Ethereum',
-  dexUrlPrefix: 'eth/mainnet',
+  dexUrlPrefix: 'eth/ethereum',
   coinSymbol: 'ETH'
 }
 
